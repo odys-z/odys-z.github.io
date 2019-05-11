@@ -1,0 +1,13 @@
+gen.antlr.sql.exprs
+gen.antlr.sql.select
+io.odysz.common
+io.odysz.semantics
+io.odysz.semantics.meta
+io.odysz.transact.sql
+io.odysz.transact.sql.parts
+io.odysz.transact.sql.parts.antlr
+io.odysz.transact.sql.parts.condition
+io.odysz.transact.sql.parts.insert
+io.odysz.transact.sql.parts.select
+io.odysz.transact.sql.parts.update
+io.odysz.transact.x
