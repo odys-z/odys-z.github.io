@@ -1,0 +1,479 @@
+﻿<!doctype HTML>
+<html>
+<head>
+	<meta charset='UTF-8'>
+	<link rel="stylesheet" type="text/css" href="../../tips/resources.css">
+	<link rel="icon" href="../../tips/imgs/ic-2.png">
+	<script src="../../tips/showfig.js"></script>
+	<title>Webpack Library &amp; Vue Component</title>
+</head>
+
+<body>
+<header>
+	<h1>1. Authoring Webpack Library</h1>
+	<a href='../../index.htm'>Home</a>
+	<hr>
+</header>
+
+<article>
+	<h2>1. Authoring Webpack Library</h2>
+	<p>Follow <a target='_blank' href='https://webpack.js.org/guides/author-libraries/'>
+		Webpack doc: authoring webpack library</a> to configure webpack.</p>
+	<div class='code'>npm init -y<br>
+		npm install --save-dev lodash<br>
+		webpack
+	</div>
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00A-webpack-libray.png">
+	<h3>Key point</h3>
+	<p>In webpack.config.js:<div class='code'><pre>
+  output: {
+    filename: 'tutorialib.js',
+    path: path.resolve(__dirname, 'dist'),
+    library: 'tutorialib',
+    libraryTarget: 'umd'
+  },</pre></div></p>
+	<a download href='files/webpack-02.zip'>Download Source</a>
+	<h3>Trouble: externals doesn't work</h3>
+	<div class='exception'>TypeError: lodash__WEBPACK_IMPORTED_MODULE_0___default.a is undefined
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00B-webpack-err-external-lib.png"></div>
+	<p>There are a lot of similar reports, <a target='_blank'
+		href='https://stackoverflow.com/questions/43788304/configuring-library-as-external-in-webpack-does-not-work-with-umd-as-librarytarg'>
+		like the question at stackoverflow</a>, not resolved (bug?)</p>
+
+	<h1>2. Thinking in Vue Component</h1>
+	<p>Vue is born with the object of designing as components.</p>
+	<p>This section we will implement a popping up window, which is dynamically
+		loading data, interacted with user events.</p>
+	<p>The popup component is modified from the source of a tutorial by Neo Ighodaro <a href='#ref'><sup>[4]</sup></a>.
+		<a target='_blank', href='https://github.com/neoighodaro-articles/Vue-Slack-Preview'>The source is avialable at github.</a></p>
+	<p>The component is bundled into module named 'prevComp', which is exported from source file PreComp.js: </p>
+	<div class='code'><pre>
+		import Vue from 'vue'
+		import UserPop from './UserPop.vue'
+		import UserPopImage from './UserPopImage.vue'
+
+		const prevComp =  {
+		    install: function (Vue, options) {
+		        Vue.component('user-pop', UserPop)
+		        Vue.component('user-pop-image', UserPopImage)
+		    }
+		}
+
+		export default prevComp;</pre></div>
+	<p>The module is used in test.js, wich serves as an example of how to use
+		the vue component we exported early.</p>
+	<p>The exported bundle (dist/prev.component.js) is included in test.html,
+		as an old javascript fashion for showing the module concept clearly.
+		<div class='code'>
+			&lt;script src='./dist/prev.component.js' type='text/javascript'&gt;&lt;/script&gt;
+		</div>
+	</p>
+	<p>The in the test.html, a basic Vue component is created as a container of the
+		built component.
+		<div class='code'><pre>
+	&lt;comp-item
+		v-for="msg in messages"
+		v-bind:item="msg"
+		v-bind:key="msg.user.name"&gt;
+	&lt;/comp-item&gt;</pre></div></p>
+	<p>The 'comp-item' template is the caller of our exported vue module 'prevComp'. In test.js:
+		<div class='code'><pre>
+	Vue.component('comp-item', {
+	    props: ['item'],
+	    template: '&lt;user-pop :user="item.user" :main="item.user.name"&gt;&lt;/user-pop&gt;'
+	});</pre></div></p>
+	<p>In the code above, component &lt;user-pop&gt; is the component name registered in PrevComp.js.</p>
+	<p>prevComp is been actually installed by test.js:
+		<div class='code'>prevComp.default.install(Vue);</div></p>
+	<p><img class="screenshot" title="click for large image"
+			onclick="showFig(src)" src="imgs/00E-prev-comp-popping.png">
+		<a download href='files/webpack-03.zip'>The source project (with test example) is provided here</a>.</p>
+	<p>To understand the source, it's highly recommended to thoroughly read through referenc 1, 2 and 3.</p>
+
+	<h1>3. Import Plugins from Vue.js Examples<sup><a href='#ref'>[5]</a></sup> (with source)</h1>
+	<h2>3.1 Setting up Project</h2>
+	<p>Ass we are planning using component source, we directly downloaded DataTable.vue file.</p>
+	<div class='code'>npm install --save-dev vue vue-loader vue-template-compiler style-loader css-loader axios</div>
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00F-init-prj-04.png">
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00G-init-prj-04-curl.png">
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00H-prj-04-tree.png">
+
+	<h2>3.2 Using DataTable<sup><a href='#ref'>[6]</a></sup> from Vue.js Examples</h2>
+	<p>Download and use it int test.js</p>
+	<div class='code'><pre>
+    import Vue from 'vue';
+    import DataTable from './components/DataTable.vue';
+
+    Vue.component({DataTable});
+
+    window.onload = function init() {
+        console.log(this);
+        new Vue({
+            render: h => h(DataTable)
+        }).$mount('#app')
+    }</pre></div>
+	<p>If you have trouble to understand how the DataTable render function is working,
+		you are suggested stoping here and reading through reference <a href='ref'>[7], [8], [9], [10], [11]</a>,
+		- not that much as first look.</p>
+
+	<p>Then you can figure out how the final resutls can managed working - resolve error of referencing css and fonts resources.</p>
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00I-datable-css-304.png">
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00J-datable-fonts-cors.png">
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00K-datable-fonts-local-tree.png">
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00L-datable-local-ok.png"><br>
+	<p><a download href='webpack-04.step1.zip'>The project milestone (source project step 1) which can be downloaded here</a>
+		shows the process of how to resolve css and font problems.</p>
+	<p>Also <a target='_blank' href='../../notes/basics/js/webpack-04/dist/test.html'>the Demo Page is here.</a></p>
+
+	<h1>4. JS OOP with Suport from Webpack</h4>
+	<h2>Prjoect Source</h2>
+	<p>Sample Project Screenshot:</p>
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00N-webpack-oop.png">
+	<p>webpack.config.js</p>
+	<div class='code'><pre>
+        var path = require('path')
+        var webpack = require('webpack')
+
+        module.exports = {
+          mode: "development",
+          devtool: 'source-map',
+
+          entry: './lib/TestClass.js',
+
+          output: {
+            filename: "test-class.min.js", // string
+
+            path: path.resolve(__dirname, 'dist'),
+            publicPath: "./dist/", // string
+
+            library: 'Shapes',
+            libraryTarget: 'umd'
+          },
+        }</pre></div>
+	<p><a target='_blank' href='../../notes/basics/js/webpack-05/test/index.html'>Demo Page</a></p>
+	<p><a target='_blank' href='../../notes/basics/js/webpack-05/lib/TestClass.js'>The source file (TestClass.js) can be downloaded here</a> shows some OOP conceptions:</p>
+	<h2>OOP Key Points</h2>
+	<table class="reference notranslate">
+		<tbody>
+			<tr>
+				<th style="width:25%">concept</th>
+				<th>code snipet</th>
+				<th>remarks</th>
+			</tr>
+
+			<tr><td>class and subclass - <b>inheritance</b></td>
+				<td>TestClass.js
+					<div class='code'><pre>
+            class Shape {
+                ...
+            }
+
+            class Rectangle extends Shape {
+                ...
+            }</pre></div></td>
+				<td>typeof Shape === 'function'<br>
+					See <a href='#ref'>[12]</a><br>
+				</td>
+			</tr>
+
+			<tr><td>constructor</td>
+				<td>TestClass.js
+					<div class='code'><pre>
+            class Rectangle extends Shape {
+              <b>constructor(height, width) {
+            	super('Rectangle');
+                this.height = height;
+                this.width = width;
+              };</b>
+              ...
+            }</pre></div>
+				</td>
+				<td><a href='#ref'>[12]</a></td>
+			</tr>
+
+			<tr><td>abstract class and <br>
+				constructor or methods overriden</td>
+				<td>TestClass.js
+					<div class='code'><pre>
+            class Shape {
+              constructor (tn) {
+                // abstract class constructor can't been called
+                if (this.constructor === Shape) {
+                    throw new Error('Cannot instantaciate abstract class Shape');
+                }
+              }
+
+              /** Getter */
+              get area() {
+                // call overriden method <b>- polymorphism</b>
+                return this.calcArea();
+              }
+
+              /**Overriden method */
+              calcArea () {
+                throw new Error('Cannot call abstract method')
+              };
+            }
+
+            /**Concreate class */
+            class Rectangle extends Shape {
+              constructor(height, width) {
+                // super() won't throw Error because this.constructor === Rectangle
+                super('Rectangle');
+                ...
+              };
+
+              /**Overriding Method */
+              calcArea() {
+                return this.height * this.width;
+              }
+            }</pre></div>
+				</td>
+				<td>Ideas comes from <a href='#ref'>[13]</a></td>
+			</tr>
+
+			<tr><td>static methods and variables</td>
+				<td>TestClass.js
+					<div class='code'><pre>
+            class Shape {
+              static tname() { return Shape._tn; }
+            }</pre></div>
+					using static method in test/index.html
+					<div class='code'><pre>
+            console.log(Shapes.Rectangle.tname());</pre></div>
+				</td>
+				<td>See <a href='#ref'>[14]</a></td>
+			</tr>
+
+			<tr><td>static methods and variables</td>
+				<td>TestClass.js
+					<div class='code'><pre>
+            var Geometry = new class {
+                constructor(n) {
+                    this.name = n
+                }
+
+                log() {
+                    console.log(this.name);
+                }
+            } ('App'); </pre></div>
+					using static method in test/index.html
+					<div class='code'><pre>
+            Shapes.Geometry.log();</pre></div>
+				</td>
+				<td>JS anonymous class is not a good practise, see <a href='#ref'>[15]</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>5. Modify DataTable to Semantable</h4>
+	<p>As DataTable doesn't very suitable for paging at server side, and even no pager,
+		let's modify it to integrate a pager and load rows paged at server side, the Semantable.</p>
+	</p>Of cause, Semantable needing to access our semantic.jserv data servics.</p>
+
+	<p>The finished Semantable component looks like this.</p>
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/00P-semantable-basic.png"><br>
+	<a download href='../../notes/basics/js/webpack-06/lib/components/vue/Semantable.vue'>
+		Source</a> and <a target='_blank' href='../../notes/basics/js/webpack-06/test/simple.html'>Simple Static Demo</a>, or
+		<a target='_blank' href='../../notes/basics/js/webpack-06/test/semantable.html'>Basic Server Side Paging Demo</a>.
+	<p>Tip: Vue slot is a tool powerful for making vue components customerizable.
+		The <a target='_blank' href='https://vuejsexamples.com/vue-component-for-rendering-tables-used-in-ena-projects/'>
+		ENA Table</a> from <a traget='_blank' href='https://vuejsexamples.com/'>
+		Vue.js Examples</a> is a good example showing how to use slots to customerize vue components.
+
+	<h3>Code Snipet Explained</h3>
+	<table class="reference notranslate">
+		<tbody>
+			<tr>
+				<th>Function</th>
+				<th style="width:55%">Source</th>
+				<th>Remarks</th>
+			</tr>
+
+			<tr><td></td>
+				<td><div class='exception'><pre></pre></div></td>
+				<td/>
+			</tr>
+		</tbody>
+	</table>
+
+	<h4>To be continued ...</h4>
+
+	<h1>6. Modify Sidebar Menue to Dynamic Menu <sup>[17, 18]</sup></h4>
+	<a download href='files/webpack-06.zip'>project soure (zip)</a><br>
+	<a target='_blank' href='../../notes/basics/js/webpack-06/README.md'>README.md</a><br>
+	<a download href='../../notes/basics/js/webpack-06/lib/components/vue/menu/SidebarMenu.vue'>Sidebar Menu Component</a><br>
+	<h3>6.1 Static Menu</h3>
+		<a download href='../../notes/basics/js/webpack-06/lib/views/jview-menu.vue'>App using vue components (only with menu components avialable statically)</a><br>
+		<a download href='../../notes/basics/js/webpack-06/webpack.jvue.config.js'>webpack.config.js</a><br>
+		<a target='_blank' href='../../notes/basics/js/webpack-06/test/index-static.html'>demo</a>
+	<h3>6.2 Dynamic Menu</h3>
+		<a download href='../../notes/basics/js/webpack-06/lib/views/jview-menu-dyna.vue'>App using vue components (only the daynamic menu components avialable)</a><br>
+		<a download href='../../notes/basics/js/webpack-06/webpack.dyna-menu.config.js'>webpack.config.js</a><br>
+		<a target='_blank' href='../../notes/basics/js/webpack-06/test/index.html'>demo</a>
+
+	<h1>7. Transpiling Tree <sup>[19]</sup> &amp; Popping Modal Dialog</h4>
+	<a download href='../../notes/basics/js/webpack-07/lib/components/vue/tree/Tree.vue'>Tree Component</a><br>
+	<a download href='../../notes/basics/js/webpack-07/lib/views/jview-test-tree.vue'>App using vue components (only with tree components avialable statically)</a><br>
+	<a download href='../../notes/basics/js/webpack-07/webpack.config.js'>webpack.config.js</a><br>
+	<a target='_blank' href='../../notes/basics/js/webpack-07/test/index.html'>demo</a>
+	<h3>In this project:</h3>
+	<h4>1. Using Tree with JSX</h4>
+	<p>The component using JSX for replacing render function - for dynamic template</p>
+	<p>See <i>tpl</i> attribute in <a download
+		href='../../notes/basics/js/webpack-07/lib/components/vue/tree/Tree.vue'>
+		Tree.vue</a>.</p>
+	<p>To compile with JSX, in webpack.config.js:<div class='code'>
+		module: { rules: [<br>
+		{test: /\.js$/, exclude: /node_modules/, loader: "babel-loader",
+			options: { plugins: ['transform-vue-jsx'] }},
+		<br>...</div>
+	</p>
+	<p>For render function and JSX, see [20]</p>
+	<p>For toturial of using JSX with Vue.js, see [21]</p>
+
+	<h4>2. Using Modal Dialog</h4>
+	<p>This demo page also showing how to popping and recieving results of modal dialog,
+		which is modified from VueJs exmaple.</p>
+	<p>For VueJS docs about modal dialog example, see <a href='#ref22'>[22]</a>.</p>
+
+	<div class='code'><pre>
+		&lt;button class=" tree-search-btn" type="button" @click="show('modal-1')"&gt;Show Modal1&lt;/button&gt;
+		&lt;button class=" tree-search-btn" type="button" @click="show('modal-2')"&gt;Show Modal2&lt;/button&gt;
+		&lt;modal ref="modal-1"&gt;&lt;user-form slot='modal-form'/&gt;&lt;/modal&gt;
+		&lt;modal ref="modal-2"/&gt;<br>
+
+		&lt;script&gt;
+		const UserForm = { template: '...' }
+		Vue.component('user-form', UserForm);
+		&lt;/script&gt;</pre></div>
+
+	<h1>Troubleshootings</h1>
+	<table class="reference notranslate">
+		<tbody>
+			<tr>
+				<th style="width:55%">Error</th>
+				<th>Handling</th>
+			</tr>
+
+			<tr><td><div class='exception'><pre>
+            /usr/local/bin/nodejs/lib/node_modules/webpack-cli/bin/cli.js:235
+                throw err;
+                ^
+            Error: Cannot find module 'webpack'</pre></div>
+				<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/00C-webpack-err-not-found.png">
+				</td>
+				<td>Setup NODE_PATH. In ubuntu:
+					<div class='code'>export NODE_PATH=/usr/local/bin/nodejs/lib/node_modules/</div>
+				</td>
+			</tr>
+
+			<tr><td><div class='exception'><pre>
+            Error: Cannot find module '@babel/core'
+             babel-loader@8 requires Babel 7.x (the package '@babel/core').
+             If you'd like to use Babel 6.x ('babel-core'), you should install 'babel-loader@7'.
+            </pre></div>
+				<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/00O-err-babel-core-version.png">
+				</td>
+				<td>That's because new version of babel dependency.
+					<div class='code'>
+					sudo npm install -g @babel/core<br>
+					npm link @babel/core<br>
+					sudo npm install -g babel-loader<br>
+					npm link babel-loader</div>
+					See <a target='_blank' href='https://stackoverflow.com/questions/35215461/error-in-cannot-find-module-babel-core-using-react-js-webpack-and-express-s'>
+						Answer by CounterFlame</a>.</td>
+			</tr>
+
+			<tr><td>Firefox complain about source map<br>
+				<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/00Q-source-map-warn.png">
+				</td>
+				<td>Don't use name variable in library name in webpack.config.js.<br>
+					This will produce warning message:
+					<div class='code'>output: { library: 'j[name]'; }</div>
+					instead use this:
+					<div class='code'>output: { library: 'jvue'; }</div>
+				</td>
+			</tr>
+
+
+		</tbody>
+	</table>
+
+	<h2 id='ref'>References</h2>
+	<ol type='1'>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/index.html'>
+			Vue.js doc: Guid / Introduction # Composing with Components</a></li>
+		<li><a target='_blank' href='https://webpack.js.org/guides/author-libraries/'>
+			Webpack doc: Authoring Component</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/components.html'>
+			Vue.js doc: Component Basics</a></li>
+		<li id='ref4'><a target='_blank' href='https://blog.pusher.com/building-external-modules-vuejs/'>
+			Neo Ighodaro, Bulding External Modules in VueJS</a></li>
+		<li id='ref5'><a target='_blank' href='https://vuejsexamples.com'>
+			Vue.js Examples</a></li>
+		<li id='ref6'><a target='_blank' href='https://github.com/dogukanayd/basic-vue-data-table'>
+			Vue.js Basic Datatable Source Project @ github</a></li>
+		<li><a target='_blank' href='https://alligator.io/vuejs/introduction-render-functions/'>
+			Introduction to Vue.js Render Functions</a></li>
+		<li><a target='_blank' href='https://alligator.io/vuejs/component-slots/'>
+			Understanding Component Slots with Vue.js</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/api/'>
+			Vue.js Doc: Vue.js API</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/render-function.html'>
+			Vue.js Doc: Render Functions & JSX</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/render-function.html#Slots'>
+			Slots, Vue.js Doc: Render Functions & JSX</a></li>
+		<li><a target='_blank' href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/class'>
+			MDN Documents: Class</a> and <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes'>
+			MDN Web technology for developer &gt; JavaScript &gt; JavaScript reference</a></li>
+		<li><a target='_blank' href='https://coderwall.com/p/r47jlw/advanced-javascript-class-abstract-class-method'>
+			Advanced JavaScript Class: Abstract Class & Method</a></li>
+		<li><a target='_blank' href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static'>
+			Web technology for developers &gt; JavaScript JavaScript reference &gt; Classes &gt; static</a></li>
+
+		<li><a target='_blank' href='https://stackoverflow.com/questions/38739499/anonymous-class-instance-is-it-a-bad-idea'>
+			Discusion ablout anonymous class on StackOverFlow</a></li>
+		<li><a target='_blank' href='https://vuejsexamples.com/vue-component-for-rendering-tables-used-in-ena-projects/'>
+			ENA Table, a vue slots example</a>, one of <a traget='_blank' href='https://vuejsexamples.com/'>VueJs Examples</a></li>
+		<li><a traget='_blank' href='https://vuejsexamples.com/a-vue-js-sidebar-menu-component/'>
+			VueJs Examples: Sidebar Menu</a></li>
+		<li><a traget='_blank' href='https://vuejs.org/v2/guide/routing.html#Official-Router'>
+			VueJs Doc: Routing</a></li>
+		<li><a target='_blank' href='https://github.com/halower/vue-tree'>Tree @ Github, Halower</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/render-function.html'>Vue Doc: Render Function and JSX</a></li>
+		<li><a target='_blank' href='https://dzone.com/articles/using-jsx-with-vuejs'>Tutorial at DNZone: Using JSX</a></li>
+		<li id='ref22'><a target='_blank' href='https://vuejs.org/v2/examples/modal.html'>
+			Vue.js Doc: Modal Component Example</a></li>
+		<li><a target='_blank' href=''></a></li>
+		<li><a target='_blank' href=''></a></li>
+		<li><a target='_blank' href=''></a></li>
+	</ol>
+	<p><br></p>
+</article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+<hr>
+<span id="copyright">Copyright © 2019 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,304 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Developer's FAQ</title>
+	<link rel="stylesheet" type="text/css" href="resources.css">
+	<script src="showfig.js"></script>
+	<link rel="icon" href="imgs/ic-2.png">
+</head>
+<body>
+<header>
+	<h1>Topic: Maven</h1>
+	<p class="tips">updating: Odys' techincal troubleshootings</p>
+	<a href='index.htm'>Home</a>
+	<hr>
+</header>
+
+<article>
+<table class="reference notranslate">
+<tbody>
+	<tr>
+		<th style="width:1%"></th>
+		<th>trouble</th>
+		<th style="width:84%">shootings</th>
+	</tr>
+
+	<tr><td colspan="3">m2e</td></tr>
+	<tr><td></td>
+		<td>jserv-sample depending on semantic.jserv.jar but deployed classes into WEB-INF/classes
+			<div class='exception'>ClassNotFoundException:io.odysz.semantic.jserv.JSingleton</div>
+		</td>
+		<td>This is because jserv-sample denpending directly to the eclipse project semantic.jserv and
+			unfortunately the semantic.jserv has some incorrect project settings in <i>Deployment Assembly</i>.<br>
+			see <a target='_blank' href='https://stackoverflow.com/questions/28701858/maven-prefixing-web-inf-classes-into-jar-dependency'>
+				Seth Ellison's Answer of His Question</a>
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/005-jserv-deploy-asm.png"><br>
+		</td>
+	</tr>
+
+
+	<tr><td></td>
+		<td>Eclipse can not resolve type from maven denpendency, but mvn works perfectly.</td>
+		<td>Cause:<br>
+			The referenced type is comments out in dependee project, but the folder is there.<br>
+			Another type in another maven dependee project provide the same package and class.<br>
+			This makes eclipse failed to resolve type.<br>
+			Solution<br>
+			Delete the deprecated package in the 1st dependee, install and clean, update maven projects.
+		</td>
+	</tr>
+
+	<tr><td></td>
+		<td>Maven project can't deploy to tomcat</td>
+		<td>Error: Tomcat return 404 to browser for <div class='code'>http://127.0.0.1:8080/semantic.jserv/query.serv</div>
+			When checking project in eclipse, there is no 'webapp' folder to deploy.<br>
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/004-maven-webapp.png"><br>
+			Solution:<br>
+			Clean and reconvert to maven project:
+			<div class='code'>
+				mvn eclipse:clean eclipse:eclipse<br>
+				right clicke project - configure - convert to maven project<br>
+				right clicke project - maven - update project<br>
+				mvn package<br>
+			</div>
+			redeploy tomcat server.<br>
+			See <a target="_blank" href='https://stackoverflow.com/questions/2048719/updating-settings-org-eclipse-wst-common-component-file-in-a-maven-project'>
+			Updating .settings/org.eclipse.wst.common.component file in a maven project Ask Question</a>
+		</td>
+	</tr>
+
+	<tr><td></td>
+		<td>New Maven project can't update</td>
+		<td id='maven-proxy'><div class='exception'>Description Resource Path Location Type Could not calculate build plan:
+				Failure to transfer org.apache.maven.plugins:... from http://repo1.maven.org/maven2 ...
+			</div>
+			This is a connection error. Check proxy settings for Maven.<br>
+			To change proxy, ~/.m2/settings.xml
+			<div class='code'>
+				&lt;settings&gt; &lt;proxies&gt;<br>
+				&lt;proxy&gt;<br>
+				&emsp;&lt;id&gt;example-proxy&lt;/id&gt;<br>
+				&emsp;&lt;active&gt;true&lt;/active&gt;<br>
+				&emsp;&lt;protocol&gt;http&lt;/protocol&gt;<br>
+				&emsp;&lt;host&gt;proxy.example.com&lt;/host&gt;<br>
+				&emsp;&lt;port&gt;8080&lt;/port&gt;<br>
+				&emsp;&lt;username&gt;proxyuser&lt;/username&gt;<br>
+				&emsp;&lt;password&gt;somepassword&lt;/password&gt;<br>
+				&emsp;&lt;nonProxyHosts&gt;www.google.com|*.example.com&lt;/nonProxyHosts&gt;<br>
+				&lt;/proxy&gt;<br>
+				...<br>
+				&lt;/proxies&gt; &lt;/settings&gt;
+			</div>
+			Then check in CLI to verify maven is working.<br>
+			If the problem persists in Eclipse, use force update:
+			<div class='code'>Maven &gt; Update Project &gt; chek <i>Force Update of Snapshots/Releases</i></div>
+			See <a target='_blank' href='https://howtodoinjava.com/maven/maven-proxy-settings/'>Maven proxy settings – Eclipse, command line and global settings</a>
+		</td>
+	</tr>
+
+	<tr><td></td>
+		<td>Mavan web app depends on another web app
+			<div calss='exception'>java.ClassNotFoundException: class.from.denendency</div></td>
+		<td>Add maven overlay plugin to denpendee.<br>
+			Export a jar to depending lib<br>
+			See <a target='_blank' href='https://github.com/odys-z/semantic-jserv/wiki/Semantic-jserv-Troubleshootings#classnotfoundexception'>
+				jserv-sample troubleshootings</a>
+		</td>
+	</tr>
+
+	<tr><td></td>
+		<td>SqlBuilder can not compile</td>
+		<td>1. After imorted from GitHub, right clikck project
+			<div class='code'>Configure &gt; convert to maven project</div>
+			2. Update maven project.
+			<div class='exception'>
+				In Problem view: Plugin execution not covered by lifecycle configuration
+			</div>
+			Ignore the pom error (Suggested by Eclipse):<br>
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/001-sqlbuilder-ignore.png"><br>
+			For details, see <a target="_blank" href='https://stackoverflow.com/questions/6352208/how-to-solve-plugin-execution-not-covered-by-lifecycle-configuration-for-sprin'>stackoverflow</a>.
+		</td>
+	</tr>
+
+	<tr><td colspan="3">GIT / EGIG </td></tr>
+	<tr><td></td>
+		<td>EGit won't push</td>
+		<td><div class='exception'>Egit rejected non-fast-forward</div>
+			Follow <a target='_blank' href='https://stackoverflow.com/questions/19474186/egit-rejected-non-fast-forward'>Robert Bender's answer</a>
+			<hr>
+			In short, you need:<br>
+			1. add remote<br>
+			2. add source to fetch<br>
+			3. merge fetched with local branch<br>
+			4. push<br>
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/002-01-add-fetching.png">
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/002-02-add-fetching-src.png">
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/002-03-add-src.png">
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/002-04-merge-with.png">
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/002-05-pushed.png">
+		</td>
+	</tr>
+
+	<tr><td colspan="3">Deploy / Release</td></tr>
+	<tr><td></td>
+		<td>Tutorial Resources</td>
+		<td>To do excactly the deloy and release,
+			Follow <a target='_blank' href='https://dzone.com/articles/publish-your-artifacts-to-maven-central'>
+				How to Publish Your Artifacts to Maven Central</a>.<br>
+			This <a target='_blank', href='https://www.youtube.com/watch?v=bxP9IuJbcDQ'>video by niklas</a> is also helpful.<br>
+			The <a target='_blank' href='https://www.youtube.com/watch?v=dXR4pJ_zS-0&feature=youtu.be'>
+				official video -First Deployments - Easy Publishing to Central Repository</a> is also helpful.<br>
+			Make sure it's project of "Community Support - Open Source Project Repository Hosting (OSSRH)"<br>
+			Using groupId with 'io.github' is suggested as it's can be as quick as in minuts.
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/003-create-maven-repo.png">
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/003-create-reop-6minuts.png">
+			<hr>
+			Tip 1: To deploy to maven repository, a CLI is necessary.
+			<div class='code'>sudo apt-get install maven</div><br>
+			Tip 2: Server Id must consists. Check the Examples.<br>
+			<a target="_blank" href="files/maven/pom-snapshot.xml">pom.xml example</a><br>
+			<a target="_blank" href="files/maven/m2-settings-snapshot.xml">.m2/settings.xml example</a><br><br>
+			Tip 3: SNAPSHOT can be published and dependended on by others.<br>
+			The above example is enough to publish a dependable snapshot. Use this to depend on a snapshot:
+			<div class='code'><pre>
+		&lt;repositories&gt;
+			&lt;repository&gt;
+				&lt;id&gt;sonatype-snapshots&lt;/id&gt;
+				&lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
+			&lt;/repository&gt;
+		&lt;/repositories&gt;</pre>
+			</div>
+			And add this to depend on Semantics.Transact:
+			<div class='code'><pre>
+		&lt;dependency&gt;
+			&lt;!-- As sonatype SNAPSHOT is updating on a daily base, you may update this with:
+				mvn clean package -U
+				to update immediately. --&gt;
+			&lt;groupId&gt;io.github.odys-z&lt;/groupId&gt;
+			&lt;artifactId&gt;semantics.transact&lt;/artifactId&gt;
+			&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+		&lt;/dependency&gt;</pre>
+			</div>
+		</td>
+	</tr>
+
+	<tr><td></td>
+		<td>Deploy Maven SNAPSHOT Failed</td>
+		<td>Deploy failed on another host.
+			<div class='exception'><pre>
+			[INFO] ------------------------------------------------------------------------
+			[INFO] BUILD FAILURE
+			[INFO] ------------------------------------------------------------------------
+			[INFO] Total time: 23.436 s
+			[INFO] Finished at: 2019-01-01T15:00:20+08:00
+			[INFO] Final Memory: 31M/365M
+			[INFO] ------------------------------------------------------------------------
+			[ERROR] Failed to execute goal org.sonatype.plugins:nexus-staging-maven-plugin:
+			1.6.7:deploy (injected-nexus-deploy) on project semantics.transact: Failed to d
+			eploy artifacts: Could not transfer artifact io.github.odys-z:semantics.transac
+			t:jar:javadoc:0.5.0-20190101.070018-5 from/to ossrh (https://oss.sonatype.org/c
+			ontent/repositories/snapshots): Failed to transfer file: https://oss.sonatype.o
+			rg/content/repositories/snapshots/io/github/odys-z/semantics.transact/0.5.0-SNA
+			PSHOT/semantics.transact-0.5.0-20190101.070018-5-javadoc.jar. Return code is: 4
+			01, ReasonPhrase: Unauthorized. -> [Help 1]</pre></div>
+			~/.m2/settings.xml
+			<div class='code'><pre>
+			&lt;settings&gt;
+		        &lt;servers&gt;
+		            &lt;server&gt;
+		                &lt;id&gt;ossrh&lt;/id&gt;
+		                &lt;username&gt;odys-z&lt;/username&gt;
+		                &lt;password&gt;*************&lt;/password&gt;
+		                    &lt;!-- other optional elements:
+		                    &lt;privateKey&gt;/path/to/identity&lt;/privateKey&gt; (default is ~/.ssh/id_dsa)
+		                    &lt;passphrase&gt;my_key_passphrase&lt;/passphrase&gt;
+		                    --&gt;
+		            &lt;/server&gt;
+		        &lt;/servers&gt;
+		    &lt;/settings&gt;</pre></div>
+			<a target='_blank' href='https://github.com/odys-z/semantic-transact/blob/master/semantic.transact/pom.xml'>pom.xml</a><br>
+			<a target='_blank' href='https://blog.sonatype.com/2010/11/what-to-do-when-nexus-returns-401/'>What to do when Nexus returns '401'</a>
+	</td>
+	</tr>
+
+	<tr><td></td>
+		<td>maven-surefire-plugin Failed</td>
+		<td>The above can be results from the correct step:
+			<div class='code'>maven test / deploy</div><br>
+			<div class='exception'><pre>
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Error: Could not find or load main class org.apache.maven.surefire.booter.ForkedBooter
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.086 s
+[INFO] Finished at: 2018-11-27T15:58:41+08:00
+[INFO] Final Memory: 17M/378M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.
+17:test (default-test) on project semantics.transact: Execution default-test of
+goal org.apache.maven.plugins:maven-surefire-plugin:2.17:test failed: The forked
+ VM terminated without properly saying goodbye. VM crash or System.exit called?
+[ERROR] Command was /bin/sh -c cd /media/sdb/docs/git/repo/semantic-transact/sem
+antic.transact && /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -jar /media/sdb
+/docs/git/repo/semantic-transact/semantic.transact/target/surefire/surefireboote
+r2579853082995400329.jar /media/sdb/docs/git/repo/semantic-transact/semantic.tra
+nsact/target/surefire/surefire5313879494273966955tmp /media/sdb/docs/git/repo/se
+mantic-transact/semantic.transact/target/surefire/surefire_08020210402550410574tmp
+[ERROR] -> [Help 1]</pre></div>
+			This is a bug issue. See: <a target='_blank'
+				href='https://issues.apache.org/jira/browse/SUREFIRE-1588?focusedCommentId=16671777&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-16671777'>
+				handling bug SUREFIRE-1588</a>.<br>
+			.m2/settings.xml:
+			<div class='code'><pre>
+&lt;profile&gt;
+    &lt;id&gt;SUREFIRE-1588&lt;/id&gt;
+    &lt;activation&gt;
+        &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+    &lt;/activation&gt;
+    &lt;properties&gt;
+        &lt;argLine&gt;-Djdk.net.URLClassPath.disableClassPathURLCheck=true&lt;/argLine&gt;
+    &lt;/properties&gt;
+&lt;/profile&gt;</pre></div>
+			see <a target="_blank" href="https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class">
+				answer by Erich Schubert</a>
+		</td>
+	</tr>
+
+</tbody>
+</table>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>
