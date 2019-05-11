@@ -1,0 +1,10 @@
+io.odysz.common
+io.odysz.module.rs
+io.odysz.module.xtable
+io.odysz.semantic
+io.odysz.semantic.DA
+io.odysz.semantic.DA.cp
+io.odysz.semantic.DA.drvmnger
+io.odysz.semantic.util
+io.odysz.semantics.x
+org.apache.commons.io
