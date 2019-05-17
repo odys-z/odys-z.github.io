@@ -19,15 +19,23 @@
 <table class="reference notranslate">
 <tbody>
 	<tr>
-		<th style="width:1%"></th>
+		<th style="width:2%"></th>
 		<th>Topic</th>
-		<th style="width:84%">Discussion / Recommendation</th>
+		<th style="width:94%">Discussion / Recommendation</th>
 	</tr>
 
-	<tr><td colspan="3">relationship table</td></tr>
+	<tr><td colspan="3">Primary Key</td></tr>
 	<tr><td></td>
-		<td>No Primary Key</td>
-		<td>It's recommended the relationship tables have no primary key of itself,
+		<td colspan="2">No compond key for enity table; only fk componded for relationship table</td>
+	</tr>
+
+	<tr><td></td>
+		<td/>
+		<td>The entity table should have one and only one column of PK.<br>
+			The pk can be configured as an <i>auto key<i>, which can be referenced by
+				child table and been handled in a batched DB committing.
+			<hr>
+			It's recommended the relationship tables have no primary key of itself,
 			the multiple FK referencing parents should be used as commpond primary keys.<br>
 			Take author - publisher relationship for example, if we need a table representing their contracts,
 			a relationship table can be designed as:<div class='code'><pre>
