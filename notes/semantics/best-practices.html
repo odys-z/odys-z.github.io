@@ -9,7 +9,7 @@
 </head>
 <body>
 <header>
-	<h1>Best Practices of Semantics-*</h1>
+	<h1>Developers' Guide &amp; Best Practices of Semantics-*</h1>
 	<a href='../../index.html'>Documents Home</a>
 	<hr>
 </header>
@@ -39,11 +39,58 @@
 </tbody>
 </table>
 
+<h1>Semantics-* Concepts</h1>
+<h4>Java Example</h4>
+<p>The best java example for how to use semantic-* api is the test class,
+	<a href='https://github.com/odys-z/semantic-DA/blob/master/semantic.DA/src/test/java/io/odysz/semantic/DASemantextTest.java'>DASemanticTest.java</a>.</p>
+<h4>Javascript Example</h4>
+<p>...</p>
+<h4>Testing Database</h4>
+<p>There is a sqlite 3 databse for testing in semantic.DA
+	<a href='https://github.com/odys-z/semantic-DA/blob/master/semantic.DA/src/test/res'>test resource folder </a>
+	named semantic-DA.db.</p>
+<table class="reference notranslate">
+<tbody>
+	<tr>
+		<th ></th>
+		<th style="width:99%">Semantic-* Concepts</th>
+	</tr>
+
+	<tr><td colspan='2'>Semantext</td></tr>
+	<tr><td/>
+		<td>The Runtime context when semantic.transact is building sql.<br>
+			When building sql, there is some dynamic information needed to build it, like auto generated key and
+			the referencing relationships. It's usually structured like a AST.<br>
+			Semantext is used to provide the runtime context, after loading the configured semantics in semantics.xml.<br>
+			In jserv-sample sample web application project, the configure file is located in web-content/WEB-INF.
+			<p>See <a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html'>javadoc: smtyp</a>
+				for what types <a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.html'>DASemantics</a> can handle.<p>
+		</td>
+	</tr>
+	<tr><td colspan='2'>Auto Key</td></tr>
+	<tr><td/>
+		<td><p>The semantic.DA can automatically generate a 6 digital length, radix 64 integer used for primary key.<br>
+				It's saved in database as a string, but it's logically an integer.</p>
+			<p>Semantics.DA doesn't depending on database for implementing this.
+				There is a table named 'oz_autoseq' in the testing database. All sequence number are saved here.
+			<h6>javadoc:</h6>
+			<p><a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#autoInc'>smtyp.autInc</a><p>
+			<h6>Resulved Value</h6>
+			<p>The auto generated integer is stored in the semantext. To get the resulved value after commit, at server side with java:
+				<div class='code'>semtxtInstance.resulvedVal(table, pk);</div></p>
+			<p>To use the resulvedVal while building sql (it's still unknown when referencing it):
+				<div class='code'>statement.nv("col-to-using", new Resulving(table, pk));</div></p>
+		</td>
+	</tr>
+	<tr><td colspan='2'>AND MORE ...</td></tr>
+</tbody>
+</table>
+</article>
+
 <div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
 <script>
 initDiv('picDiv');
 </script>
-</article>
 
 <!-- fake hr and span to reserve space for footer -->
 <hr style="color:transparent;">
