@@ -18,15 +18,24 @@
 	<h2>About Semantic-*</h2>
 	<p>The semantic-* including 3 major modules working together to be used as a web application server framework running in servlet 3.0.</p>
 	<p>It includes:
-		<ul><li><a target='_blank' href=''>The semantic-transact</a>, a structured API for building SQL.</li>
-			<li><a target='_blank' href=''>The semantic-DA</a>, a JDBC based datasource access layer,
+		<ul><li><a target='_blank' href='https://github.com/odys-z/semantic-transact'>The semantic-transact</a>, a structured API for building SQL.</li>
+			<li><a target='_blank' href='https://github.com/odys-z/semantic-DA'>The semantic-DA</a>, a JDBC based datasource access layer,
 				managing JDBC database connections and handling typical semantics data processing pattern.</li>
-			<li><a target='_blank' href=''>The semantic-jserv</a>, a servlet server framework for implementing web applications.
+			<li><a target='_blank' href='https://github.com/odys-z/semantic-jserv'>The semantic-jserv</a>, a servlet server framework for implementing web applications.
 				It provides a protocol layer using json as data package as well as parsers currently based on google Gson which will be upgraded / replaced in the future.
 			</li>
 		</ul>
 	</p>
-	<p>In addition to the library, there is also a maven sample project, <a target='_blank' href=''>jserv-sample</a>,
+	<p>The semantic-* also including 1 extension module providing some basic workflow engine function, which can be configured with:</p>
+		<ul><li>business table &amp; node instance meta data</li>
+			<li>workflow nodes and commands for stepping to next nodes</li>
+			<li>timeout time</li>
+			<li>event handler's class name for step events and timeout events</li>
+			<li>node command's right based on role, bridging by a configured dataset</li>
+			<li>tasks' and task details' semantics that the engine will create / update data but don't handle the structer directly</li>
+		</ul>
+
+	<p>In addition to the library and extensions, there is also a maven sample project, <a target='_blank' href=''>jserv-sample</a>,
 		showing how to use sematnic-*.<br>
 		It's recommended clone and use this project as a web server project template. It should be a good starting point.</p>
 
