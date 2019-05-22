@@ -40,11 +40,18 @@
 
 
 	<tr><td></td>
-		<td>Eclipse can not resolve type from maven denpendency, but mvn works perfectly.</td>
+		<td>Eclipse can not resolve type from maven denpendency, but mvn works perfectly.<br>
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/006-eclipse resolve failed.png"><br>
+		</td>
 		<td>Cause:<br>
 			The referenced type is comments out in dependee project, but the folder is there.<br>
 			Another type in another maven dependee project provide the same package and class.<br>
 			This makes eclipse failed to resolve type.<br>
+			<hr>
+			Another similar case is commented out the same pakage.class from the project and referencing a maven depended class.
+			See the left error.
+			<hr>
 			Solution<br>
 			Delete the deprecated package in the 1st dependee, install and clean, update maven projects.
 		</td>
