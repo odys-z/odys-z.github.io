@@ -3,71 +3,68 @@
 <head>
 	<meta charset="utf-8">
 	<title>Developer's FAQ</title>
-	<link rel="stylesheet" type="text/css" href="resources.css">
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
 	<script src="showfig.js"></script>
-	<link rel="icon" href="css/odysz.png">
+	<link rel="icon" href="../../css/odysz.png">
 </head>
 <body>
 <header>
-	<h1>Home Page</h1>
-	<p class="tips">updating: Odys' Documents</p>
+	<h1>Semantic-workflow Documents</h1>
+	<a href='../../index.html'>Documents Home</a>
 	<hr>
 </header>
 
 <article>
-	<h2>About Semantic-*</h2>
-	<p>The semantic-* including 3 major modules working together to be used as a web application server framework running in servlet 3.0.</p>
-	<p>It includes:
-		<ul><li><a target='_blank' href='https://github.com/odys-z/semantic-transact'>The semantic-transact</a>, a structured API for building SQL.</li>
-			<li><a target='_blank' href='https://github.com/odys-z/semantic-DA'>The semantic-DA</a>, a JDBC based datasource access layer,
-				managing JDBC database connections and handling typical semantics data processing pattern.</li>
-			<li><a target='_blank' href='https://github.com/odys-z/semantic-jserv'>The semantic-jserv</a>, a servlet server framework for implementing web applications.
-				It provides a protocol layer using json as data package as well as parsers currently based on google Gson which will be upgraded / replaced in the future.
-			</li>
-		</ul>
-	</p>
-	<p>The semantic-* also including 1 extension module providing some basic workflow engine function, which can be configured with:</p>
-		<ul><li>business table &amp; node instance meta data</li>
-			<li>workflow nodes and commands for stepping to next nodes</li>
-			<li>timeout time</li>
-			<li>event handler's class name for step events and timeout events</li>
-			<li>node command's right based on role, bridging by a configured dataset</li>
-			<li>tasks' and task details' semantics that the engine will create / update data but don't handle the structer directly</li>
-		</ul>
-
-	<p>In addition to the library and extensions, there is also a maven sample project, <a target='_blank' href=''>jserv-sample</a>,
-		showing how to use sematnic-*.<br>
-		It's recommended clone and use this project as a web server project template. It should be a good starting point.</p>
-
-	<h2>About jclient/*</h2>
-	<p>jclient/* is a collection of a few clients that working with semantic-* sample project, the jserv-sample.</p>
-	<p>It includes:
-		<ul>
-			<li>The java client</li>
-			<li>The js client, including an EasyUI template project and a in-developing template project based on Vue.js.</li>
-			<li>The c# client in developing</li>
-		</ul>
+	<h2>About Cheap Workflow</h2>
+	<p>The Cheap Workflow is a lightweigth workflow engine can only work on semantic-*.
+		It's also a good example showing how to use semantic.DA and semantic.transact java API.</p>
+	<p>TODO Howto ...
 	</p>
 
-	<h2>Developer's Guide</h2>
-	<ul>
-		<li><a href='notes/semantics/best-practices.html'>Guide, Reference &amp; Best Practices</a></li>
-		<li><a href='notes/semantics/about-semantics.DA.html'>Discussions / Notes on Semantics</a></li>
-	</ul>
-	<h2>Javadocs</h2>
-	<ul>
-		<li><a href='javadoc/semantic.jserv/index.html'>semantic - jserv</a></li>
-		<li><a href='javadoc/semantic.DA/index.html'>semantic - DA</a></li>
-		<li><a href='javadoc/semantic.transact/index.html'>semantic - transact</a></li>
-	</ul>
-	<hr>
+	<h2>SQL Scripts</h2>
+	<table class="reference notranslate">
+	<tbody>
+		<tr>
+			<th style="width:1%"></th>
+			<th style="width:95%">Mysql</th>
+		</tr>
+		<tr><td colspan="2">node instance</td></tr>
+		<tr><td/>
+			<td>It's recommended configure different table for each workflow, to optimize performance.
+				<div class='code'><pre>
+				-- Replace this table name, 'oz_sampleBusiness', keeping consists with value from oz_workflow.bussTable
+				CREATE TABLE oz_sampleBusiness (
+				instId varchar(20) COLLATE utf8mb4_bin NOT NULL,
+				nodeId varchar(20) COLLATE utf8mb4_bin NOT NULL comment 'node FK',
+				taskId varchar(20) COLLATE utf8mb4_bin NOT NULL comment 'fk to tasks.taskId',
+				oper varchar(20) COLLATE utf8mb4_bin NOT NULL,
+				opertime DATETIME,
+				descpt varchar(200),
+				remarks varchar(2000),
+				handlingCmd varchar(10) COLLATE utf8mb4_bin,
+				prevRec varchar(20) COLLATE utf8mb4_bin,
+				PRIMARY KEY (instId)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+				COMMENT ' work flow node instances, table name is configured in oz_workflow.instabl (separating table for performance)'; </pre></div>
+			</td>
+		</tr>
+	</tbody>
+	</table>
 
-	<h2>Notes / Wiki</h2>
-	<ul>
-		<li><a href='wiki/webpack vue quick start/tutorial-01.html'>Tutorial 01: Webpack and Vue Quick Start</a></li>
-		<li><a href='wiki/webpack vue quick start/tutorial-02.html'>Tutorial 02: Vue Components with Seamtnic-jserv</a></li>
-	</ul>
-
-	<p> <a target='_blank' href='https://github.com/odys-z'>His Repos</a> </p>
 </article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
 </html>
