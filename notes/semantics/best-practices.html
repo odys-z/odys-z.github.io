@@ -91,16 +91,19 @@
 			It can only updated when child's PK generated. Post FK can be used to update parent FK aftermath.</p>
 			<h6>Why both Post Fk and <a href='../../javadoc/semantic.transact/io/odysz/transact/sql/parts/Resulving.html'>
 				Resulving<a> are needed?</h6>
-			<p>Post Fk can update cross FK automatically. But it's weak updating
+			<p>Resulving can be used anywhere in a statement subtree referencing
+				ancestor's pk value, but can't resolve reference to children's pk;<br>
+				Post Fk on the other hand can update cross FK automatically. But it's weak updating
 				- generate the updating SQL only when cliet doesn't provide this value.
-				This makes Post Fk will only update the parent value when inseting a child,
-				but it also can't generate correct sql for NOT NULL FK field.<br>
-				Note: Inserting a new record without value of not null field
-				then update it later in a batch operation is not allowed in mysql.</p>
+				This makes Post Fk will only update the target value when inseting a child.<br>
+				Post Fk also can't generate correct sql for NOT NULL FK field. This
+				is because of inserting a new record without value of not null field
+				then update it later in a batch operation is not allowed in many database,
+				like mysql and sqlite.</p>
 			<p>User can solve this problem with any of two ways:<br>
 				1. Let the field nullable;<br>
 				2. Use a Resulving when create the statement.</p>
-			<p>The first solution weaken the DB data schema checking;<br>
+			<p>The first solution can weaken the DB data schema checking;<br>
 				the second way is a little complicate and must used in all updating
 				handling case rather than configure in xml in one sigle place.
 				It's guarenteed up to user not by system supporting.</p>
