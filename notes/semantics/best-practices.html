@@ -82,6 +82,31 @@
 				<div class='code'>statement.nv("col-to-using", new Resulving(table, pk));</div></p>
 		</td>
 	</tr>
+
+	<tr id='post-fk'><td colspan='2'>Post Fk</td></tr>
+	<tr><td/>
+		<td><p>Let seamntic.DA update a FK after back referenced record is generated, like the cross referencing.</p>
+			<h6>Why Post Updating?</h6>
+			<p>If a parent record has an FK to a child, the FK can not resulved when inserting parent records.
+			It can only updated when child's PK generated. Post FK can be used to update parent FK aftermath.</p>
+			<h6>Why both Post Fk and <a href='../../javadoc/semantic.transact/io/odysz/transact/sql/parts/Resulving.html'>
+				Resulving<a> are needed?</h6>
+			<p>Post Fk can update cross FK automatically. But it's weak updating
+				- generate the updating SQL only when cliet doesn't provide this value.
+				This makes Post Fk will only update the parent value when inseting a child,
+				but it also can't generate correct sql for NOT NULL FK field.<br>
+				Note: Inserting a new record without value of not null field
+				then update it later in a batch operation is not allowed in mysql.</p>
+			<p>User can solve this problem with any of two ways:<br>
+				1. Let the field nullable;<br>
+				2. Use a Resulving when create the statement.</p>
+			<p>The first solution weaken the DB data schema checking;<br>
+				the second way is a little complicate and must used in all updating
+				handling case rather than configure in xml in one sigle place.
+				It's guarenteed up to user not by system supporting.</p>
+		</td>
+	</tr>
+
 	<tr><td colspan='2'>AND MORE ...</td></tr>
 </tbody>
 </table>
