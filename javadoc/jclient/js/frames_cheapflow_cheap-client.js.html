@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: frames/cheapflow/cheap-client.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: frames/cheapflow/cheap-client.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+import $ from 'jquery';
+import {Protocol, JMessage, JHeader, QueryReq, UserReq} from '../../protocol.js';
+
+
+/**See semantic.workflow/io.odysz.sworkflow.EnginDesign.Req */
+const chpEnumReq = {
+	heartbeat: "ping",
+	/** load workflow list */
+	load: "load",
+	/** load a node's commnads */
+	nodeCmds: 'nodeCmds',
+	TgetDef: "get-def",
+	findRoute: "findroute",
+	cmdsRight: "right",
+	/** client use this to ask plausible operation using 't' */
+	Ttest: "test",
+	start: "start",
+	/**request stepping according to cmds configured in oz_wfcmds */
+	cmd: "cmd",
+	close: "close",
+	timeout: "timeout",
+}
+
+/** @See io.odysz.sworkflow.CheapException */
+const CheapCode = {
+	ok: 'ok',
+	err: 'wf_err',
+	err_rights: 'wf_err_rights',
+	err_competation: 'wf_err_competing',
+}
+
+///////////////// io.odysz.sworkflow ///////////////////////////////////////////
+class CheapReq {
+	// a (req.name)
+	// protected String wftype;
+	// protected String[] cmdArgs;
+	// protected String ndescpt;
+	// protected String childTbl;
+	// protected ArrayList&lt;String[]> taskNvs;
+	// protected ArrayList&lt;ArrayList&lt;String[]>> childInserts
+
+	constructor (wftype, port) {
+		this.wftype = wftype;
+		if (port === undefined)
+			this.port = 'cheapflow.sample';
+		else this.port = port;
+	}
+
+	/**set a.&lt;br>
+	 * a() can only been called once.
+	 * @param {string} a
+	 * @return {UserReq} this */
+	a(a) {
+		this.a = a;
+		return this;
+	}
+
+	cmd(c) {
+		this.cmd = c;
+		return this;
+	}
+
+	arg(n, v) {
+		if (v !== undefined) { // getting
+			if (this.cmdArgs === undefined)
+				this.cmdArgs = {};
+			// this.cmdArgs = Object.assign(this.cmdArgs, {n, v});
+			this.cmdArgs[n] = v;
+			return this;
+		}
+		else {
+			if (this.cmdArgs === undefined) return;
+			// for (var ix = 0; ix &lt; this.cmdArgs.length; ix++) {
+			// 	if (this.cmdArgs[ix][0] === n)
+			// 		return this.cmdArgs[ix][1];
+			// }
+			return this.cmdArgs[n];
+		}
+	}
+
+	nodeDesc (descpt) {
+		this.ndescpt = descpt;
+		return this;
+	}
+
+	taskNv (n, v) {
+		if (this.taskNvs === undefined || this.taskNvs === null)
+			this.taskNvs = [];
+		this.taskNvs.push([n, v]);
+		return this;
+	}
+
+	taskRow (row) {
+		if (Array.isArray(row)) {
+			for (var ix = 0; ix &lt; row.length &amp;&amp; Array.isArray(row[ix]); ix++) {
+				this.taskNv(row[ix][0], row[ix][1]);
+			}
+		}
+		else {
+			console.error('CheapReq.taskRow(row) argument format:\n',
+						'[[n, v], ...]\n',
+						row);
+		}
+		return this;
+	}
+
+	taskId (tid) {
+		return this.arg('taskId', tid);
+	}
+
+	nodeId (nid) {
+		return this.arg('nodeId', nid);
+	}
+
+	instId (iid) {
+		return this.arg('instId', iid);
+	}
+
+	usrId (uid) {
+		return this.arg('usrId', uid);
+	}
+
+	/**Add a post update request to the transact batch operations
+	 * @param {UpdateReq | InsertReq} jbody post request
+	 * @return {CheapReq} this*/
+	post (jbody) {
+		// FIXME there is no such thing in CheapReq.java
+		if (this.childInserts === undefined || this.childInserts === null)
+			this.childInserts = [];
+		else this.childInserts.push(jbody);
+		return this;
+	}
+
+	// FIXME
+	childInsert (n, v) {
+		// FIXME call post() instead
+		this.childInserts[this.childInserts.length - 1].push([n, v]);
+		return this;
+	}
+
+	// req (r) {
+	// 	this.a = r;
+	// 	return this;
+	// }
+
+	// use ssClient.usrCmd() instead
+	// reqCmd (cmd) {
+	// 	this.cmdArgs = [cmd];
+	// 	return req(chpEnumReq.cmd);
+	// }
+
+	// cmdsRight (nodeId, usrId, taskId) {
+	// 	this.cmdArgs = [nodeId, usrId, taskId];
+	// 	return req(chpEnumReq.cmdsRight);
+	// }
+}
+
+export {CheapReq, chpEnumReq, CheapCode};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-jclient_js_core.html">jclient/js/core</a></li><li><a href="module-jeasy_html.html">jeasy/html</a></li><li><a href="module-jeasy_session.html">jeasy/session</a></li></ul><h3>Classes</h3><ul><li><a href="DatasetCfg.html">DatasetCfg</a></li><li><a href="Jregex.html">Jregex</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="module-jclient_js_core-Inseclient.html">Inseclient</a></li><li><a href="module-jclient_js_core-J.html">J</a></li><li><a href="module-jclient_js_core-SessionClient.html">SessionClient</a></li><li><a href="Protocol.html">Protocol</a></li><li><a href="Test%2520JS%2520AES.html">Test JS AES</a></li><li><a href="Tweenable.html">Tweenable</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CheapCode">CheapCode</a></li><li><a href="global.html#chpEnumReq">chpEnumReq</a></li><li><a href="global.html#dispose">dispose</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getIv128">getIv128</a></li><li><a href="global.html">interpolate</a></li><li><a href="global.html#isPlaying">isPlaying</a></li><li><a href="global.html#pause">pause</a></li><li><a href="global.html#resume">resume</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setBezierFunction">setBezierFunction</a></li><li><a href="global.html#setConfig">setConfig</a></li><li><a href="global.html#setScheduleFunction">setScheduleFunction</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stree_t">stree_t</a></li><li><a href="global.html#tween">tween</a></li><li><a href="global.html#unsetBezierFunction">unsetBezierFunction</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sat Jun 01 2019 00:41:03 GMT+0800 (Hong Kong Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

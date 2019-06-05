@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: view/easyui/jeasy-api.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: view/easyui/jeasy-api.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>///////////////////////   jeasy API version 1.0    /////////////////////////////
+// This part comes from the open source jclient.js/easyui.
+// Because the current project is not using webpack, so the two parts is merged
+// into one js file for business module's convenient avoiding including 2 files.
+////////////////////////////////////////////////////////////////////////////////
+/** html tag ids and supported ir-attrs
+ * @module jeasy/session */
+
+/**************       Sample project section     *******************************
+ * A sample project usually have common module to configure jeasy API like this:
+ * NOTE: Replace all '* /' with end of block comments - without space.
+ *
+ * application config
+ * @module jserv-sample/easui-demo * /
+const jconsts = {
+	// if your tomcat server.xml is configured like:
+	// &lt;Context docBase="engcosts" path="/your-path reloadable="true"
+	// 		source="org.eclipse.jst.j2ee.server:..."/>&lt;/Host>
+	// serv: 'http://localhost:8080/jserv-sample',
+	conn: '...',
+	// datas.xml/sk, sk for ir-combobox, ir-cbbtree shouldn't be here.
+	sk: {
+		menu: 'sys.menu.ez-test',
+	},
+
+	/** Application Message Strings, a callback called when jeasy-html.js loaded.
+	 * @param {EzMsger} msger easyUI messager wrapper
+	 * /
+	initMsg: function (msger) {
+		msger.setM('saved', 'Overriding mssage in your favor!');
+	}
+}
+
+const engports = {
+	/** see semantic.jserv/io.odysz.jsample.SysMenu * /
+	menu: "menu.serv",
+	/** see semantic.jserv/io.odysz.jsample.cheap.CheapServ * /
+	cheapflow: "cheapflow.sample"
+}
+
+var J = jvue._J;
+J.init(jconsts.serv, jconsts.conn);
+window.J = J;
+
+// otherwise jclient can't understand business defined ports.
+J.understandPorts(engports);
+* *******************    project configure section end    *********************/
+
+//////////////////////////      Example Section     ////////////////////////////
+/*******   Example: general way of handling complex data at server sied   ******
+var conn = jconsts.conn;
+// This function is requsting tools.serv for function branch 'A'
+function saveToolA() {
+	var dat = {borrowId: 'borrow-001', items: []};
+	dat.items.push(['item001', 3]); // return 3 of tiem001
+
+	var usrReq = new jvue.UserReq(conn, "r_tools_borrows") // req.tabl
+						// turn back tools - or any function branch tag handled by tools.serv
+						.a("A")
+
+						// or reaplace these 2 set() with data(dat)
+						.set('borrowId', 'borrow-001')
+						.set('items', [['item001', 3]]);
+
+	var jmsg = ssClient
+		// ssClient's current user action is handled by jeasy when loading menu
+		.usrCmd('save') // return ssClient itself
+		.userReq(conn, engports.tools, usrReq); // return the JMessage&lt;UserReq> object
+
+	// You should get sqls at server side (tools.serv) like this:
+	// delete from r_tools_borrows where borrowId = 'borrow-001'
+	// insert into detailsTbl  (item001) values ('3.0')
+	// update borrowTbl  set total= where borrowId = 'borrow-001'
+	ssClient.commit(jmsg, function(resp) {
+				EasyMsger.ok(EasyMsger.m.saved);
+			}, EasyMsger.error);
+}
+***************************** end of example section **************************/
+
+
+/**Gloable variable, key of localStorage
+ * For W3C standard, see: https://www.w3.org/TR/webstorage/#the-storage-interface&lt;br>
+ * For ussage, see: https://hacks.mozilla.org/2009/06/localstorage/&lt;br>
+ * and https://stackoverflow.com/questions/19861265/getting-the-value-of-a-variable-from-localstorage-from-a-different-javascript-fi*/
+var ssk = jvue.SessionClient.ssInfo;
+var ssClient;
+
+function jeasyAPI (J, log) {
+	{	// for shorter sentence
+		this.c = jvue.Protocol.CRUD.c;
+		this.r = jvue.Protocol.CRUD.r;
+		this.u = jvue.Protocol.CRUD.u;
+		this.d = jvue.Protocol.CRUD.d;
+
+		this.J = J;
+		this.log = log === false ? false : true;
+		this.mainRows = {};
+
+		J.opts({noNull: true, noBoolean: false});
+	}
+
+	/** Get rows from jclient response for easyui datagrid, etc.
+	 * @param {object} resp jclient got response
+	 * @param {int} ixRs resultset index */
+	this.rows = function (resp, ixRs) {
+		if (resp) {
+			var cols = this.J.respCols(resp, ixRs);
+			var rows = this.J.respRows(resp, ixRs);
+			if (cols !== undefined &amp;&amp; rows != undefined) {
+				var rows2 = [];
+				for (var rx = 0; rx &lt; rows.length; rx++) {
+					var ri = {};
+					for (var cx = 0; cx &lt; cols.length; cx++)
+						ri[cols[cx]] = rows[rx][cx];
+					rows2[rx] = ri;
+				}
+				return rows2
+			}
+		}
+		return [];
+	};
+
+	/** get "total" from jclient response */
+	this.total = function (resp, rsIx) {
+		if (resp !== undefined &amp;&amp; rsIx >= 0) {
+			return resp.data.total[rsIx];
+		}
+	};
+
+	/**Set main row when user selected a row in main list of a CRUD typical case.
+	 * @param {string} listId easyui list id
+	 * @param {object} easyui datagrid row that user selected
+	 * @return {object} row found row or new set row.
+	 */
+	this.mainRow = function (listId, row) {
+		var p = regex.desharp_(listId);
+		this.mainRows[ p ] = row;
+	};
+
+	/**
+	 * @return {object} row found row or new set row.
+	 */
+	this.getMainRow = function(listId) {
+		var p = regex.desharp_(listId);
+		return this.mainRows[ p ];
+	};
+
+	/**Select row if row[idName] === selectId
+	 * @param {Array} rows
+	 * @param {Object} select {n, v}
+	 * n: the field in row to be compared
+	 * v: the value to be compared
+	 * @return {Number} index in rows if found, or -1
+	 */
+	this.findRowIdx = function (rows, select) {
+		if (typeof select === 'object') {
+			var valName = Object.getOwnPropertyNames(select)[0];
+			var val = select[valName];
+			for (var ix = 0; ix &lt; rows.length; ix++) {
+				if (rows[ix][valName] == val) {
+					return ix;
+				}
+			}
+		}
+		return -1;
+	};
+
+	/**create request JBody for adding post operation (no header etc.).
+	 * @param {string} crud jeasy.c | r | u | d
+	 * @param {Object} opts
+	 * t: main table&lt;br>
+	 * pk: for where conditiong&lt;br>
+	 * nvs: for update values&lt;br>
+	 * cols: columns to be inserted&lt;br>
+	 * values: rows value for insert&lt;br>
+	 * @return {UpdateReq} with a = &lt;i>crud&lt;/i>
+	 */
+	this.postBody = function (crud, opts) {
+		if (crud === jeasy.c) {
+			var ins = new jvue.InsertReq(null, opts.t);
+			ins.a = crud;
+			if (Array.isArray(opts.cols)) {
+				ins.columns(opts.cols);
+				// ins.valus(opts.values);
+				ins.nvRows(opts.values);
+			}
+			else console.warn('WARN - inserting empty columns?', opts);
+			return ins;
+		}
+		else {
+			var upd = new jvue.UpdateReq(null, opts.t, opts.pk);
+			upd.a = crud;
+			upd.nv(opts.nvs)
+			return upd;
+		}
+	}
+}
+const jeasy = new jeasyAPI(J);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-jclient_js_core.html">jclient/js/core</a></li><li><a href="module-jeasy_html.html">jeasy/html</a></li><li><a href="module-jeasy_session.html">jeasy/session</a></li></ul><h3>Classes</h3><ul><li><a href="DatasetCfg.html">DatasetCfg</a></li><li><a href="Jregex.html">Jregex</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="module-jclient_js_core-Inseclient.html">Inseclient</a></li><li><a href="module-jclient_js_core-J.html">J</a></li><li><a href="module-jclient_js_core-SessionClient.html">SessionClient</a></li><li><a href="Protocol.html">Protocol</a></li><li><a href="Test%2520JS%2520AES.html">Test JS AES</a></li><li><a href="Tweenable.html">Tweenable</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CheapCode">CheapCode</a></li><li><a href="global.html#chpEnumReq">chpEnumReq</a></li><li><a href="global.html#dispose">dispose</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getIv128">getIv128</a></li><li><a href="global.html">interpolate</a></li><li><a href="global.html#isPlaying">isPlaying</a></li><li><a href="global.html#pause">pause</a></li><li><a href="global.html#resume">resume</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setBezierFunction">setBezierFunction</a></li><li><a href="global.html#setConfig">setConfig</a></li><li><a href="global.html#setScheduleFunction">setScheduleFunction</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stree_t">stree_t</a></li><li><a href="global.html#tween">tween</a></li><li><a href="global.html#unsetBezierFunction">unsetBezierFunction</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Sat Jun 01 2019 00:41:03 GMT+0800 (Hong Kong Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
