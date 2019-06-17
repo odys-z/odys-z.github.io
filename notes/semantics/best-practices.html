@@ -39,18 +39,17 @@
 </tbody>
 </table>
 
-<h1>Howtos</h1>
+<h1 id='semantic-DA-howtos'>Howtos</h1>
 <ul><li><h3>Save and read external files like database fields</h3>
 		<p>In semantic-*, external files are files that saved in file system at server side.<br>
 			To save and load those file, semantic.DA has a special handler,
 			<a href='https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#extFile'>ShExtFile</a>,
 		</p>
 	</li>
-	<li></li>
 </ul>
 
 
-<h1>Semantics-* Concepts</h1>
+<h1 id='DA-concept'>Semantics-* Concepts</h1>
 <h4>Java Example</h4>
 <p>The best java example for how to use semantic-* api is the test class,
 	<a href='https://github.com/odys-z/semantic-DA/blob/master/semantic.DA/src/test/java/io/odysz/semantic/DASemantextTest.java'>DASemanticTest.java</a>.</p>
@@ -91,6 +90,28 @@
 				<div class='code'>semtxtInstance.resulvedVal(table, pk);</div></p>
 			<p>To use the resulvedVal while building sql (it's still unknown when referencing it):
 				<div class='code'>statement.nv("col-to-using", new Resulving(table, pk));</div></p>
+		</td>
+	</tr>
+
+	<tr id='DA-concept-fullpath'><td colspan='2'>(Tree Node) Fullpath</td></tr>
+	<tr><td/>
+		<td><p>The semantic.DA can automatically generate tree node's deep first fullpath for a tree table.</p>
+			<p>A tree table with fullpath is usually designed like this:<div class='code'><pre>
+            parent  nodeId  node-name   sibling-sort  fullpath
+            null    1       root        1             1 1
+            1       2       child 1     1             1 0/1 2
+            1       3       child 2     2             1 0/2 3</pre></div>
+			Where fullpath = parent-fullpath / sibling-sort nodeId.</p>
+			<p>There are a few pros if a tree table has a fullpath column.</p>
+			<p>One of it is finding a sub-tree is extemely simple and performance
+				optimized because all nodes in a sub-tree have the same prefixes.
+				No recursive query is needed, which is not supported by all DBMS,
+				and time cosuming.</p>
+			<p>The other benefit of fullpath is essential to seamntic-*.
+				If the query result set is ordered by fullpath, the resultset will
+				be correctly been converted in tree structure in one iteration.</p>
+			<p>The semantic-jserv/SemanticTree depends on this, whill will convert
+				a general query result to configured tree structure.</p>
 		</td>
 	</tr>
 
