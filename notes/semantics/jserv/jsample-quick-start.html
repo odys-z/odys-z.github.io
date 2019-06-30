@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<title>Developer's FAQ</title>
-	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
-	<script src="showfig.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../../css/notes.css">
+	<script src="../../../css/showfig.js"></script>
 	<link rel="icon" href="../../css/odysz.png">
 </head>
 <body>
@@ -16,7 +16,7 @@
 
 <article>
 	<h1>About Jserv-sample</h1>
-	<p>Jserv-sample is the <a href='../semantics/about-semantics.DA.html'>semantic-*</a>
+	<p>Jserv-sample is the <a href='../about-semantics.DA.html'>semantic-*</a>
 		sample project, including ports:
 		<ul>
 			<li>menu (menu.serv)</li>
@@ -24,7 +24,63 @@
 		</ul>
 	<p></p>
 
-	<h1 id='jsample-kick'>Jserv-sampl Quick Start<h1>
+	<h1 id='jsample-kick'>Jserv-sample Quick Start (Eclipse and Tomcat)<h1>
+	<h2>1. Clone and Import Eclipse Project</h2>
+	<p>You can clone and import the project from here:
+		<a href='https://github.com/odys-z/semantic-jserv'>semantic-jserv repository</a>.</p>
+	<p>The repository contains 2 Eclipse project, the semantic-jserv server library
+		and the sample web application's sample project, jserv-sample, showing how
+		to use the library.</p>
+	<p>Just import the sample project located in folder "jserv-sample".</p>
+	<h2>2. Check JDBC Connections</h2>
+	<p>Jserv-sample using a sqlite3 db file as the default datasource for test.
+		The providen project has some ready to run configurations.</p>
+	<p>For the first time biginner, it's nothing to do here. More datasource configuration
+		based on JDBC (both connection pool and driver manager mode) can be found
+		in semantic-DA documents.</p>
+	<p>It's recommended have a look at the JDBC connection file, located in
+		<div class='code'>src/main/webapp/WEB-INF/connects.xml</div></p>
+	<h2>3.Update Maven Dependencies</h2>
+	<p>Right click the imported project, then "Maven -&gt; Update Project...".</p>
+	<p>Wait for the project refreshed. Now the project should be ready to be deployed.</p>
+	<h2>4. Deploy the Web Application</h2>
+	<p>In this step, you need to check the url path, which will be used to configure the client.
+		The tomcat server.xml in Eclipse's server configuration section my look like this:
+		<div class='code'><pre>
+        &lt;Server&gt;
+          &lt;Service&gt;
+            &lt;Engine&gt;
+              ...
+              &lt;Context docBase="jserv-sample" path="/jsample" reloadable="true" source="org.eclipse.jst.jee.server:jserv-sample"/&gt;&lt;/Host&gt;
+            &lt;/Engine&gt;
+          &lt;/Service&gt;
+        &lt;/Server&gt;
+		</pre></div>
+		If everything goes ok, the console should showing messge like this:
+		<div class='code'><pre>
+        JSingleton initializing...
+        INFO - JDBC initialized using inet (mysql) as default connection.
+        config file : .../.metadata/.plugins/org.eclipse.wst.server.core/tmp1/wtpwebapps/jserv-sample/WEB-INF/config.xml
+        Loading Semantics:
+        	.../.metadata/.plugins/org.eclipse.wst.server.core/tmp1/wtpwebapps/jserv-sample/WEB-INF/semantics.xml
+        show tables
+        show columns from a_attaches
+        show columns from ... </pre></div>
+	</p>
+	<p>Now, using a browser visiting<div class='code'>
+		http://localhost:8080/jsample/login.serv</div>
+		should get some error message like this:<br>
+		<img class="screenshot" title="click for large image"
+			onclick="showFig(src)" src="imgs/001-jsample ok.png"><br>
+		The message is complaining that the client didn't providing any login credential,
+		but it's showing the server is working now.</p>
+	<h2>5. Next: Try a Js Client</h2>
+	<p>The server is a basically json data service, with session management, nothing
+		is interesting until now. You may using one of the testing client to
+		experience some client functions.</p>
+	<p>There are serveral jclient available. The js client is recommended for
+		quick starting. You can follow the <a href='../../jclient/quick-start.html'>
+			jclient/js quick start</a>.</p>
 </article>
 
 <div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
