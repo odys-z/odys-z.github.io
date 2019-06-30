@@ -1,3 +1,3 @@
 # odys-z.github.io
 
-javadoc of sematic-*
+javadoc / jsdoc of [https://odys-z.github.io](sematic-* and jclient/*)
