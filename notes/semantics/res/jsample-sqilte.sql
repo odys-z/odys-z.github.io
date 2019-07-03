@@ -70,7 +70,6 @@ CREATE TABLE a_users(
 	userName TEXT(50) not null,
 	roleId TEXT(20),
 	orgId TEXT(20),
-	counter NUMBER,
 	birthday DATE,
 	pswd TEXT NOT NULL,
 	iv TEXT(200),
@@ -86,3 +85,6 @@ values
 ('sys-uesr', 'Uesr Manage', 'views/sys/users.html', '', '1', '1 sys.4 user', 'sys', 4),
 ('sys-wf', 'Workflow Settings', 'views/sys/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5),
 ;
+
+insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
+values ('admin', 'Sun Yat-sen', 'r001', '001', '1866-12-12', '123456', null);
