@@ -94,3 +94,6 @@ insert into a_roles (roleId, roleName, remarks, orgId) values
 
 insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
 values ('admin', 'Sun Yat-sen', 'r001', '001', '1866-12-12', '123456', null);
+
+insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
+values ('washinton', 'Geoge Washinton', 'r001', '002', null, '123456', null);
