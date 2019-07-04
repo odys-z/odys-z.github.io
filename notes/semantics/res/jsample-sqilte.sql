@@ -76,15 +76,21 @@ CREATE TABLE a_users(
 	CONSTRAINT a_users_pk PRIMARY KEY (userId)
 );
 
+delete from a_functions;
+
 insert into a_functions ( funcId, funcName, url, css, flags, fullpath, parentId, sibling )
 values
 ('sys', 'System', null, '', '1', '1 sys', null, 1),
-('sys-domain', 'Domain Settings', 'views/sys/domain.html', '', '1', '1 sys.1 domain', 'sys', 1),
-('sys-role', 'Role Manage', 'views/sys/roles.html', '', '1', '1 sys.2 role', 'sys', 2),
-('sys-org', 'Orgnization Manage', 'views/sys/orgs.html', '', '1', '1 sys.3 org', 'sys', 3),
-('sys-uesr', 'Uesr Manage', 'views/sys/users.html', '', '1', '1 sys.4 user', 'sys', 4),
-('sys-wf', 'Workflow Settings', 'views/sys/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5),
+('sys-domain', 'Domain Settings', 'views/sys/domain/domain.html', '', '1', '1 sys.1 domain', 'sys', 1),
+('sys-role', 'Role Manage', 'views/sys/role/roles.html', '', '1', '1 sys.2 role', 'sys', 2),
+('sys-org', 'Orgnization Manage', 'views/sys/org/orgs.html', '', '1', '1 sys.3 org', 'sys', 3),
+('sys-uesr', 'Uesr Manage', 'views/sys/user/users.html', '', '1', '1 sys.4 user', 'sys', 4),
+('sys-wf', 'Workflow Settings', 'views/sys/workflow/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5)
 ;
+
+insert into a_roles (roleId, roleName, remarks, orgId) values
+('r001', 'funder', 'R.C. 1911-10-10', '001');
+
 
 insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
 values ('admin', 'Sun Yat-sen', 'r001', '001', '1866-12-12', '123456', null);
