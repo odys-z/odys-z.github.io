@@ -88,6 +88,14 @@ values
 ('sys-wf', 'Workflow Settings', 'views/sys/workflow/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5)
 ;
 
+insert into a_orgs (orgId, orgName, orgType) values
+('001', 'Funders', ''),
+('002', 'Mossad', 'AAAA'),
+('003', 'MI6', 'AAA'),
+('004', 'CIA', 'AA'),
+('005', 'SVR', 'A'),
+('006', 'ChaoYang People', 'AAAAA');
+
 insert into a_roles (roleId, roleName, remarks, orgId) values
 ('r001', 'funder', 'R.C. 1911-10-10', '001');
 
