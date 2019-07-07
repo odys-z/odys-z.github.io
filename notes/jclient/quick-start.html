@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>Developer's FAQ</title>
 	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
-	<script src="showfig.js"></script>
+	<script src="../../css/showfig.js"></script>
 	<link rel="icon" href="../../css/odysz.png">
 </head>
 <body>
@@ -35,9 +35,37 @@
 		<li>EasyUI tested on 1.7.0, already included in test page</li>
 		<li>JQuery newer than 1.8, already included in test page</li>
 	</ul>
-	<h4>Open the Jeasy Client Demo Pages</h4>
-	<ol><li>Configure the jserv-sample url path in ... TO BE CONTINUED</li>
+	<h4>Browsing the Jeasy Client Demo Pages</h4>
+	<ol><li>Follow <a href='../semantics/jserv/jsample-quick-start.html'>
+		the jserv.sample quick start</a> to deploy the server and make
+		sure the server is allowing cross domain content accessing.</li>
+		<li>Configure the jserv-sample url path in<br>
+		jclient/js/test/easyi/jsample-easyui.js
+		<div class='code'><pre>const jconsts = {
+        ...
+        serv: 'http://localhost:8080/jsample',
+        conn: 'local-sqlite',</pre></div>
+		Replace 'serv' with url path to your web application (e.g. jserv.sample);<br>
+		Replace 'conn' with your connection ID configured in 'your-web-app'/WEB-INF/connects.xml.<br>
+		The default configuration should working if you didn't change any configurations.</li>
+		<li>Open login demo page:<br>
+			jclient/js/test/easyi/login.html<br>
+		</li>
+		<li>Login with 'admin:123456' and navigate through function pages.</li>
 	</ol>
+	<h4>Screen Shots (click for large image):</h4>
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/001.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/002.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/003.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/004.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/005.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/006.png">
 	<p></p>
 	<h2>jclient/c#</h2>
 </article>

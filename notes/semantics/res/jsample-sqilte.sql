@@ -70,6 +70,7 @@ CREATE TABLE a_users(
 	userName TEXT(50) not null,
 	roleId TEXT(20),
 	orgId TEXT(20),
+	nationId TEXT(20),
 	birthday DATE,
 	pswd TEXT NOT NULL,
 	iv TEXT(200),
@@ -80,25 +81,38 @@ delete from a_functions;
 
 insert into a_functions ( funcId, funcName, url, css, flags, fullpath, parentId, sibling )
 values
-('sys', 'System', null, '', '1', '1 sys', null, 1),
-('sys-domain', 'Domain Settings', 'views/sys/domain/domain.html', '', '1', '1 sys.1 domain', 'sys', 1),
-('sys-role', 'Role Manage', 'views/sys/role/roles.html', '', '1', '1 sys.2 role', 'sys', 2),
-('sys-org', 'Orgnization Manage', 'views/sys/org/orgs.html', '', '1', '1 sys.3 org', 'sys', 3),
-('sys-uesr', 'Uesr Manage', 'views/sys/user/users.html', '', '1', '1 sys.4 user', 'sys', 4),
-('sys-wf', 'Workflow Settings', 'views/sys/workflow/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5)
-;
+	('sys', 'System', null, '', '1', '1 sys', null, 1),
+	('sys-domain', 'Domain Settings', 'views/sys/domain/domain.html', '', '1', '1 sys.1 domain', 'sys', 1),
+	('sys-role', 'Role Manage', 'views/sys/role/roles.html', '', '1', '1 sys.2 role', 'sys', 2),
+	('sys-org', 'Orgnization Manage', 'views/sys/org/orgs.html', '', '1', '1 sys.3 org', 'sys', 3),
+	('sys-uesr', 'Uesr Manage', 'views/sys/user/users.html', '', '1', '1 sys.4 user', 'sys', 4),
+	('sys-wf', 'Workflow Settings', 'views/sys/workflow/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5) ;
+
+insert into a_domain (domainId, parentId, domainValue, domainName, sort, fullpath)
+values
+	('0',   null, 't-org', 'org type',  1, '0'),
+	('001', '0',  'AAAAA', '5 START', 1, '0.1 001'),
+	('002', '0',  'AAAA ', '4 START', 2, '0.2 002'),
+	('003', '0',  'AAA  ', '3 START', 3, '0.3 003'),
+	('004', '0',  'AA   ', '2 START', 4, '0.4 004'),
+	('005', '0',  'A    ', '1 START', 5, '0.5 005'),
+	('nation', null,  't-nation', 'nations',  2, '1'),
+	('N01', 'nation', 'CHN', 'Republic of China',  1, '1.1 CN'),
+	('N02', 'nation', 'USA',  'United States of America',  2, '1.2 US'),
+	('N03', 'nation', 'ISR',  'Israel',  3, '1.3 IS');
 
 insert into a_orgs (orgId, orgName, orgType) values
-('001', 'Funders', ''),
-('002', 'Mossad', 'AAAA'),
-('003', 'MI6', 'AAA'),
-('004', 'CIA', 'AA'),
-('005', 'SVR', 'A'),
-('006', 'ChaoYang People', 'AAAAA');
+	('001', 'Funders', ''),
+	('002', 'Mossad', 'AAAA'),
+	('003', 'MI6', 'AAA'),
+	('004', 'CIA', 'AA'),
+	('005', 'SVR', 'A'),
+	('006', 'ChaoYang People', 'AAAAA');
 
 insert into a_roles (roleId, roleName, remarks, orgId) values
-('r001', 'funder', 'R.C. 1911-10-10', '001');
-
+	('r001', 'funder', 'R.C. 1911-10-10', '001'),
+	('r003', 'spy', 'Anything', '002'),
+	('r002', 'snooper', 'Every Where', '006');
 
 insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
 values ('admin', 'Sun Yat-sen', 'r001', '001', '1866-12-12', '123456', null);
