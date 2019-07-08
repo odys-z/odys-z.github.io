@@ -85,6 +85,16 @@
 	<p>There are serveral jclient available. The js client is recommended for
 		quick starting. You can follow the <a href='../../jclient/quick-start.html'>
 			jclient/js quick start</a>.</p>
+
+	<h2>6. Optional: Configure an Oracle Connection for Testing Java Client</h2>
+	<p>If you'd like to try the java version of jclient, you better configure a
+		JDBC Pooled Connection to a Oracle database. Otherwise the test will partialy
+		failed. But the login, file uploading test will success. It's using the sqlite3 DB
+		come with the jserv.sample project.</p>
+	<p>Please follow the Oracle official docs to configure an Oracle Pooled JDBC Connection.
+		The following is an example that works on tomcat 7 and 9.<br>
+		TODO ...
+	</p>
 </article>
 
 <div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>

@@ -40,12 +40,11 @@
 		enterprise webapp's client, including a role based function previllege infrastructure
 		and a cheap workflow extension. It's a good starting point for a commercial
 		webapp.</p>
-	<h2>jclient/java</h2>
 	<h2>jclient/js</h2>
 	<h3>jclient/js/vue</h3>
 	<p>TODO ...</p>
 	<h3 id='qickstart-jeasy'>jclient/js/easUI</h3>
-	<h4>Prerequisits</h4>
+	<h4>Prerequisites</h4>
 	<ul><li>The jserv.sample server <a href='../semantics/jserv/jsample-quick-start.html'> - see quick start here</a></li>
 		<li><a target='_blank' href='https://www.jeasyui.com/'>EasyUI</a>
 			(tested on 1.7.0 and 1.8.1), already included in test page</li>
@@ -83,6 +82,27 @@
 			<img class="screenshot-big" title="click for large image"
 				onclick="showFig(src)" src="imgs/006.png">
 	<p></p>
+
+	<h2 id='java'>jclient/java</h2>
+	<p>If you'v tried js client, you may wonder is the protocol layer powerful enough
+		for other runtime environment or programming languange. Try the jclient java
+		version, have a look at the source.</p>
+	<p>Keep in mind that we won't change a single configuration at the server side.</p>
+	<h4>Prerequisites</h4>
+	<p>JDK 1.8</p>
+	<h4>Run Junit4 Test Cases</h4>
+	<ol><li>Make sure you configured a data connection for jserv.sample server.<br>
+			This client will use the "orcl.alarm-report" connection as configured in connects.xml.<br>
+			See <a href='../semantics/jserv/jsample-quick-start.html'>the jserv.sample quick start,
+			configure an oracle connection for java client testing.</a>
+		</li>
+		<li><div class='code'>git clone https://github.com/odys-z/jclient.git</div>
+		This will also clone other jclient version. We only needing the java folder here.</li>
+		<li>Import The Eclipse Java Project</li>
+		<li>Run Junit Test Case: io.odysz.jclient.SemantiClientTest</li>
+	</ol>
+	<p></p>
+
 	<h2>jclient/c#</h2>
 </article>
 
@@ -98,6 +118,6 @@ initDiv('picDiv');
 
 <footer class="cpyrit" style="position:fixed;bottom:0px;">
 	<hr>
-	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+	<span id="copyright">Copyright © 2019 github.com/odys-z. All Rights Reserved.</span>
 </footer>
 </html>
