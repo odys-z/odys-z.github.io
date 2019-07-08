@@ -15,8 +15,17 @@
 </header>
 
 <article>
+	<h2>About The JSample Application</h2>
+	<p>The JSample is an example showing how to use the jclent's JS API to visit
+		the <i>jserv.sample</i> json data service. Before floing steps in this tutorial,
+		you need to setup the sever. These 2 parts must work together though they
+		can be deployed separately.</p>
+	<p>The jserv.sample is a SOA json service can work together with any one or more
+		following client. Please following the <a href='../semantics/jserv/jsample-quick-start.html'>
+		quick start doc</a> to set up the server.</p>
+
 	<h2>About JClient</h2>
-	<p>JClient is the <a href='../semantics/about-semantics.DA.html'>semantic-*</a> client side,
+	<p>JClient is the client side API for <a href='../../index.html'>semantic-*</a>,
 		including:
 		<ul>
 			<li>jclient/java, the java client</li>
@@ -26,13 +35,20 @@
 			<li>jclient/js, the low level js client API for accessing service at jerver.sample</li>
 		</ul>
 	<p>All the clients are tested together with jserv.sample (All? Not True) and can be configured to a different jserv.</p>
+	<p>The sample project's client side located in the jclient/test folder.</p>
+	<p>Some client implementation like the EasyUI version is implementated as a basic
+		enterprise webapp's client, including a role based function previllege infrastructure
+		and a cheap workflow extension. It's a good starting point for a commercial
+		webapp.</p>
 	<h2>jclient/java</h2>
 	<h2>jclient/js</h2>
 	<h3>jclient/js/vue</h3>
+	<p>TODO ...</p>
 	<h3 id='qickstart-jeasy'>jclient/js/easUI</h3>
 	<h4>Prerequisits</h4>
 	<ul><li>The jserv.sample server <a href='../semantics/jserv/jsample-quick-start.html'> - see quick start here</a></li>
-		<li>EasyUI tested on 1.7.0, already included in test page</li>
+		<li><a target='_blank' href='https://www.jeasyui.com/'>EasyUI</a>
+			(tested on 1.7.0 and 1.8.1), already included in test page</li>
 		<li>JQuery newer than 1.8, already included in test page</li>
 	</ul>
 	<h4>Browsing the Jeasy Client Demo Pages</h4>
@@ -53,7 +69,7 @@
 		</li>
 		<li>Login with 'admin:123456' and navigate through function pages.</li>
 	</ol>
-	<h4>Screen Shots (click for large image):</h4>
+	<h4>Screenshots (click for large image):</h4>
 			<img class="screenshot-big" title="click for large image"
 				onclick="showFig(src)" src="imgs/001.png">
 			<img class="screenshot-big" title="click for large image"
