@@ -77,6 +77,20 @@ CREATE TABLE a_users(
 	CONSTRAINT a_users_pk PRIMARY KEY (userId)
 );
 
+CREATE TABLE oz_autoseq (
+  sid text(50),
+  seq INTEGER,
+  remarks text(200),
+  CONSTRAINT oz_autoseq_pk PRIMARY KEY (sid)
+);
+
+insert into oz_autoseq (sid, seq, remarks) values
+	('a_logs.logId', 0, 'log'),
+	('a_users.userId', 64, 'user'),
+	('a_roles.roleId', 64 * 64, 'role'),
+	('a_orgs.orgId', 64 * 64 * 64, 'orgniation'),
+	('a_attaches.attId', 0, 'attachement');
+
 delete from a_functions;
 
 insert into a_functions ( funcId, funcName, url, css, flags, fullpath, parentId, sibling )
@@ -115,7 +129,6 @@ insert into a_roles (roleId, roleName, remarks, orgId) values
 	('r002', 'snooper', 'Every Where', '006');
 
 insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
-values ('admin', 'Sun Yat-sen', 'r001', '001', '1866-12-12', '123456', null);
-
-insert into a_users (userId, userName, roleId, orgId, birthday, pswd, iv)
-values ('washinton', 'Geoge Washinton', 'r001', '002', null, '123456', null);
+values
+	('admin', 'Sun Yat-sen', 'r001', '001', '1866-12-12', '123456', null),
+	('washinton', 'George Washinton', 'r001', '002', null, '123456', null);
