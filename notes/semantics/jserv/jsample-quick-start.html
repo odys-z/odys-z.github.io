@@ -74,7 +74,7 @@
 	<p>Now, using a browser visiting<div class='code'>
 		http://localhost:8080/jsample/login.serv</div>
 		should get some error message like this:<br>
-		<img class="screenshot" title="click for large image"
+		<img class="screenshot-big" title="click for large image"
 			onclick="showFig(src)" src="imgs/001-jsample ok.png"><br>
 		The message is complaining that the client didn't providing any login credential,
 		but it's showing the server is working now.</p>
@@ -93,7 +93,19 @@
 		come with the jserv.sample project.</p>
 	<p>Please follow the Oracle official docs to configure an Oracle Pooled JDBC Connection.
 		The following is an example that works on tomcat 7 and 9.<br>
-		TODO ...
+		eclipse-server-config/context.xml:
+		<div class='code'><pre>        &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+        &lt;Context reloadable="true"&gt;
+            &lt;Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver"
+                global="jdbc/orcl-temp" maxActive="10" maxIdle="3" maxWait="10000"
+                name="jdbc/orcl-temp" username="c##tempuser" password="user"
+                type="javax.sql.DataSource" url="jdbc:oracle:thin:@221.236.26.29:1521:orcl" /&gt;
+
+            &lt;Parameter name="io.oz.root-key" value="*************" override="false"/&gt;
+        &lt;/Context&gt;</pre></div>
+		Here is the screen shot using Eclipse together with Tomcat 7.<br>
+		<img class="screenshot-big" title="click for large image"
+			onclick="showFig(src)" src="imgs/002-jserv-orcl ok.png"><br>
 	</p>
 </article>
 

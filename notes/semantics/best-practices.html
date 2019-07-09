@@ -119,6 +119,61 @@
 		</td>
 	</tr>
 
+	<tr id='fk-ins-cate'><td colspan='2'>FK CateIns</td></tr>
+	<tr><td/>
+		<td><h6>Javadoc</h6>
+			<p><a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#fkCateIns'>
+				DASemantics.smtype.fkCateIns</a></p>
+			<h6>About</h6>
+			<p>FkCateIns is an FK field referencing multiple parent table,
+				typically used for special data table like managing attached files.</p>
+			<p>If you save all uploaded file in a separate folder, then you may want
+				a special table remembering all the file URI, and for what parent
+				table it's used for. The jserv.sample project come with a table named
+				a_attaches is designed for this:
+				<div class='code'><pre>CREATE TABLE a_attaches (
+        attId TEXT NOT NULL, -- attachement ID
+        attName TEXT,
+        uri TEXT,            -- the resource identity
+        busiTbl TEXT,        -- used for e.g. a_users
+        busiId TEXT,         -- the user's id, e.g. admin
+        oper TEXT,
+        optime DATETIME,
+        CONSTRAINT a_attaches_PK PRIMARY KEY (attId) );</pre></div></p>
+			<p>Also, the semantics-sys.xml configured a semantics fk-ins-cate:
+				<div class='code'><pre>
+        &lt;s&gt;
+            &lt;id&gt;att.parent&lt;/id&gt;
+            &lt;smtc&gt;fk-ins-cate&lt;/smtc&gt;
+            &lt;tabl&gt;a_attaches&lt;/tabl&gt;
+            &lt;pk&gt;attId&lt;/pk&gt;
+            &lt;!-- 0 business cate (table name); 1 merged child fk; 2 parent table, 3 parent referee [, ...]  --&gt;
+            &lt;args&gt;
+                busiTbl busiId a_users userId,
+                busiTbl busiId b_tasks taskId
+            &lt;/args&gt;
+        &lt;/s&gt;</pre></div></p>
+			<p>This semantics makes <a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#fkCateIns'>
+				semantics.DA/io.odysz.semantics.DASemantics.ShFkInsCates</a> will
+				replace a_attaches.busiId with auto generated parent key for a_users.</p>
+			<p>Tip:<br>
+				A common error for using this semantics is that update parent,
+				then delete and insert new attachment records. This won't resulve
+				parent pk (not generated so can't find when updating parent table).
+				You probably will get an error message like this:<div class='exception'>
+					code: exSemantic, error: Semantics fkCateIns can't been handled
+					without business record Id - resulving failed: a_users.userId
+				</div><p>
+			<p>To avoid this assertion error, you can eigther insert attachment after
+				inserted a new parent record, or provide a parent reference for the semantics.
+				For the later method, see the jclient.java test case,
+				<a href='https://github.com/odys-z/jclient/blob/master/java/eclipse-workspace/jclient.java/src/test/java/io/odysz/jclient/SemantiClientTest.java'>
+					io.odysz.jclient.SemantiClientTest#testUpload()</a>.<p>
+			<h6>On Event</h6>
+			<p>Insert</p>
+		</td>
+	</tr>
+
 	<tr id='post-fk'><td colspan='2'>Post Fk</td></tr>
 	<tr><td/>
 		<td><p>Let seamntic.DA update a FK after back referenced record is generated, like the cross referencing.</p>

@@ -83,7 +83,21 @@
 
 </tbody>
 </table>
-
+<p/>
+<h1>Known Issues</h1>
+<ol><li id='issue-sql-condt'><h3><a href=''>Sql#condt(String)</a>
+		parsed predicate missing flowing single quote.</h3>
+		<p>See test case <a href='https://github.com/odys-z/semantic-transact/blob/master/semantic.transact/src/test/java/io/odysz/transact/sql/TestTransc.java'>
+			TestTransc#testExprVals()</a>.</p>
+		<p>For code line <div class='code'>
+			.where(Sql.condt("roleName = '%s'", "roleName-old'''"))	// roleName = 'roleName-old''' </div>
+			We are expecting this:
+			<div class='code'>roleName = 'roleName-old'''<br>
+			// but we want 3 single quotes ("'"), the 2nd from right side should be replaced</div>
+			But we got this: <div class='code'>roleName = 'roleName-old''</div>
+			It's because of PredicateVisitor handled the wrong grammar?</p>
+	</li>
+</ol>
 <div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
 <script>
 initDiv('picDiv');
