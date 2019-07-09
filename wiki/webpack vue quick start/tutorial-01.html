@@ -1,0 +1,371 @@
+﻿<!doctype HTML>
+<html>
+<head>
+	<meta charset='UTF-8'>
+	<link rel="stylesheet" type="text/css" href="../../tips/resources.css">
+	<link rel="icon" href="../../tips/imgs/ic-2.png">
+	<script src="../../tips/showfig.js"></script>
+	<title>Webpack + Vue Qick Start</title>
+</head>
+
+<body>
+<header>
+	<h1>Webpack + Vue IDE Quick Start</h1>
+	<a href='../../index.html'>Home</a>
+	<hr>
+</header>
+
+<article>
+	<h2>Introduction</h2>
+	<p>This document is a general guid for setting up B/S front end IDE enviroment, using Webpack and Vue.js.</p>
+	<div class='code'>It's highly recommneded to build a knowledge base of morden JavaScript and development tools.<br>
+		<a href='#ref1'>Reference 1</a> is a quick but perspective survey for beginer although it's written in 2016.<br>
+		Read <a href='#ref1'>1 &amp; 2</a> before go through this tutorial if you don't know about 'export', 'import', and bundling or transplie.</div>
+	<p>In this article, we will start from installing node, through integrating
+	Semantic frame modules, and will finally establish an organization coding / designing
+ 	convention of application development.</p>
+	<p>All the steps are illustrated on Ubuntu 16.04 LTS. Readers may needing check
+	official sites from time to time to find out menus for other platforms like MS Windows.</p>
+
+	<h2>Install Node.js &amp; NPM</h2>
+	<h3>About</h3>
+	<p><a target='_blank' href='https://www.toptal.com/nodejs/why-the-hell-would-i-use-node-js'>
+		“Node.js is a packaged compilation of Google’s V8 JavaScript engine,
+		the libuv platform abstraction layer, and a core library, which is itself
+		primarily written in JavaScript.”</a></p>
+	<p>The article gives <a target='_blank' href='https://www.toptal.com/nodejs/why-the-hell-would-i-use-node-js#where-nodejs-shouldnt-be-used'>
+		Some examples of where Node shouldn't been used</a>.</p>
+	<p>Every Package is installed via npm</p>
+	<p><a target='_blank' href='https://www.npmjs.com/'>NPM: The Node Package Manager</a></p>
+	<p><a target='_blank' href='https://docs.npmjs.com/getting-started/'>npm docs home: Getting Started</a></p>
+
+	<h3>Install Node</h3>
+	<p>Difficult in China. <a target='_blank' href='https://github.com/nodesource/distributions/blob/master/README.md#debinstall'>
+		Following the official installation doc won't work (sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -)</a>,
+		or <a target='_blank' href='https://askubuntu.com/questions/594656/how-to-install-the-latest-versions-of-nodejs-and-npm/711976#711976'>this at Ask Ubuntu.</a><br>
+		Check <a target='_blank' href='https://blog.csdn.net/wxx151556/article/details/72466254'>a hackish way at CSDN.</a></p>
+	<p>1. <a target='_blank' href='https://nodejs.org/en/'>Download Node 10.15.0 LTS</a><br>
+		- for version updating, see <a target='_blank' href='https://github.com/nodejs/Release#release-schedule'>Node Version Releas Schedule</a>.</p>
+	<p>2. Unzip<div class='code'>
+		tar -xf node-v10.15.0-linux-x64.tar.xz<br>
+		sudo cp nodejs /usr/local/bin -r<br>
+	</div></p>
+	<p>3. Link<div class='code'>
+		sudo ln -s /usr/local/bin/nodejs-00/bin/npx /usr/bin/npx<br>
+	</div></p>
+	<p><div class='code'>
+		ody@infochange:~$ ls /usr/bin/node* -l<br>
+		lrwxrwxrwx 1 root root 30 Jan 10 12:01 /usr/bin/node -> /usr/local/bin/nodejs/bin/node<br>
+		ody@infochange:~$ ls /usr/bin/npm* -l<br>
+		lrwxrwxrwx 1 root root 29 Jan 10 12:01 /usr/bin/npm -> /usr/local/bin/nodejs/bin/npm<br>
+		ody@infochange:~$ ls /usr/bin/npx* -l<br>
+		lrwxrwxrwx 1 root root 29 Jan 10 12:01 /usr/bin/npx -> /usr/local/bin/nodejs/bin/npx
+	</div></p>
+	<p>4. Check Version
+		<div class='code'>
+			ody@infochange:~$ node -v<br>
+			v10.15.0<br>
+			ody@infochange:~$ npm -v<br>
+			6.5.0
+		</div>
+	</p>
+
+	<h2>Install webpack</h2>
+	<p><a target='_blank' href='https://docs.npmjs.com/cli/install.html'>npm install reference</a></p>
+	<p>Reference Video (webpack 2.4.1)<br>
+		<video width="320" height="240" controls>
+			<source src="files/Webpack Crash Course.webm" type="video/webm">
+			Your browser does not support the video tag.
+		</video>
+	</p>
+	<p>Install webpack &amp; webpack-cli globally.</p>
+		<p> -g: install globally
+		<div class='code'><pre>
+        ody@infochange:~$ sudo npm install -g webpack
+        /usr/local/bin/nodejs/bin/webpack -> /usr/local/bin/nodejs/lib/node_modules/webpack/bin/webpack.js
+
+        ody@infochange:~$ webpack -v
+        4.28.1
+
+        ody@infochange:~$ sudo npm install -g webpack-cli
+
+        /usr/local/bin/nodejs-00/bin/webpack-cli -> /usr/local/bin/nodejs-00/lib/node_modules/webpack-cli/bin/cli.js
+
+        &gt; webpack-cli@3.2.1 postinstall /usr/local/bin/nodejs-00/lib/node_modules/webpack-cli
+        &gt; lightercollective
+
+             *** Thank you for using webpack-cli! ***
+
+        Please consider donating to our open collective
+             to help us maintain this package.
+
+          https://opencollective.com/webpack/donate
+
+                            ***
+
+        npm WARN webpack-cli@3.2.1 requires a peer of webpack@4.x.x but none is installed. You must install peer dependencies yourself.
+
+        + webpack-cli@3.2.1
+        added 210 packages from 129 contributors in 6.675s</pre></div></p>
+	<p>Tip: see <a target='_blank' href='https://imcodebased.com/npm-save-or-save-dev-which-one-to-use/'>
+		npm –save or –save-dev. Which one to use?</a></p>
+
+	<h3>Example: First Webpack Project (Import JQuery) </h3>
+	<p>With webpack, the jquery can be easyly dependended on.</p>
+	<h4>1. create a basic npm project structure</h4>
+	<p>Initiate a SPA (single page application) project.<br>
+		In the new project folder,
+		<div class='code'>npm init</div>
+		Screenshot of final project structure and package.json.<br>
+		<img class="screenshot" title="click for large image"
+			onclick="showFig(src)" src="imgs/001-npm-init.png">
+		<img class="screenshot" title="click for large image"
+			onclick="showFig(src)" src="imgs/002-webpack.config.js.png">
+	</p>
+
+	<h4>2. install jquery</h4>
+	<div class='code'>
+		npm install --save-dev jquery<br>
+		npm install css-loader style-loader --save-dev
+	</div>
+	package.json:
+	<div class='code'><pre>
+		package.json/dependencies
+		"devDependencies": {
+			"css-loader": "^2.1.0",
+			"style-loader": "^0.23.1"
+		}</pre></div>
+
+	<h4>3. import jquery in js</h4>
+	<p>index.js:
+		<div class='code'>
+			import $ from 'jquery';<br>
+			$('body').append('&lt;h4&gt;By jquery&lt;/h4&gt;');
+		</div>
+	</p>
+
+	<h4>4. setup webpack.config.js</h4>
+	<p>The basic webpack config can be nothing. Let's configure the output bundle.
+	<div class='code'><pre>
+		module.exports = {
+			mode: v, // "production" | "development" | "none"
+
+			// Here the application starts executing
+			// and webpack starts bundling
+			output: {
+				// the target directory for all output files
+				filename: "bundle.js", // string
+			},
+		}</pre></div>
+	</p>
+
+	<h4>5. Use bundle.js</h4>
+	<p>index.html:
+		<div class='code'>
+			&lt;script src='./dist/bundle.js' type='text/javascript'&gt;&lt;/script&gt;
+		</div>
+	</p>
+	<p>Then use webpack to transpile the index.js.
+		<div class='code'>usr@project-folder$ webpack </div>
+	</p>
+
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/003-css-loaded-inline.png">
+	<a download href='files/webpack-01.zip'>download project final source of this tutorial.</a>
+
+	<h3>Why Webpack?</h3>
+	<p>Now, the transpile process show us how webpack makes source component published as
+	bundles understood by browser.</p>
+	<p>Developer now no longer needing consider which html page need which JavaScript modules.
+	It's handled by webpack.</p>
+
+	<h2>Install Vue.js</h2>
+	<h3>About</h3>
+	<p><a target='_blank' href='https://vuejs.org/'>Vue.js</a> is a JavaScript Framework</p>
+	<p><a target='_blank' href='https://vuejs.org/v2/guide/installation.html'>Vue.js Guid - installation</a></p>
+	<h3>Install</h3>
+	<div class='code'>sudo npm install --save-dev vue<br>
+		sudo npm install --save-dev vue-cli</div>
+	<p>This makes webpack know about Vue.js</p>
+	package.json:
+	<div class='code'><pre>
+		"devDependencies": {
+			"css-loader": "^2.1.0",
+			"style-loader": "^0.23.1",
+			"vue": "^2.5.22",
+			"vue-cli": "^2.9.6",
+			"vue-loader": "^15.5.1",
+			"vue-template-compiler": "^2.5.22"
+		}</pre></div>
+
+
+	<h2>Import Vue Components</h2>
+	<p>Component is the basic way how Vue.js is working.</p>
+	<p><b>Note:</b><br>
+	<a target='_blank' href='https://vuejs.org/v2/guide/index.html'>The Vue.js guid</a>
+	provided a basic knowledge base of how to use Vue.js.</p>
+	<p>index.js:<div class='code'>
+		import Vue from 'vue'<br>
+		import App from './App.vue'
+	</div></p>
+	<p>The finished page shows how vue.js component (App.vue) looks like.
+		It's only a html tag in index.html.
+		<div class='code'> &lt;div id="app"&gt;&lt;/div&gt;</div>
+		Module details are handled by Hello.vue.</p>
+	<img class="screenshot" title="click for large image"
+		onclick="showFig(src)" src="imgs/003-vue-component.png"><br>
+	<a download href='files/webpack-01.zip'>download project final source of this tutorial.</a>
+
+	<h2>Integrate with JClient.js</h2>
+	<h3>About</h3>
+	<p><a target='_blank' href='https://github.com/odys-z/jclient'>JClient.js</a>
+		is the JavaScript client of the
+		<a target='_blank' href='https://github.com/odys-z/semantic-jserv'>semantic.jserv framework</a>.</p>
+	<h3>Sample Project</h3>
+	<p>The JClient.js test can work with help of Vue 2.5.17.</p>
+	<p>See <a target='_blank' href='https://github.com/odys-z/jclient/blob/master/js/test/api-basic/testVue.js'>
+		JClient.js/test/api-basic/testVue.js</a> function load()</p>
+	<p>With the help of JClient.js/Protocol.js, the responded data is bound to vue template.
+		<div class='code'>obj7.groceryList = Protocol.rs2arr(resp.rs[0]);</div>
+		Where obj7 is the vue instance created when window loaded.
+		<div class='code'><pre>
+		obj7 = new Vue({
+			el: '#obj-7',
+			data: {
+				groceryList: [
+				{ id: 0, text: 'Vegetables' },
+				] }
+		});</pre></div>
+	</p>
+
+	<h2>Troubleshootings</h2>
+	<table class="reference notranslate">
+		<tbody>
+			<tr>
+				<th style="width:25em">Error</th>
+				<th>Handling</th>
+			</tr>
+
+			<tr><td><div class='code'>vue init webpack ex01</div>Command Halt<br>
+				<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/005-vue-cli-halt.png"><br>
+				</td>
+				<td>That's because vue trying to download chrome driver. Try Chinese way.</td>
+			</tr>
+
+			<tr><td>Can't resolve vue loader<div class='exception'><pre>ERROR in ./src/index.js
+Module not found: Error: Can't resolve 'vue-loader' in '... /js/webpack-01'
+@ ./src/index.js 8:0-27 24:16-19</pre></div>
+				</td>
+				<td>Install vue-loader.
+					<div class='code'>
+						ody@infochange:~/webpack-01$ npm install vue-loader --save-dev
+					</div>
+					In webpack.config.js:
+					<div class='code'>
+						{test: /\.vue$/, loader: "vue-loader" },<br>
+	  					{test: /\.(png|jpg|gif)$/, loader: "file-loader"},
+					</div>
+				</td>
+			</tr>
+
+			<tr><td>Can not find module 'webpack/lib/RuleSet'
+					<div class='exception'><pre>ERROR in ./src/App.vue
+Module build failed (from ./node_modules/vue-loader/lib/index.js):
+Error: Cannot find module 'webpack/lib/RuleSet'</pre></div>
+				</td>
+				<td>Set node path to where node_modules installed globally.
+					<div class='code'>
+						export NODE_PATH=/usr/local/bin/nodejs/lib/node_modules
+					</div>
+				</td>
+			</tr>
+
+			<tr><td><div class='exception'>
+					Error in ./src/App.vue'<br>
+					Module build failed ...<br>
+					Error: [vue-loader] vue-template-compiler must be installed ...
+					</div>
+				</td>
+				<td>Install file loader<div class='code'>npm install vue-template-compiler --save-dev</div>
+					<img class="screenshot" title="click for large image"
+						onclick="showFig(src)" src="imgs/009-webpack-err-vue-template-loader.png"><br>
+				</td>
+			</tr>
+
+			<tr><td><div class='exception'>
+					Module not found, can't resolve './components/Hello'<br>
+					Module not found, can't resolve 'file-loader'
+					</div>
+				</td>
+				<td>Install file loader<div class='code'>npm install file-loader</div>
+					In webpack.config.js/modules/rule:
+					<div class='code'>
+						{test: /\.vue$/, loader: "vue-loader" },<br>
+	  					{test: /\.(png|jpg|gif)$/, loader: "file-loader"},
+					</div>
+					<img class="screenshot" title="click for large image"
+						onclick="showFig(src)" src="imgs/008-vue-err-load-png.png"><br>
+				</td>
+			</tr>
+
+			<tr><td><div class='exception'>
+					You are using the runtime-only build of vue where the
+					template compiler is not avialable...
+					</div>
+					<img class="screenshot" title="click for large image"
+						onclick="showFig(src)" src="imgs/007-vue-warn-pre-compile.png"><br>
+				</td>
+				<td><p>Explaination: Runtime-Compiler not included in bundle.<p>
+					See the <a target='_blank' href='https://vuejs.org/v2/guide/installation.html#Runtime-Compiler-vs-Runtime-only'>
+					Vue.js document explained why this happening</a>.<br>
+					And there are many discussion about this:
+					<a target='_blank' href='https://github.com/vuejs-templates/webpack/issues/215'>[1], </a>
+					<a target='_blank' href='https://stackoverflow.com/questions/39488660/vue-js-2-0-not-rendering-anything'>[2], </a>
+					<a target='_blank' href='https://stackoverflow.com/questions/40806689/pre-compile-typescript-vue-components-with-template-string'>[3], </a><br>
+					<a target='_blank' href='https://stackoverflow.com/questions/44646403/precompile-vue-template-into-render-functions'>and there is not much opions.</a>
+					<p>In webpack.config.js:<div class='code'>
+						resolve: { alias: { vue: 'vue/dist/vue.ems.js' } }</div>
+						or <div class='code'>import Vue from 'vue/dist/vue.js'</div>
+					</p>
+				</td>
+			</tr>
+
+			<tr><td>Can't find webpack even after PATH and NODE_PATH been set.
+					<div class='exception'>Error: Cannot find module 'webpack'</div>
+					<img class="screenshot" title="click for large image"
+						onclick="showFig(src)" src="imgs/00M-err-webpack-module.png">
+				</td>
+				<td>Link webpack globally.<div class='code'>npm link webpack</div>
+					See <a target='_blank' href='https://stackoverflow.com/questions/29492240/error-cannot-find-module-webpack'>StackOverFlow</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>References</h2>
+	<ul type='1'>
+		<li id='ref1'><a target='_blank' href='https://www.sitepoint.com/javascript-modules-bundling-transpiling/'>
+			Mark Brown, Understanding JavaScript Modules: Bundling & Transpiling, April 12, 2016</a></li>
+		<li><a target='_blank' href='https://www.sitepoint.com/understanding-module-exports-exports-node-js/'>
+			Cho S. Kim, Understanding module.exports and exports in Node.js, August 06, 2018</a>
+		<li><a target='_blank' href='https://webpack.js.org/guides/installation/'>Webpack Doc: installation</a></li>
+		<li><a target='_blank' href='https://webpack.js.org/api/cli/'>Webpack Doc: Command Line Interface</a></li>
+		<li><a target='_blank' href='https://webpack.js.org/configuration/'>Configuration</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/index.html'>Vue.js Doc: Introduction</a></li>
+		<li><a target='_blank' href='https://vuejs.org/v2/guide/installation.html'>Vue.js Doc: Installation</a></li>
+		<li><a target='_blank' href='https://vuejsexamples.com/'>Vue.js Examples</a></li>
+	</ul>
+</article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+<hr>
+<span id="copyright">Copyright © 2019 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>

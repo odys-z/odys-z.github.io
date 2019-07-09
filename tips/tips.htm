@@ -1,0 +1,1450 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Developer's FAQ</title>
+	<link rel="stylesheet" type="text/css" href="resources.css">
+	<script src="showfig.js"></script>
+	<link rel="icon" href="imgs/ic-2.png">
+</head>
+<body>
+
+<header>
+	<h1>Topic: Maven</h1>
+	<p class="tips">updating: Odys' techincal troubleshootings</p>
+	<a href='index.htm'>Home</a>
+	<hr>
+</header>
+
+<article>
+<table class="reference notranslate">
+  <tbody>
+  <tr>
+    <th style="width:16%"></th>
+    <th>trouble</th>
+    <th style="width:84%">shootings</th>
+  </tr>
+
+  <tr><td colspan="3">windows configuration</td></tr>
+  <tr><td></td>
+      <td>install chrome and proxy setting by command line</td>
+      <td><div class='code'>
+              cd /tmp<br>
+              wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb<br>
+              sudo dpkg -i google-chrome-stable_current_amd64.deb<br>
+              /opt/google/chrome/chrome --proxy-server="http=192.168.1.201:8580;https=192.168.1.201:8580"</div>
+          see <a target='_blank' href='https://askubuntu.com/questions/510056/how-to-install-google-chrome'>stackoverflow: How to install Google Chrome</a><br>
+          There may be some problem like <div class='exception'><pre>
+Unpacking google-chrome-stable (61.0.3163.100-1) ...
+dpkg: dependency problems prevent configuration of google-chrome-stable:
+ google-chrome-stable depends on libappindicator1; however:
+  Package libappindicator1 is not installed.
+
+dpkg: error processing package google-chrome-stable (--install):
+ dependency problems - leaving unconfigured
+Processing triggers for gnome-menus (3.13.3-6ubuntu3.1) ...
+Processing triggers for desktop-file-utils (0.22-1ubuntu5) ...
+Processing triggers for bamfdaemon (0.5.3~bzr0+16.04.20160824-0ubuntu1) ...
+Rebuilding /usr/share/applications/bamf-2.index...
+Processing triggers for mime-support (3.59ubuntu1) ...
+Processing triggers for man-db (2.7.5-1) ...
+Errors were encountered while processing:
+ google-chrome-stable</pre></div>
+              Fix:<div class='code'>sudo apt-get install -f</div>
+              See: <a target='_blank' href='https://askubuntu.com/questions/220960/cannot-install-google-chrome-how-do-i-fix-it'>StackOverflow: Cannot Install Google Chrome. How do I fix it?</a>
+      </td>
+  </tr>
+
+  <tr><td colspan="3">Ubuntu configuration</td></tr>
+
+  <tr>
+	<td></td>
+    <td>Find Ubuntu Version</td>
+    <td><div class='code'>lsb_release -a</div>
+        See <a target='_blank' href='https://help.ubuntu.com/community/CheckingYourUbuntuVersion'>CheckingYourUbuntuVersion</a>
+    </td>
+  </tr>
+
+  <tr>
+	<td></td>
+    <td><div class='exception'><pre>$ sudo apt-get install [package]
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+E: Unable to locate package [package]</pre></div><br>
+    </td>
+    <td>See <a target='_blank' href='https://askubuntu.com/questions/378558/unable-to-locate-package-while-trying-to-install-packages-with-apt'>“Unable to locate package” while trying to install packages with APT</a><br>
+        <img class="screenshot" title="click for large image"
+                onclick="showFig(src)" src="imgs/039-ubunt-package-lib.png"><br>
+            <a target='_blank' href='http://packages.ubuntu.com/'>http://packages.ubuntu.com/</a>
+    </td>
+  </tr>
+
+  <tr>
+	<td></td>
+    <td>Recovery the missing Windows MBR after installed Ubuntu<br>
+        - grub loader not show after dual installation
+    </td>
+    <td>Create a live CD (USB), <br>
+        Case 1: load Ubuntu if needed (user: ubuntu, pswd: &lt;empty&gt;)<br>
+        Install and Run Boot-Repair<br>
+        <div class='code'>
+            sudo add-apt-repository ppa:yannubuntu/boot-repair<br>
+            sudo apt-get update<br>
+            sudo apt-get install -y boot-repair &amp;&amp; boot-repair
+        </div>
+        What actually happened is that the MBR recovered without 'windows', but after updated Ubuntu 15 to the latest version, the windows MBR is recovered.<br><br>
+        Case 2: Windows boot img damaged. update-grub and repairing not working.<br>
+        - Reinstall windows. (Create a install USB stick, reinstall, now grub of Ubuntu is missing)<br>
+        - boot in rescure mode (with Ubuntu 16.04 Server Rescue USB Stick), select install grub, and update-grub if neccessary.
+        <hr>
+        <b>tip:</b><br>
+        - Sometimes boot-repair won't work, disable BIOS boot security my help.<br>
+        - Installed windows 7 WAT must activated, or removed with <a download href='files/RemoveWAT.exe'>RemoveWAT (local)</a>. win 7 iso can be downloaded from <a href='#digital-river'>digital river</a>.
+    </td>
+  </tr>
+
+  <tr><td/>
+      <td>Ubuntu Server - Keyboard mapping error</td>
+      <td><div class='code'>sudo nano /etc/default/keyboard</div>
+          Check <a target='_blank' href='https://askubuntu.com/questions/342066/how-to-permanently-configure-keyboard'>ask ubuntu: How to permanently configure keyboard</a>
+          <div class='code'><pre>XKBMODEL="pc105"
+XKBLAYOUT="us"
+XKBVARIANT=""
+XKBOPTIONS=""
+
+BACKSPACE="guess"</pre></div>
+      </td>
+  </tr>
+
+  <tr><td/>
+      <td>Ubuntu Server - samba</td>
+      <td><div class='code'><pre>
+sudo apt-get update
+sudo apt-get install samba
+sudo smbpasswd -a inforise
+# mount /etc/fstab: /media/sdb2 check <a href='#mount-ntfs'>Mount NTFS</a>
+sudo vim /etc/samba/smb.conf
+#[sdb2]
+#path = /media/sdb2
+#valid users = inforise
+#read only = no
+sudo service smbd restart</pre></div>
+          See <a target='_blank' href='https://help.ubuntu.com/community/How%20to%20Create%20a%20Network%20Share%20Via%20Samba%20Via%20CLI%20(Command-line%20interface/Linux%20Terminal)%20-%20Uncomplicated,%20Simple%20and%20Brief%20Way!'>How to Create a Network Share Via Samba Via CLI (Command-line interface/Linux Terminal) - Uncomplicated, Simple and Brief Way!</a><br>and <a target='_blank' href=''>Ubuntu Documentation: Samba/SambaServerGuide</a>.
+      </td>
+  </tr>
+
+  <tr><td/>
+      <td>Ubuntu Server - install ssh</td>
+      <td><div class='code'>sudo apt install openssh-server<br>
+          sudo apt install openssh-client</div>
+      <hr>
+        Error: <div class='exception'>sudo update reporting 404 Not Found [IP: ...]</div>
+        Solve: Select the best server in Software Center.
+      </td>
+  </tr>
+
+  <tr id="mount-ntfs"><td></td>
+      <td>Mount NTFS</td>
+      <td>/etc/fstab<br>
+          <div class='code'># /etc/fstab: static file system information.<br>
+              # &lt;file system&gt; &lt;mount point&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;<br>
+              # / was on /dev/sdb5 during installation<br>
+              UUID=48a6564a-b021-4b10-b053-42cfd6655fea /               ext4    errors=remount-ro 0       1<br>
+              # swap was on /dev/sdb3 during installation<br>
+              UUID=d809f0d6-f8f7-4f72-ac32-7e1fa0bc5eba none            swap    sw              0       0<br>
+              # C - readonly<br>
+              UUID=DAC82088C82064CB  /home/ody/c  ntfs  defaults,umask=222  0 0<br>
+              # D<br>
+              UUID=0005822300019E8C  /home/ody/d  ntfs-3g  defaults,windows_names,locale=en_US.utf8  0 0<br>
+              # E<br>
+              UUID=000982C10007703C   /home/ody/e  ntfs-3g  defaults,windows_names,locale=en_US.utf8  0 0<br>
+          </div>
+          For memo:<br>
+          sudo mount -a<br>
+          sudo umount [mount-point: /media/000982CBBC]<br>
+          <hr>
+          <b>Deprecated</b> - see bellow
+          <div class='code'><pre>inforise@db:/media$ cat /etc/fstab
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sdb1 during installation
+UUID=30f73d6f-5f07-4f0d-aaf7-be34e75d1d29 /               ext4    errors=remount-ro 0       1
+# swap was on /dev/sdb5 during installation
+UUID=7f767df8-74c7-4688-aceb-7e754cebcd13 none            swap    sw              0       0
+/dev/sdb2 /media/sdb2/    ntfs   0    0
+/dev/sdb3 /media/sdb3/    ntfs   0    0</pre></div>
+        <hr>
+        NTFS can be mounted as permission enabled - which makes samba sharing enabled.
+        <div class='code'><pre>
+# /home/ody/e was on /dev/sda6 during installation
+# UUID=000982C10007703C /home/ody/e     ntfs    defaults,umask=007,gid=46 0       0
+UUID=000982C10007703C /home/ody/e     ntfs-3g    auto,user,permissions 0       0 </pre></div>
+        See <a href='https://askubuntu.com/questions/11840/how-do-i-use-chmod-on-an-ntfs-or-fat32-partition/91054#91054'>How do I use 'chmod' on an NTFS (or FAT32) partition?</a>
+      </td>
+  </tr>
+
+  <tr><td/>
+      <td>Check Disk Usage</td>
+      <td>for GUI,<div class='code'>baobab</div>
+          for CLI,<div class='code'>ncdu</div>
+          see <a target='_blank' href='https://askubuntu.com/questions/73160/how-do-i-find-the-amount-of-free-space-on-my-hard-drive'>Ask Ubuntu</a><br>
+          to check disk partitions,<div class='code'>sudo blkid</div>
+          to check disk size,<div class='code'>lsblk</div>or<div class='code'>fdisk -l</div>
+          see <a target='_blank' href='https://askubuntu.com/questions/31678/how-to-mount-a-ntfs-disk-in-the-text-modefrom-command-line'>How to mount a ntfs disk in the text mode(from command line)?</a>, and <a target='_blank' href='https://askubuntu.com/questions/182446/how-do-i-view-all-available-hdds-partitions'>How do I view all available HDD's/partitions?</a><br>
+      </td>
+  </tr>
+
+  <tr><td/>
+      <td>Check file encoding and convert to UTF8</td>
+      <td><div class='code'><pre>file --mime input.file
+iconv -t UTF8 input.file output.file</pre></div>
+          See <a target='_blank' href='https://stackoverflow.com/questions/11018967/how-can-i-be-sure-of-the-file-encoding'>StackOverflow</a> and <a target='_blank' href='https://linux.die.net/man/1/iconv'>iconv man page</a>.
+      </td>
+  </tr>
+
+  <tr><td/>
+    <td>setup environment variables</td>
+      <td><div class='code'>gvim /etc/environment</div>
+          See <a target='_blank' href='https://askubuntu.com/questions/58814/how-do-i-add-environment-variables'>Ask Ubuntu</a>.</td>
+    <td></td>
+  </tr>
+
+  <tr><td></td>
+      <td>Install deb package</td>
+      <td><div class='code'>sudo dpkg --install youfile.deb</div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+	<td>Can't connect Wifi (desktop usb wifi adapter)</td>
+    <td><div class='code'>
+            sudo service network-manager stop<br>
+            gksudo gedit /etc/modprobe.d/iwlwifi.conf<br>
+        </div>
+        Add options iwlwifi 11n_disable=1 to file, save, and close. Then:<br>
+        <div class='code'>sudo rmmod iwlmvm iwlwifi <br>
+            sudo modprobe iwlmvm iwlwifi<br>
+            sudo service network-manager restart<br>
+        </div>
+        This will inactivate Wireless N so network speed may be affected.<br>
+        If that doesn't work undo what you did by:<br>
+        <div class='code'>gksudo gedit /etc/modprobe.d/iwlwifi.conf</div>
+        and delete the last line (options iwlwifi 11n_disable=1) and everything will be back to the way it was before.<br>
+        see <a target='_blank' href='http://askubuntu.com/questions/613065/unable-to-connect-to-wireless-network-following-upgrade-to-15-04'>Ask Ubuntu: Unable to Connect to Wireless Network Following Upgrade to 15.04</a><br>
+        If the connection not up on boot, restart the service.
+        <p>BTW</p>
+        If the <i>Enable Wifi</i> menu item not been seen, check <i>/etc/modprobe.d/iwlwifi.conf</i>, enable <br>
+        <div class='code'>options iwlwifi 11n_disable=1</div>
+        Then restart the service.
+        </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Connect internet only via wifi</td>
+      <td><img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/032-ubuntu-ethernet-no-internet.png">
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Share ubuntu internet wifi connection</td>
+      <td>Share the wired connection to client ubuntu.<br>
+          <img class="screenshot" title="click for large image"
+               onclick="showFig(src)" src="imgs/034-ubuntu-share-internet.png"><br>
+          See <a target='_blank' href='https://askubuntu.com/questions/359856/share-wireless-internet-connection-through-ethernet'>Share wireless Internet connection through ethernet</a>.<br>
+          Note:<br>
+          Ubuntu has a bug in shared connection - can't setup IP manually in GUI.<br>
+          <div class='code'>nmcli connection modify $CONNECTION_ID +ipv4.addresses 192.168.0.1/24</div>
+          See <a target='_blank' href='https://askubuntu.com/questions/609645/configure-connection-sharing-with-specific-ip-address'>Ask: Configure connection sharing with specific IP Address</a>.<br>
+          To setup connection IP in cli:<br>
+          <div class='code'>gvim /etc/network/interfaces<br><br>
+              iface eth0 inet static<br>
+              address 192.168.56.101<br>
+              netmask 255.255.255.0<br>
+              gateway 192.168.56.1
+          </div>
+          Note: Configuration set by GUI are saved in /etc/NetworkMangager/system-connections/Wired\ connection\ 1.<br>
+          To check connection:<div class='code'>nmcli con show "Wired connectin 1"</div>
+          See <a target='_blank' href='https://askubuntu.com/questions/335352/how-to-change-ip-address-in-ubuntu-desktop-through-command-line'>How to change ip address in ubuntu desktop through command line</a>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Fonts not displayed correctly for Ubuntu 15</td>
+      <td>sudo nvidia-settings, select a nvidia driver.</td>
+  </tr>
+
+  <tr><td></td>
+      <td>apt-get update error: 404 not found<div class='exception'>
+E: Failed to fetch http://cn.archive.ubuntu.com/ubuntu/pool/main/s/ssh-import-id/ssh-import-id_4.5-0ubuntu1_all.deb  404  Not Found [IP: 125.65.43.82 80]</div></td>
+      <td>Change pps server to best server in "software center / settings"<br>
+          Go to the Ubuntu Software Centre and browse to the Edit -&gt; Software Sources -&gt; Ubuntu Software tab. Then select Other -&gt; Select Best Server under Download From. <br>
+          See <a target='_blank' href='https://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2'>ask ubuntu.</a>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Instal Openshot-qt 2.3.3</td>
+      <td><div class='code'>
+              sudo apt-get remove openshot-qt<br>
+              sudo add-apt-repository ppa:openshot.developers/ppa<br>
+              sudo apt-get update &amp;&amp; sudo apt-get install openshot-qt
+          </div>
+          sudo nvidia-settings, select a nvidia driver.</td>
+  </tr>
+
+  <tr><td></td>
+      <td>Vnc4server + VNCViewer<br>(No Unity Launcher)</td>
+      <td>Following <a target='_blank' href="http://www.krizna.com/ubuntu/install-vnc-server-ubuntu-14-04/">this</a> to setup vnc4server:<br>
+          <div class='code'>
+              sudo apt-get install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal<br>
+              sudo apt-get install vnc4server
+          </div>
+          /usr/bin/vncserver:<br>
+          <div class='code'>
+              "# exec /etc/X11/xinit/xinitrcnn".<br>
+              "gnome-panel &amp;n".<br>
+              "gnome-settings-daemon &amp;n".<br>
+              "metacity &amp;n".<br>
+              "nautilus &amp;n".<br>
+              "gnome-terminal &amp;n".<br>
+          </div>
+          creating new vnc password.<br>
+          <div class='code'>vncserver</div>
+          Connect remote desktop using IP address and port ( Eg : 192.168.1.10:1 ).<br>
+          <hr>
+          To start on system boot:<br>
+          /etc/init.d/vncserver <br>
+          <div class='code'>
+              #!/bin/bash<br>
+              ### BEGIN INIT INFO<br>
+              # Provides:          VNCSERVER<br>
+              # Required-Start:    $remote_fs $syslog<br>
+              # Required-Stop:     $remote_fs $syslog<br>
+              # Default-Start:     2 3 4 5<br>
+              # Default-Stop:      0 1 6<br>
+              # Short-Description: Start daemon at boot time<br>
+              # Description:       Enable service provided by daemon.<br>
+              ### END INIT INFO<br>
+              unset VNCSERVERARGS<br>
+              VNCSERVERS=""<br>
+              [ -f /etc/vncservers.conf ] &amp;&amp; . /etc/vncservers.conf<br>
+              prog=$"VNC server"<br>
+              start() {<br>
+              . /lib/lsb/init-functions<br>
+              REQ_USER=$2<br>
+              echo -n $"Starting $prog: "<br>
+              ulimit -S -c 0 &gt;/dev/null 2&gt;&amp;1<br>
+              RETVAL=0<br>
+              for display in ${VNCSERVERS}<br>
+              do<br>
+              export USER="${display##*:}"<br>
+              if test -z "${REQ_USER}" -o "${REQ_USER}" == ${USER} ; then<br>
+              echo -n "${display} "<br>
+              unset BASH_ENV ENV<br>
+              DISP="${display%%:*}"<br>
+              export VNCUSERARGS="${VNCSERVERARGS[${DISP}]}"<br>
+              su ${USER} -c "cd ~${USER} &amp;&amp; [ -f .vnc/passwd ] &amp;&amp; vncserver :${DISP} ${VNCUSERARGS}"<br>
+              fi<br>
+              done<br>
+              }<br>
+              stop() {<br>
+              . /lib/lsb/init-functions<br>
+              REQ_USER=$2<br>
+              echo -n $"Shutting down VNCServer: "<br>
+              for display in ${VNCSERVERS}<br>
+              do<br>
+              export USER="${display##*:}"<br>
+              if test -z "${REQ_USER}" -o "${REQ_USER}" == ${USER} ; then<br>
+              echo -n "${display} "<br>
+              unset BASH_ENV ENV<br>
+              export USER="${display##*:}"<br>
+              su ${USER} -c "vncserver -kill :${display%%:*}" &gt;/dev/null 2&gt;&amp;1<br>
+              fi<br>
+              done<br>
+              echo -e "n"<br>
+              echo "VNCServer Stopped"<br>
+              }<br>
+              case "$1" in<br>
+              start)<br>
+              start $@<br>
+              ;;<br>
+              stop)<br>
+              stop $@<br>
+              ;;<br>
+              restart|reload)<br>
+              stop $@<br><br>
+              sleep 3<br>
+              start $@<br>
+              ;;<br>
+              condrestart)<br>
+              if [ -f /var/lock/subsys/vncserver ]; then<br>
+              stop $@<br>
+              sleep 3<br>
+              start $@<br>
+              fi<br>
+              ;;<br>
+              status)<br>
+              status Xvnc<br>
+              ;;<br>
+              *)<br>
+              echo $"Usage: $0 {start|stop|restart|condrestart|status}"<br>
+              exit 1<br>
+              esac
+          </div>
+            Modify execute permission for the file.
+          <div class='code'>sudo chmod +x /etc/init.d/vncserver</div>
+          /etc/vncservers.conf<br>
+            <div class='code'>VNCSERVERS="1:krizna"
+                VNCSERVERARGS[1]="-geometry 1024x768"<br>
+                VNCSERVERS="1:krizna"<br>
+                VNCSERVERARGS[1]="-geometry 1024x768"
+            </div>
+            add vncserver service to default runlevels.<br>
+            <div class='code'>sudo update-rc.d vncserver defaults
+                sudo /etc/init.d/vncserver start
+                sudo /etc/init.d/vncserver restart
+            </div>
+            <hr>
+            Note: There are many tutorial for TightVNC or other vnc server. Follow exactly only one of them.<br>
+            Error 1. Empty desktop (No Unity Launcher)<br>
+            update system, install gnome-core, xfce4, see <a href="http://askubuntu.com/questions/322006/vnc-on-ubuntu-13-04-not-showing-full-desktop/724340#724340">ask ubuntu</a><br>
+            Error 2.<br>- Connection refused by host computer or<br>
+            - Connection reset by peer (10054) after connected.<br>
+            Check the Ubuntu server Ip is not in the router's DHCP IP range. Ubuntu will not check ip confliction and same ip will be used for Android devices.<br>
+            Explicitly specify the display prot ":1", a.k.a 192.168.0.200:1
+            <hr>
+            Tips for Ubuntu Server:<br>
+            1. no need to install x desktop<br>
+            2. vncserver service can be started via ssh and not neccessary to setup as service:<div class='code'>vncserver</div></td>
+  </tr>
+
+  <tr><td></td>
+      <td>Remmina RDP connection failed</td>
+      <td>Make sure the direct wire connection is up (manually set ip addr).<br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/008-remmina-halt.png"><br>
+          <hr>
+          <b>Tip: </b>To install remmina,
+          <div class='code'>
+              sudo apt-add-repository ppa:remmina-ppa-team/remmina-next<br>
+              sudo apt-get update<br>
+              sudo apt-get install remmina remmina-plugin-rdp libfreerdp-plugins-standard<br>
+          </div>
+          See <a target='_blank' href='https://github.com/FreeRDP/Remmina/wiki'>Remmina Homepage</a>.
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Connect to Google</td>
+      <td>get wine:
+          <div class='code'>sudo add-apt-repository ppa:ubuntu-wine/ppa<br>
+              sudo apt-get update<br>
+              sudo apt-get dist-upgrade
+              winetricks mfc42
+          </div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>ls colors for green background</td>
+      <td>~/.bashrc:<br>
+          <div class='code'>LS_COLORS=$LS_COLORS:'ow=1;32;100:' ; export LS_COLORS
+              <hr>
+              echo $LS_COLORS
+          </div>
+          see <a href="http://askubuntu.com/questions/466198/how-do-i-change-the-color-for-directories-with-ls-in-the-console" target='_blank'>How do I change the color for directories with ls in the console?</a>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>turn off screen</td>
+      <td><div class='code'>xset dpms force standby</div></td>
+  </tr>
+
+  <tr><td colspan="3">Eclipse, JDK, ADB</td></tr>
+  <tr><td></td>
+      <td>adb command memos
+          <hr>For adb command manu, check <a target='_blank' href='http://adbshell.com/commands/adb-shell-ls'>adbshell.com</a>
+      </td>
+      <td><table class='reference'><tbody>
+                  <tr><td>Error: adb install failed with<br>
+                     Failure: [INSTALL_PARSE_FAILED_NO_CERTIFICATES]</td>
+                      <td><div class='code'>jarsinger -verbose SHA1withRSA -digestalg SHA1 -keystore metronome.keystore min3dSampleProject1_020.apk edu.music<br>
+                              jarsigner -verify -verbose -certs min3dSampleProject1_020.apk</div></td></tr>
+                  <tr><td>take screenshots<br>
+                          <img class="screenshot" title="click for large image"
+                                      onclick="showFig(src)" src="imgs/00F-min3d-obj.png">&emsp;
+                          <img class="screenshot" title="click for large image"
+                                      onclick="showFig(src)" src="imgs/010-min3d-demos.png">
+                      </td>
+                      <td><div class='code'>adb shell<br>screencap /sdcard/00F-min3d-obj.png<br>
+                              screencap /sdcard/010-min3d-demos.png<br>cd /sdcard<br>ls *.png<br>exit<br>
+                              adb pull 00F-min3d-obj.png<br>adb pull 010-min3d-demos.png</div></td></tr>
+                  <tr><td>adb push</td>
+                      <td>To push a file, user needs a rw target directory.<br>
+                          <div class='code'>$sdk/platform-tools: ./adb push [local-file] [target-path]</div>
+                          To mount a rw direcotry, needing rooted user. Check <a target='_blank' href='http://www.droidviews.com/push-pull-files-android-using-adb-commands/'>this</a>.
+                      </td></tr>
+              </tbody></table></td>
+  </tr>
+  <tr><td></td>
+      <td>Install Eclipse</td>
+      <td>/usr/shares/applications/eclipse.desktop<br>
+          <div class='code'>[Desktop Entry]<br>
+              Name=Eclipse-4.5<br>
+              Type=Application<br>
+              Exec=/home/ody/d/ubuntu/eclipse/eclipse<br>
+              Terminal=false<br>
+              Icon=/home/ody/d/ubuntu/eclipse/icon.xpm<br>
+              Comment=Integrated Development Environment<br>
+              NoDisplay=false<br>
+              Categories=Development;IDE;<br>
+              Name[en]=Eclips-Mars
+          </div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Eclipse shortcuts to collapse / expand methods</td>
+      <td>Windows - Preference - General - Keys (filter: collapse, expand)</td>
+  </tr>
+
+  <tr><td></td>
+      <td>Change Eclipse hover font color </td>
+      <td>/usr/share/themes/Ambiance/gtk-2.0<br>
+          <div class='code'>gtk-color-scheme = "... tooltip_fg_color:#6f6f6f ..."</div>
+          See <a target='_blank' href='https://stackoverflow.com/questions/3571850/eclipse-change-popup-text-background-color-when-hovering-the-mouse-on-a-keyword'>Eclipse, change popup text background color when hovering the mouse on a keyword</a> and <a target='_blank' href='http://blog.vogella.com/2012/12/04/eclipse-papercut-10-eclipse-on-ubuntu-fixing-the-black-background-color-in-hover/'>Eclipse Papercut #10 – Eclipse on Ubuntu: Fixing the black background color in hover</a>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Eclipse: workspace is in use or can not be created...</td>
+      <td><div class='code'>rm -f path2workspace/.metadata/.lock</div>
+          See <a target='_blank' href='https://stackoverflow.com/questions/7465793/eclipse-workspace-in-use-or-cannot-be-created-chose-a-different-one'>Eclipse - “Workspace in use or cannot be created, chose a different one.” [duplicate]</a>
+      </td>
+  </tr>
+
+  <tr><td/><td>Making eclipse ignore js errors</td>
+          <td>See <a href='https://stackoverflow.com/questions/7102299/eclipse-javascript-validation-disabled-but-still-generating-errors'>https://stackoverflow.com/questions/7102299/eclipse-javascript-validation-disabled-but-still-generating-errors</a>
+              <div class='code'><pre>
+    Right click your project
+    Select Properties -&gt; JavaScript -&gt; Include
+    Select Source tab (It looks similar to the Java Build Path Source tab)
+    Expand source folder
+    Highlight Excluded pattern
+    Click Edit button
+    Click Add button next to Exclusion patterns box.
+    Click Browse button and select the JavaScript source by name.
+              </pre></td>
+  </tr>
+
+  <tr><td/><td>Stop Eclipse xml gramma checking</td>
+	  <td> <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/01G-eclipse-xml-validating.png">
+	  </td>
+  </tr>
+
+  <tr><td/><td>Eclipse for Ubuntu doesn't apply eclipse.ini settings</td>
+	  <td>Eclipse do apply eclipse.ini settings, if start from the installing direcorty,
+	  	both from command line or Nautilus.<br>
+		It's applying ~/.local/share/applications/eclipse.desktop when start up from launcher.</td>
+  </tr>
+
+  <tr><td/><td>Eclipse variable, e.g. template ${user}</td>
+	  <td>eclipse.ini
+		  <div class='code'>-Duser.name=odys-z@github.com</div>
+	  </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Eclipse Marketplace exception<br>
+          Tag: GFW<br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/023-eclipse-marketplace-gfw.png">
+      </td>
+      <td>Clear Proxy for Socket, restart eclipse, sometimes proxy server. See <a target='_blank' href='https://stackoverflow.com/questions/5857499/how-do-i-have-to-configure-the-proxy-settings-so-eclipse-can-download-new-plugin'>How do I have to configure the proxy settings so Eclipse can download new plugins?</a><br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/024-eclipse-proxy-clear-sock.png">
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td><a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=355955">Bug 355955</a>: "Install New Software" don't show tree list.</td>
+      <td>Close Eclipse, modify workspace/.metadate/.plugins/org.eclipse.equinox.p2.ui/dialog_settings.xml:<br>
+          (Carefully check which workspace is in using.)<br>
+          <div class='code'>
+              &lt;item value="200" key="AvailableVersionColumnWidth"/&gt;<br>
+              &lt;item value="500" key="AvailableNameColumnWidth"/&gt;
+          </div>
+          <hr>
+          Note: gvim (un)folding commands (zc, zo) for Eclipse Ubuntu are working.
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>LogCat show only the first letter</td>
+      <td>In workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/com.android.ide.eclipse.ddms.prefs try this
+          <div class='code'>ddms.logcat.auotmonitor.level=error<br>
+              ddms.logcat.automonitor=false<br>
+              ddms.logcat.automonitor.userprompt=true<br>
+              devicePanel.Col0=1<br>
+              eclipse.preferences.version<br>
+              logcat.messagelist.max.size=50000<br>
+              logcat.view.colsize.Application=169<br>
+              logcat.view.colsize.Level=54<br>
+              logcat.view.colsize.PID=54<br>
+              logcat.view.colsize.Tag=198<br>
+              logcat.view.colsize.Text=619<br>
+              logcat.view.colsize.Time=182<br>
+              threadPanel.Col0=675<br>
+              threadPanel.stack.col0=653<br>
+          </div>
+      </td>
+  </tr>
+
+
+
+  <tr><td colspan="3">g++, CMake, Ant etc.</td></tr>
+  <tr><td></td>
+      <td>Ant [get] task trouble</td>
+      <td>Using proxy for get task
+          <div class='code'>export ANT_OPTS="-Dhttp.proxyHost=192.168.3.201 -Dhttp.proxyPort=8580 -Dhttps.proxyHost=192.168.3.201 -Dhttps.proxyPort=8580"</div>
+          Using break proint continuing (no downloading for updated local copy)
+          <div class='code'>&lt;get usetimestamp="true" src='...' dest='...'&gt;</div>
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>Compile Errors of ogldev-source<br>
+          (Source Code of Tutorial from <a href="http://ogldev.atspace.co.uk" target='_blank'>OGL dev Tutorials</a>)</td>
+	<td>Following the <a target='_blank' href="http://ogldev.atspace.co.uk/instructions.html" target='_blank'>source instructions.</a><br>
+	<div class='code'>apt-get install g++ freeglut3-dev glew1.5-dev libmagick++-dev libassimp-dev libglfw-dev<br>
+		make<br></div>
+	Error 1. (not solved yet)<br>
+	<div class='code'>GL version: 3.0 Mesa 10.5.2<br>
+	Error compiling shader type 35633: '0:1(10): error: GLSL 3.30 is not supported. Supported versions are: 1.10, 1.20, 1.30, 1.00 ES, and 3.00 ES
+	</div>
+	To install open a terminal window and enter<br>
+	To add the PPA run the following in a new Terminal window:
+	<div class='code'>sudo add-apt-repository ppa:graphics-drivers/ppa<br>
+	</div>
+	To remove, you can use ppa-purge<br>
+	<div class='code'>sudo apt-get install ppa-purge<br>
+		sudo ppa-purge ppa:graphics-drivers/ppa (not tested)<br>
+	</div>
+	To upgrade to or install the latest Nvidia drivers:
+	<div class='code'>sudo apt-get update &amp;&amp; sudo apt-get install nvidia-355<br>
+	</div>
+	<a href="http://www.omgubuntu.co.uk/2015/08/ubuntu-nvidia-graphics-drivers-ppa-is-ready-for-action" target='_blank'>http://www.omgubuntu.co.uk/2015/08/ubuntu-nvidia-graphics-drivers-ppa-is-ready-for-action</a><br>
+	userful link:<br>
+	<a target='_blank' href="http://www.binarytides.com/install-nvidia-drivers-ubuntu-14-04/">How to install the latest Nvidia drivers on Ubuntu 14.04 Trusty Tahr</a>
+	<div class='code'>lshw -C display<br>
+		lspci -vnn | grep VGA -A 12<br>
+		glxinfo | grep OpenGL<br>
+		nvidia-setttings
+    </div>
+        The GLSL3.3 is not installed yet. But at least Tutorial06 can be executed.<br>
+        - Don't go to the Dir where the binary file is. Execute from the dir where the make file located.
+        <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/007-ogl-tutor6-running.jpg"><br>
+	</td>
+  </tr>
+
+  <tr><td></td>
+      <td>Install <a href="https://github.com/GLSL-Debugger/GLSL-Debugger">GLSL-Debugger</a><br>
+        <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/00E-glsl-debugger.png"></td>
+      <td>Follow the instruction<br>
+          <div class='code'>mkdir Build &amp;&amp; cd Build<br>cmake ..\<br>make</div>
+          Error 1: Could NOT find BISON (missing: BISON_EXECUTABLE) (Required is at least version "2.7")<br>
+          Download <a href="https://www.gnu.org/software/bison/" target="_blank">Bison from GNU</a> or use <a href="files/bison-3.0.4.tar.gz">local bison-3.0.4.tar.gz</a><br>
+          <div class='code'>tar zxf bison-3.0.4.tar.gz<br>
+              cd bison-3.0.4<br>
+              sudo apt-get install m4<br>
+              ./configure &amp;&amp; make<br>
+              sudo make install</div>
+          Error 2: cannot create regular file '/usr/local/bin/bison': Permission denied<br>
+          <div class='code'>sudo make install</div>
+          Error 3: Could NOT find FLEX (missing: FLEX_EXECUTABLE)<br>
+          Error 4: Found unsuitable Qt version "" from NOTFOUND, this code requires Qt 4.x<br>
+          <div class='code'>sudo apt-get install flex<br>
+              sudo apt-get install qt-sdk</div>
+          To check bison version: <div class='code'>apt-cache showpkg bison</div>
+          <hr>
+          FYI: wget proxy and deb install (wget --help for username and password)<br>
+          <div class='code'>set http_proxy="192.168.1.201:8580" &amp;&amp; wget http://launchpadlibrarian.net/140087283/libbison-dev_2.7.1.dfsg-1_amd64.deb<br>
+              set http_proxy="192.168.1.201:8580" &amp;&amp; wget http://launchpadlibrarian.net/140087282/bison_2.7.1.dfsg-1_amd64.deb<br>
+              dpkg -i libbison-dev_2.7.1.dfsg-1_amd64.deb<br>
+              dpkg -i bison_2.7.1.dfsg-1_amd64.deb<br></div>
+      </td>
+  </tr>
+
+  <tr><td colspan="3">Bash, Linux</td></tr>
+  <tr><td></td>
+      <td>Bash - find and remove .svn</td>
+      <td>Find with wildcard:<br>
+          <div class='code'>find -name "*.xml" -print</div>
+          <a href="http://superuser.com/questions/602385/find-and-delete-all-the-directories-named-test-in-linux">Find and remove .svn</a><br>
+          <div class='code'>find -name .svn -type d -print0 | xargs -0 rm -r --</div>
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>batch convert picture format</td>
+      <td><div class='code'>mogrify -format jpg *.tga</div></td>
+  </tr>
+  <tr><td></td>
+      <td>kill process</td>
+      <td><div class='code'>gonome-system-monitor</div></td>
+  </tr>
+  <tr><td></td>
+      <td>tar</td>
+      <td>See <a target='_blank' href='https://www.interserver.net/tips/kb/use-tar-command-linux-examples/'>How to use Tar Command in Linux with examples</a> and <a target='_blank' href='https://www.tecmint.com/18-tar-command-examples-in-linux/'>18 Tar Command Examples in Linux</a>.<br>
+          To create a tar (z for compress; careful -f is the last option):
+          <div class='code'>tar -czf source.tar.gz ./src/</div></td>
+  </tr>
+  <tr><td></td>
+      <td>zip with password</td>
+      <td>See <a target='_blank' href='https://superuser.com/questions/162624/how-to-password-protect-gzip-files-on-the-command-line'>Answer by SaeX on superuser.com</a>.<br>
+          <div class='code'>7z a -p<password> A.zip A/* -tzip</div>
+          No space following -p.
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>Remove folder</td>
+      <td><div class='code'>rm -r A</div></td>
+  </tr>
+
+  <tr><td colspan="3">Visual Studio &amp; .net framework</td></tr>
+  <tr><td></td>
+	<td>Visual Studio 2015 community crashes when visualizing DataTable while debugging</td>
+    <td>Turn on : Tools -&gt; Options -&gt; Debugging -&gt; General -&gt; Use the legacy C# and VB expression evaluators<br>
+        see <a target='_blank' href="http://stackoverflow.com/questions/31696387/visual-studio-2015-datatable-dataset-visualizer-crashes-ide">stackoverflow: Visual Studio 2015 DataTable/DataSet Visualizer crashes IDE</a></td>
+  </tr>
+  <tr><td></td>
+      <td>Visual Studio 2015 community shows duplicated menu items</td>
+      <td>devenv.exe /resetuserdata<br>
+          <a target='_blank' href="http://stackoverflow.com/questions/7263066/why-does-visual-studio-duplicate-my-menus-and-buttons-persists-after-reinstall">Statckoverflow: Why does Visual Studio duplicate my menus and buttons? Persists after reinstall and profile wipe</a>
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>install vsVim</td>
+      <td>tools --&gt; extension and updates --&gt; online --&gt; search vsvim --&gt; download and install</td>
+  </tr>
+  <tr><td></td>
+      <td>C# Regex Examples</td>
+      <td><a target='_blank' href="https://msdn.microsoft.com/en-us/library/az24scfc(v=vs.110).aspx">MSDN Quick Reference</a><br>
+          <table class="reference notranslate">
+              <tbody>
+                  <tr><td>background\-image\W+url\(\'?(?&lt;picUrl&gt;.*(?&lt;suffix&gt;\.\w+))\'?\)</td>
+                      <td>background-image: url(http://wm.com/we/f.jpg)<br>
+                            picUrl = http://wm.com/we/f.jpg<br>
+                            suffix = .jpg</td>
+                  </tr>
+                  <tr><td>definition\W(?&lt;defNo&gt;\d*)</td>
+                      <td>definition 1<br>
+                      defNo = 1</td>
+                  </tr>
+              </tbody>
+          </table>
+      </td>
+  </tr>
+
+  <tr><td colspan="3">Git/EGit, svn</td></tr>
+  <tr>
+	<td></td>
+	<td>Global Identity &amp; Editor</td>
+    <td>$ git config --global user.name "John Doe"<br>
+        $ git config --global user.email johndoe@example.com<br>
+        $ git config --global core.editor emacs<br>
+        $ git config --list<br>
+        see <a href="http://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup" target="_blank">Git First Time Setup</a><br>
+    </td>
+  </tr>
+  <tr><td></td>
+      <td>Git Proxy</td>
+      <td>home/.gitconfig<br>
+          <div class='code'>[http]<br>&emsp;proxy = http://username:password@proxy.at.your.org:8080<br>
+              [https]<br>&emsp;proxy = https://username:password@proxy.at.your.org:8080</div>
+      </td>
+  <tr>
+	<td></td>
+	<td>EGit Setup</td>
+    <td>Home = %USERPROFILE%<br>
+        Collaborate with Git: Proference - Team - Git - Configuration - System Settings<br>
+        see <a href='http://wiki.eclipse.org/EGit/User_Guide#Pushing_to_other_Repositories' target='_blank'>Eclipse Git User Guid</a> for create SCM project.<br>
+        <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/001-eclipse-egit-cfg.jpg"><br>
+    </td>
+  </tr>
+  <tr>
+      <td></td>
+      <td>Using Git</td>
+      <td><dl><dt>- git deamon</dt>
+              <dd>C:\Users\ody\Desktop&amp;git daemon --reuseaddr --export-all --base-path="e:\docs\git\prjsrep" --enable=receive-pack</dd>
+              <dt>- clone repository from remote</dt>
+              <dd>git clone git://192.168.1.7/2048core.git</dd>
+      </dl></td>
+  </tr>
+  <tr><td></td>
+      <td>Git Client Trhouble: early EOF<br></td>
+      <td>D:\personal\andriodworkspace&amp;git clone git://192.168.1.7/2048core.git<br>
+          Cloning into '2048core'...<br>
+          remote: Counting objects: 161, done.<br>
+          remote: Compressing objects: 100% (138/138), done.<br>
+          remote: Total 161 (delta 7), reused 0 (delta 0)<br>
+          fatal: read error: Invalid argumefatal: ntB | 718.00 KiB/s<br>
+          early EOF<br>
+          fatal: index-pack failed
+          <hr>
+          Enable Quick Edit Mode of Git runing console<br>
+          see <a target='_blank' href='http://stackoverflow.com/questions/1943914/git-clone-fails-with-index-pack-failed'>git clone fails with “index-pack” failed?</a><br>
+          <img class="screenshot" title="click for large image"
+          onclick="showFig(src)" src="imgs/002-quick-edit-win7.jpg">
+      </td>
+
+  <tr><td></td>
+      <td>SVN</td>
+      <td><div class='code'>sudo apt-get install subversion</div>
+          To install graphic client (rabbitvcs):
+          <div class='code'>sudo apt-get install rabbitvcs-cli rabbitvcs-core rabbitvcs-gedit rabbitvcs-nautilus</div>
+          See <a target='_blank' href='https://askubuntu.com/questions/812678/graphical-svn-client-for-ubuntu-16-04'>Ask Ubuntu: Graphical svn client for Ubuntu 16.04?</a><br>
+          To initialize a local working copy:
+          <div class='code'><pre>
+ody@thinkpad-ody:/media/ody/000101FD000538E9/prjs$ svn co "https://221.236.26.28/svn/Infochange/emergency-ganzi"
+A    emergency-ganzi/trunk
+A    emergency-ganzi/trunk/test01
+A    emergency-ganzi/branches
+A    emergency-ganzi/tags
+Checked out revision 17.
+ody@thinkpad-ody:/media/ody/000101FD000538E9/prjs$ ls
+...
+emergency-ganzi
+...</pre></div>
+              <hr>
+              <h4>Useful command examples</h4>
+              To discard all loacal changes (revert):<div class='code'>svn revert --depth=infinity .</div>
+      </td>
+  </tr>
+
+  <tr><td colspan="3">JDK, Tomcat &amp; MySql (and B/S middleware) Administration</td></tr>
+  <tr><td></td>
+      <td>Tomcat Service on Windows Server 2012 R2 failed to startup</td>
+      <td>Problem:<br>
+          The java autoupdate updated a new version of jre, deleting old jre/bin folder.<br>
+          Quick Shooting: set the new jre path then tomcat can be started from command line.<br>
+          Solving: The service has some paramter to set:<br>
+          <img class="screenshot" title="click for large image"
+               onclick="showFig(src)" src="imgs/033-tomcat-jre-updated.png"><br>
+          See <a target="_blank" href="https://stackoverflow.com/questions/24647003/cant-start-tomcat-as-windows-service">Can't start Tomcat as Windows Service</a>
+      </td>
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>Running JNPL etc. 应用程序已被安全设置阻止</td>
+      <td>Add Exception to the List<br>
+          <img class="screenshot" title="click for large image"
+          onclick="showFig(src)" src="imgs/003-config-java.jpg">
+      </td>
+  </tr>
+  <tr><td></td>
+	<td>Path outside webapps</td>
+    <td>$TOMCAT/conf/Catalina/localhost/testbed.xml contains:<br>
+        &lt;Context path="/testbed" docBase="/Users/bear/Development/projects/testbed/web" reloadable="true"/&gt;<br>
+        see <a target='_blank' href="http://www.coderanch.com/t/611009/Tomcat/put-Tomcat-app-folder-webapps">How put a Tomcat 7 app folder outside webapps (OS X)?</a></td>
+  </tr>
+
+  <tr><td></td>
+      <td>Install JDK &amp; Tomcat in Ubuntu</td>
+      <td>To install openJDK 7 &amp; Tomcat, use apt-get install and update.<br>
+	  After installed, export PATH and TOMCAT_HOME:<br>
+	  <div class='code'>
+	  sudo apt-get install openjdk-7-jdk<br>
+	  sudo apt-get install tomcat7<br>
+	  export TOMCAT_HOME=/etc/tomcat7<br>
+	  export PATH=$PATH:/usr/share/tomcat7/bin<br>
+	  sudo service tomcat7 start/stop/restart
+	  </div>
+	  To configure virtual path of tomcat:<br>
+	  modify /etc/tomcat7/Catalina/localhost/tips.xml or /etc/tocmat/server.xml<br>
+	  <div class='code'>
+	    &lt;Context path="/myapp" allowLinking="true"&gt;
+      </div>in context of host
+      <div class='code'>
+	    &lt;Host appBase="webapps" name="localhost"/&gt;<br>
+		...<br>
+       	    &lt;Context  docBase="/home/ody" path="/tips" /&gt;<br>
+      	    &lt;/Host&gt;<br>
+	  </div>
+	  allowLinking will enable symbol link, but will not work for NTFS mounted disk ( no solution found yet). To link symbol:<br>
+	  ln -s /media/ody/000982C.../docs/tips (pwd)/tips<br>
+      see: <a target='_blank' href="http://stackoverflow.com/questions/417658/how-to-config-tomcat-to-serve-images-from-an-external-folder-outside-webapps">How to config Tomcat to serve images from an external folder outside webapps?</a><br>
+      See: <a target='_blank' href='http://www.thegeekstuff.com/2010/10/linux-ln-command-examples/'>ln examples</a> for using ln.
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>Change heep size of tomcat8</td>
+      <td>In file /etc/default/tomcat8:
+          <div class='code'>JAVA_OPTS="-Djava.awt.headless=true -Xmx2048m -Xms512m -XX:+UseConcMarkSweepGC"</div>
+      </td>
+  </tr>
+  <tr><td></td>
+      <td>fbx-conv-lin64: error while loading shared libraries: libfbxsdk.so: cannot open shared object file: No such file or directory</td>
+      <td>Not tested:
+          <div class='code'>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH;/home/ody/d/ubuntu/fbx-conv</div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Install JDK in Ubuntu</td> <td id="install-jdk-7-8">Install openJDK 1.7 as default:<br>
+          /etc/environment<br>
+          <div class='code'>JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64<br>
+              export JAVA_HOME
+          </div>
+          Install <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">oracle JDK 8:</a><br>
+          Download the <a href="files/jdk-8u72-linux-x64.tar.gz">jdk-8u72-linux-x64.tar.gz</a>
+          <div class='code'>tar -xf jdk-8u72-linux-x64.tar.gz --directory=/home/ody/d/ubuntu/</div>
+          Config Eclipse, nothing more.
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/00A-config-jre8.png"><br>
+            <br><b>Note:</b><br>
+          1. On Jan 13 2017 JDK 8 can be installed from unbuntu APP center:<br>
+          JDK:
+          <div class='code'>sudo apt-get install openjdk-8-jdk</div>
+          JRE:
+          <div class='code'>sudo apt-get install openjdk-8-jre</div>
+          See <a target="_blank" href="http://askubuntu.com/questions/464755/how-to-install-openjdk-8-on-14-04-lts">Ask Ubuntu</a><br><br>
+          2. On ubuntu 16.04 LTS, open jdk 7 is no longer installed by default.
+          <div class='code'>
+              sudo add-apt-repository ppa:openjdk-r/ppa<br>
+              sudo apt-get update<br>
+              sudo apt-get install openjdk-7-jdk
+          </div>
+          See <a target='_blank' href='https://askubuntu.com/questions/761127/how-do-i-install-openjdk-7-on-ubuntu-16-04-or-heigher'>Ask Ubuntu Question</a>.<br><br>
+          3. To switch JDK version:<br>
+          <div class='code'>sudo update-alternatives --config java<br>
+              sudo update-alternatives --config javac</div>
+          See <a href="http://askubuntu.com/questions/272187/setting-jdk-7-as-default/272190" target="_blank">Ask Ubuntu</a>
+      </td>
+  </tr>
+  <tr><td/>
+      <td>Setup ZK project<br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/028-zk-hello.png">
+      </td>
+      <td>1. Install ZK<br>
+          Go Eclipse Market Place, search ZK.<br>
+          2. Download a stand alone version of tomcat7. <a href='files/apache-tomcat-7.0.79.tar.gz'>Here is a local tar ball</a>.<br>
+          tip: <br>
+          Don't install tomcat via eclipse (a install button when creating a server item in eclipse). It's not friendly.<br>
+          ZK support only Eclipse 4.2 Juno, which only support tomcat7.<br>
+          And don't even install tomcat7 via apt-get, which where install tomcat conf dir in /etc/tomcat7, but eclipse 4.2 Juno will take the conf in the same directory, a.k.a /usr/share/tomcat7. Some reports says a symbol link will solve the problem. But it don't work me.<br>
+          Just download and unpact it. Here is <a target='_blank' href='files/apache-tomcat-7.0.79.tar.gz'>a local 7.0.79.tar.gz</a>.<br><br>
+          3. Create a zk project, and debug as a server application.<br>
+          tip:<br>
+          A stand alone tomcat7 needing change ports in $CATALINA_HOME/conf/server.xml. They are 8080, 8009, 8005.<br>
+          (See <a target='_blank' href='https://www.mkyong.com/tomcat/how-to-change-tomcat-default-port/'>How to change Tomcat default port<a>)<br>
+          Don't start tomcat7 manually. Let eclipse do it. Sometime switch the server location can help.<br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/025-eclipse-tomcat7-error.png">
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/026-eclipse-tomcat7-switch.png"><br>
+          Sometimes tomcat7 will be blank if a server definition is deleted.<br>
+          Delte eclipse-workspace/test01/.metadata/.plugins/org.eclipse.core.runtime/.settings:<br>
+          org.eclipse.wst.server.core.prefs<br>
+          org.eclipse.jst.server.tomcat.core.prefs<br>
+          See <a target='_blank' href='https://stackoverflow.com/questions/14791843/eclipse-add-tomcat-7-blank-server-name'>StackOverFlow</a><br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/027-eclipse-new-server-bug.png">
+          <hr>
+          To move eclipse and server from 1 host to another:<br>
+          1. Copy eclipse (no need to install zk again, just active it)<br>
+          2. Copy or un-zip tomcat<br>
+          3. Remove and new a server. If can't create tomcat server, delete the meta files. see above.<br>
+          4. The above step will also resolve "can't resolve javax.servlet" error.<br>
+          Refere <a traget='_blank' href='https://stackoverflow.com/questions/8046871/how-to-add-tomcat-server-in-eclipse'>ShivBuyya's answer</a>.
+      </td>
+  </tr>
+
+    <tr><td></td>
+        <td>ZK makes Catalina starting failed. </td>
+        <td><div class='exception'>Caused by: org.apache.catalina.LifecycleException:<br>
+            Failed to start component [StandardEngine[Catalina].StandardHost[localhost].StandardContext[[pilgram-0.1]]
+            </div>
+        Try active zk studio.</td>
+    </tr>
+
+  <tr><td></td>
+      <td>zk Messagebox won't show in modal dialog way if event thread enabled.<br>
+          com.infochange.frameleisure.util.Msgbox.question(...) not going synchronized with client
+      </td><td>Disable event thread in zk.xml. See <a target="_blank" href="https://www.zkoss.org/wiki/ZK_Developer%27s_Reference/UI_Patterns/Event_Threads">ZK_Developer's_Reference/UI_Patterns/Event_Threads</a>
+          <div class='code'><pre>&lt;system-config&gt;
+    &lt;disable-event-thread&gt;true&lt;/disable-event-thread&gt;
+&lt;/system-config&gt;</pre></div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Install Mysql and Workbench<br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/029-mysql-test.png">
+      </td>
+      <td><div class='code'>sudo apt-get update<br>
+              sudo apt-get install mysql-server<br>
+              sudo mysql_secure_installation<br>
+              sudo mysql_install_db (for mysql 5.7 mysqld --initialize)<br>
+              sudo mysqladmin -p -u root version
+          </div>
+          <hr>
+          <div class='code'>sudo apt-get install mysql-workbench</div>
+          <hr>
+          Install mysql on Ubunt 16.04 LTS, mysql client complain:
+          <div class='exception'>ERROR 1698 (28000): Access denied for user 'root'@'localhost'</div>
+          Follow the exactly <a target='_blank' href='https://stackoverflow.com/questions/39281594/error-1698-28000-access-denied-for-user-rootlocalhost'>same title at stackoverflow</a>, the anwser is:
+          <div class='code'>$ sudo mysql -u root<br>
+mysql&gt; USE mysql;<br>
+mysql&gt; SELECT User, Host, plugin FROM mysql.user;<br>
+          </div>
+          the solution:
+          <div class='code'>mysql&gt; USE mysql;<br>
+mysql&gt; UPDATE user SET plugin='mysql_native_password' WHERE User='root';<br>
+mysql&gt; FLUSH PRIVILEGES;<br>
+mysql&gt; exit;<br>
+
+$ service mysql restart<br></div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+    <td>dump and import database</td>
+    <td>See <a target='_blank' href='https://stackoverflow.com/questions/17666249/how-to-import-an-sql-file-using-the-command-line-in-mysql'>How to import an SQL file using the command line in MySQL?</a>
+        <div class='code'>$ mysqldump -u root -h host -ppswd receipt &gt; receipt.sql<br>
+mysql&gt; create database receipt;<br>
+mysql&gt; use receipt;<br>
+mysql&gt; source ~/receipt.sql;
+        </div>
+        To dump a single table:
+        <div class='code'>$ mysqldump -u root -h host -ppswd receipt f_domain &gt; receipt.sql</div>
+        Note:<br>
+        You must be careful dumping tables from windows to linux, because table name on windows are case insensitive bu sensitive on linux. See <a target="_blank" href="https://dev.mysql.com/doc/refman/5.7/en/identifier-case-sensitivity.html">Mysql Manual section 9.2.2</a>. This makes table duplicated.
+        <div class='exception'><pre>
+mysql&gt; show tables from receipt;
++------------------------+
+| Tables_in_receipt      |
++------------------------+
+| ...                    |
+| b_itineraryTemplate    |
+| b_itineraryTemplateDay |
+| b_itinerarytemplate    |
+| b_itinerarytemplateday |
++------------------------+
+        </pre></div>
+        Mysql Manual:<br>
+        <div class='code'><b>9.2.2 Identifier Case Sensitivity</b><br>
+In MySQL, databases correspond to directories within the data directory. Each table within a database corresponds to at least one file within the database directory (and possibly more, depending on the storage engine). Triggers also correspond to files. Consequently, the case sensitivity of the underlying operating system plays a part in the case sensitivity of database, table, and trigger names. This means such names are not case sensitive in Windows, but are case sensitive in most varieties of Unix. One notable exception is OS X, which is Unix-based but uses a default file system type (HFS+) that is not case sensitive. However, OS X also supports UFS volumes, which are case sensitive just as on any Unix. See Section 1.8.1, “MySQL Extensions to Standard SQL”. The lower_case_table_names system variable also affects how the server handles identifier case sensitivity, as described later in this section.
+        </div>
+    </td>
+  </tr>
+  <tr><td></td>
+      <td>Workbench and Mysql command line don't connect to MySql server.</br>
+              <div class='exception'>error 1 (10061) cannot connect to Database server (Wrokbench code: 10061).</div>
+              <div class='exception'>error 2 (111) can't connect MySQL Server on 192.168.2.200 (111).</div>
+      </td><td>
+          update1: (111) means service not found. Tested by /etc/init.d/mysqld -stop<br>
+          <h6>Key point 1.</h6>
+          Make sure the server is bind to local internal ip address for the user. To config this, in my.conf:
+          <div class='code'><pre>
+[mysqld]
+user = receipt
+bind-address = 0.0.0.0
+          </pre></div>
+          Don't forget restart mysql server.<br>
+          See <a target='_blank' href='https://www.cyberciti.biz/tips/how-do-i-enable-remote-access-to-mysql-database-server.html'>How Do I Enable Remote Access To MySQL Database Server?</a><br>
+          Note:<br>
+          1. We are used /etc/init.d/mysql restart this time. Let't try service mysql restart next time.<br>
+          2. To find where the my.conf mysql is using, try <a target='_blank' href=''>this way</a>:
+          <div class='code'>mysqld --help --verbose | more</div>
+          And mysql will reporting:
+          <div class='code'>Default options are read from the following files in the given order:<br>
+              /etc/my.cnf /etc/mysql/my.cnf /usr/etc/my.cnf ~/.my.cnf
+          </div>
+          <h6>Key point 2.</h6>
+          Make sure the user is granted. See <a target='_blank' href='https://support.rackspace.com/how-to/mysql-connect-to-your-database-remotely'>Connect to a MySQL database remotely</a>
+          <div class='code'>mysql -u root -h localhost -port 3306 -ppswd<br>
+              mysql&gt; grant all on receipt.* to receipt@'192.168.0.200' identified by 'receipt'</div>
+          Note: The ip address in the grant sentence is the remote ip where workbench are using;
+          the ip in mysql command line are mysql host ip.<br>
+          After this, you will get:<br>
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/030-mysql-shecma-create.png">
+          <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/031-mysql-shecma-use.png">
+          <hr>
+          There is a default meta date db in mysql, named 'mysql'. The user / grants date is in 'user' table.<br>
+          Here are some useful commands.<br>
+          <div class='code'>
+              shwo grants - show grants of users<br>
+              show grants for user - show grants of user<br>
+              show grants for 'root'@'host' - <br>
+              use database - change current database<br>
+              select user, host from mysql.user - show user - host pair.<br>
+              show tables - check the db design<br>
+              select database(); - show databases
+          </div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>mysql : can' connect via socket</td>
+      <td><div class='code'>mysql -u root -h localhost</div>
+          <div class='exception'>ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)</div>
+          <div class='code'>ody@ody:/$ sudo /etc/init.d/mysql start</div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>mysql empty root passward will make thing messed:
+          <div class='exception'>ERROR 1524 (HY000): Plugin 'auth_socket' is not loaded<br>
+              see <a target="_blank" href='https://bugs.launchpad.net/ubuntu/+source/mysql-5.7/+bug/1571668'>bug report </a></div>
+      </td><td>The usual way to reset root password will resolve the problem?<br>
+          Follow this to <a target='_blan' href='https://dev.mysql.com/doc/refman/5.6/en/resetting-permissions.html'>reset mysql 5.6 root password</a> or <a target='_blank' href='https://dev.mysql.com/doc/refman/5.7/en/resetting-permissions.html?acf=1'>reset mysql 5.6 password</a>. Here are some useful commands:<br>
+          check is mysqld running and stop mysql service:
+          <div class='code'>
+              sudo /etc/init.d/mysql stop<br>
+              sudo /etc/init.d/mysql start<br>
+              ps -ef | grep mysql </div>
+          To find where pid file mysql use:
+          <div class='code'>mysqld --print-defaults</div>
+          See <a target='_blank' href='https://stackoverflow.com/questions/7151229/how-do-i-locate-the-pid-file-in-var-lib-mysql-when-in-terminal-there-is-no-suc'>How do I locate the .pid file in /var/lib/mysql when in terminal there is no such directory?</a>.<br>
+          But if somethin happend lik <a target='_blank' href='https://stackoverflow.com/questions/4963171/mysql-server-startup-error-the-server-quit-without-updating-pid-file'>MySql server startup error 'The server quit without updating PID file '</a>, there my be something worse. A case of this  is mysql latest verstion and mysql 5.6 are both partly installed. And the bug makes empty root password worse. And resetting with
+          <div class='code'>sudo mysql_safe --skip-grant-tables &amp;</div> won't work.<br>
+          <div class='exception'>mysqld_safe mysqld from pid file /var/run/mysqld/mysqld.pid ended</div>
+              The only solution found for this is reinstall everything.<br>
+              Make sure all package are purged on ubuntu 15.10<br>
+              mysql-server mysql-server-5.6 mysql-server-core-5.6<br>
+              <div class='code'>sudo service mysql stop  #or mysqld<br>
+                  sudo killall -9 mysql<br>
+                  sudo killall -9 mysqld<br>
+                  sudo apt-get remove --purge mysql-server mysql-client mysql-common<br>
+                  sudo apt-get autoremove<br>
+                  sudo apt-get autoclean<br>
+                  sudo deluser mysql<br>
+                  sudo rm -rf /var/lib/mysql<br>
+                  sudo apt-get purge mysql-server-core-5.5<br>
+                  sudo apt-get purge mysql-client-core-5.5<br>
+              </div>
+              See <a target='code' href='https://askubuntu.com/questions/253023/unable-to-set-password-for-the-mysql-root-user'>Ask Ubuntu</a>.
+              Check all package are purged befor reinstall. To see mysql installation:
+              <div class='code'>sudo dpkg -l | grep mysql</div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Mysql tutorial: create user and database(schema)</td>
+      <td><div class='code'><pre>PS D:\mysql-5.7.19-winx64\bin&gt; ./mysql -u root -h 127.0.0.1 -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10121
+Server version: 5.7.19 MySQL Community Server (GPL)
+...
+
+mysql&gt; create user inforise identified by infochange;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version
+ for the right syntax to use near 'infochange' at line 1
+mysql&gt; create user inforise identified by 'infochange';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql&gt; create database emergency;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; grant all on emergency.* to inforise@'localhost' identified by 'infochange';
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql&gt; quit
+Bye
+PS D:\mysql-5.7.19-winx64\bin&gt; ./mysql -u inforise -h localhost -pinfochange emergency
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10122
+Server version: 5.7.19 MySQL Community Server (GPL)
+...
+
+mysql&gt; source d:/working-folder/zhou/portal-tables-01.sql;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+...
+Query OK, 0 rows affected (0.21 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql&gt;</pre></div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Mysql Commnad Memo</td>
+      <td>expand column
+          <div class='code'><pre>alter table b_articels modify levels varchar(4);</pre></div>
+          show table fields
+          <div class='code'><pre>show columns from b_articles;</pre></div>
+          drop / add foreign key
+          <div class='code'><pre>-- not enought
+alter table footable drop foreign key fooconstraint
+-- to see a foreign key
+SHOW CREATE TABLE `<yourtable>`;
+drop table b_articles;
+alter table b_articles add constraint FK_Reference_12 foreign key (cateId) references b_cates (cateId) on delete restrict on update restrict;</pre></div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Mysql Error: create table script failed on 5.7.20-0ubuntu0.16.04.1 (but ok on 5.7.19 windows 2012 R2)</td>
+      <td>Error result from <a download href='files/f_alerts.sql'>f_alerts.sql</a>:
+          <div class='exception'><pre>
+mysql&gt; source f_alerts.sql;
+ERROR 1142 (42000): CREATE command denied to user 'inforise'@'localhost' for table 'f_alerts'
+ERROR 1142 (42000): ALTER command denied to user 'inforise'@'localhost' for table 'f_alerts'
+mysql&gt; show grants;
++-----------------------------------------------------------------+
+| Grants for inforise@localhost                                   |
++-----------------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'inforise'@'localhost'                    |
+| GRANT ALL PRIVILEGES ON `emergency`.* TO 'inforise'@'localhost' |
++-----------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql&gt; select user(), current_user();
++--------------------+--------------------+
+| user()             | current_user()     |
++--------------------+--------------------+
+| inforise@localhost | inforise@localhost |
++--------------------+--------------------+
+1 row in set (0.01 sec)</pre></div>
+              Solve: remove schema "EMERGENCY". See <a target='_blank' href='https://stackoverflow.com/questions/5254537/create-command-denied-for-user-that-has-grant-all-privileges'>CREATE command denied for user that has GRANT ALL PRIVILEGES</a>.
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Mysql Error: Chinese characters not savable</td>
+      <td>To solve the problem in a short sight way: change database charset<div class='code'><pre>select @@version;
+select version();
+
+alter database emergency character set = utf8mb4 collate utf8mb4_unicode_ci;
+
+show columns from b_articles;
+
+ALTER TABLE b_articles CHANGE level level VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE b_articles CHANGE title title VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE b_articles CHANGE content content VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE b_articles CHANGE picStyles picStyles VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE b_articles CHANGE turnpic turnpic VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE b_articles CHANGE turnpic turnpic VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</pre></div>
+              To understand the root of problem, see <a target='_blank' href='https://mathiasbynens.be/notes/mysql-utf8mb4'>How to support full Unicode in MySQL databases</a>. In short, Mysql supporting of utf8 makes it complex. Don't use mysql early than 5.5.<br>
+              Also check <a target='_blank' href='https://stackoverflow.com/questions/6115612/how-to-convert-an-entire-mysql-database-characterset-and-collation-to-utf-8'>StackOverflow for solution discussed</a>.
+              <hr>
+              You may create db with utf8 as character set - default lartin1.
+              <div class='code'>create/alter database emergency default character set utf8 default collate utf8_general_ci;</div>
+              See <a blank='_blank' href='https://dev.mysql.com/doc/refman/5.7/en/charset-database.html'><i>MySQL 5.7 Reference Manual 10.1.3.3 Database Character Set and Collation</i></a>.<br>
+              To show databese charset<div class='code'>show character set</div>
+        <hr>
+        In powerdesigner 12.5 and later, edit current DBMS for default character set in "MYSQL 50 / Script / Objects / Table / Options", append
+        <div class='code'><pre>ENGINE =%s: list = BDB | HEAP | ISAM | InnoDB | MERGE | MRG_MYISAM | MYISAM, default = InnoDB
+DEFAULT CHARACTER SET =%s: list = utf8 | utf8mb4, default = utf8mb4
+COLLATE =%s: list = utf8_bin | utf8_general_ci | gbk_bin | gbk_chinese_ci, default = utf8_bin</pre></div>
+        Then modify every table's physical options. Check <a target='_blank' href='http://www.quweiji.com/powerdesigner12-5-mysql-character-set-support-added'>powerdesigner12.5 mysql character set support added</a>.
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Make mysql backup task for windows server</td>
+      <td>Check <a target="_blank" href='https://stackoverflow.com/questions/14666819/mysql-database-backup-automatically-on-a-windows-server'>Answer on statckoverflow</a>
+          <div class='code'>mysqldump.exe --user=root --password=root  --host=localhost --port=3306 --result-file="c:\www\db\backup.%date:~10,4%%date:~7,2%%date:~4,2%.sql" --default-character-set=utf8 --single-transaction=TRUE --databases "dbtest1" "dbtest2"
+          </div>
+          Check the date output in different environment.
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Workbench complain about forgin key constrains.
+          <div class='exception'>create table receipt.f_role ... <br>
+                Error Code: 1050. Table 'f_role' already exists	0.0019 sec</div>
+      </td>
+      <td>drop childn tables first. Script generated by powerdesigner (Mysql) won't work.
+          <div class='code'><pre>drop table if exists receipt.f_role_funcs;
+drop table if exists receipt.f_user_roles;
+drop table if exists receipt.f_functions;
+drop table if exists receipt.f_role;
+
+create table receipt.f_functions (...);
+create table receipt.f_role ();
+create table receipt.f_role_funcs ();
+
+alter table receipt.f_role_funcs add constraint FK_Reference_3 foreign key (RoleID)
+references f_role (RoleID) on delete restrict on update restrict;
+
+alter table receipt.f_role_funcs add constraint FK_Reference_4 foreign key (FuncID)
+eferences receipt.f_functions (FuncID) on delete restrict on update restrict;
+          </pre></div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+    <td>zul page is utf-8, sql string printed by system.out is utf-8, all Chinese characters are displayed normally, but mysql field is '?'.
+    </td><td>The problem comes from JDBC charset.
+        <div class='code'>jdbc:mysql://localhost:3306/receipt?characterEncoding=utf8 </div>
+        See <a target='_blank' href='https://stackoverflow.com/questions/3040597/jdbc-character-encoding'>StackOverflow: JDBC character encoding</a>.<br>
+        also make sure mysql default collation is utf8-bin or utf8-defalut-collation.</td>
+  </tr>
+
+  <tr><td></td>
+      <td>Configure Pooled Datasource on tomcat</td>
+      <td>Pooled data source connection are managed by servlet container. To use pooled connections, data source must deployed with JNDI binding. See <a target='_blank' href='https://docs.oracle.com/javase/tutorial/jdbc/basics/sqldatasources.html'>Oracle Java Tutorials: Connecting with DataSource Objects</a>.<br>
+          To deploy a Mysql JNDI DataSource to tomcat:<br>
+          <div class='code'><ol>
+              <li>get the mysql Connector/J jar package. <a download href='files/mysql-connector-java-5.1.44-bin.jar'>(here is a local version)</a></li>
+              <li>setup emerge-server/WebContent/WETA-INF/context.xml:<br><pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Context&gt;
+  &lt;Resource name="jdbc/frameDs" global="jdbc/frameDs"
+  			auth="Container" type="javax.sql.DataSource"
+  			maxActive="10" maxIdle="3" maxWait="10000"
+  			username="inforise" password="infochange" driverClassName="com.mysql.jdbc.Driver"
+  			url="jdbc:mysql://localhost:3306/emergency"/&gt;
+&lt;/Context&gt;</pre></li>
+              <li>setup emerge-server/WebContent/WEB-INF/web.xml:<br><pre>
+&lt;web-app xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0"&gt;
+  &lt;description&gt; Frame DAO - MySQL &lt;/description&gt;
+  &lt;resource-ref&gt;
+      &lt;description&gt;DB Connection&lt;/description&gt;
+      &lt;res-ref-name&gt;jdbc/emergency&lt;/res-ref-name&gt;
+      &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+      &lt;res-auth&gt;Container&lt;/res-auth&gt;
+  &lt;/resource-ref&gt;
+&lt;/web-app&gt;</pre></li>
+            <li>Connect mysql:<br>
+                InitialContext ctx = new InitialContext();<br>
+                DataSource ds = (DataSource)ctx.lookup("java:/comp/env/jdbc/frameDs");
+            </li>
+          </ol></div>
+          See <a target='_blank' href='https://tomcat.apache.org/tomcat-7.0-doc/jndi-datasource-examples-howto.html#MySQL_DBCP_Example'>Tomcat Manu: JNDI Datasource HOW-TO</a>.<br>
+          Error 1.<br>
+          <div class='exception'>NameNotFoundException: Name [jdbc/frameDs] is not bound in this Context. Unable to find [jdbc]</div>
+          Add "java:/comp/env/" in to the argument of lookup(). See <a target='_blank' href='https://stackoverflow.com/questions/16737754/javax-naming-namenotfoundexception-name-is-not-bound-in-this-context-unable-to'>answer about "java:/comp/env/..."</a><br>
+          Error 2.<br>
+          <div class='exception'>java.lang.ClassCastException: org.apache.tomcat.dbcp.dbcp.BasicDataSource cannot be cast to org.apache.tomcat.jdbc.pool.DataSource</div>
+          Solve:
+          <div class='code'>import javax.sql.DataSource;</div>
+          instead of <div class='code'>import org.apache.tomcat.jdbc.pool.DataSource;</div>
+          Check <a target='_blank' href='https://stackoverflow.com/questions/10926659/how-to-solve-this-java-lang-classcastexception-org-apache-tomcat-dbcp-dbcp-basi'>Stackoverflow</a>.<br>
+          Error 3.<br>
+          Deleting tomcat server in eclipse makes deploy web project impossible. Check <a target='_blank' href='https://stackoverflow.com/questions/28465155/add-previously-deleted-tomcat-7-server-in-eclipse'>Add previously deleted Tomcat 7 server in Eclipse</a>.<br>
+          In {workspace-directory}/.metadata/.plugins/org.eclipse.core.runtime/.settings, delete:<div class='code'>
+              org.eclipse.wst.server.core.prefs<br>
+              org.eclipse.jst.server.tomcat.core.prefs</div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+    <td>mysql and workbench:<div class='exception'>
+You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column To disable safe mode, toggle the option ....</div>
+    </td><td><div class='code'><pre>
+SET SQL_SAFE_UPDATES=0;
+UPDATE tablename SET columnname=1;
+SET SQL_SAFE_UPDATES=1;
+    </pre></div></td>
+  </tr>
+
+  <tr><td colspan="3">gvim/vim</td></tr>
+  <tr><td></td>
+      <td>install, config gvim</td>
+      <td>sudo apt-get install vim-gnome<br>
+          The utuntu config file is ~/.vimrc<br>
+          if there are trouble about '\r'<br>
+          <div class='code'>line    1:<br>
+          E488: Trailing characters: nocompatible^M
+          </div>
+          try: dos2unix &lt;file&gt;
+          <hr>
+          In unbuntu, put this <a download href='files/.vimrc'>.vimrc (file)</a> in home directory for configurations.
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>regular expression for vim</td>
+      <td>replace current and following 5 lines' starting space:
+          <div class='code'>:.,.+5s/^\s*//g</div>
+          See <a target='_blank' href='http://vim.wikia.com/wiki/Ranges'>gvim range examples</a>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Disable backup file (~file),<br>set color theme,<br>set tab space,<br>set encoding<br>no blinking</td>
+      <td>In windows 7, put _vimrc in C:\Users\ody<br>
+          <div class='code'>
+          :colorscheme desert
+          :map H 30k<br>
+          :map L 30j<br>
+          set lines=50 columns=120<br>
+          :set nobackup<br>
+          :set noundofile<br>
+          set nowritebackup<br>
+          set encoding=utf-8<br>
+          set fileencoding=utf-8<br>
+          set tabstop=4     <br>
+          set shiftwidth=4    " Indents will have a width of 4<br>
+          set softtabstop=4   " Sets the number of columns for a TAB<br>
+          set expandtab       " Expand TABs to spaces<br>
+          set guicursor=a:blinkon0
+          </div>
+          <hr>
+          To find home and excutable directory:<br>
+          :echo $HOME<br>
+          :echo $VIM
+          <hr>
+          The .un~ file is an undo file persisted, since 7.3. To disable:<br>
+          :set noundofile
+          <hr>
+          To stop cursor blinking in Ubuntu:
+          <div class='code'>gconftool-2 --set /desktop/gnome/interface/cursor_blink --type bool false</div>
+      </td>
+  </tr>
+
+  <tr><td></td>
+      <td>Multiple tab editing</td>
+      <td><div class='code'><pre>:echo $PWD
+:tabe anotherfile
+gT (1gt)
+gt (2gt)</pre></div></td>
+  </tr>
+
+  <tr><td></td>
+      <td>install Varpper (gvim for Eclipse)</td>
+      <td>In Eclipse Mars, start Eclipse Marketplace Center, search "vrapper" and install<br>
+          ~/.vrapperrc:<br>
+          <div class='code'>
+            : nmap L 30j<br>
+            : nmap H 30k
+          </div>
+      </td>
+</table>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+<hr>
+<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>

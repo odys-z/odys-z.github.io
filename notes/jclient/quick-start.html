@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Developer's FAQ</title>
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
+	<script src="../../css/showfig.js"></script>
+	<link rel="icon" href="../../css/odysz.png">
+</head>
+<body>
+<header>
+	<h1>JClient Quick Start</h1>
+	<a href='../../index.html'>Documents Home</a>
+	<hr>
+</header>
+
+<article>
+	<h2>About The JSample Application</h2>
+	<p>The JSample is an example showing how to use the jclent's JS API to visit
+		the <i>jserv.sample</i> json data service. Before floing steps in this tutorial,
+		you need to setup the sever. These 2 parts must work together though they
+		can be deployed separately.</p>
+	<p>The jserv.sample is a SOA json service can work together with any one or more
+		following client. Please following the <a href='../semantics/jserv/jsample-quick-start.html'>
+		quick start doc</a> to set up the server.</p>
+
+	<h2>About JClient</h2>
+	<p>JClient is the client side API for <a href='../../index.html'>semantic-*</a>,
+		including:
+		<ul>
+			<li>jclient/java, the java client</li>
+			<li>jclient/js/vue, the vue components can communicate with sematic-*</li>
+			<li>jclient/js/easui, the easUI API lib can communicate with sematic-*</li>
+			<li>jclient/cs, the c# client</li>
+			<li>jclient/js, the low level js client API for accessing service at jerver.sample</li>
+		</ul>
+	<p>All the clients are tested together with jserv.sample (All? Not True) and can be configured to a different jserv.</p>
+	<p>The sample project's client side located in the jclient/test folder.</p>
+	<p>Some client implementation like the EasyUI version is implementated as a basic
+		enterprise webapp's client, including a role based function previllege infrastructure
+		and a cheap workflow extension. It's a good starting point for a commercial
+		webapp.</p>
+	<h2>jclient/js</h2>
+	<h3>jclient/js/vue</h3>
+	<p>TODO ...</p>
+	<h3 id='qickstart-jeasy'>jclient/js/easUI</h3>
+	<h4>Prerequisites</h4>
+	<ul><li>The jserv.sample server <a href='../semantics/jserv/jsample-quick-start.html'> - see quick start here</a></li>
+		<li><a target='_blank' href='https://www.jeasyui.com/'>EasyUI</a>
+			(tested on 1.7.0 and 1.8.1), already included in test page</li>
+		<li>JQuery newer than 1.8, already included in test page</li>
+	</ul>
+	<h4>Browsing the Jeasy Client Demo Pages</h4>
+	<ol><li>Follow <a href='../semantics/jserv/jsample-quick-start.html'>
+		the jserv.sample quick start</a> to deploy the server and make
+		sure the server is allowing cross domain content accessing.</li>
+		<li>Configure the jserv-sample url path in<br>
+		jclient/js/test/easyi/jsample-easyui.js
+		<div class='code'><pre>const jconsts = {
+        ...
+        serv: 'http://localhost:8080/jsample',
+        conn: 'local-sqlite',</pre></div>
+		Replace 'serv' with url path to your web application (e.g. jserv.sample);<br>
+		Replace 'conn' with your connection ID configured in 'your-web-app'/WEB-INF/connects.xml.<br>
+		The default configuration should working if you didn't change any configurations.</li>
+		<li>Open login demo page:<br>
+			jclient/js/test/easyi/login.html<br>
+		</li>
+		<li>Login with 'admin:123456' and navigate through function pages.</li>
+	</ol>
+	<h4>Screenshots (click for large image):</h4>
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/001.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/002.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/003.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/004.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/005.png">
+			<img class="screenshot-big" title="click for large image"
+				onclick="showFig(src)" src="imgs/006.png">
+	<p></p>
+
+	<h2 id='java'>jclient/java</h2>
+	<p>If you'v tried js client, you may wonder is the protocol layer powerful enough
+		for other runtime environment or programming languange. Try the jclient java
+		version, have a look at the source.</p>
+	<p>Keep in mind that we won't change a single configuration at the server side.</p>
+	<h4>Prerequisites</h4>
+	<p>JDK 1.8</p>
+	<h4>Run Junit4 Test Cases</h4>
+	<ol><li>Make sure you configured a data connection for jserv.sample server.<br>
+			This client will use the "orcl.alarm-report" connection as configured in connects.xml.<br>
+			See <a href='../semantics/jserv/jsample-quick-start.html'>the jserv.sample quick start,
+			configure an oracle connection for java client testing.</a>
+		</li>
+		<li><div class='code'>git clone https://github.com/odys-z/jclient.git</div>
+		This will also clone other jclient version. We only needing the java folder here.</li>
+		<li>Import The Eclipse Java Project</li>
+		<li>Run Junit Test Case: io.odysz.jclient.SemantiClientTest</li>
+	</ol>
+	<p></p>
+
+	<h2>jclient/c#</h2>
+</article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2019 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</html>

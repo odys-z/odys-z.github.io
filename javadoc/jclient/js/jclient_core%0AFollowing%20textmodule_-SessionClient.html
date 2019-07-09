@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: SessionClient</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: SessionClient</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="jclient_core%250AFollowing%2520textmodule_.html">jclient/core
+Following text</a>~</span>SessionClient<span class="signature">(ssInf, iv, dontPersist)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Client with session logged in.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="SessionClient"><span class="type-signature"></span>new SessionClient<span class="signature">(ssInf, iv, dontPersist)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Create SessionClient with credential information or load from localStorage.<br>
+Because of two senarios of login / home page integration, there are 2 typical useses:<br>
+Use Case 1 (persisted): logged in, then create a client with response,
+		save in local storage, then load it in new page.<br>
+Use Case 1 (not persisted): logged in, then create a client with response,
+		user's app handled the object, then provided to other functions,<br>
+		typicall a home.vue component.<br>
+<p><b>Note</b></p>
+<p>Local storage may be sometimes confusing if not familiar with W3C standars.<br>
+The local storage can't be cross domain referenced. It's can not been loaded by home page
+if you linked from login page like this, as showed by this example in login.vue:</p>
+<p>window.top.location = response.home</p>
+<p>One recommended practice is initializing home.vue with login credential
+by login.vue, in app.vue.</p>
+<p>But this design makes home page and login component integrated. It's not
+friedly to application pattern like a port page with login which is independent
+to the system background home page.</p>
+<p>How should this pattern can be improved is open for discussion.
+If your are interested in this subject, leave any comments in wiki page please.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ssInf</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">login response form server: {ssid, uid}</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>iv</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;byte></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">iv used for cipher when login.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dontPersist</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">don't save into local storage.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jclient.js.html">jclient.js</a>, <a href="jclient.js.html#line223">line 223</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="commit"><span class="type-signature"></span>commit<span class="signature">(jmsg, onOk, onError)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Post the request message (JMessage with body of subclass of JBody).
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>jmsg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="JMessage.html">JMessage</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">request message</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onOk</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jclient.js.html">jclient.js</a>, <a href="jclient.js.html#line254">line 254</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="query"><span class="type-signature"></span>query<span class="signature">(conn, maintbl, alias, pageInf<br>, act)</span><span class="type-signature"> &rarr; {<a href="JMessage.html">JMessage</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    create a query message.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>conn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">connection id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maintbl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">target table</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>alias</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">target table alias</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pageInf<br></code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">page: page index, -1 for no paging<br>
+size: page size, default 20, -1 for no paging</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>act</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user's action for logging<br>
+{func, cate, cmd, remarks};</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jclient.js.html">jclient.js</a>, <a href="jclient.js.html#line270">line 270</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the request message
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="JMessage.html">JMessage</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="userReq"><span class="type-signature"></span>userReq<span class="signature">(conn, port, bodyItem, act)</span><span class="type-signature"> &rarr; {<a href="JMessage.html">JMessage</a>.&lt;<a href="UserReq.html">UserReq</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Create a user request JMessage.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>conn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">connection id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>port</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bodyItem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Protocol.UserReq</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">request body, created by like: new jvue.UserReq(conn, tabl).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>act</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">action, optional.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jclient.js.html">jclient.js</a>, <a href="jclient.js.html#line357">line 357</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    JMessage
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="JMessage.html">JMessage</a>.&lt;<a href="UserReq.html">UserReq</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="usrAct"><span class="type-signature"></span>usrAct<span class="signature">(funcId, cate, cmd, remarks)</span><span class="type-signature"> &rarr; {SessionClient}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Set user's current action to be logged.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>funcId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">curent function id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">category flag</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cmd</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>remarks</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jclient.js.html">jclient.js</a>, <a href="jclient.js.html#line372">line 372</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    this
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">SessionClient</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="usrCmd"><span class="type-signature"></span>usrCmd<span class="signature">(cmd)</span><span class="type-signature"> &rarr; {SessionClient}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Set user's current action to be logged.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cmd</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user's command, e.g. 'save'</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="jclient.js.html">jclient.js</a>, <a href="jclient.js.html#line383">line 383</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    this
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">SessionClient</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="jclient_core%250AFollowing%2520textmodule_.html">jclient/core
+Following text</a></li><li><a href="module-jeasy_html.html">jeasy/html</a></li><li><a href="module-jeasy_session.html">jeasy/session</a></li></ul><h3>Classes</h3><ul><li><a href="DatasetCfg.html">DatasetCfg</a></li><li><a href="jclient_core%250AFollowing%2520textmodule_-Inseclient.html">Inseclient</a></li><li><a href="jclient_core%250AFollowing%2520textmodule_-J.html">J</a></li><li><a href="jclient_core%250AFollowing%2520textmodule_-SessionClient.html">SessionClient</a></li><li><a href="Jregex.html">Jregex</a></li><li><a href="module.html#.exports">exports</a></li><li><a href="Protocol.html">Protocol</a></li><li><a href="Tweenable.html">Tweenable</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CheapCode">CheapCode</a></li><li><a href="global.html#chpEnumReq">chpEnumReq</a></li><li><a href="global.html#dispose">dispose</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#getIv128">getIv128</a></li><li><a href="global.html">interpolate</a></li><li><a href="global.html#isPlaying">isPlaying</a></li><li><a href="global.html#pause">pause</a></li><li><a href="global.html#resume">resume</a></li><li><a href="global.html#seek">seek</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setBezierFunction">setBezierFunction</a></li><li><a href="global.html#setConfig">setConfig</a></li><li><a href="global.html#setScheduleFunction">setScheduleFunction</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#stree_t">stree_t</a></li><li><a href="global.html#testAES">testAES</a></li><li><a href="global.html#tween">tween</a></li><li><a href="global.html#unsetBezierFunction">unsetBezierFunction</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a> on Fri May 31 2019 23:44:53 GMT+0800 (Hong Kong Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

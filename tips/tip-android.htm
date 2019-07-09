@@ -1,0 +1,687 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Android, ... - Developer's FAQ</title>
+<link rel="stylesheet" type="text/css" href="resources.css">
+<script src="showfig.js"></script>
+<link rel="icon" href="imgs/ic-2.png">
+</head>
+<body>
+
+<header>
+	<h1>Topic: Android, Android Studio, GDX, Gradle, ...</h1>
+	<p class="tips">updating: Odys' techincal troubleshootings</p>
+	<a href='index.htm'>Home</a>
+	<hr>
+</header>
+
+<article>
+<table class="reference notranslate">
+  <tbody>
+  <tr>
+    <th style="width:20px"></th>
+    <th style="width:200px">trouble</th>
+    <th style="width:70%">shootings</th>
+  </tr>
+
+  <tr><td colspan="3">Pro net</td></tr>
+  <tr><td></td>
+      <td></td>
+      <td><div class='code'>/opt/google/chrome/chrome --proxy-server="http=192.168.1.201:8580;https=192.168.1.201:8580"</div></td>
+  </tr>
+
+  <tr><td></td>
+	  <td>Gradle Pro</td>
+	  <td>~/.gradle/gradle.proterties
+	  <div class='code'><pre>
+	  systemProp.https.nonProxyHosts=192.168.*,baidu.com,127.0.0.1
+	  systemProp.http.proxyHost=192.168.3.101
+	  systemProp.https.proxyPort=8888
+	  systemProp.http.nonProxyHosts=192.168.*,baidu.com,127.0.0.1
+	  systemProp.https.proxyHost=192.168.3.101
+	  systemProp.http.proxyPort=8888
+	  </pre></div></td>
+  </tr>
+
+  <tr><td colspan="3">Gradle</td></tr>
+  <tr><td></td>
+	  <td>Move .gradle</td>
+	  <td>1. change Android Studio gradle path
+		  <div class='code'>File - settings - Build, Execution, Deployment - Gradle - Service Directory Path</div>
+		  2. <div class='code'>export GRADLE_USER_HOME=/home/ody/e/.gradle<br>
+		  gvim /etc/environment </div>
+		  <hr>
+		  Note:<br>
+		  copying .gradle will results in some truouble not resolved. Create a new one instead.<br>
+		  Android Studio needing invalid cache and restart.
+		  Trouble:
+		  <div class='exception'>Android Studio Can not reslove symbol on  import com.badlogic.gdx.Game;</div>
+		  Shooting:<br>
+		  delete project/.gradle and project/.idea
+	  </td>
+  </tr>
+
+  <tr><td colspan="3">GDX</td></tr>
+  <tr><td></td>
+      <td>GDX</td>
+      <td>~/.gradle/gradle.proterties
+	  </td>
+  </tr>
+
+  <tr><td/>
+	  <td>Model's exported by Blender lacking of texture</td>
+	  <td>See <a target='_blank' href='https://blender.stackexchange.com/questions/16702/why-do-the-objects-imported-to-libgdx-look-white/126350#126350'>
+		  my answer at blender's community as stackExcange</a><br>
+		  also:<a target='_blank' href='https://people.cs.clemson.edu/~dhouse/courses/405/docs/brief-obj-file-format.html'>obj format</a>
+		  and <a target='_blank' href=https://github.com/libgdx/libgdx/wiki/Importing-Blender-models-in-LibGDX>Importing Blender models in LibGDX</a>
+		  are useful.
+	  </td>
+  </tr>
+
+  <tr><td colspan="3">Android & ADB</td></tr>
+  <tr><td/>
+	  <td>Huawei Mobile (Android 6.0.1) drop adb connection when install debug apk</td>
+	  <td>[project]/gradlew android:installDebug:
+		  <div class='exception'><pre>&gt; Task :android:installDebug
+02:55:25 V/ddms: execute: running am get-config
+02:55:27 V/ddms: execute 'am get-config' on 'UUKDU15C08000299' : EOF hit. Read: -1
+02:55:27 V/ddms: execute: returning
+Installing APK 'android-debug.apk' on 'HUAWEI RIO-CL00 - 6.0.1' for android:debug
+02:55:27 D/android-debug.apk: Uploading android-debug.apk onto device 'UUKDU15C08000299'
+02:55:27 D/Device: Uploading file onto device 'UUKDU15C08000299'
+02:55:27 D/ddms: Reading file permision of /media/sdb/docs/personal/as-prjs/test/t01/android/build/outputs/apk/debug/android-debug.apk as: rw-rw-r--
+02:55:32 E/Device: Error during Sync: Connection reset by peer
+Unable to install /media/sdb/docs/personal/as-prjs/test/t01/android/build/outputs/apk/debug/android-debug.apk
+com.android.ddmlib.InstallException: Connection reset by peer
+      at com.android.ddmlib.Device.installPackage(Device.java:912)
+      at com.android.ddmlib.Device.installPackage(Device.java:880)
+      at com.android.ddmlib.Device.installPackage(Device.java:869)
+      at com.android.builder.testing.ConnectedDevice.installPackage(ConnectedDevice.java:126)
+      at com.android.build.gradle.internal.tasks.InstallVariantTask.install(InstallVariantTask.java:179)
+      at com.android.build.gradle.internal.tasks.InstallVariantTask.install(InstallVariantTask.java:110)
+      at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+      at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</pre></div>
+	  Follow <a href='https://answers.unity.com/questions/1227805/adb-install-connection-reset-by-peer.html'>Answer by Liinnkk</a><br>
+	  - enable developer mode (tap 5 times quickly on version number in "about phone")<br>
+	  - connect adb and find out ip configuration in local WLAN <div class='code'>adb shell ifconfig</div>
+	  - connect adb via tcpip<div class='code'>adb tcpip 5555<br>
+		  adb connect [ip]</div>
+	  - disconnect USB, install
+	  </td>
+  </tr>
+
+  <tr><td></td>
+	  <td>Setup Gradle Projects from scratch</td>
+	  <td><table class='reference'><tbody>
+              <tr><td colspan="2">Setup a Log4j Demoe with Eclipse (STS Gradle)</td></tr>
+              <tr><td>1. Create a Gradle Project (Gradle Quick Start Project)<br>
+                      2. in src/main/java/com.ex01/Hello.java<br>
+                      <div class='code'>
+                          package com.ex01;<br>
+                          import java.util.Arrays;<br>
+                          import org.apache.logging.log4j.LogManager;<br>
+                          import org.apache.logging.log4j.Logger;<br>
+                          public class Hello {<br>
+                          &emsp;static final Logger logger =<br>
+                          &emsp;&emsp;&emsp;LogManager.getLogger(Hello.class.getName());<br>
+                          &emsp;public static void main(String[] args) {<br>
+                          &emsp;&emsp;System.out.println("args: " + Arrays.toString(args));<br>
+                          &emsp;}<br>
+                          }<br>
+                      </div>
+                      3. Configure log4j.properties following this <a href="http://www.mkyong.com/logging/log4j-hello-world-example/">tutorial</a>.
+                      <div class='code'>
+                          # Root logger option<br>
+                          log4j.rootLogger=DEBUG, stdout, file<br><br>
+                          Redirect log messages to console<br>
+                          log4j.appender.stdout=org.apache.log4j.ConsoleAppender<br>
+                          log4j.appender.stdout.Target=System.out<br>
+                          log4j.appender.stdout.layout=org.apache.log4j.PatternLayout<br>
+                          log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n<br> <br>
+                          Redirect log messages to a log file, support file rolling.<br>
+                          #   %d{yyyy-MM-dd HH:mm:ss} = Date and time format, refer to SimpleDateFormat JavaDoc.<br>
+                          #   %-5p = The logging priority, like DEBUG or ERROR. The -5 is optional, for the pretty print format.<br>
+                          #   %c{1} = The logging name we set via getLogger(), refer to log4j PatternLayout guide.<br>
+                          #   %L = The line number from where the logging request.<br>
+                          #   %m%n = The message to log and line break.<br>
+                          log4j.appender.file=org.apache.log4j.RollingFileAppender<br>
+                          log4j.appender.file.File=C:\\log4j-application.log<br>
+                          log4j.appender.file.MaxFileSize=5MB<br>
+                          log4j.appender.file.MaxBackupIndex=10<br>
+                          log4j.appender.file.layout=org.apache.log4j.PatternLayout<br>
+                          log4j.appender.file.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n<br>
+                      </div>
+                  </td>
+                  <td>4. in gradle.build<br>
+                      <div class='code'>
+                          apply plugin: 'java'<br> apply plugin: 'eclipse'<br>
+                          apply plugin: 'idea'  // not sure - Note 1<br>
+                          ...<br> jar {<br>
+                          &emsp;// Note 2<br>
+                          &emsp;<b>from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }</b><br>
+                          &emsp;manifest {<br>
+                          &emsp;&emsp;&emsp;<b>'Main-Class': 'com.ex01.Hello'</b><br>
+                          &emsp;}<br>
+                          }<br>...<br>
+                          dependencies {<br>
+                          &emsp;// Note 3<br>
+                          &emsp;<b>compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'</b><br>
+                          &emsp;<b>compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'</b><br>
+                          }
+                      </div>
+                      Note 1:<br>
+                      Eclipse Error Report: Class/Type cannot resloved.<br>
+                      Try gradle clean, gradle eclipse and refresh project. see <a href="http://stackoverflow.com/questions/17907927/update-my-gradle-dependencies-in-eclipse">Update my gradle dependencies in eclipse</a>.<br>
+                      Note 2:<br>
+                      See <a href="https://logging.apache.org/log4j/2.x/maven-artifacts.html">Log4j2 home page for dependencies</a>.<br>
+                      Note 3: handle the NoClassFoundException error:<br>
+                      See <a href="http://www.petrikainulainen.net/programming/gradle/getting-started-with-gradle-dependency-management/">Tutorial: Getting Started With Gradle: Dependency Management for "fat" jar</a>.<br>
+                      5. <div class='code'>jar -jar build/libs/demo01-1.0.jar arg1 arg2</div>
+                  </td>
+              </tr>
+              <tr><td colspan="2">A helpful <a href="files/gdx-tests-android-gradle.build" target="_blank">gradle.build</a> for understanding method definition and tasks of exec type.</td></tr>
+      </tbody></table>
+  </td>
+</tr>
+
+<tr><td></td>
+  <td id="import-gradle">How to import gradle project to eclipse?<br>
+      tag: eclipse proxy, gradle proxy
+  </td>
+  <td>File -&gt; import -&gt; gradle prject.<br>
+      To import gradle project, a proxy must been set to let gradle down load files.<br>
+      ~/.gradle/gradle.properties:
+      <div class='code'>
+          systemProp.http.proxyHost=192.168.3.105<br>
+          systemProp.http.proxyPort=8580<br>
+          # systemProp.http.proxyUser=userid<br>
+          # systemProp.http.proxyPassword=password<br>
+          systemProp.https.proxyHost=192.168.3.105<br>
+          systemProp.https.proxyPort=8580<br>
+      </div>
+      Eclipse Mars has another issue.<br>
+      <dl>
+      <dt>Eclips Mars Network Proxy can't been set.</dt>
+      <dd>This is a known issue(bug): <a target='_blank' href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=479075" >Bug 479075</a><br>
+      To work arround, copy this to<br>
+      eclipse-dir/java-mars/eclipse/configuration/.settings/org.eclipse.core.net.prefs<br>
+      <div class='code'>
+          proxiesEnabled=true<br>
+          # HTTP proxy settings<br>
+          proxyData/HTTP/host=127.0.0.1<br>
+          proxyData/HTTP/port=8580<br>
+          proxyData/HTTP/hasAuth=false<br><br>
+
+          # HTTPS proxy settings<br>
+          proxyData/HTTPS/host=127.0.0.1<br>
+          proxyData/HTTPS/port=8580<br>
+          proxyData/HTTPS/hasAuth=false<br>
+
+          # Hosts that will not use proxy <br>
+          # nonProxiedHosts=hostname1|hostname2|...<br>
+          # This line will work around the eclipse bug.<br>
+          nonProxiedHosts=127.0.0.1|localhost
+      </div>
+      To find where your Eclipse folder is, check $ECLIPSE_HOME, and if not specified (these directions at least work for Juno):
+      Open Eclipse as you normally do.<br>
+      Help -&gt; About Eclipse SDK -&gt; Installation Details -&gt; Configuration tab<br>
+      Find "eclipse.home.location=file:PATH". PATH is where eclipse is installed.
+      </dd>
+      </dl>
+  </td>
+</tr>
+
+<tr><td></td>
+  <td>Copy <i>assets</i> folder into desktop jar file with gradle</td>
+  <td><div class="code"><pre>
+    jar {
+        from ("assets") { into ("assets") };
+        manifest {
+	        attributes 'Main-Version': 1.0
+            attributes 'Main-Class': 'com.infochange.test4d.Test4D'
+        }
+    }</pre></div></td>
+</tr>
+
+<tr><td></td>
+  <td>Importing libGDX source projects from <a target='_blank' href="https://github.com/libgdx/libgdx">github</a>.<br>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/01C-gdxtest-3dscene.jpg">
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/01C-gdxtest-box2d.png"><br>
+  </td>
+  <td>Run gradle eclipse, import gradle existing project.<br>
+      Error 1: <br>
+      SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.<br>
+      create a local.properties file at the root directory of git local repository:<br>
+      <div class="code">sdk.dir=/home/ody/d/ubuntu/android-sdk-linux/</div>
+      <hr>
+      Error 2: <br>
+      eclipse gradle import failed to find target with hash string 'android-20'<br>
+      Install SDK Platform 20<br>
+      <hr>
+      Error 3: <br>
+      Could not find any version that matches com.android.support:support-v4:+.<br>
+      Install Android Support Library and Maven Local library<br>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/01A-libgdx-gradlerror.png">
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/01B-android-maven.png"><br>
+      <hr>
+      Error 4:<br>
+      test project don't configure correctly - jars don't existing.<br>
+      Compile the correspondent lib projects (run gradle jar task, copy to the required location).<br>
+      Download <a href="https://libgdx.badlogicgames.com/releases/" target="_blank">libgdx release</a> for gdx-native.jar. <a href="files/gdx-natives-1.6.1.jar">local copy here (1.6.1)</a>.<br>
+      <hr>
+      Error 5:<br>
+      Exception in thread "LWJGL Application" com.badlogic.gdx.utils.GdxRuntimeException: Error reading pack file: uiskin.<br>
+      Caused by: java.io.FileNotFoundException: uiskin.json<br>
+      <div class='code'>ln -s ../gdx-tests-android/assets assets</div>
+      In  com.badlogic.gdx.tests.g3d.Basic3DSceneTest.doneLoading():
+      <div class='code'>Model model = assets.get("assets/data/g3d/invaders.g3dj", Model.class);</div>
+      Error 6: <br>
+      gdx-test-android can't compile:<br><div class='code'>
+      [2016-03-12 22:53:58 - gdx-tests-android] Error generating final archive: Found duplicate file for APK: LICENSE.txt<br>
+      Origin 1: /home/ody/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar<br>
+      Origin 2: /home/ody/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar</div>
+      rename LICENSE.txt<br>
+      <div class='code'>
+          ody@ody:~/e/docs/jbox2d-git/libgdx/tests/gdx-tests-android$ cd ~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/<br>
+          ody@ody:~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0$ ls<br>
+          junit-4.11.jar<br>
+          ody@ody:~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0$ jar xf junit-4.11.jar<br>
+          ody@ody:~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0$ ls<br>
+          junit  junit-4.11.jar  LICENSE.txt  META-INF  org<br>
+          ody@ody:~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0$ mv LICENSE.txt LICENSE-junit.txt<br>
+          ody@ody:~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0$ mv junit-4.11.jar junit-4.11.jar.bak<br>
+          ody@ody:~/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0$ jar cf junit-4.11.jar junit LICENSE-junit.txt META-INF org<br></div>
+          refresh the project.
+          <hr>
+       Error 7: LogCat doesn't show logs.<br>
+       Make sure adb server started by sudo befor eclipse starting.
+       <hr><hr>
+       Error 8: project gdx-tests-android won't run, complaining like:<br>
+       [2016-03-13 22:11:40 - gdx-tests-android] Dx trouble processing "java/awt/font/NumericShaper.class":<br>
+       Ill-advised or mistaken usage of a core class (java.* or javax.*) when not building a core library.<br>
+       Don't try to build apk in gradle way, follow <a href="https://github.com/libgdx/libgdx/wiki/Running-demos-%26-tests" target="_blank">the gdx doc: runing tests</a>.<br>
+       If the console sasy:<br>
+       [2016-03-14 13:31:54 - gdx-tests-android] The library 'gdx-freetype-natives.jar' contains native libraries that will not run on the device.<br>
+       [2016-03-14 13:31:54 - gdx-tests-android] The following libraries were found:<br>
+       [2016-03-14 13:31:54 - gdx-tests-android]  - libgdx-freetype.so<br>
+       [2016-03-14 13:31:54 - gdx-tests-android]  - libgdx-freetype64.so<br>
+       Don't let the depending project (ligbdx-freetype) export the jar. And refresh and clean for the projects.<br>
+       Error 9: Exception when running xoppa tutorial's desktop project<br>
+       <div class='exception'>Exception in thread "LWJGL Application" com.badlogic.gdx.utils.GdxRuntimeException: com.badlogic.gdx.utils.GdxRuntimeException: Couldn't load dependencies of asset: data/invaderscene.g3db</div>
+       There are some problem in the .g3db file. Don't save the links, download the raw files.
+  </td>
+</tr>
+<tr><td></td>
+  <td>Android sub-project created by libGDX gdx-setup.jar error<br>
+  </td>
+  <td><img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/011-prj-setup-err.png">
+      The type android.os.handle cannot be resolved.<br>
+      This error occured while followed GDX tutorial:<a href="https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle">Project Setup Gradle</a>, which can be solved by updating ADT for Eclipse.<br>
+      After updated, add <i>Android Library</i> to <i>Build Path</i>.<br>
+      See <a href="http://www.badlogicgames.com/forum/viewtopic.php?t=16251&p=69796">the libGDX topic</a>.
+      <hr>
+      Error 1: Eclipse don't show <i>Android SDK Manager</i> menu.<br>
+      Change the perspective to java.<br>
+      See <a href="http://stackoverflow.com/questions/13885051/cant-see-android-sdk-manager-option-after-installation-run-as-administrator-do">anwser at Stackoverflow</a>.
+      <hr><img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/012-eclipse-import.png">
+      Null Pointer While Importing Gradle Project Into Eclipse<br>
+      Don't set the eclipse workspace to the gradle imported folder.<br>
+      See <a href="http://stackoverflow.com/questions/23050695/null-pointer-importing-gradle-project-into-eclipse" target="_blank">Null Pointer Importing Gradle Project Into Eclipse At StackOverFlow</a>
+  </td>
+</tr>
+<tr><td></td>
+  <td>Trouble when deploying html/desktop sub-projects of libGDX</br></td>
+  <td>1. The "export runable jar" method don't work for desktop project<br>
+      <div class='code'><i>user@:home-prj-root-created-by-jar$<i> ./gradlew desktop:dist<br>
+      java -jar build/dist/libs/desktop.jar</div>
+      2. Eclipse GWT don't work - plugin can't installed:<br>
+      <div class='code'>home-prj-root-created-by-jar: ./gradlew html:dist</div>
+      3. Firefox don't support WebGL:<br>
+      <div class='code'>URL: about:config<br>
+          webgl.force-enabled = true.<br>
+          layers.acceleration.force-enabled = true<br>
+          gfx.direct2d.force-enabled = true</div>
+      4. Browser displaying blank page<br>
+      Page must be visited through web service, and be careful about proxy settings;<br>
+      Don't access via VNC.<br>
+      5. User scene of Desktop and Both Desk and HTML of Tutorial Scene work fine, but HTML distribution of user scene can't work. The error show by browser reporing there is no file *.tga.<br>
+      Solution: change tga file to png. See <a href="http://stackoverflow.com/questions/19623613/font-file-not-found-in-libgdx-gwt-web-application">StackOverflow: font file not found in libgdx gwt web application</a>
+  </td>
+</tr>
+<tr><td></td>
+  <td>Importing libGDX demo project <a href="https://github.com/libgdx/libgdx-demo-cuboc" target='_blank'>cuboc</a> failed.</td>
+  <td>Error 1: <br>
+      Gradle Project don't import correctly with default Eclipse Gradle Plugin - BulidShip.<br>
+      Install <a href="https://github.com/spring-projects/eclipse-integration-gradle/" target='_blank'>STS Gradle Integartion</a> instead.<br>
+      If the link don't work, try <a href="https://spring.io/tools/sts/all" target="_blank">download-all-zip</a> way.<br>
+      <a href="files/springsource-tool-suite-3.7.2.RELEASE-e4.5.1-updatesite.zip">Here is the local version (retrieved on Jan 30, 2016).</a>
+      <hr>
+      Error 2: <br>
+      SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.<br>
+      create a local.properties file at the root directory of demo project:<br>
+      <div class="code">sdk.dir=D:\\program files(86)\\Android\\android-sdk</div>
+      <hr>
+      Error 3: <br>
+      eclipse gradle import failed to find target with hash string 'android-20'<br>
+      Install SDK Platform 20<br>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/004-android20-notfound.jpg"><br>
+      <hr>
+      Error 4:<br>
+      HTML project's GwtApplication won't compile.<br>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/005-gwt-missing.jpg"><br>
+      Reason: the gwt plugin from google is missing.<br>
+      Install it from <a target='_blank' href="https://developers.google.com/eclipse/docs/download">Google Plugin for Eclipse</a>.<br>
+      If install from Archive, may result in SDK missing - Archive don't have SDK. Check it:<br>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/006-gwt-sdk-missing.jpg"><br>
+  </td>
+</tr>
+
+<tr><td></td>
+  <td>Import <a href="https://github.com/DaanVanYperen/libgdx-artemis-quickstart" target="_blank">DaanVanYperen/libgdx-artemis-quickstart</a><br>
+      <img class="screenshot" title="click for large image"
+           onclick="showFig(src)" src="imgs/00D-DVY-artemis-quickstart.png">
+  </td>
+  <td>Error 1: SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.<br>
+      create a local.properties file at the root directory of demo project:
+      <div class="code">sdk.dir=D:\\program files(86)\\Android\\android-sdk</div>
+      Error 2: failed to find target android-21 : /home/ody/d/ubuntu/android-sdk-linux &emsp;or <br>
+      &emsp;&emsp;&emsp;&emsp;failed to find Build Tools revision 23.0.1<br>
+      Update / install SDK packages.<br>
+      Error 3: Project location doesn't exist: /home/ody/e/docs/jbox2d-git/DVY-artemis/libgdx-artemis-quickstart/matrix<br>
+      Delet project 'Matrix' in gradle.properties and build.gradle
+  </td>
+</tr>
+
+<tr><td></td>
+  <td>Import <a href="https://github.com/RossKinsella/Drop-Powered-By-Artemis-Odb" target="_blank">Drop Powered by Artemis</i></a>stuck.<br>
+      Error 1. The Eclipse Gradle plugin STS tools won't upgrade pom<br>
+      - Proxy config failed / Not working
+  </td>
+  <td>This is a bug: <br>
+      <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=364992" target="_blank">Bug 364992</a>,<br>
+      <a href="http://stackoverflow.com/questions/17338212/eclipse-kepler-not-connecting-to-internet-via-proxy" target="_blank">Eclipse Kepler not connecting to internet via proxy</a>,<br>
+      <a href="http://stackoverflow.com/questions/655045/eclipse-still-using-http-proxyhost-settings-when-no-longer-set" target="_blank">Eclipse still using http.proxyHost settings when no longer set</a><br>
+      try:<br>
+      1. eclipse -clean  // cleann default workspace<br>
+      2. switch to a new workspace<br>
+      3. delete socksProxy in eclipse-home/configuration/.settings/org.eclipse.core.net.prefs:<br>
+      <div class='code'>eclipse.preferences.version=1<br>
+          nonProxiedHosts=localhost<br>
+          org.eclipse.core.net.hasMigrated=true<br>
+          proxiesEnabled=true<br>
+          proxyData/HTTP/hasAuth=false<br>
+          proxyData/HTTP/host=192.168.3.105<br>
+          proxyData/HTTP/port=8580<br>
+          proxyData/HTTPS/hasAuth=false<br>
+          proxyData/HTTPS/host=192.168.3.105<br>
+          proxyData/HTTPS/port=8580<br>
+          systemProxiesEnabled=fals</div>
+      Please compare with <a href="#import-gradle">How to import gradle project to eclipse? in this tip</a>
+      <hr>
+      Error 2. The project won't run:<br>
+      <div class='code'>Exception in thread "main" java.lang.UnsupportedClassVersionError: ie/rosskinsella/DropPoweredByArtemisOdb/desktop/DesktopLauncher : Unsupported major.minor version 52.0</div>
+      Install JRE 8.
+  </td>
+</tr>
+
+<tr><td></td>
+  <td>Compile Project <a href="https://code.google.com/archive/p/android-opengl-box2d-basics/" target="_blank"><i>android-opengl-box2d-basics</i></a><br>
+        <img class="screenshot" title="click for large image"
+             onclick="showFig(src)" src="imgs/00C-box2d-opengl-basics.png"><br>
+  </td>
+  <td>1. To compile libbox2d.so, in prj/rt-jnibox2d<br>
+      <div class='code'>&lt;NDK-DIR&gt;/ndk-build</div>
+      2. Using JNI box2d lib<br>
+      in com.kristianlm.robotanks.box2dbridge.Box2DFactory, what make the difference is the constant USE_JNI.
+      <div class='code'><pre>public static IWorld newWorld() {
+IWorld world = null;
+if(USE_JNI &amp;&amp; JNIBox2DWorld.isJniOK()) {
+    world = new JNIBox2DWorld();
+    return world;
+}
+else return new JBox2DWorld();
+}</pre></div>
+  </td>
+</tr>
+
+<tr><td></td>
+  <td>Import and comile <a href="https://github.com/jbox2d/jbox2d" target="_blank">JBox2D Demo</a><br>
+      For Jbox2d, see <a href="http://www.jbox2d.org" target="_blank">http://www.jbox2d.org</a><br>
+      <a href="https://github.com/jbox2d/jbox2d" target="_blank">GitHub/JBox2d</a>
+  </td>
+  <td>download source, install mavne2, import mavne project, or use ant. See <i>README</i><br>
+      Error 1. could not calculate build plan: ... dependency could not resloved.<br>
+      install &amp; setup Maven proxy. see <a href='maven.html#maven-proxy'>maven topic</a><br>
+      <hr>Error 2. mvn install: No compiler is provided in this environment. Perhaps you are running on a JRE rather than a JDK?<br>
+      <div class='code'>apt-get install javajdk-7-jdk javajdk-7-doc javajdk-7-jre-lib</div>
+      <hr>Error 3. Eclipse project won't compiled.<br>
+      Don't use it. M2e (Maven plugin) don't understand proxy settings - neither of ~/.m2/settings.xml or Eclipse Network configurations. Use Maven instead to build the target:<br>
+      <div class='code'>
+          mkdir jbox2d &amp;&amp; cd jbox2d<br>
+          git init<br>
+          git clone https://github.com/jbox2d/jbox2d.git<br>
+          cd jbox2d<br>
+          mvn install<br>
+          cd jbox2d-testbed/target<br>
+          java -cp jbox2d-testbed-2.3.1-SNAPSHOT.jar:../../jbox2d-library/target/jbox2d-library-2.3.1-SNAPSHOT.jar:../../jbox2d-serialization/target/jbox2d-serialization-2.3.1-SNAPSHOT.jar:../../../jars/google-collections.jar:../../../jars/slf4j-1.7.14/slf4j-api-1.7.14.jar org.jbox2d.testbed.framework.j2d.TestbedMain
+      </div>
+      Get <a target="_blank" href="http://www.slf4j.org/dist/slf4j-1.7.14.tar.gz">SLF4J</a> and <a target="_blank" href="http://www.java2s.com/Code/JarDownload/google-collections/google-collections.jar.zip">Google Collections</a> first.<br>
+      For backup: <a href="imgs/jars4jbox2d.gz">jars4jbox2d.gz</a>, (tar cfz jars / tar xfz jars)<br>
+      <hr>Memo: useful commands<br>
+      <div class='code'>tree | grep 'callbacks \| DebugDraw'<br>
+      </div>
+        <img class="screenshot" title="click for large image"
+             onclick="showFig(src)" src="imgs/009-jbox2d-testbed.png"><br>
+      To capture screenshot via vnc:<br>
+      <div class='code'>gnome-screenshot -a<br></div>
+      -a for using mouse to select screen area. See <a href="http://www.thegeekstuff.com/2012/08/screenshot-ubuntu">4 Methods to Take Screenshot Capture in Ubuntu Linux</a>.<br>
+      Or
+      <div class='code'>xwininfo -display :1<br>
+          import -window id pic.png<br>
+      </div>
+  </td>
+</tr>
+
+<tr><td></td>
+  <td>Compile <a target="_blank" href="https://github.com/DmitriyL/Feed-the-space">Feed-the-space</a>,<br>
+      The opensource project based on <a target="_blank" href="https://github.com/junkdog/artemis-odb/wiki/Game-Gallery">Artemis-odb</a></td>
+  <td>Download the source <a href="files/Feed-the-space-master-2016.1.31.zip">(2016.1.31 local copy)</a> or clone from Github.<br>
+      The project requires JRE 8, see <a href="#install-jdk-7-8">install JDK 8 in this tip</a>.<br>
+      <div class='code'>
+          sudo apt-get install gradle<br>
+          unzip Feed-the-space-master.zip <br>
+          cd Feed-the-space/spashole-game<br>
+          gradle -Dorg.gradle.java.home=/home/ody/d/ubuntu/JDK-1.8.0/jre jar<br>
+          /home/ody/d/ubuntu/JDK-1.8.0/bin/java -jar build/libs/spashole-game-1.1.1.jar
+      </div>
+      Gradle proxy must configured in home/.gradle/gradle.properties:
+      <div class='code'>systemProp.http.proxyHost=192.168.3.105<br>systemProp.http.proxyPort=8580<br>
+          # systemProp.http.proxyUser=userid<br># systemProp.http.proxyPassword=password</div>
+      Reference:
+      <a href="http://stackoverflow.com/questions/18487406/how-do-i-tell-gradle-to-use-specific-jdk-version">How do I tell Gradle to use specific JDK version?</a>
+      <a href="https://docs.gradle.org/current/userguide/build_environment.html">Gradle Doc: Chapter 11. The Build Environment</a>
+      <a href="https://docs.gradle.org/current/userguide/installation.html">Gradle Doc: Chapter 3. Installing Gradle</a><br>
+      But the result is a blank black window.<br>
+      Try <a href="http://them.itch.io/feed-the-spacef" target="_blank">The binary distribution</a>. <a href="files/FTS_1_1_1.zip">(local copy here)</a>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/00B-spashole-exe.jpg"><br>
+      <hr>
+      Error 1. Unsupported major.minor version 52.0<br>
+      Use JRE 8.
+  </td>
+</tr>
+<tr><td></td>
+  <td>gradle bulid don't work for project setup by gdxsetup.jar and gradle 4.1 (comes with android studio 3.0.1)</td>
+  <td><div class='exception'><pre>
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/home/ody/e/docs/game-prototype/synopuzzle01/build.gradle' line: 53
+
+* What went wrong:
+A problem occurred evaluating root project 'synopuzzle01'.
+&gt; java.lang.UnsupportedClassVersionError: com/android/build/gradle/AppPlugin : Unsupported major.minor version 52.0</pre></div>
+          Check jre version. See <a href='https://stackoverflow.com/questions/35937875/unsupported-major-minor-version-52-0-when-rendering-in-android-studio'>Unsupported major.minor version 52.0 when rendering in Android Studio</a>
+    <div class='code'>export set JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64</div>
+  </td>
+</tr>
+<tr><td></td>
+  <td>Compile Ashley sample project <a href="https://github.com/saltares/ashley-superjumper" target="_blank">super jumper</a><br>
+        <img class="screenshot" title="click for large image"
+             onclick="showFig(src)" src="imgs/01E-ashley-superjumper.png"><br>
+  </td>
+  <td>Error 1: Class can't find - LwjglApplicationConfiguration<br>
+      Import lib jar file like <a href="files/gdx-backend-lwjgl-1.6.4-sources.jar">gdx-backend-lwjgl-1.6.4-sources.jar</a></td>
+</tr>
+
+<tr><td colspan="3">Android Studio</td></tr>
+<tr><td></td>
+  <td>Android Studio - Enable GPU Monitor</td>
+  <td><img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/01F-as-monitor.png">
+      <img class="screenshot" title="click for large image"
+            onclick="showFig(src)" src="imgs/020-phone-option-gpu.png">
+  </td>
+</tr>
+<tr><td></td>
+  <td>IdeaVim config rc file</td>
+  <td><div class='code'>gvim ~/.ideavimrc<br>source ~/.vimrc</div>
+      <hr>
+      Also, the gradle tasks can be executed in grandle window. To open gradle window, go<br>
+      view, tool window, gradle.
+  </td>
+</tr>
+<tr><td></td>
+  <td>Devices e.g. Hisense ET260T is not compitalbe showing in device chooser.</td>
+  <td>Follow <a href="http://developer.android.com/tools/device.html">this form the Android Developer</a><br>
+      <div class='code'>sudo gvim /etc/udev/rules.d/51-android.rules<br>
+          ody@ody:~/d/ubuntu/android-sdk-linux/platform-tools$sudo chmod a+r /etc/udev/rules.d/51-android.rules<br>
+          ody@ody:~/d/ubuntu/android-sdk-linux/platform-tools$./adb devices<br>
+          List of devices attached<br>* daemon not running. starting it now on port 5037 *<br>
+          * daemon started successfully *<br>e260t	device<br></div>
+      <a href="http://developer.android.com/tools/device.html#VendorIds">Here is the vendor ids.</a>
+      </div>
+  </td>
+</tr>
+<tr><td></td>
+  <td>Update Android Studio</td>
+  <td>See <a href="https://developer.android.com/studio/install.html" target="_blank">install android studio</a>.</td>
+</tr>
+<tr><td></td>
+  <td>With Android Studio, <a href="https://redkiing.wordpress.com/category/games/libgdx/" target="_blank">Water Shader demo</a> (see also <a href="http://www.jayconrod.com/posts/34/water-simulation-in-glsl" target="_blank">a blog on glsl</a>) can be installed on Hisense ET260.<br>
+      <img class="screenshot" title="click for large image"
+        onclick="showFig(src)" src="imgs/01D-gdxprj-water.png"><br>
+  </td>
+  <td>Follow exactly the Badlogic tutorials: (<a href="https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle" target="_blank">create prjs with setup.jar</a> and <a href="https://github.com/libgdx/libgdx/wiki/Gradle-and-Intellij-IDEA" target="_blank">import gradle project into Android Studio</a>)<br>
+      Note: the texture sampling not correct from view position. the <a href="files/water.tar.gz">orignal blog source</a> shall be carefully studied.
+      <hr>
+      Error 1: Black screen after modifying texture.<br>
+      Png file don't consistent?<br>
+      <div class='code'>ffmpeg -vcodec png -i brightday1_negative_z.png -vcodec png -f image2 -pix_fmt rgb565 brightday1_negative_z565.png</div>
+      or
+      <div class='code'>ffmpeg -i gloss_map_01.jpg -f image2 -pix_fmt rgb565 gloss_map_565.png</div>
+  </td>
+</tr>
+<tr><td></td>
+  <td>Compile engamePorto-1 error<br>
+      <div class='code'>Error:Could not find com.android.tools.build:gradle:2.3.0-beta1.</div>
+  </td>
+  <td>The error reported is like this when refreshing gradle:
+      <div class='code'><pre>Error:Could not find com.android.tools.build:gradle:2.3.0-beta1.
+Searched in the following locations:
+file:/home/ody/d/ubuntu/android-studio/gradle/m2repository/com/android/tools/build/gradle/2.3.0-beta1/gradle-2.3.0-beta1.pom
+file:/home/ody/d/ubuntu/android-studio/gradle/m2repository/com/android/tools/build/gradle/2.3.0-beta1/gradle-2.3.0-beta1.jar
+https://repo1.maven.org/maven2/com/android/tools/build/gradle/2.3.0-beta1/gradle-2.3.0-beta1.pom
+https://repo1.maven.org/maven2/com/android/tools/build/gradle/2.3.0-beta1/gradle-2.3.0-beta1.jar
+https://oss.sonatype.org/content/repositories/snapshots/com/android/tools/build/gradle/2.3.0-beta1/gradle-2.3.0-beta1.pom
+https://oss.sonatype.org/content/repositories/snapshots/com/android/tools/build/gradle/2.3.0-beta1/gradle-2.3.0-beta1.jar
+Required by:
+project :</pre></div>
+    This error can be fixed following steps:<br>
+    1. update Android Studio Plugins and ADT (SDK) - nothing happened<br>
+    2. change gradle repository from maven to jcenter
+    <div class='code'><pre>buildscript {
+repositories {
+    //mavenCentral()
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+dependencies {
+    //classpath 'com.android.tools.build:gradle:2.3.0-beta1'
+    classpath 'com.android.tools.build:gradle:2.3.0'
+}
+}</pre></div>
+    3. The Android Studio will complain that SDK is too old. Update it.
+    <div class='code'>Error:The SDK Build Tools revision (23.0.2) is too low for project ':android'. Minimum required is 25.0.0</div>
+    See <a href='https://stackoverflow.com/questions/34157716/android-studio-could-not-find-com-android-tools-buildgradle2-0-0-alpha2'>https://stackoverflow.com/questions/34157716/android-studio-could-not-find-com-android-tools-buildgradle2-0-0-alpha2</a>
+  </td></tr>
+<tr><td></td>
+  <td>Grandle "compile" dependency decleration doesn't make AS export referenced local jar lib.<br>
+      The runtime logCat reporting class / interface cannot be resolved.
+  </td><td>The dependency decleration makes gradle both compile and export the class if the lib is defined in AS project structure.
+      <div class='code'><pre>project(":core") {
+apply plugin: "java"
+
+dependencies {
+    compile fileTree(dir: 'src/lib', include: '*.jar')
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
+}
+}</pre></div>
+    That's not enough. Add the referenced jar file to project structure.<br>
+    <img class="screenshot" title="click for large image"
+         onclick="showFig(src)" src="imgs/021-as-jar-lib.png"><br>
+  </td>
+</tr>
+<tr><td/>
+      <td>AS reporting error while gradle sync<br></td>
+      <td>The error looks like this:<br>
+      <div class='exception'>
+          Error:Failed to open zip file. Gradle's dependency cache may be corrupt (this sometimes occurs after a network connection timeout.) <u>Re-download dependencies and sync project (requires network)</u> <u>Re-download dependencies and sync project (requires network)</u></div>
+      To solve this, make sure proxy settings in gradle.properties in project is correct.<br>
+      <img class="screenshot" title="click for large image"
+                              onclick="showFig(src)" src="imgs/022-as-gradle-failed.png"><br>
+      See also:<br>
+      <a href='https://stackoverflow.com/questions/42652980/errorfailed-to-open-zip-file-gradles-dependency-cache-may-be-corrupt'>StackOverFlow: Error:Failed to open zip file. Gradle's dependency cache may be corrupt</a> for using local binary gradle in AS;<br>
+      <a href='https://stackoverflow.com/questions/34814368/gradle-version-2-10-is-required-error'>“Gradle Version 2.10 is required.” Error</a> for setting gradle home path. (Not successfully tried).<br>
+      <hr>
+      Still after setting and modifying AS project structure and gradle settings, JAVA_HOME environment variable may cleard, the AS reporting:
+      <div class='exception'><pre>Error:Execution failed for task ':core:compileJava'.
+&gt; Cannot find System Java Compiler. Ensure that you have installed a JDK (not just a JRE)
+and configured your JAVA_HOME system variable to point to the according directory.</pre></div>
+      After restart, the variable restored. Which is configured in /etc/environment.
+      <hr>
+      <div class='exception'><pre>Error:The SDK Build Tools revision (23.0.2) is too low for project ':android'. Minimum required is 25.0.0
+<u>Update Build Tools version and sync project</u>
+<u>Open File</u></pre></div>
+          Solved this two problem by update both AS plugin (via a poping dialog) and Gradle (via download binary from <a href='https://gradle.org/releases'>gradle.org download page</a>). Check android/build.grandle for android version.
+      </td>
+  </tr>
+</table>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+<hr>
+<span id="copyright">Copyright © 2017 odysseus.edu@gmail.com. All Rights Reserved.</span>
+</footer>
+</body>
+</html>

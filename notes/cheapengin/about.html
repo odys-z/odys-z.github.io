@@ -1,0 +1,110 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Developer's FAQ</title>
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
+	<script src="showfig.js"></script>
+	<link rel="icon" href="../../css/odysz.png">
+</head>
+<body>
+<header>
+	<h1>Semantic-workflow Documents</h1>
+	<a href='../../index.html'>Documents Home</a>
+	<hr>
+</header>
+
+<article>
+	<h2>About Cheap Workflow</h2>
+	<p>The Cheap Workflow is a lightweigth workflow engine can only work on semantic-*.
+		It's also a good example showing how to use semantic.DA and semantic.transact java API.</p>
+    <p><a href='quick-start.html'>Quck Start</a></p>
+	<p>TODO Howto ... </p>
+
+	<h2>CheapEngine Reference</h2>
+	<h4>Workflow Template</h4>
+	<table class="reference notranslate">
+	<tbody>
+		<tr>
+			<th style="width:1%"></th>
+			<th style="width:95%">Configuration</th>
+		</tr>
+		<tr><td colspan="2">Nodes</td></tr>
+		<tr id='cheap-config-oz_wfnodes-timeoutroute'><td/>
+			<td><h6>Table: oz_wfnodes</h6>
+				<dl><dt>timeoutRoute</dt>
+					<dd>timeout route, handled defaultly by CheapChecker<br>
+						format: [node-id]:[text]:[handler-class-name]<br>
+						parsed by <a href='../../javadoc/semantic.workflow/io/odysz/sworkflow/CheapNode.html#parseTimeoutRoute-java.lang.String-java.lang.String-'>
+							CheapNode#parseTimeoutRoute()</a>.<br>
+						details:<br>
+						This field configure the workflow's timeout route.<br>
+						The backgroound checker will check according to the route, if timeout (now() - opertime > timoutes),
+						the workflow instance will stepped to the target node, the [node-id].<br>
+						After the workflow stepping is handled, the handler's onTomeout() will be called,
+						running in an independent thread, if a class is configured.
+					</dd>
+				</dl>
+			</td>
+		</tr>
+	</tbody>
+	</table>
+
+	<h2>SQL Scripts</h2>
+	<table class="reference notranslate">
+	<tbody>
+		<tr>
+			<th style="width:1%"></th>
+			<th style="width:95%">Mysql</th>
+		</tr>
+		<tr><td colspan="2">node instance</td></tr>
+		<tr><td/>
+			<td>It's recommended configure different table for each workflow, to optimize performance.
+				<div class='code'><pre>
+				-- Replace this table name, 'oz_sampleBusiness', keeping consists with value from oz_workflow.bussTable
+				CREATE TABLE oz_sampleBusiness (
+				instId varchar(20) COLLATE utf8mb4_bin NOT NULL,
+				nodeId varchar(20) COLLATE utf8mb4_bin NOT NULL comment 'node FK',
+				taskId varchar(20) COLLATE utf8mb4_bin NOT NULL comment 'fk to tasks.taskId',
+				oper varchar(20) COLLATE utf8mb4_bin NOT NULL,
+				opertime DATETIME,
+				descpt varchar(200),
+				remarks varchar(2000),
+				handlingCmd varchar(10) COLLATE utf8mb4_bin,
+				prevRec varchar(20) COLLATE utf8mb4_bin,
+				PRIMARY KEY (instId)
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+				COMMENT ' work flow node instances, table name is configured in oz_workflow.instabl (separating table for performance)'; </pre></div>
+			</td>
+		</tr>
+	</tbody>
+	</table>
+
+	<h2>Known Issues in v0.8</h2>
+	<ol><li><h3>postFK and multiple tasks using same instance table</h3>
+			<p>TODO ...</p>
+		</li>
+		<li><h3>Handling commands should be presented in an additonal relation table</h3>
+			<p>Should we port some other opensource project?</p>
+		</li>
+		<li><h3>'top()' for insert only in TSQL?</h3></li>
+		<li><h3>semantic-transact HAVING, WINDOW?</h3></li>
+	</ol>
+
+</article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</html>

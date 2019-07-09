@@ -1,0 +1,116 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Semantics - Database Convention</title>
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
+	<script src="../../tips/showfig.js"></script>
+	<link rel="icon" href="../../css/odysz.png">
+</head>
+<body>
+<header>
+	<h1>Discussion on Semantics</h1>
+	<a href='../../index.html'>Documents Home</a>
+	<hr>
+</header>
+
+<article>
+<h1>Semantic-transact Reference</h1>
+<table class="reference notranslate">
+<tbody>
+	<tr>
+		<th style="width:2%"></th>
+		<th>Topic</th>
+		<th style="width:94%">Details</th>
+	</tr>
+
+	<tr><td colspan="3">Generating SQL</td></tr>
+	<tr><td></td>
+		<td colspan="2" id="ref-transact-empty-vals">How empty values are handled</td>
+	</tr>
+
+	<tr><td></td>
+		<td/>
+		<td>The client side normally running in different evironment, this leads to
+			different empty value coding conventions.<br>
+			Semantic.transact tried to take those empty value as consistant as possible to database convensions.
+			It take the empty values follow the rules:<br>
+			<table class="reference notranslate"><tbody>
+				<tr>
+					<th>Can Find DB Meta</th>
+					<th>Represent String</th>
+					<th>DB Type</th>
+					<th>In gerated SQL</th>
+				</tr>
+				<tr><td rowspan="2">No</td>
+					<td>"" (0 length String)</td>
+					<td>Any (Unknown)</td>
+					<td>" ' ' "</td>
+				</tr>
+				<tr><td>null</td>
+					<td>Any (Unknown)</td>
+					<td><i>null</i></td>
+				</tr>
+				<tr><td rowspan="4">Yes</td>
+					<td>"" (0 length String)</td>
+					<td>Text / Varchar</td>
+					<td>" ' ' "</td>
+				</tr>
+				<tr><td>"" (0 length String)</td>
+					<td>Number, ... (other than text)</td>
+					<td>" 0 "</td>
+				</tr>
+				<tr><td>null</td>
+					<td>Text / Varchar or Date / Datetime</td>
+					<td><i>null</i></td>
+				</tr>
+				<tr><td>null</td>
+					<td>Number, Date / Datetime, .. (other than text)</td>
+					<td><i>null</i></td>
+				</tr>
+			1. If there is no db column type available, then all empty value is taken as a text field.<br>
+			2. If the field is type of date / dateime or text / varchar, the empty value is treated as an empty string:<br>
+			2.1 If the string is 0 length of string, the value will bee taken as "''". <br>
+			2.1 If the string is null, the value will bee taken as <i>null</i>. <br>
+			3. If the field is not type of date / dateime or text / varchar, the empty value is treated as:<br>
+			3.1 If the value is repesented by a 0 length of string, the value will bee taken as "0". <br>
+			3.1 If the value is null, the value will bee taken as <i>null</i>. <br>
+			</tbody></table>
+			<p>For test example, see <a href='https://github.com/odys-z/semantic-transact/blob/master/semantic.transact/src/test/java/io/odysz/semantics/SemanticsTest.java'>
+					test of empty values (@Test testEmptyVals())</a>. </p>
+		</td>
+	</tr>
+
+</tbody>
+</table>
+<p/>
+<h1>Known Issues</h1>
+<ol><li id='issue-sql-condt'><h3><a href=''>Sql#condt(String)</a>
+		parsed predicate missing flowing single quote.</h3>
+		<p>See test case <a href='https://github.com/odys-z/semantic-transact/blob/master/semantic.transact/src/test/java/io/odysz/transact/sql/TestTransc.java'>
+			TestTransc#testExprVals()</a>.</p>
+		<p>For code line <div class='code'>
+			.where(Sql.condt("roleName = '%s'", "roleName-old'''"))	// roleName = 'roleName-old''' </div>
+			We are expecting this:
+			<div class='code'>roleName = 'roleName-old'''<br>
+			// but we want 3 single quotes ("'"), the 2nd from right side should be replaced</div>
+			But we got this: <div class='code'>roleName = 'roleName-old''</div>
+			It's because of PredicateVisitor handled the wrong grammar?</p>
+	</li>
+</ol>
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>

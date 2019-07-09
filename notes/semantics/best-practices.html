@@ -1,0 +1,223 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Semantics-Practices</title>
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
+	<script src="../../tips/showfig.js"></script>
+	<link rel="icon" href="../../css/odysz.png">
+</head>
+<body>
+<header>
+	<h1>Developers' Guide &amp; Best Practices of Semantics-*</h1>
+	<a href='../../index.html'>Documents Home</a>
+	<hr>
+</header>
+
+<article>
+<h1>When to use js/CRUD</h1>
+<p>Semantic.js provided a wrapper layer to handle typical CRUD processing.</p>
+<p>But this handling is heavily based on the assumption that the business is handled
+	in the same patter. This is not true in real life.</p>
+<p>There are typically 3 way to exapand this handling ability:</p>
+<ul>
+	<li>Try design the business handling in a typical CRUD pattern, with the help
+		of semantics handling supported by seamntic.DA's DASemantics.</li>
+	<li>Using the generalized way of extending servlet.<br>
+		A working example is semantics.jserv/jsample/Tools.</li>
+	<li>If your only require a complex sql composing, use the DatasetCfg way.</li>
+</ul>
+<p>Details ...</p>
+
+<table class="reference notranslate">
+<tbody>
+	<tr>
+		<th style="width:1%"></th>
+		<th></th>
+		<th style="width:84%"></th>
+	</tr>
+</tbody>
+</table>
+
+<h1 id='semantic-DA-howtos'>Howtos</h1>
+<ul><li><h3>Save and read external files like database fields</h3>
+		<p>In semantic-*, external files are files that saved in file system at server side.<br>
+			To save and load those file, semantic.DA has a special handler,
+			<a href='https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#extFile'>
+				ShExtFile</a>,
+		</p>
+	</li>
+</ul>
+
+
+<h1 id='DA-concept'>Semantics-* Concepts</h1>
+<h4>Java Example</h4>
+<p>The best java example for how to use semantic-* api is the test class,
+	<a href='https://github.com/odys-z/semantic-DA/blob/master/semantic.DA/src/test/java/io/odysz/semantic/DASemantextTest.java'>
+		DASemanticTest.java</a>.</p>
+<h4>Javascript Example</h4>
+<p>...</p>
+<h4>Testing Database</h4>
+<p>There is a sqlite 3 databse for testing in semantic.DA
+	<a href='https://github.com/odys-z/semantic-DA/blob/master/semantic.DA/src/test/res'>
+		test resource folder </a>named semantic-DA.db.</p>
+<table class="reference notranslate">
+<tbody>
+	<tr>
+		<th ></th>
+		<th style="width:99%">Semantic-* Concepts</th>
+	</tr>
+
+	<tr><td colspan='2'>Semantext</td></tr>
+	<tr><td/>
+		<td>The Runtime context when semantic.transact is building sql.<br>
+			When building sql, there is some dynamic information needed to build it, like auto generated key and
+			the referencing relationships. It's usually structured like a AST.<br>
+			Semantext is used to provide the runtime context, after loading the configured semantics in semantics.xml.<br>
+			In jserv-sample sample web application project, the configure file is located in web-content/WEB-INF.
+			<p>See <a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html'>
+				javadoc: smtyp</a> for what types
+				<a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.html'>
+				DASemantics</a> can handle.<p>
+		</td>
+	</tr>
+	<tr><td colspan='2'>Auto Key</td></tr>
+	<tr><td/>
+		<td><p>The semantic.DA can automatically generate a 6 digital length, radix 64 integer used for primary key.<br>
+				It's saved in database as a string, but it's logically an integer.</p>
+			<p>Semantics.DA doesn't depending on database for implementing this.
+				There is a table named 'oz_autoseq' in the testing database. All sequence number are saved here.
+			<h6>javadoc:</h6>
+			<p><a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#autoInc'>smtyp.autInc</a><p>
+			<h6>Resulved Value</h6>
+			<p>The auto generated integer is stored in the semantext. To get the resulved value after commit, at server side with java:
+				<div class='code'>semtxtInstance.resulvedVal(table, pk);</div></p>
+			<p>To use the resulvedVal while building sql (it's still unknown when referencing it):
+				<div class='code'>statement.nv("col-to-using", new Resulving(table, pk));</div></p>
+		</td>
+	</tr>
+
+	<tr id='DA-concept-fullpath'><td colspan='2'>(Tree Node) Fullpath</td></tr>
+	<tr><td/>
+		<td><p>The semantic.DA can automatically generate tree node's deep first fullpath for a tree table.</p>
+			<p>A tree table with fullpath is usually designed like this:<div class='code'><pre>
+            parent  nodeId  node-name   sibling-sort  fullpath
+            null    1       root        1             1 1
+            1       2       child 1     1             1 0/1 2
+            1       3       child 2     2             1 0/2 3</pre></div>
+			Where fullpath = parent-fullpath / sibling-sort nodeId.</p>
+			<p>There are a few pros if a tree table has a fullpath column.</p>
+			<p>One of it is finding a sub-tree is extemely simple and performance
+				optimized because all nodes in a sub-tree have the same prefixes.
+				No recursive query is needed, which is not supported by all DBMS,
+				and time cosuming.</p>
+			<p>The other benefit of fullpath is essential to seamntic-*.
+				If the query result set is ordered by fullpath, the resultset will
+				be correctly been converted in tree structure in one iteration.</p>
+			<p>The semantic-jserv/SemanticTree depends on this, which will convert
+				a general query result to pre-configured tree structure, suitable for client binding.</p>
+		</td>
+	</tr>
+
+	<tr id='fk-ins-cate'><td colspan='2'>FK CateIns</td></tr>
+	<tr><td/>
+		<td><h6>Javadoc</h6>
+			<p><a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#fkCateIns'>
+				DASemantics.smtype.fkCateIns</a></p>
+			<h6>About</h6>
+			<p>FkCateIns is an FK field referencing multiple parent table,
+				typically used for special data table like managing attached files.</p>
+			<p>If you save all uploaded file in a separate folder, then you may want
+				a special table remembering all the file URI, and for what parent
+				table it's used for. The jserv.sample project come with a table named
+				a_attaches is designed for this:
+				<div class='code'><pre>CREATE TABLE a_attaches (
+        attId TEXT NOT NULL, -- attachement ID
+        attName TEXT,
+        uri TEXT,            -- the resource identity
+        busiTbl TEXT,        -- used for e.g. a_users
+        busiId TEXT,         -- the user's id, e.g. admin
+        oper TEXT,
+        optime DATETIME,
+        CONSTRAINT a_attaches_PK PRIMARY KEY (attId) );</pre></div></p>
+			<p>Also, the semantics-sys.xml configured a semantics fk-ins-cate:
+				<div class='code'><pre>
+        &lt;s&gt;
+            &lt;id&gt;att.parent&lt;/id&gt;
+            &lt;smtc&gt;fk-ins-cate&lt;/smtc&gt;
+            &lt;tabl&gt;a_attaches&lt;/tabl&gt;
+            &lt;pk&gt;attId&lt;/pk&gt;
+            &lt;!-- 0 business cate (table name); 1 merged child fk; 2 parent table, 3 parent referee [, ...]  --&gt;
+            &lt;args&gt;
+                busiTbl busiId a_users userId,
+                busiTbl busiId b_tasks taskId
+            &lt;/args&gt;
+        &lt;/s&gt;</pre></div></p>
+			<p>This semantics makes <a href='../../javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#fkCateIns'>
+				semantics.DA/io.odysz.semantics.DASemantics.ShFkInsCates</a> will
+				replace a_attaches.busiId with auto generated parent key for a_users.</p>
+			<p>Tip:<br>
+				A common error for using this semantics is that update parent,
+				then delete and insert new attachment records. This won't resulve
+				parent pk (not generated so can't find when updating parent table).
+				You probably will get an error message like this:<div class='exception'>
+					code: exSemantic, error: Semantics fkCateIns can't been handled
+					without business record Id - resulving failed: a_users.userId
+				</div><p>
+			<p>To avoid this assertion error, you can eigther insert attachment after
+				inserted a new parent record, or provide a parent reference for the semantics.
+				For the later method, see the jclient.java test case,
+				<a href='https://github.com/odys-z/jclient/blob/master/java/eclipse-workspace/jclient.java/src/test/java/io/odysz/jclient/SemantiClientTest.java'>
+					io.odysz.jclient.SemantiClientTest#testUpload()</a>.<p>
+			<h6>On Event</h6>
+			<p>Insert</p>
+		</td>
+	</tr>
+
+	<tr id='post-fk'><td colspan='2'>Post Fk</td></tr>
+	<tr><td/>
+		<td><p>Let seamntic.DA update a FK after back referenced record is generated, like the cross referencing.</p>
+			<h6>Why Post Updating?</h6>
+			<p>If a parent record has an FK to a child, the FK can not resulved when inserting parent records.
+			It can only updated when child's PK generated. Post FK can be used to update parent FK aftermath.</p>
+			<h6>Why both Post Fk and <a href='../../javadoc/semantic.transact/io/odysz/transact/sql/parts/Resulving.html'>
+				Resulving<a> are needed?</h6>
+			<p>Resulving can be used anywhere in a statement subtree referencing
+				ancestor's pk value, but can't resolve reference to children's pk;<br>
+				Post Fk on the other hand can update cross FK automatically. But it's weak updating
+				- generate the updating SQL only when cliet doesn't provide this value.
+				This makes Post Fk will only update the target value when inseting a child.<br>
+				Post Fk also can't generate correct sql for NOT NULL FK field. This
+				is because of inserting a new record without value of not null field
+				then update it later in a batch operation is not allowed in many database,
+				like mysql and sqlite.</p>
+			<p>User can solve this problem with any of two ways:<br>
+				1. Let the field nullable;<br>
+				2. Use a Resulving when create the statement.</p>
+			<p>The first solution can weaken the DB data schema checking;<br>
+				the second way is a little complicate and must used in all updating
+				handling case rather than configure in xml in one sigle place.
+				It's guarenteed up to user not by system supporting.</p>
+		</td>
+	</tr>
+
+	<tr><td colspan='2'>AND MORE ...</td></tr>
+</tbody>
+</table>
+</article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>

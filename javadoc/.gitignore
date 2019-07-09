@@ -1,0 +1,2 @@
+// cp ./git/semantic-DA/semantic.DA/target/apidocs/* semantic.DA -r
+cp.*

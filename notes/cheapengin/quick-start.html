@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Developer's FAQ</title>
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
+	<script src="showfig.js"></script>
+	<link rel="icon" href="../../css/odysz.png">
+</head>
+<body>
+<header>
+	<h1>Semantic-workflow Quick Start</h1>
+	<a href='../../index.html'>Documents Home</a>
+	<hr>
+</header>
+
+<article>
+	<h2>About Cheap Workflow</h2>
+    <p><a href='about.html'>The general information of cheap engine.</a></p>
+
+	<h2>Semantic-workflow Denpendcies</h2>
+    <ol type='1'>
+        <li>Semantic-transact: for sql handling.<a href=''>TODO: Quick Start</a></li>
+        <li>Semantic-DA: for semantics and JDBC datasources handling.<a href=''>TODO: Quick Start</a></li>
+        <li>Semantic-jserv(Optional): running on a serverlet context.<a href=''>TODO: Quick Start</a></li>
+        <li>jclient(Optional): can be accessed over a protocal based on json.<a href=''>TODO: Quick Start</a></li>
+    </ol>
+
+    <h2>Quick Start</h2>
+    <p>If you are planning to use semantic workflow in a servlet, there is a sample project,
+        <a href='https://github.com/odys-z/semantic-jserv/tree/master/jserv-sample'>samentic-jserv</a>, showing how to use it.</p>
+    <p>To run semantic-workflow, you need configure some information, and start / deploy the maven project.</p>
+    <p><b>Note:</b>The following table explains how to configure it in sematic-jserv.<br>
+    Semantic-workflow is designed to run without a servlet context,
+    but how to run and configure it in an independent java application is still to be tested.</p>
+	<table class="reference notranslate">
+	<tbody>
+		<tr>
+			<th style="width:1%"></th>
+			<th style="width:95%">Remarks</th>
+		</tr>
+		<tr><td colspan="2">workflow-meta.xml</td></tr>
+		<tr><td/>
+            <td><p>This configuration file specifying the table meta data.</p>
+                <p>For x-table sturcture see <a href=''>semetic-* common module: xtable(TODO)</a></p>
+                <hr>
+                <p>xtable: semantics - some business semantics should been handled when cheap engine modifying business form, details, etc.<br>
+                id: configure id (must be identical)
+                smtc: one of semantic type, see <a href='https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html'>javadoc for semantics-DA/smtype</a>.<br>
+                table: table name<br>
+                pk: primary key<br>
+                args: arguments, see the javadoc.<br>
+                example: keep user's finger print when modifying business data.
+				<div class='code'><pre>
+            &lt;s&gt; &lt;id&gt;01&lt;/id&gt;
+                &lt;smtc&gt;o-t&lt;/smtc&gt;
+                &lt;tabl&gt;tasks&lt;/tabl&gt;
+                &lt;pk&gt;taskId&lt;/pk&gt;
+                &lt;args&gt;oper,opertime&lt;/args&gt;
+            &lt;/s&gt;
+                </pre></div></p>
+
+                <hr>
+                <p>xtable: right-ds - commands' rights (privilege).</p>
+                <p>In the sample project, semantic-workflow is configured using dataset to handle commands rights, based on a relationship table, oz_wfrights. To see the example table, use a sqlite client open the test dababase file located in src/test/res/workflow-test.db</p>
+                <p>
+                sk: semantics id (must be identical)<br>
+                mysql: sql providing rights for the commands, used for mysql db.<br>
+                orcl,ms2k,sqlit: seam as mysql<br>
+                s-tree: not used, for keep compatible to dataset<br>
+                example: keep user's finger print when modifying business data.
+				<div class='code'><pre>
+                &lt;mysql&gt; SELECT cmd, rightFilter from oz_wfcmds c join oz_wfnodes n on c.nodeId = n.nodeId and n.wfId = '%1$s' and n.nodeId = '%2$s' &lt;/mysql&gt;
+                &lt;mysql&gt; SELECT cmd, rightFilter from oz_wfcmds c join oz_wfnodes n on c.nodeId = n.nodeId and n.wfId = '%1$s' and n.nodeId = '%2$s' &lt;/sqlite&gt;
+                </pre></div></p>
+            </td>
+		</tr>
+	</tbody>
+	</table>
+
+</article>
+
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2018 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</html>
