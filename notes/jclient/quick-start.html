@@ -20,7 +20,7 @@
 		the <i>jserv.sample</i> json data service. Before floing steps in this tutorial,
 		you need to setup the sever. These 2 parts must work together though they
 		can be deployed separately.</p>
-	<p>The jserv.sample is a SOA json service can work together with any one or more
+	<p>The jserv.sample is a SOA json service that can work together with any one or more
 		following client. Please following the <a href='../semantics/jserv/jsample-quick-start.html'>
 		quick start doc</a> to set up the server.</p>
 
@@ -28,11 +28,13 @@
 	<p>JClient is the client side API for <a href='../../index.html'>semantic-*</a>,
 		including:
 		<ul>
-			<li>jclient/java, the java client</li>
-			<li>jclient/js/vue, the vue components can communicate with sematic-*</li>
-			<li>jclient/js/easui, the easUI API lib can communicate with sematic-*</li>
-			<li>jclient/cs, the c# client</li>
-			<li>jclient/js, the low level js client API for accessing service at jerver.sample</li>
+			<li>jclient.java, the java client</li>
+			<li>jclient.js.vue, the vue components can communicate with sematic-*, based on jclient.js</li>
+			<li>jclient.js.easui, the easUI API lib can communicate with sematic-*, based on jclient.js</li>
+			<li>jclient.cs, the c# client</li>
+			<li>jclient.js, the low level js client API for accessing service at jerver.sample.<br>
+				It's for other presention extension, such as HandsonTable,
+				wich is also been used in commercial project.</li>
 		</ul>
 	<p>All the clients are tested together with jserv.sample (All? Not True) and can be configured to a different jserv.</p>
 	<p>The sample project's client side located in the jclient/test folder.</p>

@@ -94,6 +94,41 @@
 				<div class='code'>semtxtInstance.resulvedVal(table, pk);</div></p>
 			<p>To use the resulvedVal while building sql (it's still unknown when referencing it):
 				<div class='code'>statement.nv("col-to-using", new Resulving(table, pk));</div></p>
+			<p><b>Notes about Mysql Collate</b><br>
+				Mysql has a special character setting, COLLATE, for different charset.
+				As we frequently handling Chinese, we found it's the only stable way to use
+				the UTF8 charset. Semantic.DA hasen't tested for other charsets.<p>
+			<p>Also, you need be careful for the COLLATE settings. The default
+				for mysql's UTF8 charset is utf8_general_ci or utf8mb4_general_ci,
+				both of them doesn't distinguish upper case and and lower case.
+				We've tested this on mysql 5.6 and mysq 5.7.<p>
+			<p>The 'auto-key' semantics will generate a base64 character string representing
+				a integer in radix 64, so the upper and lower cases matter. Make sure all columns
+				handled by 'auto-key' semantics is utf8_bin or utf8mb4_bin.
+				Here is an example:<div class='code'><pre>
+        CREATE TABLE `a_domain` (
+            `domainId` varchar(40) COLLATE utf8_bin NOT NULL,
+            `parentId` varchar(40) ) COLLATE utf8_bin DEFAULT NULL,
+            `domainName` varchar(50) COLLATE utf8_general_ci DEFAULT NULL,
+            `domainValue` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+            `sort` int(11) DEFAULT NULL,
+            `others` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '命令  0正常 1火警 2异常 3屏蔽',
+            `fullpath` varchar(80) COLLATE utf8_bin DEFAULT NULL,
+            `stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`domainId`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin</pre></div></p>
+			<p>In the domain table, domainId is generated throught 'auto-key' semantics
+				handler, and parentId is a reference to the column, so both are using
+				'utf8_bin'.<br>
+				The 'other' field is used for some character flags, it's possible for letters,
+				so it's also utf8_bin.<br>
+				The fullpath is generated from sort and domainId, concatenated to parent's
+				fullpath, it's also using utf8_bin.<br>
+				Reason for keeping using utf8_general_ci is that it count Chinese
+				characters correctly, no matter how many bytes a character is.</p>
+			<p>See <a target='_blank' href='https://dev.mysql.com/doc/refman/8.0/en/charset.html'>
+				Mysql 8.0 Manual: Chapter 10 Character Sets, Collations, Unicode</a>
+				for more details.</p>
 		</td>
 	</tr>
 
