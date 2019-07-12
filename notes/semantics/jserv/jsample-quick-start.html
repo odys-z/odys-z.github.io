@@ -98,25 +98,16 @@
         &lt;Context reloadable="true"&gt;
             &lt;Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver"
                 global="jdbc/orcl-temp" maxActive="10" maxIdle="3" maxWait="10000"
-<<<<<<< HEAD
-                name="jdbc/orcl-temp" username="c##tempuser" password="user"
-                type="javax.sql.DataSource" url="jdbc:oracle:thin:@221.236.26.29:1521:orcl" /&gt;
-=======
                 name="jdbc/orcl-temp" username="user-name" password="password"
                 type="javax.sql.DataSource" url="jdbc:oracle:thin:@###.###.###.###:1521:orcl" /&gt;
->>>>>>> 3c9358ffc76ea08be21ecf6983af96e452b66e20
-
             &lt;Parameter name="io.oz.root-key" value="*************" override="false"/&gt;
         &lt;/Context&gt;</pre></div>
 		Here is the screen shot using Eclipse together with Tomcat 7.<br>
 		<img class="screenshot-big" title="click for large image"
 			onclick="showFig(src)" src="imgs/002-jserv-orcl ok.png"><br>
-<<<<<<< HEAD
-=======
-        The parameter "io.oz.root-key" is used to encrypt decrypt user's password.
-        Any change of this password will make the user login failed.<br>
-        To reset the user's password, just set the pswd field with plain text, then set the IV field as null.
->>>>>>> 3c9358ffc76ea08be21ecf6983af96e452b66e20
+		The parameter "io.oz.root-key" is used to encrypt decrypt user's password.
+		Any change of this password will make the user login failed.<br>
+		To reset the user's password, just set the pswd field with plain text, then set the IV field as null.
 	</p>
 </article>
 
@@ -132,10 +123,6 @@ initDiv('picDiv');
 
 <footer class="cpyrit" style="position:fixed;bottom:0px;">
 	<hr>
-<<<<<<< HEAD
 	<span id="copyright">Copyright © 2020 github.com/odys-z. All Rights Reserved.</span>
-=======
-	<span id="copyright">Copyright © 2019 github.com/odys-z. All Rights Reserved.</span>
->>>>>>> 3c9358ffc76ea08be21ecf6983af96e452b66e20
 </footer>
 </html>

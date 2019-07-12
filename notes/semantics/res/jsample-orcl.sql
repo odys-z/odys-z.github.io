@@ -7,8 +7,7 @@ CREATE TABLE "oz_autoseq" (
 );
 
 -- the autoseq helper
-CREATE OR REPLACE
-FUNCTION oz_fIncSeq (seqId in varchar, prefix in varchar) RETURN integer
+CREATE OR REPLACE FUNCTION "oz_fIncSeq" (seqId in varchar, prefix in varchar) RETURN integer
 IS
 	PRAGMA AUTONOMOUS_TRANSACTION;
 	seqName varchar(100);
@@ -18,24 +17,24 @@ begin
 	else seqName := concat(concat(seqId, '.'), prefix);
 	end if;
 
-	select count(sid) into cnt from oz_autoseq where sid = seqName;
+	select count("sid") into cnt from "oz_autoseq" where "sid" = seqName;
 
 	if cnt = 0
 	then
-		insert into oz_autoseq(sid, seq, remarks)
+		insert into "oz_autoseq"("sid", "seq", "remarks")
 			values (seqName, 0, to_char(sysdate, 'MM-DD-YYYY HH24:MI:SS'));
 		commit;
 	end if;
 
-	select seq into cnt from oz_autoseq where sid = seqName;
-	update oz_autoseq set seq = cnt + 1, remarks = to_char(sysdate, 'MM-DD-YYYY HH24:MI:SS')
-		where sid = seqName;
+	select "seq" into cnt from "oz_autoseq" where "sid" = seqName;
+	update "oz_autoseq" set "seq" = cnt + 1, "remarks" = to_char(sysdate, 'MM-DD-YYYY HH24:MI:SS')
+		where "sid" = seqName;
 	commit;
 	return cnt;
 end;
 
 /*
-select oz_fIncSeq('test.cn', '') newId from dual;
+select "oz_fIncSeq" ('test.cn', '') newId from dual;
 */
 
 -- Create testing data for 3d visualization

@@ -15,7 +15,6 @@ a.cpyrit:visited {text-decoration:none;color:#8AC007}
 a.cpyrit:hover   {text-decoration:underline;color:#8AC007}
 
 /* code div */
-<<<<<<< HEAD
 .code { background-color:lightgrey; bottom:0px; padding:0.2em; margin-right:4px;
     font-size: 0.9em;
 }
@@ -23,15 +22,6 @@ a.cpyrit:hover   {text-decoration:underline;color:#8AC007}
 /* exception div */
 .exception { background-color:lightgrey; bottom:0px; padding:0.2em; margin-right:5px;
     font-size: 0.9em; color: #800000;
-=======
-.code { background-color:lightgrey; bottom:0px; padding:0.8em; margin-right:10px;
-    font-size: 0.85em;
-}
-
-/* exception div */
-.exception { background-color:lightgrey; bottom:0px; padding:0.8em; margin-right:10px;
-    font-size: 0.85em; color: #800000;
->>>>>>> 3c9358ffc76ea08be21ecf6983af96e452b66e20
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size */
@@ -43,11 +33,7 @@ a.cpyrit:hover   {text-decoration:underline;color:#8AC007}
 
 /********** body, artible header, footer **********/
 body {
-<<<<<<< HEAD
 	font-size:1.0em;color:#000000;color:#404040;
-=======
-	font-size:13px;color:#000000;color:#404040;
->>>>>>> 3c9358ffc76ea08be21ecf6983af96e452b66e20
 	background-color:#f1f1f1;margin:0px;
 }
 
