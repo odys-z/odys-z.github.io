@@ -1,4 +1,0 @@
-
-# Current Task
-
-https://threejsfundamentals.org/threejs/lessons/threejs-shadertoy.html
