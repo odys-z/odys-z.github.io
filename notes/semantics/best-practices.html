@@ -18,14 +18,21 @@
 <h1>When to use js/CRUD</h1>
 <p>Semantic.js provided a wrapper layer to handle typical CRUD processing.</p>
 <p>But this handling is heavily based on the assumption that the business is handled
-	in the same patter. This is not true in real life.</p>
-<p>There are typically 3 way to exapand this handling ability:</p>
+	in the same pattern. Although is not true in real life, the most part of a real project
+	is heavily based on those simple patterns.</p>
+<p>Semantic-* is designed to be handle throse simple CRUD patter, with some extensiblilty
+ 	to handle complex satuations. In this way, semantic-* can be applied to reduce the developers'
+	work and kept the abilities to be extended to a system as powerful as they want.
+	And semantic-* provided some basical processing can speed up their work, like json protocol,
+	structurized sql composer, etc.</p>
+<p>There are typically 3 principles to optimize this handling ability:</p>
 <ul>
 	<li>Try design the business handling in a typical CRUD pattern, with the help
 		of semantics handling supported by seamntic.DA's DASemantics.</li>
 	<li>Using the generalized way of extending servlet.<br>
 		A working example is semantics.jserv/jsample/Tools.</li>
-	<li>If your only require a complex sql composing, use the DatasetCfg way.</li>
+	<li>If your only require a complex sql for handling client request, use the DatasetCfg way,
+		which is somehow similar to <a target='_blank' href='https://en.wikipedia.org/wiki/MyBatis'>MyBatis</a>.</li>
 </ul>
 <p>Details ...</p>
 
