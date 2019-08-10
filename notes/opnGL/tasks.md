@@ -1,8 +1,6 @@
 # Readings:
 
-[Chris Wellons, A GPU Approach to Particle Physics](https://nullprogram.com/blog/2014/06/29/)
-
-DONE.
+DONE. [Chris Wellons, A GPU Approach to Particle Physics](https://nullprogram.com/blog/2014/06/29/)
 
 Tips from this article:
 
@@ -10,7 +8,8 @@ Tips from this article:
 
 2. The encoder / decoder showing some tricks of using textrue data
 
-[Chris Wellons, A GPU Approach to Path Finding](https://nullprogram.com/blog/2014/06/22/)
+DONE [Chris Wellons, A GPU Approach to Path Finding](https://nullprogram.com/blog/2014/06/22/)
+
 
 # Opensource Study / Forking
 
