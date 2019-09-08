@@ -162,16 +162,46 @@
 			Follow <a target='_blank' href='https://dzone.com/articles/publish-your-artifacts-to-maven-central'>
 				How to Publish Your Artifacts to Maven Central</a>.<br>
 			Update 2019.9.8: <a href='https://dzone.com/articles/comprehensive-step-by-step-guide-on-how-to-upload'>
-				This is the correct one</a>.
-			This <a target='_blank', href='https://www.youtube.com/watch?v=bxP9IuJbcDQ'>video by niklas</a> is also helpful.<br>
+				This is the correct one</a>?<br>
+			This <a target='_blank' href='https://www.youtube.com/watch?v=bxP9IuJbcDQ'>video by niklas</a> is also helpful.<br>
+			The GPG tutorial, <a target='_blank' href='https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages'>
+				"How To Use GPG to Encrypt and Sign Messages"</a> can be also useful.<br>
 			The <a target='_blank' href='https://www.youtube.com/watch?v=dXR4pJ_zS-0&feature=youtu.be'>
 				official video -First Deployments - Easy Publishing to Central Repository</a> is also helpful.<br>
 			Make sure it's project of "Community Support - Open Source Project Repository Hosting (OSSRH)"<br>
-			Using groupId with 'io.github' is suggested as it's can be as quick as in minuts.
+			Using groupId with 'io.github' is suggested as it's can be as quick as in minuts.<br>
 			<img class="screenshot" title="click for large image"
 					onclick="showFig(src)" src="imgs/maven/003-create-maven-repo.png">
 			<img class="screenshot" title="click for large image"
 					onclick="showFig(src)" src="imgs/maven/003-create-reop-6minuts.png">
+			<img class="screenshot" title="click for large image"
+					onclick="showFig(src)" src="imgs/maven/003-maven-transact-released.png">
+			<hr>
+			Sample settings.xml<div class='code'><pre>
+			&lt;settings&gt;
+				&lt;servers&gt;
+					&lt;server&gt;
+						&lt;id&gt;ossrh&lt;/id&gt;
+						&lt;username&gt;odys-z&lt;/username&gt;
+			            &lt;password&gt;******************&lt;/password&gt;
+					&lt;/server&gt;
+			    &lt;/servers&gt;
+
+			    &lt;profiles&gt;
+			        &lt;profile&gt;
+			            &lt;id&gt;ossrh&lt;/id&gt;
+			            &lt;activation&gt;
+			                &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+			            &lt;/activation&gt;
+			            &lt;properties&gt;
+			                &lt;gpg.executable&gt;gpg&lt;/gpg.executable&gt;
+			                &lt;gpg.passphrase&gt;*******&lt;/gpg.passphrase&gt;
+			            &lt;/properties&gt;
+			        &lt;/profile&gt;
+			    &lt;/profiles&gt;
+			&lt;/settings&gt;
+			</pre></div>
+
 			<hr>
 			Tip 1: To deploy to maven repository, a CLI is necessary.
 			<div class='code'>sudo apt-get install maven</div><br>
@@ -181,6 +211,7 @@
 			Tip 3: SNAPSHOT can be published and dependended on by others.<br>
 			The above example is enough to publish a dependable snapshot. Use this to depend on a snapshot:
 			<div class='code'><pre>
+			</pre></div>
 		&lt;repositories&gt;
 			&lt;repository&gt;
 				&lt;id&gt;sonatype-snapshots&lt;/id&gt;
@@ -199,6 +230,56 @@
 			&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
 		&lt;/dependency&gt;</pre>
 			</div>
+			<p>Tip 4: Releasing must signed by GPG</p>
+			This is done by providing key-pair<div class='code'>
+			gpg --gen-key</div>
+			and add plugin to pom.xml
+
+			<hr>
+			Error 1: sign on project failed
+			<div class='exception'><pre>
+			[ERROR] Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.5:sign (semantics.transact) on project semantics.transact: Exit code: 2 -> [Help 1]
+			[ERROR]
+			[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+			[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+			[ERROR]
+			[ERROR] For more information about the errors and possible solutions, please read the following articles:
+			[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException</pre></div>
+			Solution:<br>
+			generate key pairs, see
+				<a href='https://stackoverflow.com/questions/32018765/failed-to-execute-goal-org-apache-maven-pluginsmaven-gpg-plugin'>
+				answer by KIC</a>.
+
+			<p>Error 2: Project URL missing</p>
+			<div class='exception'><pre>
+			[ERROR] Rule failure while trying to close staging repository with ID "iogithubodys-z-1003".
+			[ERROR]
+			[ERROR] Nexus Staging Rules Failure Report
+			[ERROR] ==================================
+			[ERROR]
+			[ERROR] Repository "iogithubodys-z-1003" failures
+			[ERROR]   Rule "pom-staging" failures
+			[ERROR]     * Invalid POM: /io/github/odys-z/semantics.transact/1.0.0/semantics.transact-1.0.0.pom: Project URL missing
+			[ERROR]   Rule "signature-staging" failures
+			[ERROR]     * No public key: Key with id: (dd7bcb422bccd72b) was not able to be located on &lt;a href=http://pool.sks-keyservers.net:11371/&gt;http://pool.sks-keyservers.net:11371/&lt;/a&gt;. Upload your public key and try the operation again.
+			[ERROR]     * No public key: Key with id: (dd7bcb422bccd72b) was not able to be located on &lt;a href=http://keyserver.ubuntu.com:11371/&gt;http://keyserver.ubuntu.com:11371/&lt;/a&gt;. Upload your public key and try the operation again.
+			[ERROR]     * No public key: Key with id: (dd7bcb422bccd72b) was not able to be located on &lt;a href=http://keys.gnupg.net:11371/&gt;http://keys.gnupg.net:11371/&lt;/a&gt;. Upload your public key and try the operation again.</pre></div>
+			Solution:<br>
+			Add &lt;url&gt; to pom.xml/project
+
+			<p>Error 3: No public Key</p>
+			See error above<br>
+			Solution:
+			<div class='code'>
+				gpg --send-keys --keyserver pgp.mit.edu DD7BCB422BCCD72B<br>
+				gpg --send-keys --keyserver keys.gnupg.net DD7BCB422BCCD72B
+			</div>
+			For key id, <div class='code'><pre>gpg --list-key --keyid-format LONG
+			/home/ody/.gnupg/pubring.gpg
+			----------------------------
+			pub   2048R/DD7BCB422BCCD72B 2019-09-08 [expires: 2039-09-03]
+			uid                          Odys Zhou (odysz.github.io) &lt;odys.zhou@gmail.com&gt;
+			sub   2048R/88A11C8416A1384F 2019-09-08 [expires: 2039-09-03]</pre></div>
 		</td>
 	</tr>
 
