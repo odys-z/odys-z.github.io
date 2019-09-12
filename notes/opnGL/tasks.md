@@ -25,4 +25,12 @@ DONE [Chris Wellons, A GPU Approach to Path Finding](https://nullprogram.com/blo
 
 # Opensource Study / Forking
 
-[stackgl/glsl-transpiler](https://github.com/stackgl/glsl-transpiler)
+DONE [stackgl/glsl-transpiler](https://github.com/stackgl/glsl-transpiler)
+
+## AI
+
+[Cheng Wang, et.al, NormalNet: A voxel-based CNN for 3D object classification and retrieval](https://uwaterloo.ca/mobile-sensing/sites/ca.mobile-sensing/files/uploads/files/2019-wang-cheng-etal-li-neucom.pdf)
+
+1. A good direction
+
+2. CNN
