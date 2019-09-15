@@ -2,4 +2,8 @@
 
 [NNI Experiments](https://nni.readthedocs.io/en/latest/Tutorial/QuickStart.html)
 
-pip installed, to be continue
+# Resources
+
+## Tutorials
+
+- [Tensorflow](https://www.datacamp.com/community/tutorials/tensorflow-tutorial)
