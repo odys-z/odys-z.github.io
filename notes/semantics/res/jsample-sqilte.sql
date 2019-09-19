@@ -102,6 +102,13 @@ values
 	('sys-uesr', 'Uesr Manage', 'views/sys/user/users.html', '', '1', '1 sys.4 user', 'sys', 4),
 	('sys-wf', 'Workflow Settings', 'views/sys/workflow/workflows.html', '', '1', '1 sys.5 wf', 'sys', 5) ;
 
+-- v 1.1
+insert into a_functions ( funcId, funcName, url, css, flags, fullpath, parentId, sibling )
+values
+	('sys-1.1', 'System v1.1', null, '', '1', '2 sys-1.1', null, 2),
+	('sys-uesr-1.1', 'Uesr Manage', 'views/sys/user/users-1.1.html', '', '1', '2 sys-1.1.4 user', 'sys-1.1', 4)
+;
+
 insert into a_domain (domainId, parentId, domainValue, domainName, sort, fullpath)
 values
 	('0',   null, 't-org', 'org type',  1, '0'),
