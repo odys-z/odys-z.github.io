@@ -16,12 +16,12 @@
 
 <article>
 	<h2>About Semantic-*</h2>
-	<p>The semantic-* is cross plateform enterprise B/S application framework.
+	<p>The semantic-* is a cross plateform enterprise B/S application framework.
 		It includes 3 major modules working together to be used as a web application of which the server running on servlet 3.0.</p>
 	<p>There are multiple clients. For quick start, it's better starting from the js
 		<a target='_blank' href='https://www.jeasyui.com/'>EasyUI</a> client,
 		see <a href='notes/jclient/quick-start.html#quickstart-jeasy'>jclient/js/EasyUI quick start</a>.</p>
-	<p>It includes:
+	<p>Semantic-* includes:
 		<ul><li><a target='_blank' href='https://github.com/odys-z/semantic-transact'>
 			The semantic-transact</a>, a structured API for building SQL.</li>
 			<li><a target='_blank' href='https://github.com/odys-z/semantic-DA'>
@@ -37,6 +37,10 @@
 			</li>
 		</ul>
 	</p>
+	<p>Since version 1.1, an additional common module, Antson, is added to it for
+		handling (de)serialize structured data of java and c# (and Python in the
+		future) to / from json. Antson will be used to generalize and wrap the
+		protocol layer which is based on json message.</p>
 	<p>The semantic-* also including an extension module providing some basic workflow
 		engine function, which can be configured with:</p>
 		<ul><li>business table &amp; node instance meta data</li>
@@ -66,10 +70,16 @@
 	</p>
 
 	<h2>Quick Start</h2>
+	<p>To get semantic-* running, you must setup to separate module, server and client.</p>
+	<p>The server is a web application, it's been tested on tomcat for some comercial project.</p>
+	<p>The client are planned to extent an other js version based on vue.js, and
+		a c# version. But till v1.1, there only a js client based on EasyUI is
+		avialable.</p>
+	<p>To start with semantic-*, please follow these step.</p>
 	<ul>
 		<li><a href='notes/semantics/jserv/jsample-quick-start.html'>Sementic-* Server (jserv-sample)</a></li>
 		<li><a href='notes/jclient/quick-start.html'>jclients (js, c#, java, python?)</a></li>
-		<li><a href='notes/cheapengin/quick-start.html'>Extension: Workflow Engine Quick Start</a></li>
+		<li><a href='notes/cheapengin/quick-start.html'>Optional Extension: Workflow Engine Quick Start</a></li>
 	</ul>
 
 
