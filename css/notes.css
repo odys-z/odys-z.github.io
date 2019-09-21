@@ -33,6 +33,14 @@ a.cpyrit:hover   {text-decoration:underline;color:#8AC007}
   color: #800000;
 }
 
+.details {
+  background-color:lightgrey;
+  bottom:0px;
+  padding:0.2em;
+  margin-right:5px;
+  font-size: 0.9em;
+}
+
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size */
 .code, .exception pre {
     -moz-tab-size: 2;

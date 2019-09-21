@@ -17,6 +17,46 @@
 
 <article>
 	<h1>GIS &amp; EPSG</h1>
+	<h2 class='h-item'>How map can be presented</h2>
+	<p>In present days, map can be presented in browser via js client easyly, with
+	support from map server. Based on client framework like <a target='_blank'
+	href='https://leafletjs.com'>leaflet</a> or <a target'_blank' href='https://openlayers.org'>
+	openlayers</a>, tiled map pictures can be easily presented.</p>
+	<p>Map tiles are acturally pictures servered by a map server. The <a target='_blank'
+		href='https://www.openstreetmap.org'>OSM</a> is a good example. The service
+		and data are free.</p>
+	<p>Here is <a target='_blank' href='https://openlayers.org/en/latest/doc/quickstart.html'>
+		the quickstart from openlayers</a> with <a target='_blank'
+		href='https://wiki.openstreetmap.org/wiki/Tile_servers'>OSM tiles</a> support.</p>
+	<p>If you are an experienced programmer, the above massage is enough for you
+		to ba a "GIS Programmer", if such a profecient really exists.</p>
+	<p>But from the day you decide to do something about GIS, you need to know more
+		about geography data itself. There are 2 things you need to keep in mind:</p>
+	<ul>
+		<li><a target='_blank' href=''>Earth is not a simple geometry shape,</a></li>
+		<li><a target='_blank' href=''>and there are many ways to measure, and errors always exist.</a></li>
+	</ul>
+	<p>And here is the 3rd advice, only for Chinese programmers:</p>
+	<ul>
+		<li>Be professional, be alert to your thinking patterns.</li>
+	</ul>
+	<p>I'm not tend to insulting those Chinese programmers but I do got requests asking me
+		showing geologicall locations marked from different map services. And here
+		comes the radiculous part: locations are not considered correct compare to
+		the orignal marks even when the really long-lat is known. Because you just
+		don't show the loaction the same with some popular map service, from China of cause.<br>
+		<div class='details'>It's often asked by clients that you must show objects'
+			locations with displacement from the "true" longitude and latitude.
+			The resultes is that marks from different system won't displaced in the same way.<br>
+			But why displacement is needed? For security!<br>
+			You shouldn't doubt which enemy is so stupid that will collect data
+			like this, it's not job of a programmer.</div>
+	</p>
+	<p>
+		I must be appreciating that they don't ask any questions after I asked
+		what the referencing measurement they used.
+	</p>
+
 	<h2 class='h-item'>About EPSG, WSG84 &amp; Mercato Projection</h2>
 	<h2 class='h-item'>EPSG 4326 &amp; CRS 80 (Xi'an 80)</h2>
 
