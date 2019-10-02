@@ -33,6 +33,14 @@ a.cpyrit:hover   {text-decoration:underline;color:#8AC007}
   color: #800000;
 }
 
+.details {
+  background-color:lightgrey;
+  bottom:0px;
+  padding:0.2em;
+  margin-right:5px;
+  font-size: 0.9em;
+}
+
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size */
 .code, .exception pre {
     -moz-tab-size: 2;
@@ -110,7 +118,7 @@ table.reference td{
 	border:1px solid #d4d4d4;padding:5px;padding-top:7px;padding-bottom:7px;vertical-align:top;
 }
 
-table.reference dl dt { background-image:url(sqorange.gif);
+table.reference dl dt { background-image:url(item.png);
 	background-repeat:no-repeat;
 	background-position:1em;
 	color:#033;
@@ -120,12 +128,28 @@ table.reference dl dt { background-image:url(sqorange.gif);
 }
 
 /*********** ex-item, withou a table *****************/
+.h-item { background-image:url(item.png);
+		background-repeat: no-repeat;
+		padding-left: 1.8em;
+		background-position-y: center;
+		background-size: 24px;
+	}
+
+.small-item {
+		// @extend .h-item;
+		background-image:url(item.png);
+		background-repeat: no-repeat;
+		padding-left: 1.2em;
+		background-position-y: center;
+		background-size: 16px;
+	}
+
 .exitem>li { margin-bottom: 1em; }
 
 /*********** discription table item ******************/
 .dtitem { font-style:italic; text-decoration:underline}
 
-/*********** 参考文献 ********************************/
+/*********** references ********************************/
 table.refs td { vertical-align: text-top; }
 
 /*********** 九宫格 **********************************/
