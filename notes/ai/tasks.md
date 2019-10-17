@@ -19,3 +19,7 @@
 1. A good direction
 
 2. CNN / SDF?
+
+- [Phillip Isola, et. al, Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/pdf/1611.07004.pdf)
+
+    see also the example from [sandbank pix2pix](https://research.google.com/seedbank/seed/pixpix_with_eager_execution)
