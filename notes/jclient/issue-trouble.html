@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>JClient.js Issues</title>
+	<link rel="stylesheet" type="text/css" href="../../css/notes.css">
+	<script src="../../tips/showfig.js"></script>
+	<link rel="icon" href="../../css/odysz.png">
+</head>
+<body>
+<header>
+	<h1>JClient.js Reference</h1>
+	<a href='../../index.html'>Documents Home</a>
+	<hr>
+</header>
+
+<article>
+<h1>JClient.js Troubleshotings</h1>
+<table class="reference notranslate">
+<tbody>
+	<tr>
+		<th colspan='2'>Trouble</th>
+		<th >Shooting</th>
+	</tr>
+
+	<tr><td colspan="3">CROS</td></tr>
+	<tr><td></td>
+		<td>Click function menu item not work.
+			The browser report postMessage error.<br>
+			Here is an example from Chrome log:
+			<div class='exception'>Failed to execute 'postMessage' on 'DOMWindow':
+			The target origin provided ('file://') does not match the recipient
+			window's origin ('null').
+		</div></td>
+		<td><p>This should only happens for EasyUI version.</p>
+			<p>The easyui version using Postmate to communicate between main page
+			(the menue manager) and the content iframe. If the html page is opened
+			from file system, the cross domain policy blocked this communication.</p>
+			To dissable the security checking, start chorme like this:
+			<div class='code'>google-chrome --allow-file-access-from-files
+				--allow-file-access --allow-cross-origin-auth-prompt</div>
+		</td>
+	</tr>
+</tbody>
+</table>
+<div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
+<script>
+initDiv('picDiv');
+</script>
+</article>
+
+<!-- fake hr and span to reserve space for footer -->
+<hr style="color:transparent;">
+<span>&nbsp;</span>
+
+<footer class="cpyrit" style="position:fixed;bottom:0px;">
+	<hr>
+	<span id="copyright">Copyright © 2020 github.com/odys-z. All Rights Reserved.</span>
+</footer>
+</body>
+</html>
