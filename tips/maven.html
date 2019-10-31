@@ -161,7 +161,7 @@
 		<td>To excactly deloy and release,
 			Follow <a target='_blank' href='https://dzone.com/articles/publish-your-artifacts-to-maven-central'>
 				How to Publish Your Artifacts to Maven Central</a>.<br>
-			Update 2019.9.8: <a href='https://dzone.com/articles/comprehensive-step-by-step-guide-on-how-to-upload'>
+			Update 2019.9.8: <a target='_blank' href='https://dzone.com/articles/comprehensive-step-by-step-guide-on-how-to-upload'>
 				This is the correct one</a>?<br>
 			This <a target='_blank' href='https://www.youtube.com/watch?v=bxP9IuJbcDQ'>video by niklas</a> is also helpful.<br>
 			The GPG tutorial, <a target='_blank' href='https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages'>
@@ -173,8 +173,10 @@
 			<a target='_blank' href='https://central.sonatype.org/pages/apache-maven.html'>
 				Sonatype Doc: Deploying to OSSRH with Apache Maven - Introduction</a><br>
 			and <a target='_blank' href='https://central.sonatype.org/pages/releasing-the-deployment.html'>
-				Sonatype Doc: Locate and Examine Your Staging Repository</a>.<br>
-			<a target='_blank' href='https://issues.sonatype.org/'>sonatype issues board</a></p>
+				Sonatype Doc: Locate and Examine Your Staging Repository</a>.<br></p>
+			<p>Resources:</p>
+			<p><a target='_blank' href='https://oss.sonatype.org/#welcome'>Central Repository</a></p>
+			<p><a target='_blank' href='https://issues.sonatype.org/'>sonatype issues board</a></p>
 			Make sure it's project of "Community Support - Open Source Project Repository Hosting (OSSRH)"<br>
 			Using groupId with 'io.github' is suggested as it's can be as quick as in minuts.<br>
 			<img class="screenshot" title="click for large image"
@@ -218,7 +220,6 @@
 			Tip 3: SNAPSHOT can be published and dependended on by others.<br>
 			The above example is enough to publish a dependable snapshot. Use this to depend on a snapshot:
 			<div class='code'><pre>
-			</pre></div>
 		&lt;repositories&gt;
 			&lt;repository&gt;
 				&lt;id&gt;sonatype-snapshots&lt;/id&gt;
@@ -287,6 +288,10 @@
 			pub   2048R/DD7BCB422BCCD72B 2019-09-08 [expires: 2039-09-03]
 			uid                          Odys Zhou (odysz.github.io) &lt;odys.zhou@gmail.com&gt;
 			sub   2048R/88A11C8416A1384F 2019-09-08 [expires: 2039-09-03]</pre></div>
+			<p>Tip 5: release</p>
+			<div class='code'>mvn nexus-staging:release</div>
+			See <a target='_blank' href='https://dzone.com/articles/comprehensive-step-by-step-guide-on-how-to-upload'>
+			How to Upload an Open-Source Java Library to Maven Central</a>.</p>
 		</td>
 	</tr>
 
