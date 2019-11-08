@@ -9,7 +9,7 @@
 </head>
 <body>
 <header>
-	<h1>JClient Quick Start</h1>
+	<h1>Anclient Quick Start</h1>
 	<a href='../../index.html'>Documents Home</a>
 	<hr>
 </header>
@@ -24,28 +24,28 @@
 		following client. Please following the <a href='../semantics/jserv/jsample-quick-start.html'>
 		quick start doc</a> to set up the server.</p>
 
-	<h2>About JClient</h2>
-	<p>JClient is the client side API for <a href='../../index.html'>semantic-*</a>,
+	<h2>About Anclient</h2>
+	<p>Anclient is the client side API for <a href='../../index.html'>semantic-*</a>,
 		including:
 		<ul>
-			<li>jclient.java, the java client</li>
-			<li>jclient.js.vue, the vue components can communicate with sematic-*, based on jclient.js</li>
-			<li>jclient.js.easui, the easUI API lib can communicate with sematic-*, based on jclient.js</li>
-			<li>jclient.cs, the c# client</li>
-			<li>jclient.js, the low level js client API for accessing service at jerver.sample.<br>
+			<li>anclient.java, the java client</li>
+			<li>anclient.js.vue, the vue components can communicate with sematic-*, based on anclient.js</li>
+			<li>anclient.js.easui, the easUI API lib can communicate with sematic-*, based on anclient.js</li>
+			<li>anclient.cs, the c# client</li>
+			<li>anclient.js, the low level js client API for accessing service at jerver.sample.<br>
 				It's for other presention extension, such as HandsonTable,
 				wich is also been used in commercial project.</li>
 		</ul>
 	<p>All the clients are tested together with jserv.sample (All? Not True) and can be configured to a different jserv.</p>
-	<p>The sample project's client side located in the jclient/test folder.</p>
+	<p>The sample project's client side located in the anclient/test folder.</p>
 	<p>Some client implementation like the EasyUI version is implementated as a basic
 		enterprise webapp's client, including a role based function previllege infrastructure
 		and a cheap workflow extension. It's a good starting point for a commercial
 		webapp.</p>
-	<h2>jclient/js</h2>
-	<h3>jclient/js/vue</h3>
+	<h2>anclient/js</h2>
+	<h3>anclient/js/vue</h3>
 	<p>TODO ...</p>
-	<h3 id='qickstart-jeasy'>jclient/js/easUI</h3>
+	<h3 id='qickstart-jeasy'>anclient/js/easUI</h3>
 	<h4>Prerequisites</h4>
 	<ul><li>The jserv.sample server <a href='../semantics/jserv/jsample-quick-start.html'> - see quick start here</a></li>
 		<li><a target='_blank' href='https://www.jeasyui.com/'>EasyUI</a>
@@ -57,7 +57,7 @@
 		the jserv.sample quick start</a> to deploy the server and make
 		sure the server is allowing cross domain content accessing.</li>
 		<li>Configure the jserv-sample url path in<br>
-		jclient/js/test/easyi/jsample-easyui.js
+		anclient/js/test/easyi/jsample-easyui.js
 		<div class='code'><pre>const jconsts = {
         ...
         serv: 'http://localhost:8080/jsample',
@@ -66,7 +66,7 @@
 		Replace 'conn' with your connection ID configured in 'your-web-app'/WEB-INF/connects.xml.<br>
 		The default configuration should working if you didn't change any configurations.</li>
 		<li>Open login demo page:<br>
-			jclient/js/test/easyi/login.html<br>
+			anclient/js/test/easyi/login.html<br>
 		</li>
 		<li>Login with 'admin:123456' and navigate through function pages.</li>
 	</ol>
@@ -85,9 +85,9 @@
 				onclick="showFig(src)" src="imgs/006.png">
 	<p><a href='issue-trouble.html'>Issue &amp; Troubleshotings</a></p>
 
-	<h2 id='java'>jclient/java</h2>
+	<h2 id='java'>anclient/java</h2>
 	<p>If you'v tried js client, you may wonder is the protocol layer powerful enough
-		for other runtime environment or programming languange. Try the jclient java
+		for other runtime environment or programming languange. Try the anclient java
 		version, have a look at the source.</p>
 	<p>Keep in mind that we won't change a single configuration at the server side.</p>
 	<h4>Prerequisites</h4>
@@ -99,13 +99,13 @@
 			configure an oracle connection for java client testing.</a>
 		</li>
 		<li><div class='code'>git clone https://github.com/odys-z/jclient.git</div>
-		This will also clone other jclient version. We only needing the java folder here.</li>
+		This will also clone other anclient version. We only needing the java folder here.</li>
 		<li>Import The Eclipse Java Project</li>
 		<li>Run Junit Test Case: io.odysz.jclient.SemantiClientTest</li>
 	</ol>
 	<p></p>
 
-	<h2>jclient/c#</h2>
+	<h2>anclient/c#</h2>
 </article>
 
 <div id="picDiv" style="width:200px;height:20px;" onclick="hide()"></div>
