@@ -33,6 +33,15 @@ begin
 	return cnt;
 end;
 
+CREATE TABLE "a_functions" (
+	"funcId" VARCHAR2(20),
+	"funcName" VARCHAR2(20),
+	"parentId" VARCHAR2(20),
+	"sort" NUMBER(22,0),
+	"fullpath" VARCHAR2(50),
+	CONSTRAINT a_functions PRIMARY KEY ("funcId")
+) ;
+
 /*
 select "oz_fIncSeq" ('test.cn', '') newId from dual;
 */
@@ -45,7 +54,6 @@ CREATE TABLE "b_reports" (
 	"ignored" int,
 	CONSTRAINT b_repId PRIMARY KEY ("repId")
 );
-CREATE UNIQUE INDEX b_repId ON "b_reports" ("repId") ;
 
 -- report's records
 CREATE TABLE "b_reprecords" (
@@ -56,4 +64,3 @@ CREATE TABLE "b_reprecords" (
 	"val" VARCHAR2(50),
 	CONSTRAINT b_recId PRIMARY KEY ("recId")
 ) ;
-CREATE UNIQUE INDEX b_recId ON "b_reprecords" ("recId") ;
