@@ -1,13 +1,17 @@
 .. _unity_to_godot:
 
 ..    references :
-..    `Godot File Format - TSCN<https://docs.godotengine.org/en/latest/development/file_formats/tscn.html>`
+..    `Godot File Format - TSCN <https://docs.godotengine.org/en/latest/development/file_formats/tscn.html>`_
 
 Godot Tilemap Format
 ======================
 
-Tilemap is a type of TSCN Node2D. For a TSCN Node description,
-see `Godot Doc: TSCN File Format<https://docs.godotengine.org/en/latest/development/file_formats/tscn.html>`.
+TSCN
+----
+
+Tilemap is a type of TSCN Node2D. For a TSCN Node description, see
+
+`Godot Doc: TSCN File Format <https://docs.godotengine.org/en/latest/development/file_formats/tscn.html>`_.
 
 .. note::
 
@@ -73,20 +77,41 @@ A 1D 32 bits int array in decimal digital string.
 .. image:: img/001-tilemap1.png
     :width: 800px
 
-+------------------------------+-------------------------------------------------+----------------------------------------------------------------+
-|         Node Data            |        Data Formatted                           |            Remarks                                             |
-+==============================+=================================================+================================================================+
-| tile_set = ExtResource( 2 )  |      ExtResource(2) = tset1.tres                |           Tileset                                              |
-+------------------------------+-------------------------------------------------+----------------------------------------------------------------+
-|   PoolIntArray[0:2]          |   0: [x: 0, y: 0] - PosKey                      |   Postion: x, y = 0, 0                                         |
-| | 0, 1, 0                    | | 1: [id: 1]      - Cell.struct.id              | | Tileset's tile id: 1                                         |
-|                              | | 0: [auto-x: 0, auto-y: 0] -C.struct.autox/y   | | Cell's auto tile id x, y = 0, 0                              |
-+------------------------------+-------------------------------------------------+----------------------------------------------------------------+
-|   PoolIntArray[3:5]          |   0: [x: 1, y: 0] - PosKey                      |   Postion: x, y = 1, 0                                         |
-| | 1, 1073741824, 0           | | 1: [id: 0]      - Cell.struct.id              | | Tileset's tile id = 0  ( 1073741824 = 4000 0000h )           |
-|                              | |    [fliph: 0, flipv: 1]                       | | flip (x/h, y/v) = 0, 1 ( Why not 04h? )                      |
-|                              | | 0: [auto-x: 0, auto-y: 0]                     |                                                                |
-+------------------------------+-------------------------------------------------+----------------------------------------------------------------+
-| ...                          |   1610612736                                    |   6000 0000h: id, h, v = 0, 1, 1 ?                             |
-|                              | | 65536                                         | | 65536: pos(x, y) = 0, 1                                      |
-+------------------------------+-------------------------------------------------+----------------------------------------------------------------+
+I'd like raw html here.
+
+.. raw:: html
+
+    <table class='reference'>
+        <tr><th>Ndoe Data</th>
+            <th>Data Formatted</th>
+            <th>Details</th>
+        </tr>
+        <tr><td>...</td>
+            <td>1610612736</br>65536</td>
+            <td>6000 0000h: id, h, v = 0, 1, 1 ? <br>
+                65536: pos(x, y) = 0, 1</td>
+        </tr>
+    </table>
+..
+
+Text follow raw html table is visible!
+
+    +------------------------------+-------------------------------------------------+----------------------------------------------------------------+
+    |         Node Data            |        Data Formatted                           |            Remarks                                             |
+    +==============================+=================================================+================================================================+
+    | tile_set = ExtResource( 2 )  |      ExtResource(2) = tset1.tres                |           Tileset                                              |
+    +------------------------------+-------------------------------------------------+----------------------------------------------------------------+
+    |   PoolIntArray[0:2]          |   0: [x: 0, y: 0] - PosKey                      |   Postion: x, y = 0, 0                                         |
+    | | 0, 1, 0                    | | 1: [id: 1]      - Cell.struct.id              | | Tileset's tile id: 1                                         |
+    |                              | | 0: [auto-x: 0, auto-y: 0] -C.struct.autox/y   | | Cell's auto tile id x, y = 0, 0                              |
+    +------------------------------+-------------------------------------------------+----------------------------------------------------------------+
+    |   PoolIntArray[3:5]          |   0: [x: 1, y: 0] - PosKey                      |   Postion: x, y = 1, 0                                         |
+    | | 1, 1073741824, 0           | | 1: [id: 0]      - Cell.struct.id              | | Tileset's tile id = 0  ( 1073741824 = 4000 0000h )           |
+    |                              | |    [fliph: 0, flipv: 1]                       | | flip (x/h, y/v) = 0, 1 ( Why not 04h? )                      |
+    |                              | | 0: [auto-x: 0, auto-y: 0]                     |                                                                |
+    +------------------------------+-------------------------------------------------+----------------------------------------------------------------+
+    | ...                          |   1610612736                                    |   6000 0000h: id, h, v = 0, 1, 1 ?                             |
+    |                              | | 65536                                         | | 65536: pos(x, y) = 0, 1                                      |
+    +------------------------------+-------------------------------------------------+----------------------------------------------------------------+
+
+Text follow reStructuredText table is not visible?
