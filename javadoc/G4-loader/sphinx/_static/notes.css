@@ -3,6 +3,14 @@
 	max-width: 1024px !important;
 }
 
+.wy-nav-content-wrap {
+    background: #ddd;
+}
+
+.wy-side-nav-search, .wy-nav-top {
+    background: #4F5F5F;
+}
+
 /********** header **********/
 header h1 { text-align:center; }
 header h2 { text-align:center; }
@@ -69,9 +77,9 @@ h1,h2,h3,h4,h5,h6 {
 }
 /*
 footer div { background-color:#f1f1f1; position:fixed; bottom:0px; margin-right:0px;}
-*/
 footer { background-color:#f1f1f1; position:fixed; bottom:0px; margin-right:0px; width:100%; text-align:right;}
 footer span { text-align:right; margin-right:4em;}
+*/
 
 /* translated (with title attribute) should be prompted (with underline) */
 [title] {

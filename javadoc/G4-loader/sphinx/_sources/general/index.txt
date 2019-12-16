@@ -7,3 +7,6 @@ G4 Loader Docs – About
    :name: toc-about
 
    about
+   res_loader
+   node2d_loader
+   object

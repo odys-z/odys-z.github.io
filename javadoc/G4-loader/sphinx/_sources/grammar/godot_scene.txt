@@ -1,5 +1,3 @@
-.. _unity_to_godot:
-
 ..    references :
 ..    https://docs.godotengine.org/en/latest/development/file_formats/tscn.html
 ..    `Godot File Format - TSCN <https://docs.godotengine.org/en/latest/development/file_formats/tscn.html>`_

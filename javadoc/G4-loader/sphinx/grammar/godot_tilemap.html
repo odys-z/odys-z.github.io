@@ -36,6 +36,7 @@
   
     <link rel="top" title="G4 Loader 0.1.0 documentation" href="../index.html"/>
         <link rel="up" title="Grammar Reference" href="index.html"/>
+        <link rel="next" title="Godot TRES File Format" href="godot_tileset.html"/>
         <link rel="prev" title="Godot TSCN File Format" href="godot_scene.html"/> 
 
   
@@ -98,6 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#tile-date">tile_date</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="godot_tileset.html">Godot TRES File Format</a></li>
 </ul>
 </li>
 </ul>
@@ -202,100 +204,50 @@ tile_data = PoolIntArray( 0, 1, 0, 1, 1073741824, 0, 2, 0, 0, 3, 1610612736, 0, 
 </pre></div>
 </div>
 <p>A 1D 32 bits int array in decimal digital string.</p>
-<a class="reference internal image-reference" href="../_images/001-tilemap1.png"><img alt="../_images/001-tilemap1.png" src="../_images/001-tilemap1.png" style="width: 800px;" /></a>
-<p>I&#8217;d like raw html here.</p>
+<p>TileMap data</p>
 <table class='reference'>
     <tr><th>Ndoe Data</th>
         <th>Data Formatted</th>
         <th>Details</th>
     </tr>
-    <tr><td>...</td>
+    <tr><td>tile_set = ExtResource( 2 )</td>
+        <td>ExtResource(2) = tset1.tres</td>
+        <td>Tileset</td>
+    </tr>
+    <tr><td>PoolIntArray[0:2]<br>
+            0, 1, 0
+        </td>
+        <td>0: [x: 0, y: 0] - PosKey<br>
+            1: [id: 1]      - Cell.struct.id<br>
+            0: [auto-x: 0, auto-y: 0]<br>
+               -Cell.struct.autox/y
+        </td>
+        <td>Postion: x, y = 0, 0<br>
+            Tileset's tile id: 1<br>
+            Cell's auto tile id x, y = 0, 0
+        </td>
+    </tr>
+    <tr><td>PoolIntArray[3:5]<br>
+            1, 1073741824, 0<br>
+        </td>
+        <td>
+            0: [x: 1, y: 0] - PosKey<br>
+            1: [id: 0]      - Cell.struct.id<br>
+            [fliph: 0, flipv: 1]<br>
+            0: [auto-x: 0, auto-y: 0]
+        </td>
+        <td>
+            Postion: x, y = 1, 0<br>
+            Tileset's tile id = 0  ( 1073741824 = 4000 0000h )<br>
+            flip (x/h, y/v) = 0, 1 ( Why not 04h? )<br>
+        </td>
+    </tr>
+    <tr><td>... </td>
         <td>1610612736</br>65536</td>
         <td>6000 0000h: id, h, v = 0, 1, 1 ? <br>
-            65536: pos(x, y) = 0, 1</td>
+            0001 0000h: pos(x, y) = 0, 1</td>
     </tr>
-</table><p>Text follow raw html table is visible!</p>
-<blockquote>
-<div><table border="1" class="docutils">
-<colgroup>
-<col width="21%" />
-<col width="34%" />
-<col width="45%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Node Data</th>
-<th class="head">Data Formatted</th>
-<th class="head">Remarks</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>tile_set = ExtResource( 2 )</td>
-<td>ExtResource(2) = tset1.tres</td>
-<td>Tileset</td>
-</tr>
-<tr class="row-odd"><td><blockquote class="first">
-<div>PoolIntArray[0:2]</div></blockquote>
-<div class="last line-block">
-<div class="line">0, 1, 0</div>
-</div>
-</td>
-<td><blockquote class="first">
-<div>0: [x: 0, y: 0] - PosKey</div></blockquote>
-<div class="last line-block">
-<div class="line">1: [id: 1]      - Cell.struct.id</div>
-<div class="line">0: [auto-x: 0, auto-y: 0] -C.struct.autox/y</div>
-</div>
-</td>
-<td><blockquote class="first">
-<div>Postion: x, y = 0, 0</div></blockquote>
-<div class="last line-block">
-<div class="line">Tileset&#8217;s tile id: 1</div>
-<div class="line">Cell&#8217;s auto tile id x, y = 0, 0</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><blockquote class="first">
-<div>PoolIntArray[3:5]</div></blockquote>
-<div class="last line-block">
-<div class="line">1, 1073741824, 0</div>
-</div>
-</td>
-<td><blockquote class="first">
-<div>0: [x: 1, y: 0] - PosKey</div></blockquote>
-<div class="last line-block">
-<div class="line">1: [id: 0]      - Cell.struct.id</div>
-<div class="line-block">
-<div class="line">[fliph: 0, flipv: 1]</div>
-</div>
-<div class="line">0: [auto-x: 0, auto-y: 0]</div>
-</div>
-</td>
-<td><blockquote class="first">
-<div>Postion: x, y = 1, 0</div></blockquote>
-<div class="last line-block">
-<div class="line">Tileset&#8217;s tile id = 0  ( 1073741824 = 4000 0000h )</div>
-<div class="line">flip (x/h, y/v) = 0, 1 ( Why not 04h? )</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td>...</td>
-<td><blockquote class="first">
-<div>1610612736</div></blockquote>
-<div class="last line-block">
-<div class="line">65536</div>
-</div>
-</td>
-<td><blockquote class="first">
-<div>6000 0000h: id, h, v = 0, 1, 1 ?</div></blockquote>
-<div class="last line-block">
-<div class="line">65536: pos(x, y) = 0, 1</div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<p>Text follow reStructuredText table is not visible?</p>
+</table><a class="reference internal image-reference" href="../_images/001-tilemap1.png"><img alt="../_images/001-tilemap1.png" src="../_images/001-tilemap1.png" style="width: 800px;" /></a>
 </div>
 </div>
 
@@ -305,6 +257,8 @@ tile_data = PoolIntArray( 0, 1, 0, 1, 1073741824, 0, 2, 0, 0, 3, 1610612736, 0, 
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="godot_tileset.html" class="btn btn-neutral float-right" title="Godot TRES File Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="godot_scene.html" class="btn btn-neutral" title="Godot TSCN File Format" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -363,7 +317,11 @@ tile_data = PoolIntArray( 0, 1, 0, 1, 1073741824, 0, 2, 0, 0, 3, 1610612736, 0, 
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-   
+  
+    <div class="footer">
+        &copy; Copyright 2019, Odys Zhou.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    </div>
 
 </body>
 </html>
