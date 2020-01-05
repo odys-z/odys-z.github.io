@@ -35,7 +35,7 @@
 
   
     <link rel="top" title="G4 Loader 0.1.0 documentation" href="../index.html"/>
-        <link rel="up" title="G4 Loader Docs – About" href="index.html"/>
+        <link rel="up" title="G4 Loader Docs – General" href="index.html"/>
         <link rel="next" title="Grammar Reference" href="../grammar/index.html"/>
         <link rel="prev" title="Godot Node2D Loader" href="node2d_loader.html"/> 
 
@@ -88,7 +88,7 @@
             
                 <p class="caption"><span class="caption-text">General</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">G4 Loader Docs – About</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">G4 Loader Docs – General</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about.html">About G4 Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="res_loader.html">Godot Resource Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node2d_loader.html">Godot Node2D Loader</a></li>
@@ -129,7 +129,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="index.html">G4 Loader Docs – About</a> &raquo;</li>
+          <li><a href="index.html">G4 Loader Docs – General</a> &raquo;</li>
       
     <li>Godot Object</li>
       <li class="wy-breadcrumbs-aside">
@@ -159,34 +159,7 @@ MethodInfo and class Object:</p>
     <span class="n">PROPERTY_HINT_FLAGS</span><span class="p">,</span> <span class="c1">///&lt; hint_text= &quot;flag1,flag2,etc&quot; (as bit flags)</span>
     <span class="n">PROPERTY_HINT_LAYERS_2D_RENDER</span><span class="p">,</span>
     <span class="n">PROPERTY_HINT_LAYERS_2D_PHYSICS</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_LAYERS_3D_RENDER</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_LAYERS_3D_PHYSICS</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_FILE</span><span class="p">,</span> <span class="c1">///&lt; a file path must be passed, hint_text (optionally) is a filter &quot;*.png,*.wav,*.doc,&quot;</span>
-    <span class="n">PROPERTY_HINT_DIR</span><span class="p">,</span> <span class="c1">///&lt; a directory path must be passed</span>
-    <span class="n">PROPERTY_HINT_GLOBAL_FILE</span><span class="p">,</span> <span class="c1">///&lt; a file path must be passed, hint_text (optionally) is a filter &quot;*.png,*.wav,*.doc,&quot;</span>
-    <span class="n">PROPERTY_HINT_GLOBAL_DIR</span><span class="p">,</span> <span class="c1">///&lt; a directory path must be passed</span>
-    <span class="n">PROPERTY_HINT_RESOURCE_TYPE</span><span class="p">,</span> <span class="c1">///&lt; a resource object type</span>
-    <span class="n">PROPERTY_HINT_MULTILINE_TEXT</span><span class="p">,</span> <span class="c1">///&lt; used for string properties that can contain multiple lines</span>
-    <span class="n">PROPERTY_HINT_PLACEHOLDER_TEXT</span><span class="p">,</span> <span class="c1">///&lt; used to set a placeholder text for string properties</span>
-    <span class="n">PROPERTY_HINT_COLOR_NO_ALPHA</span><span class="p">,</span> <span class="c1">///&lt; used for ignoring alpha component when editing a color</span>
-    <span class="n">PROPERTY_HINT_IMAGE_COMPRESS_LOSSY</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_IMAGE_COMPRESS_LOSSLESS</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_OBJECT_ID</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_TYPE_STRING</span><span class="p">,</span> <span class="c1">///&lt; a type string, the hint is the base type to choose</span>
-    <span class="n">PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE</span><span class="p">,</span> <span class="c1">///&lt; so something else can provide this (used in scripts)</span>
-    <span class="n">PROPERTY_HINT_METHOD_OF_VARIANT_TYPE</span><span class="p">,</span> <span class="c1">///&lt; a method of a type</span>
-    <span class="n">PROPERTY_HINT_METHOD_OF_BASE_TYPE</span><span class="p">,</span> <span class="c1">///&lt; a method of a base type</span>
-    <span class="n">PROPERTY_HINT_METHOD_OF_INSTANCE</span><span class="p">,</span> <span class="c1">///&lt; a method of an instance</span>
-    <span class="n">PROPERTY_HINT_METHOD_OF_SCRIPT</span><span class="p">,</span> <span class="c1">///&lt; a method of a script &amp; base</span>
-    <span class="n">PROPERTY_HINT_PROPERTY_OF_VARIANT_TYPE</span><span class="p">,</span> <span class="c1">///&lt; a property of a type</span>
-    <span class="n">PROPERTY_HINT_PROPERTY_OF_BASE_TYPE</span><span class="p">,</span> <span class="c1">///&lt; a property of a base type</span>
-    <span class="n">PROPERTY_HINT_PROPERTY_OF_INSTANCE</span><span class="p">,</span> <span class="c1">///&lt; a property of an instance</span>
-    <span class="n">PROPERTY_HINT_PROPERTY_OF_SCRIPT</span><span class="p">,</span> <span class="c1">///&lt; a property of a script &amp; base</span>
-    <span class="n">PROPERTY_HINT_OBJECT_TOO_BIG</span><span class="p">,</span> <span class="c1">///&lt; object is too big to send</span>
-    <span class="n">PROPERTY_HINT_NODE_PATH_VALID_TYPES</span><span class="p">,</span>
-    <span class="n">PROPERTY_HINT_SAVE_FILE</span><span class="p">,</span> <span class="c1">///&lt; a file path must be passed, hint_text (optionally) is a filter &quot;*.png,*.wav,*.doc,&quot;. This opens a save dialog</span>
-    <span class="n">PROPERTY_HINT_MAX</span><span class="p">,</span>
-    <span class="c1">// When updating PropertyHint, also sync the hardcoded list in VisualScriptEditorVariableEdit</span>
+            <span class="p">...</span>
 <span class="p">};</span>
 
 <span class="k">enum</span> <span class="n">PropertyUsageFlags</span> <span class="p">{</span>
@@ -200,29 +173,7 @@ MethodInfo and class Object:</p>
     <span class="n">PROPERTY_USAGE_INTERNATIONALIZED</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="c1">//hint for internationalized strings</span>
     <span class="n">PROPERTY_USAGE_GROUP</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="c1">//used for grouping props in the editor</span>
     <span class="n">PROPERTY_USAGE_CATEGORY</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
-    <span class="c1">// FIXME: Drop in 4.0, possibly reorder other flags?</span>
-    <span class="c1">// Those below are deprecated thanks to ClassDB&#39;s now class value cache</span>
-    <span class="c1">//PROPERTY_USAGE_STORE_IF_NONZERO = 512, //only store if nonzero</span>
-    <span class="c1">//PROPERTY_USAGE_STORE_IF_NONONE = 1024, //only store if false</span>
-    <span class="n">PROPERTY_USAGE_NO_INSTANCE_STATE</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_RESTART_IF_CHANGED</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_SCRIPT_VARIABLE</span> <span class="o">=</span> <span class="mi">8192</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_STORE_IF_NULL</span> <span class="o">=</span> <span class="mi">16384</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_ANIMATE_AS_TRIGGER</span> <span class="o">=</span> <span class="mi">32768</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED</span> <span class="o">=</span> <span class="mi">65536</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_SCRIPT_DEFAULT_VALUE</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">17</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_CLASS_IS_ENUM</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_NIL_IS_VARIANT</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">19</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_INTERNAL</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_DO_NOT_SHARE_ON_DUPLICATE</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">21</span><span class="p">,</span> <span class="c1">// If the object is duplicated also this property will be duplicated</span>
-    <span class="n">PROPERTY_USAGE_HIGH_END_GFX</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">22</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_NODE_PATH_FROM_SCENE_ROOT</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">23</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_KEYING_INCREMENTS</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">25</span><span class="p">,</span> <span class="c1">// Used in inspector to increment property when keyed in animation player</span>
-
-    <span class="n">PROPERTY_USAGE_DEFAULT</span> <span class="o">=</span> <span class="n">PROPERTY_USAGE_STORAGE</span> <span class="o">|</span> <span class="n">PROPERTY_USAGE_EDITOR</span> <span class="o">|</span> <span class="n">PROPERTY_USAGE_NETWORK</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_DEFAULT_INTL</span> <span class="o">=</span> <span class="n">PROPERTY_USAGE_STORAGE</span> <span class="o">|</span> <span class="n">PROPERTY_USAGE_EDITOR</span> <span class="o">|</span> <span class="n">PROPERTY_USAGE_NETWORK</span> <span class="o">|</span> <span class="n">PROPERTY_USAGE_INTERNATIONALIZED</span><span class="p">,</span>
-    <span class="n">PROPERTY_USAGE_NOEDITOR</span> <span class="o">=</span> <span class="n">PROPERTY_USAGE_STORAGE</span> <span class="o">|</span> <span class="n">PROPERTY_USAGE_NETWORK</span><span class="p">,</span>
+            <span class="p">...</span>
 <span class="p">};</span>
 
 <span class="cp">#define ADD_SIGNAL(m_signal) ClassDB::add_signal(get_class_static(), m_signal)</span>
@@ -240,34 +191,10 @@ MethodInfo and class Object:</p>
     <span class="n">String</span> <span class="n">hint_string</span><span class="p">;</span>
     <span class="kt">uint32_t</span> <span class="n">usage</span><span class="p">;</span>
 
-    <span class="n">_FORCE_INLINE_</span> <span class="n">PropertyInfo</span> <span class="nf">added_usage</span><span class="p">(</span><span class="kt">int</span> <span class="n">p_fl</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="n">PropertyInfo</span> <span class="n">pi</span> <span class="o">=</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-        <span class="n">pi</span><span class="p">.</span><span class="n">usage</span> <span class="o">|=</span> <span class="n">p_fl</span><span class="p">;</span>
-        <span class="k">return</span> <span class="n">pi</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="k">operator</span> <span class="nf">Dictionary</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-
-    <span class="k">static</span> <span class="n">PropertyInfo</span> <span class="nf">from_dict</span><span class="p">(</span><span class="k">const</span> <span class="n">Dictionary</span> <span class="o">&amp;</span><span class="n">p_dict</span><span class="p">);</span>
-
-    <span class="n">PropertyInfo</span><span class="p">()</span> <span class="o">:</span>
-            <span class="n">type</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">NIL</span><span class="p">),</span>
-            <span class="n">hint</span><span class="p">(</span><span class="n">PROPERTY_HINT_NONE</span><span class="p">),</span>
-            <span class="n">usage</span><span class="p">(</span><span class="n">PROPERTY_USAGE_DEFAULT</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">}</span>
-
-    <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">Type</span> <span class="n">p_type</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">PropertyHint</span> <span class="n">p_hint</span> <span class="o">=</span> <span class="n">PROPERTY_HINT_NONE</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_hint_string</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">p_usage</span> <span class="o">=</span> <span class="n">PROPERTY_USAGE_DEFAULT</span><span class="p">,</span> <span class="k">const</span> <span class="n">StringName</span> <span class="o">&amp;</span><span class="n">p_class_name</span> <span class="o">=</span> <span class="n">StringName</span><span class="p">())</span> <span class="o">:</span>
-            <span class="n">type</span><span class="p">(</span><span class="n">p_type</span><span class="p">),</span>
-            <span class="n">name</span><span class="p">(</span><span class="n">p_name</span><span class="p">),</span>
-            <span class="n">hint</span><span class="p">(</span><span class="n">p_hint</span><span class="p">),</span>
-            <span class="n">hint_string</span><span class="p">(</span><span class="n">p_hint_string</span><span class="p">),</span>
-            <span class="n">usage</span><span class="p">(</span><span class="n">p_usage</span><span class="p">)</span> <span class="p">{</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="n">hint</span> <span class="o">==</span> <span class="n">PROPERTY_HINT_RESOURCE_TYPE</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">class_name</span> <span class="o">=</span> <span class="n">hint_string</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">class_name</span> <span class="o">=</span> <span class="n">p_class_name</span><span class="p">;</span>
-        <span class="p">}</span>
+    <span class="n">PropertyInfo</span><span class="p">(</span><span class="n">Variant</span><span class="o">::</span><span class="n">Type</span> <span class="n">p_type</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="n">p_name</span><span class="p">,</span>
+                    <span class="n">PropertyHint</span> <span class="n">p_hint</span> <span class="o">=</span> <span class="n">PROPERTY_HINT_NONE</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span> <span class="o">&amp;</span><span class="n">p_hint_string</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+                    <span class="kt">uint32_t</span> <span class="n">p_usage</span> <span class="o">=</span> <span class="n">PROPERTY_USAGE_DEFAULT</span><span class="p">,</span> <span class="k">const</span> <span class="n">StringName</span> <span class="o">&amp;</span><span class="n">p_class_name</span> <span class="o">=</span> <span class="n">StringName</span><span class="p">())</span> <span class="o">:</span>
+        <span class="p">...</span>
     <span class="p">}</span>
 
     <span class="n">PropertyInfo</span><span class="p">(</span><span class="k">const</span> <span class="n">StringName</span> <span class="o">&amp;</span><span class="n">p_class_name</span><span class="p">)</span> <span class="o">:</span>
@@ -277,18 +204,7 @@ MethodInfo and class Object:</p>
             <span class="n">usage</span><span class="p">(</span><span class="n">PROPERTY_USAGE_DEFAULT</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
 
-    <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">PropertyInfo</span> <span class="o">&amp;</span><span class="n">p_info</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="p">((</span><span class="n">type</span> <span class="o">==</span> <span class="n">p_info</span><span class="p">.</span><span class="n">type</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-                <span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="n">p_info</span><span class="p">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-                <span class="p">(</span><span class="n">class_name</span> <span class="o">==</span> <span class="n">p_info</span><span class="p">.</span><span class="n">class_name</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-                <span class="p">(</span><span class="n">hint</span> <span class="o">==</span> <span class="n">p_info</span><span class="p">.</span><span class="n">hint</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-                <span class="p">(</span><span class="n">hint_string</span> <span class="o">==</span> <span class="n">p_info</span><span class="p">.</span><span class="n">hint_string</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-                <span class="p">(</span><span class="n">usage</span> <span class="o">==</span> <span class="n">p_info</span><span class="p">.</span><span class="n">usage</span><span class="p">));</span>
-    <span class="p">}</span>
-
-    <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">PropertyInfo</span> <span class="o">&amp;</span><span class="n">p_info</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">name</span> <span class="o">&lt;</span> <span class="n">p_info</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span class="p">...</span>
 <span class="p">};</span>
 
 <span class="n">Array</span> <span class="nf">convert_property_list</span><span class="p">(</span><span class="k">const</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">PropertyInfo</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">p_list</span><span class="p">);</span>
@@ -315,7 +231,8 @@ MethodInfo and class Object:</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>This method can be a reference to find out tscn file&#8217;s lexical token?</p>
+<p>This helps to find will resource are handled.</p>
+<p>With this information, can safely figure out parser grammar ?</p>
 </div>
 
 
@@ -385,8 +302,7 @@ MethodInfo and class Object:</p>
       });
   </script>
   
-    <div class="footer">
-        &copy; Copyright 2019, Odys Zhou.
+    <div class="footer footr">
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
     </div>
 

@@ -1,6 +1,6 @@
 
-G4 Loader Docs – About
-======================
+G4 Loader Docs – General
+========================
 
 .. toctree::
    :maxdepth: 1
