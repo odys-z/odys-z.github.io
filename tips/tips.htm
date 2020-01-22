@@ -771,6 +771,22 @@ E: Failed to fetch http://cn.archive.ubuntu.com/ubuntu/pool/main/s/ssh-import-id
           <div class='code'>[http]<br>&emsp;proxy = http://username:password@proxy.at.your.org:8080<br>
               [https]<br>&emsp;proxy = https://username:password@proxy.at.your.org:8080</div>
       </td>
+  </tr>
+  <tr><td></td>
+      <td>Git CLI showing network graph</td>
+      <td><div class='code'><pre>
+        # https://stackoverflow.com/questions/1057564/pretty-git-branch-graphs 
+
+        case $1
+        in
+        1) git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all;;
+        2) git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all;;
+        *) git log --graph --abbrev-commit --decorate --format=format:'%C(bold yellow)%d%C(reset) %C(white)%s%C(reset)' --all;;
+        esac</pre>
+          </div>
+      </td>
+  </tr>
+  <tr>
   <tr>
 	<td></td>
 	<td>EGit Setup</td>
