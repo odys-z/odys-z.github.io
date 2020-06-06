@@ -241,6 +241,209 @@ export default class geom {
 		return ( 2 * p1 - 2 * p2 + v0 + v1 ) * t3 + ( - 3 * p1 + 3 * p2 - 2 * v0 - v1 ) * t2 + v0 * t + p1;
 	}
 }
+
+// https://discourse.threejs.org/t/simple-rectangular-geometry-extrusion-anyone/743/14
+function ProfiledContourGeometry(profileShape, contour, contourClosed) {
+
+	contourClosed = contourClosed !== undefined ? contourClosed : true;
+
+	let profileGeometry = new THREE.ShapeBufferGeometry(profileShape);
+	profileGeometry.rotateX(Math.PI * .5);
+	let profile = profileGeometry.attributes.position;
+
+	let profilePoints = new Float32Array(profile.count * contour.length * 3);
+
+	// odys: generate profiles alone contour
+	for (let i = 0; i &lt; contour.length; i++) {
+	  let v1 = new THREE.Vector2().subVectors(contour[i - 1 &lt; 0 ? contour.length - 1 : i - 1], contour[i]);
+	  let v2 = new THREE.Vector2().subVectors(contour[i + 1 == contour.length ? 0 : i + 1], contour[i]);
+	  let angle = v2.angle() - v1.angle();
+	  let halfAngle = angle * .5;
+
+	  let hA = halfAngle;
+	  let tA = v2.angle() + Math.PI * .5;
+	  if (!contourClosed){
+	  	if (i == 0 || i == contour.length - 1) {hA = Math.PI * .5;}
+	    if (i == contour.length - 1) {tA = v1.angle() - Math.PI * .5;}
+	  }
+
+	  let shift = Math.tan(hA - Math.PI * .5);
+	  let shiftMatrix = new THREE.Matrix4().set(
+	        1,  0, 0, 0,
+	    -shift, 1, 0, 0,
+	        0,  0, 1, 0,
+	        0,  0, 0, 1
+	  );
+
+
+	  let tempAngle = tA;
+	  let rotationMatrix = new THREE.Matrix4().set(
+	    Math.cos(tempAngle), -Math.sin(tempAngle), 0, 0,
+	    Math.sin(tempAngle), Math.cos(tempAngle), 0, 0,
+	    0, 0, 1, 0,
+	    0, 0, 0, 1
+	  );
+
+	  let translationMatrix = new THREE.Matrix4().set(
+	    1, 0, 0, contour[i].x,
+	    0, 1, 0, contour[i].y,
+	    0, 0, 1, 0,
+	    0, 0, 0, 1,
+	  );
+
+	  let cloneProfile = profile.clone();
+	  shiftMatrix.applyToBufferAttribute(cloneProfile);
+	  rotationMatrix.applyToBufferAttribute(cloneProfile);
+	  translationMatrix.applyToBufferAttribute(cloneProfile);
+
+	  profilePoints.set(cloneProfile.array, cloneProfile.count * i * 3);
+	}
+
+	let fullProfileGeometry = new THREE.BufferGeometry();
+	fullProfileGeometry.addAttribute("position", new THREE.BufferAttribute(profilePoints, 3));
+	let index = [];
+
+	let lastCorner = contourClosed == false ? contour.length - 1: contour.length;
+	for (let i = 0; i &lt; lastCorner; i++) {
+	  for (let j = 0; j &lt; profile.count; j++) {
+	    let currCorner = i;
+	    let nextCorner = i + 1 == contour.length ? 0 : i + 1;
+	    let currPoint = j;
+	    let nextPoint = j + 1 == profile.count ? 0 : j + 1;
+
+	    let a = nextPoint + profile.count * currCorner;
+	    let b = currPoint + profile.count * currCorner;
+	    let c = currPoint + profile.count * nextCorner;
+	    let d = nextPoint + profile.count * nextCorner;
+
+
+	    index.push(a, b, d);
+	    index.push(b, c, d);
+	  }
+	}
+
+	fullProfileGeometry.setIndex(index);
+	fullProfileGeometry.computeVertexNormals();
+
+	return fullProfileGeometry;
+}
+
+	// source of three.module.js/Curve line 36499
+function computeFrenetFrames( segments, closed ) {
+	// see http://www.cs.indiana.edu/pub/techreports/TR425.pdf
+
+	var normal = new Vector3();
+
+	var tangents = [];
+	var normals = [];
+	var binormals = [];
+
+	var vec = new Vector3();
+	var mat = new Matrix4();
+
+	var i, u, theta;
+
+	// compute the tangent vectors for each segment on the curve
+
+	for ( i = 0; i &lt;= segments; i ++ ) {
+
+		u = i / segments;
+
+		tangents[ i ] = this.getTangentAt( u );
+		tangents[ i ].normalize();
+
+	}
+
+	// select an initial normal vector perpendicular to the first tangent vector,
+	// and in the direction of the minimum tangent xyz component
+
+	normals[ 0 ] = new Vector3();
+	binormals[ 0 ] = new Vector3();
+	var min = Number.MAX_VALUE;
+	var tx = Math.abs( tangents[ 0 ].x );
+	var ty = Math.abs( tangents[ 0 ].y );
+	var tz = Math.abs( tangents[ 0 ].z );
+
+	if ( tx &lt;= min ) {
+
+		min = tx;
+		normal.set( 1, 0, 0 );
+
+	}
+
+	if ( ty &lt;= min ) {
+
+		min = ty;
+		normal.set( 0, 1, 0 );
+
+	}
+
+	if ( tz &lt;= min ) {
+
+		normal.set( 0, 0, 1 );
+
+	}
+
+	vec.crossVectors( tangents[ 0 ], normal ).normalize();
+
+	normals[ 0 ].crossVectors( tangents[ 0 ], vec );
+	binormals[ 0 ].crossVectors( tangents[ 0 ], normals[ 0 ] );
+
+
+	// compute the slowly-varying normal and binormal vectors for each segment on the curve
+
+	for ( i = 1; i &lt;= segments; i ++ ) {
+
+		normals[ i ] = normals[ i - 1 ].clone();
+
+		binormals[ i ] = binormals[ i - 1 ].clone();
+
+		vec.crossVectors( tangents[ i - 1 ], tangents[ i ] );
+
+		if ( vec.length() > Number.EPSILON ) {
+
+			vec.normalize();
+
+			theta = Math.acos( _Math.clamp( tangents[ i - 1 ].dot( tangents[ i ] ), - 1, 1 ) ); // clamp for floating pt errors
+
+			normals[ i ].applyMatrix4( mat.makeRotationAxis( vec, theta ) );
+
+		}
+
+		binormals[ i ].crossVectors( tangents[ i ], normals[ i ] );
+
+	}
+
+	// if the curve is closed, postprocess the vectors so the first and last normal vectors are the same
+
+	if ( closed === true ) {
+
+		theta = Math.acos( _Math.clamp( normals[ 0 ].dot( normals[ segments ] ), - 1, 1 ) );
+		theta /= segments;
+
+		if ( tangents[ 0 ].dot( vec.crossVectors( normals[ 0 ], normals[ segments ] ) ) > 0 ) {
+
+			theta = - theta;
+
+		}
+
+		for ( i = 1; i &lt;= segments; i ++ ) {
+
+			// twist a little...
+			normals[ i ].applyMatrix4( mat.makeRotationAxis( tangents[ i ], theta * i ) );
+			binormals[ i ].crossVectors( tangents[ i ], normals[ i ] );
+
+		}
+
+	}
+
+	return {
+		tangents: tangents,
+		normals: normals,
+		binormals: binormals
+	};
+
+}
 </code></pre>
         </article>
     </section>
@@ -251,13 +454,13 @@ export default class geom {
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="ThreeWrapper.html">ThreeWrapper</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="X_.html">X</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#generateDirTube">generateDirTube</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeWrapper.html">ThreeWrapper</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="X_.html">X</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#generateDirTube">generateDirTube</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed May 27 2020 20:11:22 GMT+0800 (Hong Kong Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Jun 06 2020 12:08:32 GMT+0800 (Hong Kong Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
