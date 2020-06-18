@@ -43,6 +43,10 @@ import {mat4} from '../xmath/vec'
  * @memberof AssetKeepr
  */
 const assets = {
+	/**@property {Object} loaders - gltf / svg loaders
+	 * @member assets#loaders
+	 * @memberof AssetKeepr
+	 */
 	loaders: {},
 	/**@property {Object} canvas - {domId: Canvas} map of Canvas components.
 	 * @member assets#canvs
@@ -54,7 +58,13 @@ const assets = {
 	 * @member assets#dynatex
 	 * @memberof AssetKeepr
 	 */
-	dynatex: {}
+	dynatex: {},
+	/**Svg Assets {key: url, value: [paths]}
+	 * @property {object} svg - {key: url, value: object} map of Dynatex components.
+	 * @member assets#svg
+	 * @memberof AssetKeepr
+	 */
+	svg: {}
 }
 
 /**Assets Manager
@@ -89,6 +99,9 @@ export default class AssetKeepr {
 	 * @property {number} dynatex - get dynamic canvas texture */
 	static get dynatex() { return assets.dynatex; }
 
+	static get greyPixel() {
+		return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5AQSDjsH5tmdcQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAMSURBVAjXY2hoaAAAAwQBgZrwzU8AAAAASUVORK5CYII=';
+	}
 
 	/**Get a spark texture, in 'data:image/png;base64'.
 	 * @return {THREE.Texture}
@@ -104,6 +117,35 @@ export default class AssetKeepr {
 			);
 		}
 		return assets.sparktex;
+	}
+
+	static loadTexure(url, onload) {
+		// Debug Notes:
+		// npm parse-data-url can't handling svg tags: https://github.com/killmenot/parse-data-url
+		// var data = parseDataUrl(url);
+		var tex;
+		if (!url)
+			return tex;
+		else if ( url.startsWith('data:application/x-visual+img') ) {
+			if ( url.substr(30, 11) // it's 10, use 11 for safe
+					=== 'grey-pixel' )
+				tex = new THREE.TextureLoader().load( AssetKeepr.greyPixel );
+			else throw new XError('TODO Unknow data url: ', url);
+		}
+		else if ( url.startsWith('data:') ) {
+			tex = new THREE.TextureLoader().load( url );
+		}
+		else {
+			// TODO fake until v0.4
+			var tex = new THREE.TextureLoader().load( 'assets/' + url );
+			// var tex = new ramTexture(3, 4, {alpha: 0.5});
+		}
+
+		if (typeof onload === 'function')
+			onload(tex);
+
+		// should work in asynchronous
+		return tex;
 	}
 
     /**load gltf model&lt;br>
@@ -146,15 +188,13 @@ export default class AssetKeepr {
 					if (scene) {
 						scene.add( gltf.scene );
 					}
-
-				//if (!scene &amp;&amp; !onload)
 					else console.warn(
 						'AssetKeepr.loadGltf(): Loaded gltf assets without THREE.Scene instance: ',
 						gltf.scene);
 				}
 		},
 		function ( xhr ) {
-			console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+			if (x.log >= 5) console.log( `[5] ${xhr.loaded / xhr.total * 100}% loaded` );
 		},
 		// called when loading has errors
 		function ( error ) {
@@ -302,92 +342,122 @@ export default class AssetKeepr {
 		return cmpCanv;
 	}
 
+	static loadSvgPath (url, nodes, onload) {
+		if (assets.loaders[url] &amp;&amp; assets.svg[url].paths) {
+			return getPaths(assets.svg[url].paths, nodes, onload);
+		}
+
+		function getPaths(mapath, nodes, onload) {
+			var paths = [];
+			for (var n of nodes) {
+				paths.push(mapath[n]);
+			}
+			onload(paths);
+		}
+
+		AssetKeepr.loadSVG(url, {}, (group, paths) => {
+			if (!assets.svg[url])
+				assets.svg[url] = {paths: {}};
+			for (var p of paths) {
+				assets.svg[url].paths[p.pathId] = p;
+			}
+			return getPaths(assets.svg[url].paths, nodes, onload);
+		});
+	}
+
 	/**
-	 * Load svg
+	 * Load svg - don't use this to load pathes
 	 *
 	 * @param {string} url string
+	 * @param {object} opts
+	 * opts.withMesh: bool - convert fill to mesh ( z = 0 )&lt;br>
+	 * opts.withStroke: bool - convert stroke to polygon ( z = 0 )&lt;br>
+	 * {drawFillShapes: bool, wireframe: THREE.material.wireframe, stroke: bool}
+	 * @param {function} onload function(group: THREE.Group)
 	 * @member AssetKeepr.loadSVG
 	 * @function
 	 */
 	static loadSVG( url, opts, onload ) {
-		// scene = new THREE.Scene();
-		// scene.background = new THREE.Color( 0xb0b0b0 );
-		//
-		// //
-		// var helper = new THREE.GridHelper( 160, 10 );
-		// helper.rotation.x = Math.PI / 2;
-		// scene.add( helper );
-
-		//
 		if (assets.loaders[url] === undefined)
 			assets.loaders[url] = new SVGLoader();
-		assets.loaders[url] = new SVGLoader();
+
 		var loader = assets.loaders[url];
 		loader.load( url, function ( data ) {
 			var paths = data.paths;
 			var group = new THREE.Group();
-			group.scale.multiplyScalar( 0.25 );
-			group.position.x = - 70;
-			group.position.y = 70;
-			group.scale.y *= - 1;
+			// group.scale.multiplyScalar( 0.25 );
+			// group.position.x = - 70;
+			// group.position.y = 70;
+			// group.scale.y *= - 1;
 
-			for ( var i = 0; i &lt; paths.length; i ++ ) {
-				var path = paths[ i ];
-				var fillColor = path.userData.style.fill;
-				if ( opts.drawFillShapes &amp;&amp; fillColor !== undefined &amp;&amp; fillColor !== 'none' ) {
-					var material = new THREE.MeshBasicMaterial( {
-						color: new THREE.Color().setStyle( fillColor ),
-						opacity: path.userData.style.fillOpacity,
-						transparent: path.userData.style.fillOpacity &lt; 1,
-						side: THREE.DoubleSide,
-						depthWrite: false,
-						wireframe: opts.wireframe
-					} );
+			if (opts.withMesh || opts.withStroke) {
+				for ( var i = 0; i &lt; paths.length; i ++ ) {
+					var path = paths[ i ];
+					if (opts.withMesh) {
+						var fillColor = path.userData.style.fill;
+						if ( opts.drawFillShapes &amp;&amp; fillColor !== undefined &amp;&amp; fillColor !== 'none' ) {
+							var material = new THREE.MeshBasicMaterial( {
+								color: new THREE.Color().setStyle( fillColor ),
+								opacity: path.userData.style.fillOpacity,
+								transparent: path.userData.style.fillOpacity &lt; 1,
+								side: THREE.DoubleSide,
+								depthWrite: false,
+								wireframe: opts.wireframe
+							} );
 
-					var shapes = path.toShapes( true );
+							var shapes = path.toShapes( true );
 
-					for ( var j = 0; j &lt; shapes.length; j ++ ) {
-						var shape = shapes[ j ];
-						var geometry = new THREE.ShapeBufferGeometry( shape );
-						var mesh = new THREE.Mesh( geometry, material );
-						group.add( mesh );
+							for ( var j = 0; j &lt; shapes.length; j ++ ) {
+								var shape = shapes[ j ];
+								var geometry = new THREE.ShapeBufferGeometry( shape );
+								var mesh = new THREE.Mesh( geometry, material );
+								group.add( mesh );
+							}
+						}
 					}
-				}
 
-				var strokeColor = path.userData.style.stroke;
+					if (opts.withStroke) {
+						var strokeColor = path.userData.style.stroke;
 
-				if ( opts.stroke &amp;&amp; strokeColor !== undefined &amp;&amp; strokeColor !== 'none' ) {
-					var material = new THREE.MeshBasicMaterial( {
-						color: new THREE.Color().setStyle( strokeColor ),
-						opacity: path.userData.style.strokeOpacity,
-						transparent: path.userData.style.strokeOpacity &lt; 1,
-						side: THREE.DoubleSide,
-						depthWrite: false,
-						wireframe: opts.wireframe
-					} );
+						if ( opts.stroke &amp;&amp; strokeColor !== undefined &amp;&amp; strokeColor !== 'none' ) {
+							var material = new THREE.MeshBasicMaterial( {
+								color: new THREE.Color().setStyle( strokeColor ),
+								opacity: path.userData.style.strokeOpacity,
+								transparent: path.userData.style.strokeOpacity &lt; 1,
+								side: THREE.DoubleSide,
+								depthWrite: false,
+								wireframe: opts.wireframe
+							} );
 
-					for ( var j = 0, jl = path.subPaths.length; j &lt; jl; j ++ ) {
-						var subPath = path.subPaths[ j ];
-						var geometry = SVGLoader.pointsToStroke( subPath.getPoints(), path.userData.style );
-						if ( geometry ) {
-							var mesh = new THREE.Mesh( geometry, material );
-							group.add( mesh );
+							for ( var j = 0, jl = path.subPaths.length; j &lt; jl; j ++ ) {
+								var subPath = path.subPaths[ j ];
+								var geometry = SVGLoader.pointsToStroke( subPath.getPoints(), path.userData.style );
+								if ( geometry ) {
+									var mesh = new THREE.Mesh( geometry, material );
+									group.add( mesh );
+								}
+							}
 						}
 					}
 				}
 			}
 
-			onload( group );
+			onload( group, paths );
 		} );
 	}
 
 	/**
 	 * draw text
 	 *
+	 *see &lt;a href='odys-z.github.io/x-visual/design-memo/renderer.html?highlight=dynatex'>docs/Dynamic Text&lt;/a>
+	 *
+	 * Reference:
+	 * // https://threejsfundamentals.org/threejs/lessons/threejs-textures.html
+	 * // https://threejsfundamentals.org/threejs/lessons/threejs-canvas-textures.html
+	 *
 	 * @param {Dynatex} cmp - options
 	 * @param  {String} cmp.text - the text to display
-	 * @param  {Number|undefined} cmp.xywh.x - if provided, it is the x where to draw, if not, the text is centered
-	 * @param  {Number} y - the y where to draw the text
+	 * @param  {Number|undefined} cmp.xywh see &lt;a href='odys-z.github.io/x-visual/design-memo/renderer.html?highlight=dynatex'>docs/Dynamic Text&lt;/a>
 	 * @param  {String} [fillStyle] - the fillStyle to clear with, if not provided, fallback on .clearRect
 	 * @param  {String} [contextFont] - the font to use
 	 * @return {THREE.CanvasTextrue}
@@ -395,38 +465,96 @@ export default class AssetKeepr {
 	 * @function
 	 */
 	static drawText (cmp) {
-	// static drawText (text, x, y, fillStyle, contextFont) {
 		var {text, xywh, style, font} = cmp
 		if (!assets.dynatex[text]) {
-			// set font if needed
-			var canvas = document.createElement( 'canvas' )
-			canvas.width = cmp.xywh.w || 128;
-			canvas.height = cmp.xywh.h || 128;
-			var ctx = canvas.getContext( '2d' )
-			if( font !== undefined )
-				ctx.font = font;
-			else ctx.font = "100px Arial";
+			var ctx = document.createElement( 'canvas' ).getContext( '2d' );
 
-			// if x isnt provided
-			// if( x === undefined || x === null ){
-			// 	var textSize = ctx.measureText(text);
-			// 	x = (canvas.width - textSize.width) / 2;
-			// }
+			// fnt must set before measure text width
+			var fnt;
+			if( font !== undefined )
+				// fnt = `${xywh.size}px bold sans-serif`;
+				fnt = `${xywh.size}px ${font}`;
+			else if (xywh.size)
+				fnt = `${xywh.size}px Arial`;
+			else fnt = "32px Arial";
+			ctx.font = fnt;
+
+			// https://threejsfundamentals.org/threejs/lessons/threejs-canvas-textures.html
+			var margin = xywh.margin || 0;
+			const doubleBorderSize = margin * 2;
+		    const width = ctx.measureText(text).width + doubleBorderSize;
+			var height = (xywh.h || xywh.size) + doubleBorderSize;
+			var hscale = 1;
+			if (xywh.w > 0 &amp;&amp; width > 0)
+				// scale h: xywh.h * width / w
+				// height = height * width / xywh.w;
+				hscale = width / xywh.w;
+			height *= hscale;
+
+		    ctx.canvas.width = width;
+		    ctx.canvas.height = height;
+
+			// debug notes: it's critical to set font after setting size
+			ctx.font = fnt;
+			ctx.textBaseline = 'top';
 
 			// actually draw the text
-			ctx.fillStyle = style;
-			ctx.fillText(text, xywh.x || 0, xywh.y || 0);
+			ctx.fillStyle = cmp['bg-color'] || 'blue';
+			ctx.fillRect(0, 0, width, height);
 
-			var texture = new THREE.CanvasTexture(ctx.canvas);
+			ctx.fillStyle = style;
+			ctx.fillText(text, ((xywh.x || 0) + margin) * hscale, ((xywh.y || 0) + margin)) * hscale;
+
 			// https://threejsfundamentals.org/threejs/lessons/threejs-textures.html
-			texture.minFilter = THREE.NearestFilter;
+			// https://threejsfundamentals.org/threejs/lessons/threejs-canvas-textures.html
+			var texture = new THREE.CanvasTexture(ctx.canvas);
+			texture.minFilter = THREE.LinearFilter;
+		    texture.wrapS = THREE.ClampToEdgeWrapping;
+		    texture.wrapT = THREE.ClampToEdgeWrapping;
+
+			// var {ctx, texture} = makeLabelCanvas(cmp.xywh.wh, text);
+
 			assets.dynatex[text] = {
 					context: ctx,
 					texture};
-
 		}
-		// this.texture.needsUpdate = true;
 		return assets.dynatex[text].texture;
+
+		// /**Create a canvas texture with text
+		//  * @param {number} size font size
+		//  * @param {string} name text
+		//  * @return {object} {canvas-context, canvas-texutre}
+		//  * @member AssetKeepr#makeLabelCanvas
+		//  * @function
+		//  */
+		// function makeLabelCanvas(size, name) {
+		// 	const borderSize = 2;
+		// 	const ctx = document.createElement('canvas').getContext('2d');
+		// 	const font =  `${size}px bold sans-serif`;
+		// 	ctx.font = font;
+		// 	// measure how long the name will be
+		// 	const doubleBorderSize = borderSize * 2;
+		// 	const width = ctx.measureText(name).width + doubleBorderSize;
+		// 	const height = size + doubleBorderSize;
+		// 	ctx.canvas.width = width;
+		// 	ctx.canvas.height = height;
+		//
+		// 	// Debug Notes:
+		// 	// need to set font again after resizing canvas
+		// 	ctx.font = font;
+		// 	ctx.textBaseline = 'top';
+		//
+		// 	ctx.fillStyle = 'green';
+		// 	ctx.fillRect(0, 0, width, height);
+		// 	ctx.fillStyle = style;
+		// 	ctx.fillText(name, borderSize, borderSize);
+		//
+		// 	var texture = new THREE.CanvasTexture(ctx.canvas);
+		// 	texture.minFilter = THREE.LinearFilter;
+		//     texture.wrapS = THREE.ClampToEdgeWrapping;
+		//     texture.wrapT = THREE.ClampToEdgeWrapping;
+		// 	return {ctx, texture};
+		// }
 	};
 }
 
@@ -466,13 +594,13 @@ export function splash(splashImgId, xworker, src) {
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="ThreeWrapper.html">ThreeWrapper</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="X_.html">X</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#generateDirTube">generateDirTube</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed May 27 2020 20:11:22 GMT+0800 (Hong Kong Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Jun 18 2020 13:45:56 GMT+0800 (Hong Kong Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

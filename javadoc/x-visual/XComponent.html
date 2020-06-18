@@ -97,7 +97,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_xv.js.html">lib/xv.js</a>, <a href="lib_xv.js.html#line36">line 36</a>
+        <a href="lib_xv.js.html">lib/xv.js</a>, <a href="lib_xv.js.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -369,6 +369,10 @@
 
 
 
+<div class="description">
+    <p>Animation types.</p>
+</div>
+
 
 
     <h5>Type:</h5>
@@ -542,7 +546,7 @@
 
             
 
-            <td class="description last"><p>Vertex translate morphing</p></td>
+            <td class="description last"><p>Vertex translate morphing in vertex uniforms</p></td>
         </tr>
 
     
@@ -565,7 +569,34 @@
 
             
 
-            <td class="description last"><p>Uniform pos morphing</p></td>
+            <td class="description last"><p>Uniform pos morphing</p>
+<ul>
+<li>tweening Obj3.mesh.unfiorms.wpos alone ModelSeqs.cache.path,
+which is created by Thrender case like AssetType.PathTube.<br></li>
+</ul></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>PATH_MOVE_Dir</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Uniform pos morphing, with path dir</p></td>
         </tr>
 
     
@@ -766,7 +797,7 @@ replaced by ROTAXIS, used for affines + non-affine combination testing</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_component_morph.js.html">lib/component/morph.js</a>, <a href="lib_component_morph.js.html#line18">line 18</a>
+        <a href="lib_component_morph.js.html">lib/component/morph.js</a>, <a href="lib_component_morph.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -832,29 +863,6 @@ texture | basic material | custom shader ...</p>
     </thead>
 
     <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>gltf</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>gltf asset file</p></td>
-        </tr>
-
     
 
         <tr>
@@ -1268,7 +1276,53 @@ with customer shader (not in v0.3)</p></td>
 
         <tr>
             
-                <td class="name"><code>SVG</code></td>
+                <td class="name"><code>gltf</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>gltf asset file</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>SvgPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Svg format asset</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>SvgExtrude</code></td>
             
 
             <td class="type">
@@ -1331,6 +1385,52 @@ with customer shader (not in v0.3)</p></td>
             
 
             <td class="description last"><p>User provide mesh in Obj3.mesh</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Extension</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Handled by as an extesion like <a href="XComponent.Dynatex.html"><code>XComponent.Dynatex</code></a> by <a href="CanvTex.html"><code>CanvTex</code></a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Dynatex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>With component <a href="XComponent.Dynatex.html"><code>XComponent.Dynatex</code></a> handled by <a href="CanvTex.html"><code>CanvTex</code></a></p></td>
         </tr>
 
     
@@ -1742,7 +1842,7 @@ Obj3.box paras:<br>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Obj3.box: [radius, height, radialSegments]</p></td>
         </tr>
 
     
@@ -2131,6 +2231,29 @@ For gl.LINE_STRip vs. gl.LINES, see
 
         <tr>
             
+                <td class="name"><code>SvgPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>TODO</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>CatmullRom</code></td>
             
 
@@ -2148,6 +2271,29 @@ For gl.LINE_STRip vs. gl.LINES, see
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MapXZRoad</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Polygon in xz plane from way points, with y = paras.y0.</p></td>
         </tr>
 
     
@@ -2296,20 +2442,253 @@ For gl.LINE_STRip vs. gl.LINES, see
 
         
             
+<h4 class="name" id=".ShaderAlpha"><span class="type-signature">(static, constant) </span>ShaderAlpha<span class="type-signature"> :int</span></h4>
+
+
+
+
+<div class="description">
+    <p>Shader alpha handling mode.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">int</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>discard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>discard fragment when alpha less than threshold</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>defualt normal mix</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>multiply</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>defualt normal mix</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>additive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>adding (clampped)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>product</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>color acculating by multiplication</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>differential</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>color difference</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_component_visual.js.html">lib/component/visual.js</a>, <a href="lib_component_visual.js.html#line110">line 110</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id=".ShaderFlag"><span class="type-signature">(static, constant) </span>ShaderFlag<span class="type-signature"> :int</span></h4>
 
 
 
 
 <div class="description">
-    <p>javascript operators uses 32 bits signed integers <pre>
-mask: 0xffff,       // 16 bits for types
-defaultex: 1 &lt;&lt; 16, // use default texture
-testPoints: 1,      // default
-randomParticles: 2,
-cubeVoxels: 3,
-throbStar: 4,
-flameLight: 5,</pre>
+    <p>Shater Types.<br>
+javascript operators uses 32 bits signed integers <pre>
 <a href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Bitwise_Operators'>
 reference: javascript bitwise operators</a></p>
 </div>
@@ -2464,7 +2843,7 @@ reference: javascript bitwise operators</a></p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Shadding a cube into evenly distributed points, with texture</p></td>
         </tr>
 
     
@@ -2560,6 +2939,52 @@ reference: javascript bitwise operators</a></p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>fragShape</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Fragment shape</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>discard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Igonre the face, e.g. a plane for picking Dynatex area.</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -2629,13 +3054,13 @@ reference: javascript bitwise operators</a></p>
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="ThreeWrapper.html">ThreeWrapper</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="X_.html">X</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#generateDirTube">generateDirTube</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed May 27 2020 20:11:22 GMT+0800 (Hong Kong Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Jun 18 2020 13:45:56 GMT+0800 (Hong Kong Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
