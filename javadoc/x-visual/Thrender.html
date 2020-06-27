@@ -225,6 +225,10 @@
 
 
 
+<div class="description">
+    <p>Set affine transform to mesh's local matrix.</p>
+</div>
+
 
 
 
@@ -338,7 +342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line557">line 557</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line519">line 519</a>
     </li></ul></dd>
     
 
@@ -379,6 +383,161 @@
     <dd>
         
 <span class="param-type">THREE.Mesh</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createCubeVoxel"><span class="type-signature">(static) </span>createCubeVoxel<span class="signature">(options)</span><span class="type-signature"> &rarr; {THREE.HemisphereLight}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>skyColor: number, default 0ffffbb<br>
+groundColor: number, defualt 0x080820<br>
+pos: array, defualt [0, 1, 0.56]<br>
+intensity: number, default 1.1<br>
+See Three.js docs: HemisphereLight</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1213">line 1213</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.HemisphereLight</span>
 
 
     </dd>
@@ -522,7 +681,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1002">line 1002</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1064">line 1064</a>
     </li></ul></dd>
     
 
@@ -559,161 +718,6 @@
     <dd>
         
 <span class="param-type">THREE.Mesh</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createCubeVoxel"><span class="type-signature">(static) </span>createCubeVoxel<span class="signature">(options)</span><span class="type-signature"> &rarr; {THREE.HemisphereLight}</span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>skyColor: number, default 0ffffbb<br>
-groundColor: number, defualt 0x080820<br>
-pos: array, defualt [0, 1, 0.56]<br>
-intensity: number, default 1.1<br>
-See Three.js docs: HemisphereLight</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1057">line 1057</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">THREE.HemisphereLight</span>
 
 
     </dd>
@@ -862,7 +866,7 @@ RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line604">line 604</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line637">line 637</a>
     </li></ul></dd>
     
 
@@ -1050,7 +1054,7 @@ type of RandomSects, PointSects from <a href="XComponent.html#.Obj3Type"><code>X
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line632">line 632</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line665">line 665</a>
     </li></ul></dd>
     
 
@@ -1097,189 +1101,6 @@ type of RandomSects, PointSects from <a href="XComponent.html#.Obj3Type"><code>X
 </dl>
 
     
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, geomType, material)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Create object mesh, put int <em>cmpObj3</em>.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>cmpObj3</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Obj3</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>geomType</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Obj3Type</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>material</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">THREE.Materail</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line660">line 660</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1439,7 +1260,7 @@ This method handle only AssetType.PathTube.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line681">line 681</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line716">line 716</a>
     </li></ul></dd>
     
 
@@ -1493,6 +1314,248 @@ This method handle only AssetType.PathTube.</p>
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, geomType, material, visual<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create object mesh, put int <em>cmpObj3</em>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cmpObj3</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Obj3</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geomType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Obj3Type</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>material</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Materail</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visual</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Visual with additional paras, such as points of [[x, y, z]] for creating path, road, polygon, etc.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line693">line 693</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1653,7 +1716,7 @@ cmVisual.shader: parameters for generate vertex and framgment shaders. see xglsl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line935">line 935</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1012">line 1012</a>
     </li></ul></dd>
     
 
@@ -1862,7 +1925,7 @@ points (vertices) can basically rendered.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line814">line 814</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line891">line 891</a>
     </li></ul></dd>
     
 
@@ -2070,7 +2133,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line577">line 577</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line610">line 610</a>
     </li></ul></dd>
     
 
@@ -2278,7 +2341,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line52">line 52</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
@@ -2314,16 +2377,12 @@ with Obj3.box as constructor parameters.</p>
     
 
     
-    <h4 class="name" id=".threeGeometryCase"><span class="type-signature">(static) </span>threeGeometryCase<span class="signature">(geomType, geomParaArr)</span><span class="type-signature"> &rarr; {THREE.BufferGeometry}</span></h4>
+    <h4 class="name" id=".createXShaderMaterial"><span class="type-signature">(static) </span>createXShaderMaterial<span class="signature">(shaderflag, uniforms, vparas)</span><span class="type-signature"> &rarr; {THREE.ShaderMaterial}</span></h4>
     
 
     
 
 
-
-<div class="description">
-    <div id='api-threeGeometryCase'>Create geometry for different cases.</div>
-</div>
 
 
 
@@ -2358,13 +2417,13 @@ with Obj3.box as constructor parameters.</p>
 
         <tr>
             
-                <td class="name"><code>geomType</code></td>
+                <td class="name"><code>shaderflag</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="XComponent.html#.Obj3Type">XComponent.Obj3Type</a></span>
+<span class="param-type">ShaderFlag</span>
 
 
             
@@ -2374,20 +2433,20 @@ with Obj3.box as constructor parameters.</p>
 
             
 
-            <td class="description last"><p>Obj3Type (geom types)</p></td>
+            <td class="description last"></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>geomParaArr</code></td>
+                <td class="name"><code>uniforms</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array.&lt;number></span>
+<span class="param-type">object</span>
 
 
             
@@ -2397,8 +2456,30 @@ with Obj3.box as constructor parameters.</p>
 
             
 
-            <td class="description last"><p>geometry parameters for the given type.
-See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters details.</p></td>
+            <td class="description last"><p>Mesh.material.uniforms</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vparas</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>visual paras</p></td>
         </tr>
 
     
@@ -2439,7 +2520,275 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line717">line 717</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line539">line 539</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>material for x-shaders</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.ShaderMaterial</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".geometryCase"><span class="type-signature">(static) </span>geometryCase<span class="signature">(geomType, geomParaArr, vpara, modelSeqs<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {THREE.BufferGeometry}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <div id='api-geometryCase'>Create geometry for different cases.</div>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geomType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="XComponent.html#.Obj3Type">XComponent.Obj3Type</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Obj3Type (geom types)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geomParaArr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>geometry parameters for the given type.
+See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters details.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vpara</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Visual.para - shouldn't been here once the orthogonal way is redesigned</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>modelSeqs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ModelSeqs</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>path will be saved in modelSeqs.cache</p>
+<ul>
+<li>Design Memo: when geometry handling became a separate process, this parameters should replaced by component?</li>
+</ul></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line752">line 752</a>
     </li></ul></dd>
     
 
@@ -2617,7 +2966,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1087">line 1087</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1243">line 1243</a>
     </li></ul></dd>
     
 
@@ -2780,7 +3129,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1159">line 1159</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1315">line 1315</a>
     </li></ul></dd>
     
 
@@ -2958,6 +3307,10 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
 
 
 
+<div class="description">
+    <p>Set affine transform to mesh's local matrix.</p>
+</div>
+
 
 
 
@@ -3071,7 +3424,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line557">line 557</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line519">line 519</a>
     </li></ul></dd>
     
 
@@ -3112,6 +3465,161 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     <dd>
         
 <span class="param-type">THREE.Mesh</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createCubeVoxel"><span class="type-signature">(static) </span>createCubeVoxel<span class="signature">(options)</span><span class="type-signature"> &rarr; {THREE.HemisphereLight}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>skyColor: number, default 0ffffbb<br>
+groundColor: number, defualt 0x080820<br>
+pos: array, defualt [0, 1, 0.56]<br>
+intensity: number, default 1.1<br>
+See Three.js docs: HemisphereLight</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1213">line 1213</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.HemisphereLight</span>
 
 
     </dd>
@@ -3255,7 +3763,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1002">line 1002</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1064">line 1064</a>
     </li></ul></dd>
     
 
@@ -3292,161 +3800,6 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     <dd>
         
 <span class="param-type">THREE.Mesh</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createCubeVoxel"><span class="type-signature">(static) </span>createCubeVoxel<span class="signature">(options)</span><span class="type-signature"> &rarr; {THREE.HemisphereLight}</span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>skyColor: number, default 0ffffbb<br>
-groundColor: number, defualt 0x080820<br>
-pos: array, defualt [0, 1, 0.56]<br>
-intensity: number, default 1.1<br>
-See Three.js docs: HemisphereLight</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1057">line 1057</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">THREE.HemisphereLight</span>
 
 
     </dd>
@@ -3595,7 +3948,7 @@ RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line604">line 604</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line637">line 637</a>
     </li></ul></dd>
     
 
@@ -3783,7 +4136,7 @@ type of RandomSects, PointSects from <a href="XComponent.html#.Obj3Type"><code>X
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line632">line 632</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line665">line 665</a>
     </li></ul></dd>
     
 
@@ -3830,189 +4183,6 @@ type of RandomSects, PointSects from <a href="XComponent.html#.Obj3Type"><code>X
 </dl>
 
     
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, geomType, material)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Create object mesh, put int <em>cmpObj3</em>.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>cmpObj3</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Obj3</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>geomType</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Obj3Type</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>material</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">THREE.Materail</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line660">line 660</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4172,7 +4342,7 @@ This method handle only AssetType.PathTube.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line681">line 681</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line716">line 716</a>
     </li></ul></dd>
     
 
@@ -4226,6 +4396,248 @@ This method handle only AssetType.PathTube.</p>
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, geomType, material, visual<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create object mesh, put int <em>cmpObj3</em>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cmpObj3</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Obj3</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geomType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Obj3Type</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>material</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Materail</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>visual</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Visual with additional paras, such as points of [[x, y, z]] for creating path, road, polygon, etc.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line693">line 693</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4386,7 +4798,7 @@ cmVisual.shader: parameters for generate vertex and framgment shaders. see xglsl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line935">line 935</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1012">line 1012</a>
     </li></ul></dd>
     
 
@@ -4595,7 +5007,7 @@ points (vertices) can basically rendered.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line814">line 814</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line891">line 891</a>
     </li></ul></dd>
     
 
@@ -4803,7 +5215,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line577">line 577</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line610">line 610</a>
     </li></ul></dd>
     
 
@@ -5011,7 +5423,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line52">line 52</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
@@ -5047,16 +5459,12 @@ with Obj3.box as constructor parameters.</p>
     
 
     
-    <h4 class="name" id=".threeGeometryCase"><span class="type-signature">(static) </span>threeGeometryCase<span class="signature">(geomType, geomParaArr)</span><span class="type-signature"> &rarr; {THREE.BufferGeometry}</span></h4>
+    <h4 class="name" id=".createXShaderMaterial"><span class="type-signature">(static) </span>createXShaderMaterial<span class="signature">(shaderflag, uniforms, vparas)</span><span class="type-signature"> &rarr; {THREE.ShaderMaterial}</span></h4>
     
 
     
 
 
-
-<div class="description">
-    <div id='api-threeGeometryCase'>Create geometry for different cases.</div>
-</div>
 
 
 
@@ -5091,13 +5499,13 @@ with Obj3.box as constructor parameters.</p>
 
         <tr>
             
-                <td class="name"><code>geomType</code></td>
+                <td class="name"><code>shaderflag</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="XComponent.html#.Obj3Type">XComponent.Obj3Type</a></span>
+<span class="param-type">ShaderFlag</span>
 
 
             
@@ -5107,20 +5515,20 @@ with Obj3.box as constructor parameters.</p>
 
             
 
-            <td class="description last"><p>Obj3Type (geom types)</p></td>
+            <td class="description last"></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>geomParaArr</code></td>
+                <td class="name"><code>uniforms</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array.&lt;number></span>
+<span class="param-type">object</span>
 
 
             
@@ -5130,8 +5538,30 @@ with Obj3.box as constructor parameters.</p>
 
             
 
-            <td class="description last"><p>geometry parameters for the given type.
-See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters details.</p></td>
+            <td class="description last"><p>Mesh.material.uniforms</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vparas</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>visual paras</p></td>
         </tr>
 
     
@@ -5172,7 +5602,275 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line717">line 717</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line539">line 539</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>material for x-shaders</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">THREE.ShaderMaterial</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".geometryCase"><span class="type-signature">(static) </span>geometryCase<span class="signature">(geomType, geomParaArr, vpara, modelSeqs<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {THREE.BufferGeometry}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <div id='api-geometryCase'>Create geometry for different cases.</div>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geomType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="XComponent.html#.Obj3Type">XComponent.Obj3Type</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Obj3Type (geom types)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>geomParaArr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>geometry parameters for the given type.
+See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters details.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vpara</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Visual.para - shouldn't been here once the orthogonal way is redesigned</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>modelSeqs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ModelSeqs</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>path will be saved in modelSeqs.cache</p>
+<ul>
+<li>Design Memo: when geometry handling became a separate process, this parameters should replaced by component?</li>
+</ul></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line752">line 752</a>
     </li></ul></dd>
     
 
@@ -5350,7 +6048,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1087">line 1087</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1243">line 1243</a>
     </li></ul></dd>
     
 
@@ -5513,7 +6211,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1159">line 1159</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1315">line 1315</a>
     </li></ul></dd>
     
 
@@ -5559,13 +6257,13 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeWrapper.html">ThreeWrapper</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="X_.html">X</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#generateDirTube">generateDirTube</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Jun 06 2020 12:08:32 GMT+0800 (Hong Kong Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Jun 27 2020
 </footer>
 
 <script> prettyPrint(); </script>

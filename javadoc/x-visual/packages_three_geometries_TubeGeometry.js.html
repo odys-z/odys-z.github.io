@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: packages/three/geometries/TubeGeometry.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: packages/three/geometries/TubeGeometry.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Geometry, BufferGeometry, Float32BufferAttribute, Vector2, Vector3 } from 'three';
+
+/**@class ThreeExt */
+class ThreeExt {
+}
+
+/**Tube geometry providing vertex attribute 'dir'.
+ *
+ * Modified from three.js source.
+ * @author oosmoxiecode / https://github.com/oosmoxiecode
+ * @author WestLangley / https://github.com/WestLangley
+ * @author zz85 / https://github.com/zz85
+ * @author miningold / https://github.com/miningold
+ * @author jonobr1 / https://github.com/jonobr1
+ * @author Mugen87 / https://github.com/Mugen87
+ *
+ * @constructor DirTubeGeometry
+ * @param {THREE.Curve} path
+ * @param {int} tubularSegments
+ * @param {number} radius
+ * @param {int} radialSegments
+ * @param {bool} closed
+ * @memberof ThreeExt
+ */
+function DirTubeGeometry( path, tubularSegments, radius, radialSegments, closed ) {
+
+	Geometry.call( this );
+
+	this.type = 'DirTubeGeometry';
+
+	this.parameters = {
+		path: path,
+		tubularSegments: tubularSegments,
+		radius: radius,
+		radialSegments: radialSegments,
+		closed: closed
+	};
+
+	// if ( taper !== undefined ) console.warn( 'THREE.TubeGeometry: taper has been removed.' );
+
+	var bufferGeometry = new DirTubeBufferGeometry( path, tubularSegments, radius, radialSegments, closed );
+
+	// expose internals
+
+	this.tangents = bufferGeometry.tangents;
+	this.normals = bufferGeometry.normals;
+	this.binormals = bufferGeometry.binormals;
+
+	// create geometry
+
+	this.fromBufferGeometry( bufferGeometry );
+	this.mergeVertices();
+
+}
+
+DirTubeGeometry.prototype = Object.create( Geometry.prototype );
+DirTubeGeometry.prototype.constructor = DirTubeGeometry;
+
+/**Tube geometry providing vertex attribute 'a_tan', the path direction.
+ *
+ * Modified from three.js source.
+ * @author oosmoxiecode / https://github.com/oosmoxiecode
+ * @author WestLangley / https://github.com/WestLangley
+ * @author zz85 / https://github.com/zz85
+ * @author miningold / https://github.com/miningold
+ * @author jonobr1 / https://github.com/jonobr1
+ * @author Mugen87 / https://github.com/Mugen87
+ *
+ * @class DirTubeBufferGeometry
+ * @param {THREE.Curve} path
+ * @param {int} tubularSegments
+ * @param {number} radius
+ * @param {int} radialSegments
+ * @param {bool} closed
+ * @memberof ThreeExt
+ */
+function DirTubeBufferGeometry( path, tubularSegments, radius, radialSegments, closed ) {
+
+	BufferGeometry.call( this );
+
+	this.type = 'DirTubeBufferGeometry';
+
+	this.parameters = {
+		path: path,
+		tubularSegments: tubularSegments,
+		radius: radius,
+		radialSegments: radialSegments,
+		closed: closed
+	};
+
+	tubularSegments = tubularSegments || 64;
+	radius = radius || 1;
+	radialSegments = radialSegments || 8;
+	closed = closed || false;
+
+	// {tangents: tangents,
+	//	normals: normals,
+	//	binormals: binormals}
+	var frames = path.computeFrenetFrames( tubularSegments, closed );
+
+	// expose internals
+
+	this.tangents = frames.tangents;
+	this.normals = frames.normals;
+	this.binormals = frames.binormals;
+
+	// helper variables
+
+	var vertex = new Vector3();
+	var normal = new Vector3();
+	var uv = new Vector2();
+	var P = new Vector3();
+
+	var i, j;
+
+	// buffer
+
+	var vertices = [];
+	var normals = [];
+	var uvs = [];
+	var indices = [];
+	// odys: vertices' tangents
+	var vertans = [];
+
+	// ody
+	var dirs = [];
+
+	// create buffer data
+
+	generateBufferData();
+
+	// build geometry
+
+	this.setIndex( indices );
+	this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
+	this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+	this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
+	// odys:
+	this.setAttribute( 'a_tan', new Float32BufferAttribute( vertans, 3 ) );
+
+	// functions
+
+	function generateBufferData() {
+
+		for ( i = 0; i &lt; tubularSegments; i ++ ) {
+			generateSegment( i );
+
+			// ody
+			var T = frames.tangents[i];
+			dirs.push ( T.x, T.y, T.z );
+		}
+
+		// if the geometry is not closed, generate the last row of vertices and normals
+		// at the regular position on the given path
+		//
+		// if the geometry is closed, duplicate the first row of vertices and normals (uvs will differ)
+
+		generateSegment( ( closed === false ) ? tubularSegments : 0 );
+
+		// uvs are generated in a separate function.
+		// this makes it easy compute correct values for closed geometries
+
+		generateUVs();
+
+		// finally create faces
+
+		generateIndices();
+
+	}
+
+	function generateSegment( i ) {
+
+		// we use getPointAt to sample evenly distributed points from the given path
+
+		P = path.getPointAt( i / tubularSegments, P );
+
+		// retrieve corresponding normal and binormal
+
+		var N = frames.normals[ i ];
+		var B = frames.binormals[ i ];
+		// odys
+		var T = frames.tangents[ i ];
+
+		// generate normals and vertices for the current segment
+
+		for ( j = 0; j &lt;= radialSegments; j ++ ) {
+
+			var v = j / radialSegments * Math.PI * 2;
+
+			var sin = Math.sin( v );
+			var cos = - Math.cos( v );
+
+			// normal
+
+			normal.x = ( cos * N.x + sin * B.x );
+			normal.y = ( cos * N.y + sin * B.y );
+			normal.z = ( cos * N.z + sin * B.z );
+			normal.normalize();
+
+			normals.push( normal.x, normal.y, normal.z );
+
+			// vertex
+
+			vertex.x = P.x + radius * normal.x;
+			vertex.y = P.y + radius * normal.y;
+			vertex.z = P.z + radius * normal.z;
+
+			vertices.push( vertex.x, vertex.y, vertex.z );
+
+			// odys: Why not do this in GPU?
+			vertans.push( T.x, T.y, T.z );
+		}
+	}
+
+	function generateIndices() {
+		for ( j = 1; j &lt;= tubularSegments; j ++ ) {
+			for ( i = 1; i &lt;= radialSegments; i ++ ) {
+				var a = ( radialSegments + 1 ) * ( j - 1 ) + ( i - 1 );
+				var b = ( radialSegments + 1 ) * j + ( i - 1 );
+				var c = ( radialSegments + 1 ) * j + i;
+				var d = ( radialSegments + 1 ) * ( j - 1 ) + i;
+
+				// faces
+				indices.push( a, b, d );
+				indices.push( b, c, d );
+			}
+		}
+	}
+
+	function generateUVs() {
+		for ( i = 0; i &lt;= tubularSegments; i ++ ) {
+			for ( j = 0; j &lt;= radialSegments; j ++ ) {
+				uv.x = i / tubularSegments;
+				uv.y = j / radialSegments;
+
+				uvs.push( uv.x, uv.y );
+			}
+		}
+	}
+
+}
+
+DirTubeBufferGeometry.prototype = Object.create( BufferGeometry.prototype );
+DirTubeBufferGeometry.prototype.constructor = DirTubeBufferGeometry;
+
+DirTubeBufferGeometry.prototype.toJSON = function () {
+
+	var data = BufferGeometry.prototype.toJSON.call( this );
+	// odys: what about vertans?
+
+	data.path = this.parameters.path.toJSON();
+
+	return data;
+};
+
+export { DirTubeGeometry, DirTubeBufferGeometry };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Jun 27 2020
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
