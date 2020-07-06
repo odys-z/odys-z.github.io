@@ -36,7 +36,6 @@ import AssetKeepr from './assetkeepr'
 
 /**
  * Stub for jsdoc, a collection of common methods
- * &lt;b>NOTE: no 'xglsl.' prefix when calling functions.&lt;/b>
  * &lt;br>This class name is all in lower case. X-visual use this convention for a
  * collection of common global methods when using jsdoc generating API doc.
  * @class
@@ -56,6 +55,7 @@ const shaderPool = {}
  * @member xglsl.randomRarticl
  * @function */
 export function xvShader(flag, vparas = {}) {
+    // TODO share shader progam
     var s;
     switch (flag &amp; ShaderFlag.mask) {
         case ShaderFlag.randomParticles:
@@ -72,19 +72,20 @@ export function xvShader(flag, vparas = {}) {
             break;
         case ShaderFlag.colorArray:
             s = phongMorph2(vparas);
-
-            // s = phongColorMorph(vparas);
-            // TODO share shader progam
-            // if (shaderPool.phongColorMorph)
-            //     s = shaderPool.phongColorMorph;
-            // else {
-            //     s = phongColorMorph(vparas);
-            //     shaderPool.phongColorMorph = s;
-            // }
             break;
         case ShaderFlag.scaleOrb:
             // this shader needs vertex has a dir attribute
             s = scaleOrb(vparas);
+            break;
+        case ShaderFlag.worldOrbs:
+            s = worldOrbs(vparas);
+            break;
+        case ShaderFlag.orbGroups:
+            s = orbGroups(vparas);
+            break;
+        case ShaderFlag.tiledOrbs:
+            // s = tiledOrbs(vparas);
+            s = thermalTile(vparas);
             break;
         case ShaderFlag.frageShape:
             throw new XError('todo');
@@ -95,7 +96,7 @@ export function xvShader(flag, vparas = {}) {
         case ShaderFlag.testPoints:
         default:
             // console.warn('xvShader(): unrecognized shader flag: ', flag);
-            s = testPnt(vparas || {});// as enum doesn't exists, paras also likely undefined
+            s = testPnt( vparas || new Object() );// as enum doesn't exists, paras also likely undefined
     }
     if (x.log >= 5)
         console.debug(`[5] flag: ${flag.toString(16)}, paras: `,
@@ -105,41 +106,169 @@ export function xvShader(flag, vparas = {}) {
 
 /**
  * Merge Visual.paras.uniforms, load texture according to Visual.paras.u_tex.
- * @param {Visual} cmpVisual
- * @param {Obj3} cmpObj3 not used?
+ * @param {Visual} visual Entities Visual component
+ * @param {Obj3} obj3 not used?
  * @return {object} uniforms for THREE.Mesh - properties are in format of name: {value}
  * @member xglsl.formatUniforms
  * @function
  */
-export function formatUniforms(cmpVisual, cmpObj3) {
-    var uniforms = {};
-    if (cmpVisual.paras &amp;&amp; cmpVisual.paras.u_tex) {
-        if (cmpVisual.paras.uniforms &amp;&amp; typeof cmpVisual.paras.uniforms.u_tex === 'string') {
+export function formatUniforms(visual, obj3) {
+    var uniforms = new Object();// make sure uniforms are not shared between materials
+    // common section
+    if (visual.paras &amp;&amp; visual.paras.u_tex) {
+        if (visual.paras.uniforms &amp;&amp; typeof visual.paras.uniforms.u_tex === 'string') {
             console.warn ( "formatUniforms(): ignoring wrong paras: Visual.paras.uniforms.u_tex = ",
-                            cmpVisual.paras.uniforms.u_tex );
-            delete cmpVisual.paras.uniforms.u_tex;
+                            visual.paras.uniforms.u_tex );
+            delete visual.paras.uniforms.u_tex;
         }
-        uniforms = {
-            u_tex: { value: new THREE.TextureLoader().load(`assets/${cmpVisual.paras.u_tex}`) }
-        };
+        // uniforms.u_tex = { value: new THREE.TextureLoader().load(`assets/${visual.paras.u_tex}`) };
+        uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.paras.u_tex) };
     }
-    else if (cmpVisual.paras.uniforms &amp;&amp; typeof cmpVisual.paras.uniforms.u_tex === 'string') {
-        console.warn ( "formatUniforms(): takeing Visual.paras.uniforms.u_tex as uniform for shader.",
-                       "The correct paras for u_tex is Visual.paras.u_tex.",
-                        cmpVisual.paras.uniforms.u_tex );
-        uniforms = {
-            u_tex: { value: new THREE.TextureLoader().load(`assets/${cmpVisual.paras.uniforms.u_tex}`) }
-        };
-        delete cmpVisual.paras.uniforms.u_tex;
+    else if (visual.paras &amp;&amp; visual.paras.uniforms
+        &amp;&amp; typeof visual.paras.uniforms.u_tex === 'string') {
+        // console.warn ( "formatUniforms(): takeing Visual.paras.uniforms.u_tex as uniform for shader.",
+        //                "The correct paras for u_tex is Visual.paras.u_tex.",
+        //                 visual.paras.uniforms.u_tex );
+
+        // uniforms.u_tex = { value: new THREE.TextureLoader().load(`assets/${visual.paras.uniforms.u_tex}`) };
+        uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.paras.uniforms.u_tex) };
+        delete visual.paras.uniforms.u_tex;
     }
-    else if ((cmpVisual.shader &amp; ShaderFlag.defaultex) === ShaderFlag.defaultex) {
-        uniforms = {
-            u_tex: { value: AssetKeepr.defaultex() }
-        };
+    else if ((visual.shader &amp; ShaderFlag.defaultex) === ShaderFlag.defaultex) {
+        uniforms.u_tex = { value: AssetKeepr.cheapixelTex() };
     }
 
-    if (cmpVisual.paras.uniforms)
-        Object.assign(uniforms, obj2uniforms(cmpVisual.paras.uniforms));
+    uniforms.side = {value: !visual.paras || visual.paras.side === undefined
+                            ? THREE.FrontSide : visual.paras.side};
+    uniforms.u_alpha = {value: visual.paras !== undefined &amp;&amp; visual.paras.tex_alpha !== undefined
+                            ? visual.paras.tex_alpha : 1};
+
+    // setup a default texture, a grey pixel to avoid this error:
+    // ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same.
+    // Cause: It is not sufficient to bind the texture to a texture unit,
+    // the index of the texture unit has to be set to the texture sampler uniform, too.
+    // comments on https://stackoverflow.com/questions/50777793/gldrawelements-source-and-destination-textures-of-the-draw-are-the-same
+    if (!uniforms.u_tex &amp;&amp;
+        (  visual.shader === ShaderFlag.worldOrbs
+        || visual.shader === ShaderFlag.scaleOrb
+        || visual.shader === ShaderFlag.orbGroups
+        || visual.shader === ShaderFlag.tiledOrbs) ) {
+        if (visual.asset)
+            uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.asset) };
+        else
+            uniforms.u_tex = { value: AssetKeepr.cheapixelTex() };
+    }
+
+    // switch of shader types
+    if (visual.paras &amp;&amp; visual.paras.uniforms)
+        Object.assign(uniforms, obj2uniforms(visual.paras.uniforms));
+
+    if (visual.shader === ShaderFlag.colorArray &amp;&amp; visual.paras.colors) {
+        // TODO should we use uniform array ?
+        for (var i = 0; i &lt; visual.paras.colors.length; i++)
+            uniforms[`u_color${i}`] = {value: new THREE.Vector3(...visual.paras.colors[i])};
+    }
+    else if (visual.shader === ShaderFlag.scaleOrb) {
+        uniforms.wpos = {value: visual.paras.wpos ?
+                        new THREE.Vector3(...p) : new THREE.Vector3(0, 0, 0)};
+        uniforms.r = {value: visual.paras.orbR === undefined
+                             ? 20 : visual.paras.orbR};
+        uniforms.whiteAlpha = {value: visual.paras.whiteAlpha === undefined
+                    ? 0 : visual.paras.whiteAlpha};
+        var os = visual.paras.orbScale;
+        uniforms.orbScale = {value: os === undefined
+                    ? new THREE.Vector3(1, 0.2, 0.2)
+                    : new THREE.Vector3(os[0], os[1], os[2])};
+    }
+    else if (visual.shader === ShaderFlag.orbGroups) {
+        // orbs in a group (always have 1 orb)
+        var offsets = visual.paras.offsets || [0];
+        var orbs = visual.paras.offsets ? visual.paras.offsets.length : 1;
+        var rs = [];
+        for (var r of visual.paras.orbR || [10]) {
+            rs.push(r);
+        }
+        var orbColors = [];
+        for (var c of visual.paras.colors) {
+            orbColors.push(new THREE.Vector3(...c));
+        }
+        uniforms.orbs = { value: orbs };
+        uniforms.offsets = { value: offsets };
+        uniforms.orbColors = { value: orbColors };
+        uniforms.r = { value: rs };
+
+        // groups
+        if ( ! Array.isArray(visual.paras.follows)
+            || visual.paras.follows.length &lt;= 0) {
+            console.error(visual);
+            throw new XError('Paras.follows for orbGroups\'s groups are not correct!');
+        }
+
+        uniforms.u_t = { value: 0 };
+        uniforms.tmin = { value: visual.paras.t_range ? visual.paras.t_range[0] : 0 };
+        uniforms.tmax = { value: visual.paras.t_range ? visual.paras.t_range[1] : 1 };
+
+        var wpos = [];
+        var wtan = [];
+        var flws = [];
+        for (var follow of visual.paras.follows) {
+            wpos.push(new THREE.Vector3(0));
+            wtan.push(new THREE.Vector3(1, 0, 0));
+            flws.push(follow);
+        }
+        uniforms.wpos = { value: wpos };
+        uniforms.wtan = { value: wtan };
+        uniforms.follows = { value: flws };
+
+        uniforms.whiteAlpha = { value: visual.paras.whiteAlpha === undefined
+                    ? 0 : visual.paras.whiteAlpha };
+        var os = visual.paras.orbScale;
+        uniforms.orbScale = { value: os === undefined
+                    ? new THREE.Vector3(1, 0.2, 0.2)
+                    : new THREE.Vector3(os[0], os[1], os[2]) };
+    }
+    else if (visual.shader === ShaderFlag.worldOrbs
+            || visual.shader === ShaderFlag.tiledOrbs) {
+        var poses = [];
+        var orbs = 0;
+        if (visual.paras.offsets === undefined)
+            visual.paras.offsets = [[0, 0, 0]];
+        for (var p of visual.paras.offsets) {
+            poses.push(new THREE.Vector3(...p));
+            orbs++;
+        }
+        var rs = [];
+        var orbRs = typeof visual.paras.orbR === 'number'
+                    ? [visual.paras.orbR] : visual.paras.orbR || [10];
+        for (var r of orbRs) {
+            rs.push(r);
+        }
+        var orbColors = [];
+        for (var c of visual.paras.colors) {
+            orbColors.push(new THREE.Vector3(...c));
+        }
+        var wpos = visual.paras.wpos
+            ? new THREE.Vector3(...visual.paras.wpos) : new THREE.Vector3(0, 0, 0);
+
+        uniforms.orbs = { value: orbs };
+        uniforms.wpos = { value: wpos };
+        uniforms.offsets = { value: poses };
+        uniforms.orbColors = { value: orbColors };
+        uniforms.r = { value: rs };
+        uniforms.whiteAlpha = { value: visual.paras.whiteAlpha === undefined
+                    ? 0 : visual.paras.whiteAlpha };
+        var os = visual.paras.orbScale;
+        uniforms.orbScale = { value: os === undefined
+                    ? new THREE.Vector3(1, 0.2, 0.2)
+                    : new THREE.Vector3(os[0], os[1], os[2]) };
+        if (visual.shader === ShaderFlag.tiledOrbs) {
+            uniforms.now = { value: 0 };
+            var groups = visual.paras.geostyle.groups || 1;
+            uniforms.speedVert = { value: new Array(groups).fill(0.01) };
+            uniforms.speedFrag = { value: new Array(groups).fill(0.01) };
+        }
+    }
+    // TODO and more... see Thrender case PathTube
 
     return uniforms;
 }
@@ -157,14 +286,14 @@ export function formatUniforms(cmpVisual, cmpObj3) {
  * @function
  */
 export function obj2uniforms(properties, uniforms) {
-    var u = {};
+    var u = new Object();
     for (var p in properties) {
         if (p === 'opacity')
             u.u_alpha = {value: properties[p]};
         else
             u[p] = {value: properties[p]};
     }
-    return Object.assign(uniforms || {}, u);
+    return Object.assign(uniforms || new Object(), u);
 }
 
 /**
@@ -179,8 +308,8 @@ export function obj2uniforms(properties, uniforms) {
  * @function
  */
 export function script2uniforms(svals, uniforms) {
-    var u = {};
-    var v = {};
+    var u = new Object();
+    var v = new Object();
     for (var p in svals) {
         if (Array.isArray(svals[p])) {
             u[p] = {value: svals[p][0]};
@@ -192,7 +321,7 @@ export function script2uniforms(svals, uniforms) {
         }
         else throw XError(`xglsl.script2uniforms(): can't convert vals to uniforms: svals[${p}]: ${svlas[p]}`);
     }
-    uniforms = Object.assign(uniforms || {}, u);
+    uniforms = Object.assign(uniforms || new Object(), u);
     return {start: uniforms, to: v};
 }
 
@@ -295,8 +424,7 @@ export function particlesGeom (vparas, meshSrc, meshTarget) {
 
 function discardShader(paras = {}) {
   return {
-    vertexShader: `void main() {
-      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); } `,
+    vertexShader: `void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); } `,
     fragmentShader: `void main() { discard; }`
   };
 }
@@ -382,7 +510,8 @@ function cubeVoxels9(paras) {
  };
 }
 
-/**Create vertex &amp;amp; fragment shaders that can morphing between multiple box positions.
+/**Create vertex &amp;amp; fragment shaders that can morphing between multiple box
+ * positions.
  * @param {object} paras
  * paras.uniforms.u_cubes array of boxes
  * param.uniforms.u_box1, 2, ... vec3 for position index (voxel index, not position)
@@ -595,7 +724,7 @@ export function pointGeom(point) {
 }
 
 /**
- * Get shaders for creating color-morphable materail (THREE.Material).
+ * Get shaders for creating color-morphable material (THREE.Material).
  *
  * &lt;b>Note:&lt;/b>&lt;br>
  * As this shader doesn't provide face color difference, it is replaced by
@@ -662,7 +791,7 @@ function meshColors(vparas) {
 }
 
 /**
- * Get shaders for creating color-morphable materail (THREE.Material).
+ * Get shaders for creating color-morphable material (THREE.Material).
  *
  * @param {object} paras
  * @return {object} {vertexShader, fragmentShader}
@@ -795,10 +924,11 @@ function phongMorph2(vparas) {
     }
 
     var len = colr.length;
-	var fragUnis = `uniform sampler2D u_tex[${len}];`;
+    // u_tex can be eighter empty or same length with colors
+    var fragUnis = tex ? `uniform sampler2D u_tex[${len}];` : '';
     var vertUnis = `uniform vec3 u_color[${len}];`;
-	var bothUnis = '';
-	var morphvert = '';
+    var bothUnis = '';
+    var morphvert = '';
 
     for (var i = 0; i &lt; len; i++) {
         bothUnis += `\nuniform float u_morph${i};`;
@@ -810,50 +940,49 @@ function phongMorph2(vparas) {
         morphvert += `\ncolori = blend(colori, u_color[0], u_morph${len - 1});`;
 
     var morphfrag = '';
-	if ( tex ) {
+    if ( tex ) {
         // len > 0
-    	morphfrag = `
+        morphfrag = `
             tex0 = texture2D( u_tex[0], vUv );`;
         for (var i = 1; i &lt; len; i++) {
             morphfrag += `
             texi = texture2D( u_tex[${i}], vUv );
-            if (texi.a > 0.01)
+            if (texi.a > 0.0)
                 tex0 = blend( tex0, texi, u_morph${i-1} );` ;
         }
-		if (len > 1)
+        if (len > 1)
             morphfrag += `
             texi = texture2D( u_tex[0], vUv );
             tex0 = blend(tex0, texi, u_morph${len - 1});` ;
-	}
-    else morphfrag = `
-            tex0 = vColor;`;
+    }
+    else morphfrag = `        tex0 = vColor;`;
 
-	// vec4 blend(txa, txb, t);
-	var statements = '';
-	if (vparas.texMix &amp; ShaderAlpha.product) {
-		statements = `clr = txa * txb;`;
-	}
-	if (vparas.texMix &amp; ShaderAlpha.multiply) {
-		statements = `clr = txa * txb * t;`;
-	}
-	if (vparas.texMix &amp; ShaderAlpha.differential) {
-		statements = `clr = txa * abs(0.5 - t) + txb * abs(t - 0.5);`;
-	}
-	else if (vparas.texMix &amp; ShaderAlpha.additive) {
-		// default ShaderAlpha.mix
-		statements = `clr = clamp(txa * (1.0 - t) + txb * t, 0.0, 1.0);`;
-	}
-	else {
-		statements = `clr = mix(txa, txb, t);`;
-	}
+    // vec4 blend(txa, txb, t);
+    var statements = '';
+    if (vparas.texMix &amp; ShaderAlpha.product) {
+        statements = `clr = txa * txb;`;
+    }
+    if (vparas.texMix &amp; ShaderAlpha.multiply) {
+        statements = `clr = txa * txb * t;`;
+    }
+    if (vparas.texMix &amp; ShaderAlpha.differential) {
+        statements = `clr = txa * abs(0.5 - t) + txb * abs(t - 0.5);`;
+    }
+    else if (vparas.texMix &amp; ShaderAlpha.additive) {
+        // default ShaderAlpha.mix
+        statements = `clr = clamp(txa * (1.0 - t) + txb * t, 0.0, 1.0);`;
+    }
+    else {
+        statements = `clr = mix(txa, txb, t);`;
+    }
 
-	var vertBlender = `vec3 blend(vec3 txa, vec3 txb, float t) {
+    var vertBlender = `vec3 blend(vec3 txa, vec3 txb, float t) {
         vec3 clr = vec3(0.4);
         ${statements}
         return clr;
     } `;
 
-	var fragBlender = `vec4 blend(vec4 txa, vec4 txb, float t) {
+    var fragBlender = `vec4 blend(vec4 txa, vec4 txb, float t) {
         vec4 clr = vec4(0.4);
         ${statements}
         return clr;
@@ -882,7 +1011,7 @@ function phongMorph2(vparas) {
     varying vec3 vertPos;
     varying vec4 vColor;
     varying float vAlpha;
-	varying vec2 vUv;
+    varying vec2 vUv;
 
     ${vertBlender}
     vec3 morphColors() {
@@ -892,7 +1021,7 @@ function phongMorph2(vparas) {
     }
 
     void main(){
-		vUv = uv;
+        vUv = uv;
         vAlpha = u_alpha;
         float Ka = ${ka};
         float Kd = ${kd};
@@ -928,17 +1057,18 @@ function phongMorph2(vparas) {
         vColor = vec4(Ka * ambientColor +
                     Kd * lambertian * diffuseColor +
                     Ks * specular * specularColor, u_alpha); // u_alpha = vparas.uniforms.u_alpha
-        // working vColor = vec4(L * Ka, 1.0);
-        // working with normalMatrix: vColor = vec4(Kd * lambertian);
-        // working with normalMatrix: vColor = vec4(Ks * specular, 0.1, 0.2, 1.0);
     }
   `,
+        // useful debug lines:
+        // working vColor = vec4(L * Ka, u_morph0);
+        // working with normalMatrix: vColor = vec4(Kd * lambertian);
+        // working with normalMatrix: vColor = vec4(Ks * specular, 0.1, 0.2, 1.0);
 
   fragmentShader: `
     ${fragUnis}
     ${bothUnis}
 
-	uniform float u_texWeight;
+    uniform float u_texWeight;
 
     varying vec4 vColor;
     varying float vAlpha;
@@ -962,7 +1092,8 @@ function phongMorph2(vparas) {
   `};
 }
 
-/** get shader of scaled orb, with respect to vertex dir &amp; cent attribute
+/**Get shader of scaled orb, with respect to vertex dir &amp; cent attribute
+ * @deprecated replaced by scaleOrb?
  * @param {object} paras paras.vert_scale [optional] number scale of vertices
  * @return {object} {vertexShader, fragmentShader}
  * @member xglsl.dirOrb2
@@ -974,7 +1105,7 @@ function dirOrb2() {
   uniform vec3 wpos;
   uniform vec3 orbScale;
 
-  attribute vec3 tan;
+  attribute vec3 a_tan;
 
   varying vec2 vUv;
   varying vec3 I;
@@ -995,7 +1126,7 @@ function dirOrb2() {
 
   void main() {
     vUv = uv;
-    vtan = tan;
+    vtan = a_tan;
 
     // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
     vec4 worldPosition = modelMatrix * vec4(position, 1.0);
@@ -1003,7 +1134,7 @@ function dirOrb2() {
     P = worldPosition.xyz;
     I = normalize(cameraPosition - P);
 
-    mat3 R3 = calcLookAtMatrix(tan, 0.);
+    mat3 R3 = calcLookAtMatrix(a_tan, 0.);
     // vec4 v = modelMatrix * vec4(R3 * orbScale, 1.);
     vabc = R3 * orbScale;
     cent = modelMatrix * vec4(wpos, 1.);
@@ -1068,12 +1199,19 @@ function dirOrb2() {
  }
 }
 
+/**&lt;p id="scaleOrb">Get shader of scaled orb, with respect to vertex dir &amp; cent
+ * attribute.&lt;/p>
+ * @param {object} paras paras.vert_scale [optional] number scale of vertices
+ * @return {object} {vertexShader, fragmentShader}
+ * @member xglsl.scaleOrb
+ * @function
+ */
 function scaleOrb(vparas) {
  return { fragmentShader: `
-  // uniform float modelAlpha;
   uniform float r;
   uniform float whiteAlpha;
   uniform vec3 orbScale;
+  uniform sampler2D u_tex;
 
   varying vec2 vUv;
   varying vec3 P;
@@ -1103,16 +1241,13 @@ function scaleOrb(vparas) {
   }
 
   void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-    // float r = 30.;
     vec3 e = cameraPosition;
     vec3 i = normalize( P - cameraPosition );
-    // vec2 dists = sdEllipsoid( e, i, r, cent.xyz, vec3(1.2, .25, .5) );
     vec2 dists = sdEllipsoid( e, i, r, cent.xyz, vscale );
 
+    fragColor = texture2D(u_tex, vUv);
+    fragColor.a = clamp(whiteAlpha, 0.0, 1.);
     if (dists.x &lt; 0.0) {
-      // Didn't hit anything
-      // fragColor = mix(vec4( abs(modelAlpha) ), texture2D(iChannel0, vUv), .3);
-      fragColor = vec4(vtan, whiteAlpha);
       ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
       return;
     }
@@ -1120,7 +1255,8 @@ function scaleOrb(vparas) {
     vec3 p = e + dists.x * i;
     vec3 n = normalize(p - cent.xyz);
     float ratio = abs(length(dists.x - dists.y)) / (2. * r);
-    fragColor = vec4 ( pow( clamp(ratio, 0.001, 1.), 4. ) );
+    fragColor += vec4 ( pow( clamp(ratio, 0.0, 1.), 4. ) );
+    fragColor = clamp(fragColor, 0., 1.);
   }
 
   void main() {
@@ -1131,7 +1267,7 @@ function scaleOrb(vparas) {
   uniform vec3 wpos;
   uniform vec3 orbScale;
 
-  attribute vec3 tan;
+  attribute vec3 a_tan;
 
   varying vec2 vUv;
   varying vec3 I;
@@ -1143,8 +1279,7 @@ function scaleOrb(vparas) {
 
   void main() {
     vUv = uv;
-    // vtan = tan;
-    vec4 v = projectionMatrix * modelViewMatrix * vec4( tan, 1.0 );
+    vec4 v = projectionMatrix * modelViewMatrix * vec4( a_tan, 1.0 );
     vtan = v.xyz;
 
     // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
@@ -1157,6 +1292,558 @@ function scaleOrb(vparas) {
 
     gl_Position = projectionMatrix * viewMatrix * worldPosition;
   } `
+ }
+}
+
+/**&lt;p id="worldOrbs">Get shader of a sequnce of orbs, with respect to vertex dir
+ * &amp;amp; cent attribute.&lt;/p>
+ * Test page: test/html/map3d/geopath-road.html&lt;br>
+ * ShaderFlag: worldOrbs
+  &lt;pre>uniform float r;
+  uniform float whiteAlpha;
+  uniform sampler2D u_tex;
+  uniform vec3 wpos;
+  uniform vec3 offsets[${orbs}];
+  uniform vec3 orbScale;
+  uniform float r[${orbs}];
+  uniform vec4 orbColors[${orbs}];
+
+  attribute vec3 a_tan;
+  attribute vec3 a_pos;&lt;/pre>
+ *
+ * sub function:&lt;br>
+ * vec2 sdEllipsoid(): Vector distance  to orignal point.
+ * param vec3 eye - raycast origin
+ * param vec3 u - ray direction
+ * param float r - orb radius
+ * param vec3 cnetr - orb center
+ * param vec3 abc - orb x y z scale
+ * return vec2 distances where ray intercecting ellipsoid; less than zero if not.
+ * see https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray
+ * @param {object} vparas paras.vert_scale [optional] number scale of vertices
+ * @return {object} {vertexShader, fragmentShader}
+ * @member xglsl.worldOrbs
+ * @function
+ */
+function worldOrbs(vparas) {
+ var orbs = vparas.offsets.length || 1;
+ return { fragmentShader: `
+  uniform float r[${orbs}];
+  uniform vec4 orbColors[${orbs}];
+
+  uniform float whiteAlpha;
+  uniform vec3 orbScale;
+  uniform sampler2D u_tex;
+
+  varying vec2 vUv;
+  varying vec3 P;
+  varying vec3 vscale;
+  varying vec4 cent[${orbs}];
+
+  vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
+      // e = o - c, where o = eye, c = center
+      vec3 e = eye - centr;
+      e = e / abc;
+
+      // delta = (u . e)^2 + r^2 - |e|^2
+      u = normalize(u / abc);
+
+      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
+      if (delta &lt; 0.) return vec2(delta);
+      // d = - u.e +/- delta^0.5
+      delta = pow( delta, 0.5 );
+      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
+  }
+
+  // void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+  vec4 mainImage( in vec2 fragCoord ) {
+    vec4 fragColor = vec4(0.);
+    vec3 e = cameraPosition;
+    vec3 u = normalize( P - cameraPosition );
+
+    for (int i = 0; i &lt; ${orbs}; i++) {
+        vec3 ci = cent[i].xyz;
+        vec2 dists = sdEllipsoid( e, u, r[i], ci, vscale );
+
+        if (dists.x &lt;= 0.00001) {
+          ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
+          continue;
+        }
+
+        vec3 p = e + dists.x * u;
+        vec3 n = normalize(p - ci);
+        float ratio = abs(length(dists.x - dists.y)) / (2. * r[i]);
+        // fragColor += vec4 ( pow( clamp(ratio, 0.0, 1.), 4. ) );
+        fragColor += pow( clamp(ratio, 0.0, 1.), 4. ) * orbColors[i];
+    }
+    fragColor = clamp(fragColor, 0., 1.);
+    float txAlpha = clamp(whiteAlpha, 0., 1.);
+    fragColor.a = 1. - txAlpha;
+
+    vec4 texcolor = texture2D(u_tex, vUv);
+    fragColor = mix(fragColor, texcolor, txAlpha);
+	return fragColor;
+  }
+
+  void main() {
+    // mainImage(gl_FragColor, gl_FragCoord.xy);
+    gl_FragColor += mainImage(gl_FragCoord.xy);
+  }`,
+
+ vertexShader: `
+  uniform vec3 wpos;
+  uniform vec3 offsets[${orbs}];
+  uniform vec3 orbScale;
+
+  attribute vec3 a_tan;
+  attribute vec3 a_pos;
+
+  varying vec2 vUv;
+  varying vec3 P;
+  varying vec3 vscale;
+  varying vec4 cent[${orbs}];
+
+  void main() {
+    vUv = uv;
+
+    // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+
+    P = worldPosition.xyz;
+    vscale = orbScale;
+    for (int i = 0; i &lt; ${orbs}; i++){
+      cent[i] = modelMatrix * vec4(wpos + offsets[i], 1.);
+    }
+
+    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+  } `
+ }
+}
+
+/**&lt;p id='orbGroups'>Get shader of a sequnce of orb groups, each for a wpos - an
+ * vec3 array, with respect to vertex dir &amp; cent attribute.&lt;/p>
+ * Test page: test/html/map3d/geopaths.html&lt;br>
+ * ShaderFlag: worldOrbs
+ * @param {object} vparas paras.vert_scale [optional] number scale of vertices
+ * @return {object} {vertexShader, fragmentShader}
+ * @member xglsl.orbGroups
+ * @function
+ */
+function orbGroups(vparas) {
+ var grps = vparas.follows.length;
+ var orbs = vparas.offsets.length;
+ return { fragmentShader: `
+  uniform float r[${orbs}];
+  uniform vec3 orbColors[${orbs}];
+
+  uniform float u_t;
+  uniform float tmin;
+  uniform float tmax;
+  uniform float follows[${grps}];
+
+  uniform float whiteAlpha;
+  uniform vec3 orbScale;
+  uniform sampler2D u_tex;
+
+  varying vec2 vUv;
+  varying vec3 P;
+  varying vec3 vtan; // ignored in v0.3
+  varying vec3 vscale;
+  varying vec3 vcent[${grps * orbs}];
+
+  vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
+      // e = o - c, where o = eye, c = center
+      vec3 e = eye - centr;
+      e = e / abc;
+
+      // delta = (u . e)^2 + r^2 - |e|^2
+      u = normalize(u / abc);
+
+      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
+      if (delta &lt; 0.) return vec2(delta);
+      // d = - u.e +/- delta^0.5
+      delta = pow( delta, 0.5 );
+      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
+  }
+
+  vec4 mainImage( in vec2 fragCoord ) {
+    vec4 fragColor = vec4(0.);
+    vec3 e = cameraPosition;
+    vec3 u = normalize( P - cameraPosition );
+
+    fragColor = vec4(0.);
+    for (int j = 0; j &lt; ${grps}; j++) {
+      float flwj = follows[j] / 100.;
+      if (tmin &lt;= u_t - flwj &amp;&amp; u_t - flwj &lt;= tmax ) {
+        for (int i = 0; i &lt; ${orbs}; i++) {
+            vec3 ci = vcent[j*${grps} + i];
+            vec2 dists = sdEllipsoid( e, u, r[i], ci, vscale );
+
+            // if (dists.x &lt;= 0.00001) {
+            //   ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
+            //   continue;
+            // }
+
+            vec3 p = e + dists.x * u;
+            vec3 n = normalize(p - ci);
+            float ratio = abs(length(dists.x - dists.y)) / (2. * r[i]);
+            ratio = clamp(ratio, 0., 1.);
+            fragColor += vec4(pow( ratio, 4. ) * orbColors[i], ratio);
+        }
+      }
+    }
+    fragColor = clamp(fragColor, 0., 1.);
+
+    float txAlpha = clamp(whiteAlpha, 0., 1.);
+    // fragColor.a = 1. - txAlpha;
+
+    // fragColor = mix(fragColor, texcolor, txAlpha);
+    vec4 texcolor = texture2D(u_tex, vUv);
+    texcolor.a = txAlpha;
+    fragColor += texcolor;
+
+    return clamp(fragColor, 0., 1.);
+  }
+
+  void main() {
+    gl_FragColor = mainImage(gl_FragCoord.xy);
+  }`,
+
+ /* wpos[] group cent ( alone path )
+    vec3 tan = normalize(a_tan);
+    for (int i = 0; i &lt; ${grps}; i++) {
+      vfollows[i] = modelMatrix * (tan * follows[i] + cent[0]);
+    }
+ */
+ vertexShader: `
+  uniform vec3 wpos[${grps}];
+  uniform vec3 wtan[${grps}];
+  uniform float follows[${grps}];
+  uniform vec3 orbScale;
+
+  uniform float offsets[${orbs}];
+
+  attribute vec3 a_tan;
+  attribute vec3 a_pos;
+
+  varying vec2 vUv;
+  varying vec3 P;
+  varying vec3 vtan; // ignored in v0.3
+  varying vec3 vscale;
+  varying vec3 vcent[${grps * orbs}];
+
+  void main() {
+    vUv = uv;
+    vec4 v = projectionMatrix * modelViewMatrix * vec4( a_tan, 1.0 );
+    vtan = v.xyz;
+
+    // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+
+    P = worldPosition.xyz;
+    vscale = orbScale;
+
+    for (int j = 0; j &lt; ${grps}; j++) {
+      for (int i = 0; i &lt; ${orbs}; i++) {
+        if (length(a_tan) > 0.) {
+          vec4 vc = modelMatrix * vec4(wpos[j] + normalize(a_tan) * offsets[i], 1.);
+          vcent[j*${grps} + i] = vc.xyz;
+        }
+        else if (length(wtan[j]) > 0.) {
+          vec4 vc = modelMatrix * vec4(wpos[j] + normalize(wtan[j]) * offsets[i], 1.);
+          vcent[j*${grps} + i] = vc.xyz;
+        }
+        else {
+          // vec4 vc = modelMatrix * vec4(wpos[j] + offsets[i], 1.);
+          vec4 vc = modelMatrix * vec4(wpos[j], 1.);
+          vcent[j*${grps} + i] = vc.xyz;
+        }
+      }
+    }
+
+    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+  } `
+ }
+}
+
+/**
+ * It's supposed look like &lt;a href='https://www.shadertoy.com/view/3ssGzn'>
+ * Thermal Particles III @shadertoy&lt;/a>. And uv distortion can be done like
+ * &lt;a href='https://www.shadertoy.com/view/4sf3zS'>Texture twistery @shadertoy&lt;/a>,
+ * with the help of color re-shaping:&lt;pre>
+     vec2 getDistortion(vec2 uv, float d, float t) {
+      uv.x += cos(d) + t * 0.9;
+      uv.y += sin(d + t * 0.75);
+      return uv;
+    }
+
+    vec4 getDistortedTexture(sampler2D iChannel, vec2 uv) {
+      vec4 rgb = texture(iChannel, uv);
+      return rgb;
+    }
+
+    void mainImage( out vec4 fragColor, in vec2 fragCoord )
+    {
+      vec2 uv = fragCoord.xy / iResolution.xy;
+      float t = iTime * 0.125;
+      vec2 mid = vec2(0.5,0.5);
+
+      vec2 focus = iMouse.xy / iResolution.xy;
+      float d1 = distance(focus+sin(t * 0.125) * 0.5, uv);
+      float d2 = distance(focus+cos(t), uv);
+
+      vec4 rgb = (getDistortedTexture(iChannel0, getDistortion(uv, d1, t))
+                  + getDistortedTexture(iChannel1, getDistortion(uv, -d2, t))) * 0.5;
+      rgb.r /= d2;
+      rgb.g += -0.5 + d1;
+      rgb.b = -0.5 + (d1 + d2) / 2.0;
+      // rgb.a = pow(rgb.a, 0.125);
+      // rgb.g = pow(rgb.g, 0.5);
+      rgb.r = pow(rgb.r, 1.5) * (sin(t * 10.) + 1.) * 0.125;
+      rgb.b = pow(rgb.b, 1.5) * (sin((t + 5.2) * 10.) + 1.) * 0.125;
+      fragColor = rgb;
+    } &lt;/pre>
+ * @param {object} vparas paras.vert_scale [optional] number scale of vertices
+ * @return {object} {vertexShader, fragmentShader}
+ * @member xglsl.thremalTile
+ * @function
+ */
+function thermalTile(vparas) {
+ var orbs = vparas.offsets.length || 1;
+ var groups = vparas.geostyle.groups || 1;
+ return {
+  fragmentShader: `
+    uniform float now;
+    // uniform float speedFrag[${groups}];
+    // uniform float speed;
+    uniform float r[${orbs}];
+    uniform vec4 orbColors[${orbs}];
+
+    uniform float whiteAlpha;
+    uniform vec3 orbScale;
+    uniform sampler2D u_tex;
+
+    varying vec2 vUv;
+    varying vec3 P;
+    varying vec3 vscale;
+    varying vec4 vcent[${orbs}];
+    varying float vspeed;
+
+    vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
+      // e = o - c, where o = eye, c = center
+      vec3 e = eye - centr;
+      e = e / abc;
+
+      // delta = (u . e)^2 + r^2 - |e|^2
+      u = normalize(u / abc);
+
+      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
+      if (delta &lt; 0.) return vec2(delta);
+      // d = - u.e +/- delta^0.5
+      delta = pow( delta, 0.5 );
+      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
+    }
+
+    vec4 mainImage( in vec2 fragCoord ) {
+      vec4 fragColor = vec4(0.);
+      vec3 e = cameraPosition;
+      vec3 u = normalize( P - cameraPosition );
+
+      // float speed = speedFrag[ int(tileIx) ];
+      // float vspeed = .01;
+
+      for (int i = 0; i &lt; ${orbs}; i++) {
+        vec3 ci = vcent[i].xyz;
+        float ri = r[i];
+        ri *= sin(now * vspeed * 0.6 + float(i) * 0.3) + 1.2;
+        vec2 dists = sdEllipsoid( e, u, ri, ci, vscale );
+
+        if (dists.x &lt;= 0.00001) {
+          ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
+          continue;
+        }
+
+        vec3 p = e + dists.x * u;
+        vec3 n = normalize(p - ci);
+        float ratio = length(dists.x - dists.y) / (2. * ri);
+        // working: fragColor += pow( clamp(ratio, 0.0, 1.), 8. * (sin(now * 0.001) + 1.75) ) * orbColors[i];
+        // fragColor.r += pow( clamp(ratio, 0.0, 1.), 6. * (sin(now * speed + float(i) * 0.1      ) * 8. + 8.1) ) * orbColors[i].r;
+        // fragColor.g += pow( clamp(ratio, 0.0, 1.), 8. * (sin(now * speed + float(i) * 0.1 + 0.01) * 9. + 9.6) ) * orbColors[i].g;
+        // fragColor.b += pow( clamp(ratio, 0.0, 1.), 10. * (sin(now * speed + float(i) * 0.1 + 0.02) * 10. + 10.1) ) * orbColors[i].b;
+        // fragColor.a += pow( clamp(ratio, 0.0, 1.), 11. * (sin(now * speed + float(i) * 0.1 + 0.03) * 10.5 + 10.6) ) * orbColors[i].a;
+
+        fragColor += pow( clamp(ratio, 0.0, 1.), 8. + (abs(sin(now * vspeed + float(i) * 0.06)) * 4.) ) * orbColors[i];
+        fragColor.a = 1.2 - ri;
+      }
+      fragColor = clamp(fragColor, 0., 1.);
+      float txAlpha = clamp(whiteAlpha, 0., 1.);
+      fragColor.a = 1. - txAlpha;
+
+      vec4 texcolor = texture2D(u_tex, vUv);
+      fragColor = mix(fragColor, texcolor, txAlpha);
+      return fragColor;
+    }
+
+    void main() {
+      gl_FragColor += mainImage(gl_FragCoord.xy);
+    }`,
+
+  vertexShader: `
+    uniform float now;
+    uniform float speedVert[${groups}];
+    uniform float speedFrag[${groups}];
+    // uniform float speed;
+    uniform vec3 wpos;
+    uniform vec3 offsets[${orbs}];
+    uniform vec3 orbScale;
+
+    attribute vec3 a_tan;
+    attribute vec3 a_loc;
+
+    varying vec2 vUv;
+    varying vec3 P;
+    varying vec3 vscale;
+    varying vec4 vcent[${orbs}];
+    varying float vspeed;
+
+    void main() {
+      vUv = uv;
+
+      // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+      vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+
+      P = worldPosition.xyz;
+      vscale = orbScale;
+      float speed = speedVert[ int(a_tan.y) ];
+      vspeed = speedFrag[ int(a_tan.y) ];
+      for (int i = 0; i &lt; ${orbs}; i++) {
+        vec3 offi = offsets[i] * 2. * sin(now * speed * 0.1 + float(i) * 0.3);
+        vcent[i] = modelMatrix * vec4(a_loc + wpos + offi, 1.);
+      }
+
+      gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    } `
+ }
+}
+
+const glx = {
+  /**Is the bit is true?
+   * At least better than this:&lt;br>
+   * a = ...5, bit = 2 (start at 0), a_rem = a % 2^3 = 5, div = 5 / 4 >= 1
+   * Reference: &lt;a href='https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf'>
+   * WebGL 1.0 API Quick Reference Card&lt;/a>
+   * @param {object} vparas paras.vert_scale [optional] number scale of vertices
+   * @return {object} {vertexShader, fragmentShader}
+   * @member xglsl.bitTrue
+   * @function
+   */
+  bitTrue: `
+    bool bitTrue(int a, int bit) {
+      float a_rem = mod(float(a), exp2(float(bit+1)));
+      return a_rem / exp2(float(bit)) >= 1.;
+    }`
+}
+
+/**
+ * orb-center = a_pos + u_tilePos + offset
+ * uniform vec3 wpos: position offsets in world - should be in tile range for tile rendering
+ * attribute vec3 a_loc: such as tile center in world.
+ * @param {object} vparas paras.vert_scale [optional] number scale of vertices
+ * @return {object} {vertexShader, fragmentShader}
+ * @member xglsl.tiledOrbs
+ * @function
+ */
+function tiledOrbs(vparas) {
+ var orbs = vparas.offsets.length || 1;
+ return {
+  fragmentShader: `
+    uniform float r[${orbs}];
+    uniform vec4 orbColors[${orbs}];
+
+    uniform float whiteAlpha;
+    uniform vec3 orbScale;
+    uniform sampler2D u_tex;
+
+    varying vec2 vUv;
+    varying vec3 P;
+    varying vec3 vscale;
+    varying vec4 vcent[${orbs}];
+
+    vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
+      // e = o - c, where o = eye, c = center
+      vec3 e = eye - centr;
+      e = e / abc;
+
+      // delta = (u . e)^2 + r^2 - |e|^2
+      u = normalize(u / abc);
+
+      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
+      if (delta &lt; 0.) return vec2(delta);
+      // d = - u.e +/- delta^0.5
+      delta = pow( delta, 0.5 );
+      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
+    }
+
+    vec4 mainImage( in vec2 fragCoord ) {
+      vec4 fragColor = vec4(0.);
+      vec3 e = cameraPosition;
+      vec3 u = normalize( P - cameraPosition );
+
+      for (int i = 0; i &lt; ${orbs}; i++) {
+        vec3 ci = vcent[i].xyz;
+        float ri = r[i];
+        vec2 dists = sdEllipsoid( e, u, ri, ci, vscale );
+
+        if (dists.x &lt;= 0.00001) {
+          ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
+          continue;
+        }
+
+        vec3 p = e + dists.x * u;
+        vec3 n = normalize(p - ci);
+        float ratio = abs(length(dists.x - dists.y)) / (2. * r[i]);
+        fragColor += pow( clamp(ratio, 0.0, 1.), 4. ) * orbColors[i];
+      }
+      fragColor = clamp(fragColor, 0., 1.);
+      float txAlpha = clamp(whiteAlpha, 0., 1.);
+      fragColor.a = 1. - txAlpha;
+
+      vec4 texcolor = texture2D(u_tex, vUv);
+      fragColor = mix(fragColor, texcolor, txAlpha);
+      return fragColor;
+    }
+
+    void main() {
+      gl_FragColor += mainImage(gl_FragCoord.xy);
+    }`,
+
+  vertexShader: `
+    uniform vec3 wpos;
+    uniform vec3 offsets[${orbs}];
+    uniform vec3 orbScale;
+
+    attribute vec3 a_tan;
+    attribute vec3 a_loc;
+
+    varying vec2 vUv;
+    varying vec3 P;
+    varying vec3 vscale;
+    varying vec4 vcent[${orbs}];
+
+    void main() {
+      vUv = uv;
+
+      // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+      vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+
+      P = worldPosition.xyz;
+      vscale = orbScale;
+      for (int i = 0; i &lt; ${orbs}; i++) {
+        vcent[i] = modelMatrix * vec4(a_loc + wpos + offsets[i], 1.);
+      }
+
+      gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    } `
  }
 }
 
@@ -1185,7 +1872,7 @@ function fragShape(vparas) {
     }
 
     void main() {
-    	vec2 st = gl_FragCoord.xy/u_resolution;
+        vec2 st = gl_FragCoord.xy/u_resolution;
 
         float y = st.x;
 
@@ -1195,7 +1882,7 @@ function fragShape(vparas) {
         float pct = plot(st,y);
         color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
 
-    	gl_FragColor = vec4(color,1.0);
+        gl_FragColor = vec4(color,1.0);
     } `,
     vertexShader: `
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
@@ -1212,13 +1899,13 @@ function fragShape(vparas) {
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Jun 18 2020 13:51:13 GMT+0800 (Hong Kong Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Jul 06 2020
 </footer>
 
 <script> prettyPrint(); </script>
