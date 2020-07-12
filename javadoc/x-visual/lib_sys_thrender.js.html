@@ -91,17 +91,34 @@ export default class Thrender extends ECS.System {
 	static createObj3s(ecs, scene, entities) {
 		// var mes = [];
 		entities.forEach(function(e, x) {
-			var tex, mat;
-			var uniforms = Object.assign(new Object(), e.Obj3.uniforms);
-				uniforms = Object.assign(uniforms, e.Visual.uniforms);
-
 			// A typicall orghogonal handling process should be blocks one after another,
 			// like material, an generalized case of alp
+			var tex, mat;
+			// 1. uniforms
+			// 1.1 paras for uniforms
+			var uniforms = new Object();
+				// uniforms = Object.assign(uniforms, e.Obj3.uniforms);
+				// uniforms = Object.assign(uniforms, e.Visual.uniforms);
+			// 1.2 shader's uniforms
+			if (!e.Visual.material &amp;&amp; e.Visual.shader) {
+				uniforms = xglsl.formatUniforms(e.Visual, e.Obj3);
+			}
+			// 2. TODO merge material handling
+
+			// common paras section
 			// FIXME alp is deprcated by xglsl.formatUniforms()
 			// - in fact, uniforms should been handled here
 			var alp = e.Visual.paras !== undefined &amp;&amp; e.Visual.paras.tex_alpha !== undefined ?
 				e.Visual.paras.tex_alpha : 1;
 
+			// tolerate API design error - Visual.asset will be deprecated
+			if ((!e.Visual.paras || !e.Visual.paras.u_tex) &amp;&amp; e.Visual.asset)
+				e.Visual.paras = Object.assign(e.Visual.paras || {}, {u_tex: [e.Visual.asset]});
+
+			if (!e.Obj3.datum)
+				e.Obj3.datum = new Object();
+
+			// create mesh of AssetType
 			switch (e.Visual.vtype) {
 				case AssetType.Extension:
 					// some extesion like Canvtex (x-visual v0.3) will handle this
@@ -111,8 +128,8 @@ export default class Thrender extends ECS.System {
 					break;
 				case AssetType.gltf:
 					if (!e.Visual.asset)
-						throw XError('Thrender: AssetType.gltf needs Visual.asset being path of gltf file.');
-					else if (e. Visual.paras &amp;&amp; e.Visual.paras.nodes) {
+						throw XError('Thrender: AssetType.gltf needs Visual.asset parameter.');
+					else if (e.Visual.paras &amp;&amp; e.Visual.paras.nodes) {
 						var nds = e.Visual.paras.nodes;
 						if (typeof nds === 'string')
 							nds = [nds]
@@ -152,8 +169,6 @@ export default class Thrender extends ECS.System {
 						AssetKeepr.loadGltf(scene, e.Obj3, `assets/${e.Visual.asset}`);
 					break;
 				case AssetType.DomCanvas:
-					var alp = e.Visual.paras !== undefined &amp;&amp; e.Visual.paras.tex_alpha !== undefined ?
-						e.Visual.paras.tex_alpha : 1;
 					// create texture of canvas
 					AssetKeepr.loadCanvtex2(e.Canvas, e.Canvas.options);
 					tex = e.Canvas.tex; // should be undefined now
@@ -170,8 +185,6 @@ export default class Thrender extends ECS.System {
 							transparent: true,
 							side,
 						});
-					// mat.setUniforms(mat, uniforms);
-					// Object.assign(mat, uniforms);
 					var m = Thrender.createObj3mesh(e.Obj3, e.Obj3.geom, mat);
 					// can not been used for rendering until html canvas texture is ready,
 					// when Canvas.dirty = true
@@ -180,42 +193,10 @@ export default class Thrender extends ECS.System {
 					break;
 				case AssetType.mesh:
 				case AssetType.mesh_basic:
-
 					if (!e.Visual.material) {
 						// FIXME material should handled in orthogonal fashion.
-						// FIXME see also createObj3particles()
-						// Ony ShaderFlag.colorArray are tested
 						if (e.Visual.shader) {
 							// create ShaderMaterial
-
-							// FIXME time to reorgnize uniforms handling, see PathTube
-							// FIXME in this branch, should get defualt uniforms from glsl?
-
-							/** NOTE before deleting this, you also need use glsl.formatUniforms() for other branches
-							uniforms.wpos = {value: new THREE.Vector3(0, 0, 0)};
-							uniforms.r = {value: e.Visual.paras.orbR === undefined
-										? 20 : e.Visual.paras.orbR};
-							uniforms.whiteAlpha = {value: e.Visual.paras.whiteAlpha === undefined
-										? 0 : e.Visual.paras.whiteAlpha};
-							var os = e.Visual.paras.orbScale;
-							uniforms.orbScale = {value: os === undefined
-										? new THREE.Vector3(1, 0.2, 0.2)
-										: new THREE.Vector3(os[0], os[1], os[2])};
-
-							var side = !e.Visual.paras || e.Visual.paras.side === undefined
-										? THREE.FrontSide : e.Visual.paras.side;
-
-							Object.assign(uniforms, xglsl.obj2uniforms(e.Obj3.uniforms));
-							if (e.Visual.paras)
-								Object.assign(uniforms, xglsl.obj2uniforms(e.Visual.paras.uniforms));
-
-							if (e.Visual.shader === ShaderFlag.colorArray)
-								for (var i = 0; i &lt; e.Visual.paras.colors.length; i++)
-									uniforms[`u_color${i}`] = {value: new THREE.Vector3(...e.Visual.paras.colors[i])};
-							*/
-
-
-							uniforms = xglsl.formatUniforms(e.Visual, e.Obj3);
 							mat = Thrender.createXShaderMaterial(e.Visual.shader, uniforms, e.Visual.paras);
 						}
 						else {
@@ -233,13 +214,12 @@ export default class Thrender extends ECS.System {
 										e.Visual.paras.blending : undefined;
 
 							var def = { map: tex,
-										alphaMap,
+										// alphaMap,
 										opacity: alp,
 										transparent: true,
 										side,
 										depthWrite: true,
 										depthTest: true,
-										// blending: THREE.AdditiveBlending
 									};
 
 							if ( alphaMap ) def.alphaMap = alphaMap;
@@ -260,9 +240,6 @@ export default class Thrender extends ECS.System {
 					addObj3(scene, m, e);
 					break;
 				case AssetType.wireframe:
-					var alp = e.Visual.paras !== undefined &amp;&amp; e.Visual.paras.tex_alpha !== undefined ?
-						e.Visual.paras.tex_alpha : 1;
-
 					var def = {
 							opacity: alp,
 							transparent: true,
@@ -289,7 +266,7 @@ export default class Thrender extends ECS.System {
 						var mesh = Thrender.createObj3points(e.Obj3,
 								e.Obj3.geom ? e.Obj3.geom : Obj3Type.SPHERE, mat);
 
-						addObj3(scene, m, e);	// 2020.05.28 BUG? Not mesh?
+						addObj3(scene, mesh, e);
 					}
 					// load model as points
 					else if (e.Visual.asset) {
@@ -349,85 +326,30 @@ export default class Thrender extends ECS.System {
 					}
 					break;
 				case AssetType.GeomCurve:
-					var {curve, path} = Thrender.createCurve(e.Obj3, e.Visual.paras);
-					// mes.push(curve);
+					// var {curve, path} = Thrender.createCurve(e.Obj3, e.Visual.paras);
+					// addObj3(scene, curve, e);
+					mat = Thrender.xlineMaterial(uniforms, e.Visual.paras);
+					var {curve, path} = Thrender.createObj3Line(e.Obj3, e.Visual.paras, mat);
 					addObj3(scene, curve, e);
-					if (e.ModelSeqs) {
-						// For geomCurve, it's hightly likely this path is needed by MorphingAnim &amp; XTweener
-						// Design MEMO
-						// what's the better practice for this in ECS pattern?
-						if (!e.Obj3.datum)
-							e.Obj3.datum = new Object();
-						e.Obj3.datum.path = path;
-					}
-					break;
-				case AssetType.Arrow:
-					var dir = new THREE.Vector3( e.Visual.paras.dir[0],
-								e.Visual.paras.dir[1], e.Visual.paras.dir[2]);
-					var org = new THREE.Vector3( e.Visual.paras.origin[0],
-								e.Visual.paras.origin[1], e.Visual.paras.origin[2]);
-					/*
-					ArrowHelper(dir : Vector3, origin : Vector3, length : Number, hex : Number, headLength : Number, headWidth : Number )
-					dir -- direction from origin. Must be a unit vector.
-					origin -- Point at which the arrow starts.
-					length -- length of the arrow. Default is 1.
-					hex -- hexadecimal value to define color. Default is 0xffff00.
-					headLength -- The length of the head of the arrow. Default is 0.2 * length.
-					headWidth -- The width of the head of the arrow. Default is 0.2 * headLength.
-					*/
-					var a = new THREE.ArrowHelper( dir, org,
-								e.Visual.paras.length, e.Visual.paras.color,
-							 	e.Visual.paras.headLength, e.Visual.paras.headWidth);
-					e.Obj3.mesh = a;
-					addObj3(scene, a, e);
+					e.Obj3.datum.path = path;
 					break;
 				case AssetType.DynaSects:
-					var {group, p} = Thrender.createDynaSects(e.Obj3, e.Visual.paras);
-					e.Obj3.mesh = group;
-					if (e.ModelSeqs) {
-						// For DynaSects, the points should be able to be tweened
-						if (!e.Obj3.datum)
-							e.Obj3.datum = new Object();
-						e.Obj3.datum.points = points;
-					}
-					addObj3(scene, group, e);
+					// TODO: this branch shows the only difference of DynaSects with GeomCurve is geometry type.
+					// var {group, points} = Thrender.createDynaSects(e.Obj3, e.Visual.paras);
+					mat = Thrender.xlineMaterial(uniforms, e.Visual.paras);
+					var {curve, points} = Thrender.createObj3Line(e.Obj3, e.Visual.paras, mat);
+					e.Obj3.mesh = curve;
+					if (!e.Obj3.datum)
+						e.Obj3.datum = new Object();
+					e.Obj3.datum.points = points;
+					addObj3(scene, curve, e);
 					break;
 				case AssetType.PathTube:
-					var alp = e.Visual.paras !== undefined
-								&amp;&amp; e.Visual.paras.tex_alpha !== undefined
-								? e.Visual.paras.tex_alpha : 1;
-
 					if (!e.Visual.material) {
 						// FIXME material should handled in orthogonal fashion.
 						// FIXME see also createObj3particles(), AssetType.mesh
 						if (e.Visual.shader) {
 							// create ShaderMaterail
-							// var uniforms = xglsl.formatUniforms(e.Visual, e.Obj3);
-
-							/** NOTE before deleting this, you also need use glsl.formatUniforms() for other branches
-							uniforms.wpos = {value: new THREE.Vector3(0, 0, 0)};
-							uniforms.r = {value: e.Visual.paras.orbR === undefined
-										? 20 : e.Visual.paras.orbR};
-							uniforms.whiteAlpha = {value: e.Visual.paras.whiteAlpha === undefined
-										? 0 : e.Visual.paras.whiteAlpha};
-							var os = e.Visual.paras.orbScale;
-							uniforms.orbScale = {value: os === undefined
-										? new THREE.Vector3(1, 0.2, 0.2)
-										: new THREE.Vector3(os[0], os[1], os[2])};
-
-							var side = !e.Visual.paras || e.Visual.paras.side === undefined
-										? THREE.FrontSide : e.Visual.paras.side;
-
-							Object.assign(uniforms, xglsl.obj2uniforms(e.Obj3.uniforms));
-							if (e.Visual.paras)
-								Object.assign(uniforms, xglsl.obj2uniforms(e.Visual.paras.uniforms));
-
-							if (e.Visual.shader === ShaderFlag.colorArray)
-								for (var i = 0; i &lt; e.Visual.paras.colors.length; i++)
-									uniforms[`u_color${i}`] = {value: new THREE.Vector3(...e.Visual.paras.colors[i])};
-							*/
-
-							uniforms = xglsl.formatUniforms(e.Visual, e.Obj3);
 							mat = Thrender.createXShaderMaterial(e.Visual.shader, uniforms, e.Visual.paras);
 						}
 						else {
@@ -474,7 +396,6 @@ export default class Thrender extends ECS.System {
 									e.Obj3.datum.paths = paths;
 								}
 
-								// if (scene) scene.add(group);
 								addObj3(scene, group, e);
 							});
 					}
@@ -483,26 +404,35 @@ export default class Thrender extends ECS.System {
 						var {mesh, path} = Thrender.createPathTube(e.Obj3, e.Visual.paras, mat);
 						if (!!e.Obj3.invisible) tube.visible = false;
 						addObj3(scene, mesh, e);
-						if (e.ModelSeqs) {
-							// For geomCurve, it's hightly likely this path is needed by MorphingAnim &amp; XTweener
-							// Design MEMO
-							// what's the better practice for this in ECS pattern?
-							if (!e.Obj3.datum)
-								e.Obj3.datum = new Object();
-							e.Obj3.datum.path = path;
-						}
+
+						// Design MEMO
+						// what's the better practice for this in ECS pattern?
+						e.Obj3.datum.path = path;
 					}
 					break;
-				// case AssetType.vertParticle:
-				// 	//console.log("vertParticle")
-				// 	var mesh = Thrender.createPracle(e.Obj3, e.Visual);
-				// 	addObj3(scene, mesh, e);
-				// 	break;
 				case AssetType.UserMesh:
 					// nothing to do
-					// TODO support Visual.shader?
-					// mes.push(e.Obj3.mesh);
 					addObj3(scene, e.Obj3.mesh, e);
+					break;
+				case AssetType.Arrow:
+					var dir = new THREE.Vector3( e.Visual.paras.dir[0],
+								e.Visual.paras.dir[1], e.Visual.paras.dir[2]);
+					var org = new THREE.Vector3( e.Visual.paras.origin[0],
+								e.Visual.paras.origin[1], e.Visual.paras.origin[2]);
+					/*
+					ArrowHelper(dir : Vector3, origin : Vector3, length : Number, hex : Number, headLength : Number, headWidth : Number )
+					dir -- direction from origin. Must be a unit vector.
+					origin -- Point at which the arrow starts.
+					length -- length of the arrow. Default is 1.
+					hex -- hexadecimal value to define color. Default is 0xffff00.
+					headLength -- The length of the head of the arrow. Default is 0.2 * length.
+					headWidth -- The width of the head of the arrow. Default is 0.2 * headLength.
+					*/
+					var a = new THREE.ArrowHelper( dir, org,
+								e.Visual.paras.length, e.Visual.paras.color,
+							 	e.Visual.paras.headLength, e.Visual.paras.headWidth);
+					e.Obj3.mesh = a;
+					addObj3(scene, a, e);
 					break;
 				default:
 					console.error('TODO AssetType: ', e.Visual.vtype);
@@ -530,13 +460,12 @@ export default class Thrender extends ECS.System {
 						g.Obj3.mesh.add(mesh);
 					else {
 						console.error('Can not find entity\'s parent group: ', e);
-						console.error('x-visual can only add child to parent that already created.');
+						console.error('x-visual can only add child to parent that already has been created.');
 					}
 				}
 				else {
 					if (mesh.type === 'Group')
 						mesh.xscene = scene; // for convenience laterly
-					// scene.add(mesh);
 				}
 			}
 			else if (x.log >= 5) { // testing
@@ -573,7 +502,7 @@ export default class Thrender extends ECS.System {
 	 * @member Thrender.createXShaderMaterial
 	 * @function
 	 */
-	static createXShaderMaterial( shaderflag, uniforms = {}, vparas ) {
+	static createXShaderMaterial( shaderflag, uniforms = new Object(), vparas ) {
 		if (shaderflag === ShaderFlag.colorArray) {
 			if (vparas &amp;&amp; vparas.u_texWeight !== undefined) {
 				uniforms.u_texWeight = {value: vparas.u_texWeight};
@@ -622,7 +551,7 @@ export default class Thrender extends ECS.System {
 			fragmentShader,
 			depthTest: true,
 			transparent: true,
-			depthWrite: false,
+			depthWrite: true,
 			side,
 		} );
 
@@ -634,6 +563,103 @@ export default class Thrender extends ECS.System {
 			// https://github.com/mrdoob/three.js/issues/17805
 			mat.colorWrite = false;
 		return mat;
+	}
+
+	/**Create a line material either one of xv.ShaderFlag.colorLine or the THREE.
+	 * LineDashedMaterial, depends on wither dashSize or gapSize presented in vparas.
+	 *
+	 * Three.js LineBasicMaterial opacity works but has issues. We tried and seems
+	 * it's not transparent. See also &lt;a href='https://discourse.threejs.org/t/change-opacity-using-fat-lines-example/5523/7'>
+	 * discussion: Change opacity using fat lines example for line opacity&lt;/a>
+	 * @param {object} uniforms
+	 * @param {object} vparas
+	 * @return {object} {curve, path, points}
+	 * @member Thrender.xlineMaterial
+	 * @function
+	 */
+	static xlineMaterial( uniforms = new Object(), vparas ) {
+
+		if (vparas.dashSize !== undefined || vparas.dashSize !== undefined) {
+			var color = 0;
+			if (Array.isArray(vparas.color)) {
+				color = new THREE.Color(...vparas.color);
+			}
+			else if (vparas.color !== undefined) {
+				color = new THREE.Color(vparas.color);
+			}
+			else
+				color = 0xffff00;
+
+			return new THREE.LineDashedMaterial( {
+				color,
+				linewidth: vparas.linewidth,
+				scale: vparas.scale,
+				dashSize: vparas.dashSize,
+				gapSize: vparas.gapSize,
+			} );
+		}
+		// use xline to control u_alpha
+		else {
+			var {vertexShader, fragmentShader} = xglsl.xvShader(
+						ShaderFlag.colorLine, vparas);
+
+			// add vec3 u_color
+			if (Array.isArray(vparas.color)) {
+				uniforms.u_color = { value: new THREE.Vector3(...vparas.color) };
+			}
+			else if (vparas.color !== undefined) {
+				var c = new THREE.Color(vparas.color);
+				uniforms.u_color = { value: new THREE.Vector3(c.r, c.g, c.b) };
+			}
+			else
+				uniforms.u_color = {value: new THREE.Vector3(1, 1, 0) };
+
+			uniforms.u_alpha = { value: 1 };
+			// uniforms.opacity = { value: 1 };
+
+			var matOpt = {	uniforms,
+							vertexShader,
+							fragmentShader,
+							depthTest: true,
+							transparent: true,
+							depthWrite: true };
+
+			if (vparas.linewidth !== undefined)
+				matOpt.linewidth = vparas.linewidth;
+
+			var mat = new THREE.ShaderMaterial( matOpt );
+
+			return mat;
+		}
+	}
+
+	/**
+	 * Generate line, segments or curve, e.g Obj3.geom =
+	 * RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
+	 * {@link XComponent.Obj3Type}.
+	 *
+	 * 1. use {@link xgeom.generateCurve} to generate points
+	 * 2. create the THREE.Line or LineSegments,
+	 * @param {Obj3} obj3
+	 * @param {object} paras Visual.paras, @see {@link xgeom.generateCurve}
+	 * @param {Material} material
+	 * @return {object} {curve, path, points}
+	 * @member Thrender.createObj3Line
+	 * @function
+	 */
+	static createObj3Line( obj3, paras, material ) {
+		var {geomCurve, points} = xgeom.generateCurve(obj3, paras);
+		var line;
+		// FIXME we can ask xgeom here to make sure how to create line buffer
+		// or let xgeom handle all of this?
+		if (obj3.geom === Obj3Type.PointSects) {
+			line = new THREE.LineSegments( geomCurve, material );
+		}
+		else {
+			line = new THREE.Line( geomCurve, material );
+		}
+		line.computeLineDistances();
+		return {curve: line, path: points, points};
 	}
 
 	/**Create THREE.Points from cmpObj3.mesh.
@@ -663,7 +689,10 @@ export default class Thrender extends ECS.System {
 			geomType);
 	}
 
-	/**Handling {@link AssetType.GeomCurve}, generate curve of type of HILBERT,
+	/**@deprecated LineBasicMaterial can only change color, not alpha - an issue
+	 * discussed this but can't find again.
+	 *
+	 * Handling {@link AssetType.GeomCurve}, generate curve of type of HILBERT,
 	 * RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
 	 * {@link XComponent.Obj3Type}.
 	 *
@@ -671,25 +700,60 @@ export default class Thrender extends ECS.System {
 	 * 2. create the THREE.line,
 	 * 3. set line to Obj3.mesh
 	 * @param {Obj3} cmpObj3
-	 * @param {Object} paras Visual.paras, @see {@link xgeom.generateCurve}
-	 * @return {Object} {curve, path}
+	 * @param {object} paras Visual.paras, @see {@link xgeom.generateCurve}
+	 * @return {object} {curve, path}
 	 * @member Thrender.createCurve
 	 * @function
-	 */
 	static createCurve(cmpObj3, paras) {
 		var {geomCurve, points} = xgeom.generateCurve(cmpObj3, paras);
 
 		// e.g. new THREE.Line( geometrySpline, new THREE.LineDashedMaterial( { color: 0x0f0f0f, dashSize: 1, gapSize: 0.05 } ) );
-		var line = new THREE.Line( geomCurve, new THREE.LineBasicMaterial( {
-				color: paras.color === undefined ? 0x0f7f8f : paras.color,
-				linewidth: paras.linewidth,
-			 	dashSize: paras.dashSize,
-				gapSize: paras.gapSize } ) );
+		var matOpt = {transparent: true,
+					  color: paras.color === undefined ? 0x0f7f8f : paras.color,
+					  vertexShader: `
+		    varying vec2 vUv;
+		    void main() {
+		      vUv = uv;
+		      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		  }`,
+					fragmentShader: `
+		    uniform float opacity;
+			uniform float u_alpha;
+		    // uniform sampler2D tDiffuse;
+			uniform vec3 u_color;
+
+		    varying vec2 vUv;
+		    void main() {
+		      // vec4 texel = vec4(u_alpha);
+		      // gl_FragColor = opacity * u_alpha * texel;
+			  gl_FragColor = vec4(u_color, u_alpha);
+			  gl_FragColor.a = opacity * u_alpha;
+		  }` };
+
+		matOpt.uniforms = new Object();
+		matOpt.uniforms.u_alpha = new Object();
+		matOpt.uniforms.u_alpha.value = 1;
+		matOpt.uniforms.u_color = {value: new THREE.Vector3(...(paras.color || [1, 1, 0, 1])) };
+		matOpt.uniforms.opacity = new Object();
+		matOpt.uniforms.opacity.value = 1;
+
+		if (paras.linewidth !== undefined)
+			matOpt.linewidth = paras.linewidth;
+		if (paras.dashSize !== undefined)
+			matOpt.dashSize = paras.dashSize;
+		if (paras.gapSize !== undefined)
+			matOpt.gapSize = paras.gapSize;
+
+		// var linemat = new THREE.LineBasicMaterial( matOpt );
+		var linemat = new THREE.ShaderMaterial( matOpt );
+
+		var line = new THREE.Line( geomCurve, linemat );
 		line.computeLineDistances();
 
 		cmpObj3.mesh = line;
 		return {curve: line, path: points};
 	}
+	 */
 
 	/**Handling {@link AssetType.DynaSects}, generate lines of
 	 * type of RandomSects, PointSects from {@link XComponent.Obj3Type}.
@@ -698,19 +762,19 @@ export default class Thrender extends ECS.System {
 	 * 2. create the THREE.line,
 	 * 3. set line to Obj3.mesh
 	 * @param {Obj3} cmpObj3
-	 * @param {Object} paras Visual.paras, @see xgeom.generateCurve
-	 * @return {Object} {curve, path}
+	 * @param {object} paras Visual.paras, @see xgeom.generateCurve
+	 * @return {object} {curve, path}
 	 * @member Thrender.createDynaSects
 	 * @function
-	 */
 	static createDynaSects(cmpObj3, paras) {
 		var {geoms, points} = xgeom.generateDynaSects(cmpObj3, paras);
 
 		var grp = new THREE.Object3D();
 		for (var geom of geoms) {
-			var line = new THREE.Line( geom, new THREE.LineBasicMaterial( {
-				linewidth: paras.linewidth,
-				color: paras.color === undefined ? 0x0f7f8f : paras.color } ) );
+			var mopt = { color: paras.color === undefined ? 0x0f7f8f : paras.color };
+			if (paras.linewidth !== undefined)
+				mopt.linewidth = paras.linewidth;
+			var line = new THREE.Line( geom, new THREE.LineBasicMaterial( mopt ) );
 			line.computeLineDistances();
 			grp.add(line)
 		}
@@ -718,6 +782,7 @@ export default class Thrender extends ECS.System {
 		cmpObj3.mesh = line;
 		return {group: grp, points};
 	}
+	 */
 
 	/**Create object mesh, put int *cmpObj3*.
 	 * @param {Obj3} cmpObj3
@@ -855,10 +920,10 @@ export default class Thrender extends ECS.System {
 				var {geom, path} = xgeom.generateWayxz( vparas.features,
 					  vparas ? vparas.y0 || geomParaArr[0] || 0 : geomParaArr[0] || 0,
 					  vparas ? vparas.origin : undefined,
-					  vparas ? vparas.style : undefined );
+					  vparas ? vparas.geostyle : undefined );
 				g = geom;
 			}
-			else if (vparas &amp;&amp; vparas.uri){
+			else if (vparas &amp;&amp; vparas.uri) {
 				// path0 is a place holder for creating the new geometry latter.
 				// Design Notes: is place holder a solution of asynchronous loading?
 				var path0 = AssetKeepr.geojsonPaths(vparas.uri,
@@ -869,9 +934,7 @@ export default class Thrender extends ECS.System {
 							var {geom, path} = xgeom.generateWayxz( paths,
 								 vparas ? vparas.y0 || geomParaArr[0] || 0 : geomParaArr[0] || 0,
 								 vparas ? vparas.origin : undefined,
-								 vparas ? vparas.style : undefined );
-							// console.log( obj3 ); //.mesh.geometry.attributes[ 'position' ] );
-							// console.log( geom.getAttribute('position') );
+								 vparas ? vparas.geostyle : undefined );
 							if (obj3.mesh.geometry)
 								obj3.mesh.geometry.dispose();
 							obj3.mesh.geometry = geom;
@@ -884,14 +947,49 @@ export default class Thrender extends ECS.System {
 				var {geom, path} = xgeom.generateWayxz( path0,
 					  vparas ? vparas.y0 || geomParaArr[0] || 0 : geomParaArr[0] || 0,
 					  vparas ? vparas.origin : undefined,
-					  vparas ? vparas.style : undefined );
+					  vparas ? vparas.geostyle : undefined );
 				g = geom;
 			}
-			// what's the better practice for this in ECS pattern?
-			if (!obj3.datum)
-				obj3.datum = new Object();
 			obj3.datum.path = path;
 			obj3.datum.dirty = true;
+		}
+		else if (geomType === Obj3Type.Hexatile) {
+			if (vparas &amp;&amp; vparas.features) {
+				var {geom, points} = AssetKeepr.geoHexacylinder( vparas.features, {
+						radius: vparas.geostyle ? vparas.geostyle.radius || 1 : 1,
+						height: vparas.geostyle ? vparas.geostyle.height || 1 : 1,
+						geoScale: vparas.geostyle ? vparas.geostyle.scale || 1 : 1,
+						geoCentre: vparas.origin || [0, 0, 0],
+						onGroup: vparas.geostyle ? vparas.geostyle.onGroup : undefined
+					} );
+				g = geom;
+				obj3.datum.locations = points;
+				obj3.datum.dirty = true;
+			}
+			else if (vparas &amp;&amp; vparas.uri) {
+				var {geom} = AssetKeepr.geoHexacylinderAsync(vparas.uri,
+					{	count: vparas.count || 1,
+						radius: vparas.geostyle ? vparas.geostyle.radius || 1 : 1,
+						height: vparas.geostyle ? vparas.geostyle.height || 1 : 1,
+						heightName: vparas.heightName || 'height',
+						geoScale: vparas.geostyle ? vparas.geostyle.scale || 1 : 1,
+						geoCentre: vparas.origin || [0, 0, 0],
+						onGroup: vparas.geostyle ? vparas.geostyle.onGroup : undefined
+					},
+					(geom, points, count) => {
+						if (obj3.mesh) {
+							// only created mesh needing new vertices
+							if (obj3.mesh.geometry)
+								obj3.mesh.geometry.dispose();
+							obj3.mesh.geometry = geom;
+							obj3.mesh.geometry.verticesNeedUpdate = true;
+						}
+						obj3.datum.locations = points;
+						// will trigger animizer rebuild AnimType.U_PATHn_MORPH, reset by animizer
+						obj3.datum.dirty = true;
+					} );
+				g = geom;
+			}
 		}
 		else {
 			if (y > 5) {
@@ -996,7 +1094,7 @@ export default class Thrender extends ECS.System {
 	}
 
 	static replaceMaterials(mesh, vparas, materl) {
-		// Design Memo: TODO verify that sharing materail is safe
+		// Design Memo: TODO verify that sharing material is safe
 		// FIXME is this the reason of the issue (bug)?
 		if (!materl) {
 			// TODO support ShaderFlag?
@@ -1102,8 +1200,7 @@ export default class Thrender extends ECS.System {
 	 * @function
 	 */
 	static createCubeVoxel(cmpObj3, cmpVisual) {
-		// Design Memo: Adding uniforms without respect to shader type.
-		// Is this means Obj3.uniforms is orthogonal to Visual.shader?
+		// FIXME can this uniforms been orthogonal handled?
 		var uniforms = xglsl.formatUniforms(cmpVisual, cmpObj3);
 
 		var {vertexShader, fragmentShader} = xglsl.xvShader(cmpVisual.shader, cmpVisual.paras);
@@ -1144,100 +1241,6 @@ export default class Thrender extends ECS.System {
 		var mesh = new THREE.Points( geometry, material );
 		return mesh;
 	}
-
-	// /**@deprecated
-	//  * particles
-	//  */
-	// static createPracle(cmpObj3, cmpVisual) {
-	//
-	// 		let geometry = new THREE.BufferGeometry();
-	// 		var positions = [];
-	// 		var colors = [];
-	// 		var sizes = [];
-	//
-	// 		var radius = 200;
-	// 		var color = new THREE.Color();
-	// 		var particles = cmpVisual.paras &amp;&amp; cmpVisual.paras.particlesNum ? cmpVisual.paras.particlesNum : 100;
-	// 		var ppos = cmpVisual.paras &amp;&amp; cmpVisual.paras.postions ? cmpVisual.paras.positions : null;
-	// 		for (var i = 0; i &lt; particles; i++) {
-	// 			if (Array.isArray(ppos)) {
-	// 				positions.push(ppos[i * 3]);
-	// 				positions.push(ppos[i * 3 + 1]);
-	// 				positions.push(ppos[i * 3 + 2]);
-	//
-	// 			} else {
-	// 				positions.push((Math.random() * 2 - 1) * radius);
-	// 				positions.push((Math.random() * 2 - 1) * radius);
-	// 				positions.push((Math.random() * 2 - 1) * radius);
-	//
-	// 			}
-	// 			color.setHSL(i / particles, 1.0, 0.5);
-	//
-	// 			colors.push(color.r, color.g, color.b);
-	//
-	// 			sizes.push(0);
-	//
-	// 		}
-	//
-	// 		geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-	// 		geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-	// 		geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1).setUsage(THREE.DynamicDrawUsage));
-	//
-	//
-	// 		if (cmpVisual.paras &amp;&amp; cmpVisual.paras.u_tex) {
-	// 			var uniforms = {
-	// 				pointTexture: { value: new THREE.TextureLoader().load(cmpVisual.paras.u_tex) }
-	// 			};
-	//
-	// 		}
-	// 		const vertexshader = `
-	// 	   attribute float size;
-	//
-	// 	   varying vec3 vColor;
-	//
-	// 	   void main() {
-	//
-	// 		   vColor = color;
-	//
-	// 		   vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-	//
-	// 		   gl_PointSize = size ;
-	//
-	// 		   gl_Position = projectionMatrix * mvPosition;
-	//
-	// 	   }`;
-	//
-	// 		const fragmentshader = `
-	//
-	// 		   uniform sampler2D pointTexture;
-	//
-	// 		   varying vec3 vColor;
-	//
-	// 		   void main() {
-	//
-	// 			   gl_FragColor = vec4( vColor, 1.0 );
-	//
-	// 			   gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
-	//
-	// 		   }
-	// 	   `
-	// 			//console.log(pointShader);
-	// 		var shaderMaterial = new THREE.ShaderMaterial({
-	//
-	// 			uniforms: uniforms,
-	// 			vertexShader: vertexshader,
-	// 			fragmentShader: fragmentshader,
-	//
-	// 			blending: THREE.AdditiveBlending,
-	// 			depthTest: false,
-	// 			transparent: true,
-	// 			vertexColors: true
-	//
-	// 		});
-	//
-	// 		var particleSystem = new THREE.Points(geometry, shaderMaterial);
-	// 		return particleSystem;
-	// 	}
 
 	/**
 	 * @param {object} options
@@ -1389,13 +1392,320 @@ function logGlInfo (renderer) {
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#functioncubeVoxels9(paras)%257Breturn%257BvertexShader:%2560uniformfloatu_alpha;uniformvec3u_sects;uniformvec3u_box0;uniformvec3u_box1;uniformfloatu_morph1;uniformmat4u_trans1;$%257Bparas.a_dest2?'uniformvec3u_box2;uniformfloatu_morph2;uniformmat4u_trans2':''%257Dattributevec3color;attributefloatsize;$%257Bparas.a_noise?'attributefloata_noise;':''%257D//attributevec3ix;//usepositionasindexvaryingvec3vColor;varyingfloatvAlpha;vec4ix2world(vec3sects,vec3box)%257BreturnmodelViewMatrix*vec4(box*sects/u_sects,1.0);%257Dvoidmain()%257BvColor=color;vAlpha=u_alpha;vec4pos0=ix2world(position,u_box0);vec4pos1=ix2world(position,u_box1);pos0=mix(modelViewMatrix*pos0,u_trans1*pos1,u_morph1);//$%257Bparas.a_noise&&!paras.vert_scale?'pos0.xyz+=a_noise*color':''%257D//$%257Bparas.a_noise&&paras.vert_scale?'pos0.xyz+=a_noise*color*'+paras.vert_scale:''%257D$%257Bparas.a_dest2?'pos1=ix2world(position,a_box2);':''%257D$%257Bparas.a_dest2?'pos0=mix(pos0,u_trans2*pos1,u_morph2);':''%257D$%257Bparas.a_noise&&!paras.vert_scale?'pos0.xyz+=a_noise*color':''%257D$%257Bparas.a_noise&&paras.vert_scale?'pos0.xyz+=a_noise*color*'+paras.vert_scale:''%257D//vec4mvPosition=modelViewMatrix*vec4(pos,1.0);gl_PointSize=size*$%257Bparas.vert_scale%257C%257C'10.0'%257D;gl_Position=projectionMatrix*pos0;//mvPosition;//gl_Position=projectionMatrix*vec4(0.,0.,0.,1.);gl_PointSize=100000.0;%257D%2560,fragmentShader:%2560uniformsampler2Du_tex;varyingvec3vColor;varyingfloatvAlpha;voidmain()%257Bgl_FragColor=vec4(vColor,1.0);gl_FragColor=gl_FragColor*texture2D(u_tex,gl_PointCoord);gl_FragColor.a*=vAlpha;%257D%2560%257D;%257D">function cubeVoxels9(paras) {
+ return { vertexShader: `
+  uniform float u_alpha;
+  uniform vec3 u_sects;
+  uniform vec3 u_box0;
+  uniform vec3 u_box1; uniform float u_morph1; uniform mat4 u_trans1;
+  ${paras.a_dest2 ? 'uniform vec3 u_box2; uniform float u_morph2; uniform mat4 u_trans2' : ''}
+
+  attribute vec3 color;
+  attribute float size;
+  ${paras.a_noise ? 'attribute float a_noise;' : ''}
+  // attribute vec3 ix;    // use position as index
+
+  varying vec3 vColor;
+  varying float vAlpha;
+
+  vec4 ix2world(vec3 sects, vec3 box) {
+    return modelViewMatrix * vec4(box * sects / u_sects, 1.0);
+  }
+
+  void main() {
+    vColor = color;
+    vAlpha = u_alpha;
+    vec4 pos0 = ix2world(position, u_box0);
+    vec4 pos1 = ix2world(position, u_box1);
+    pos0 = mix(modelViewMatrix * pos0, u_trans1 * pos1, u_morph1);
+    // ${paras.a_noise && !paras.vert_scale ? 'pos0.xyz += a_noise * color' : ''}
+    // ${paras.a_noise &&  paras.vert_scale ? 'pos0.xyz += a_noise * color * ' + paras.vert_scale : ''}
+
+    ${paras.a_dest2 ? 'pos1 = ix2world(position, a_box2);' : ''}
+    ${paras.a_dest2 ? 'pos0 = mix(pos0, u_trans2 * pos1, u_morph2);' : ''}
+
+    ${paras.a_noise && !paras.vert_scale ? 'pos0.xyz += a_noise * color' : ''}
+    ${paras.a_noise &&  paras.vert_scale ? 'pos0.xyz += a_noise * color * ' + paras.vert_scale : ''}
+
+    //vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
+    gl_PointSize = size * ${paras.vert_scale || '10.0'};
+    gl_Position = projectionMatrix * pos0; //mvPosition;
+    // gl_Position = projectionMatrix * vec4(0., 0., 0., 1.);
+
+    gl_PointSize = 100000.0;
+  }
+  `,
+
+ fragmentShader: `
+  uniform sampler2D u_tex;
+  varying vec3 vColor;
+  varying float vAlpha;
+
+  void main() {
+    gl_FragColor = vec4( vColor, 1.0 );
+    gl_FragColor = gl_FragColor * texture2D( u_tex, gl_PointCoord );
+    gl_FragColor.a *= vAlpha;
+  } `
+ };
+}</a></li><li><a href="global.html#functiondirOrb2()%257Breturn%257BvertexShader:%2560uniformvec3wpos;uniformvec3orbScale;attributevec3a_tan;varyingvec2vUv;varyingvec3I;varyingvec3P;varyingvec3vtan;varyingvec4cent;//varyingmat3R3;varyingvec3vabc;mat3calcLookAtMatrix(vec3target,floatroll)%257Bvec3rr=vec3(sin(roll),cos(roll),0.0);vec3ww=normalize(target);vec3uu=normalize(cross(ww,rr));vec3vv=normalize(cross(uu,ww));//returnmat3(uu,vv,-ww);returnmat3(uu,vv,ww);%257Dvoidmain()%257BvUv=uv;vtan=a_tan;//gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);vec4worldPosition=modelMatrix*vec4(position,1.0);P=worldPosition.xyz;I=normalize(cameraPosition-P);mat3R3=calcLookAtMatrix(a_tan,0.);//vec4v=modelMatrix*vec4(R3*orbScale,1.);vabc=R3*orbScale;cent=modelMatrix*vec4(wpos,1.);gl_Position=projectionMatrix*viewMatrix*worldPosition;%257D%2560,fragmentShader:%2560//uniformfloatmodelAlpha;uniformfloatr;uniformvec3orbScale;varyingvec2vUv;varyingvec3P;varyingvec3vtan;varyingvec4cent;varyingvec3vabc;/**Vectordistancetoorignalpoint.https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray/vec2sdEllipsoid(vec3eye,vec3u,floatr,vec3cent,vec3abc)%257B//e=o-c,whereo=eye,c=centvec3e=eye-cent;e=e/vabc;//delta=(u.e)%255E2+r%255E2-%257Ce%257C%255E2u=normalize(u/vabc);floatdelta=pow(dot(u,e),2.)+pow(r,2.)-dot(e,e);if(delta%253C0.)returnvec2(delta);//d=-u.e+/-delta%255E0.5delta=pow(delta,0.5);returnvec2(-dot(u,e)+delta,-dot(u,e)-delta);%257DvoidmainImage(outvec4fragColor,invec2fragCoord)%257B//floatr=30.;vec3e=cameraPosition;vec3i=normalize(P-cameraPosition);//vec2dists=sdEllipsoid(e,i,r,cent.xyz,vec3(1.2,.25,.5));//vec2dists=sdEllipsoid(e,i,r,cent.xyz,orbScale);vec2dists=sdEllipsoid(e,i,r,cent.xyz,vabc);if(dists.x%253C0.0)%257B//Didn'thitanything//fragColor=mix(vec4(abs(modelAlpha)),texture2D(iChannel0,vUv),.3);fragColor=vec4(vtan,0.4);fragColor.g+=0.2;return;%257Dvec3p=e+dists.x*i;vec3n=normalize(p-cent.xyz);floatratio=abs(length(dists.x-dists.y))/(2.*r);fragColor=vec4(pow(clamp(ratio,0.001,1.),4.));%257Dvoidmain()%257BmainImage(gl_FragColor,gl_FragCoord.xy);%257D%2560%257D%257D">function dirOrb2() {
+ return {
+ vertexShader: `
+  uniform vec3 wpos;
+  uniform vec3 orbScale;
+
+  attribute vec3 a_tan;
+
+  varying vec2 vUv;
+  varying vec3 I;
+  varying vec3 P;
+  varying vec3 vtan;
+  varying vec4 cent;
+  // varying mat3 R3;
+  varying vec3 vabc;
+
+  mat3 calcLookAtMatrix(vec3 target, float roll) {
+    vec3 rr = vec3(sin(roll), cos(roll), 0.0);
+    vec3 ww = normalize(target);
+    vec3 uu = normalize(cross(ww, rr));
+    vec3 vv = normalize(cross(uu, ww));
+    // return mat3(uu, vv, -ww);
+    return mat3(uu, vv, ww);
+  }
+
+  void main() {
+    vUv = uv;
+    vtan = a_tan;
+
+    // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+
+    P = worldPosition.xyz;
+    I = normalize(cameraPosition - P);
+
+    mat3 R3 = calcLookAtMatrix(a_tan, 0.);
+    // vec4 v = modelMatrix * vec4(R3 * orbScale, 1.);
+    vabc = R3 * orbScale;
+    cent = modelMatrix * vec4(wpos, 1.);
+
+    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+  } `,
+
+ fragmentShader: `
+  // uniform float modelAlpha;
+  uniform float r;
+  uniform vec3 orbScale;
+
+  varying vec2 vUv;
+  varying vec3 P;
+  varying vec3 vtan;
+  varying vec4 cent;
+  varying vec3 vabc;
+
+  /**Vector distance  to orignal point.
+https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray
+/
+  vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 cent, vec3 abc ) {
+      // e = o - c, where o = eye, c = cent
+      vec3 e = eye - cent;
+      e = e / vabc;
+
+      // delta = (u . e)^2 + r^2 - |e|^2
+      u = normalize(u / vabc);
+
+      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
+      if (delta < 0.) return vec2(delta);
+      // d = - u.e +/- delta^0.5
+      delta = pow( delta, 0.5 );
+      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
+  }
+
+  void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+    // float r = 30.;
+    vec3 e = cameraPosition;
+    vec3 i = normalize( P - cameraPosition );
+    // vec2 dists = sdEllipsoid( e, i, r, cent.xyz, vec3(1.2, .25, .5) );
+    // vec2 dists = sdEllipsoid( e, i, r, cent.xyz, orbScale );
+    vec2 dists = sdEllipsoid( e, i, r, cent.xyz, vabc );
+
+    if (dists.x < 0.0) {
+      // Didn't hit anything
+      // fragColor = mix(vec4( abs(modelAlpha) ), texture2D(iChannel0, vUv), .3);
+      fragColor = vec4(vtan, 0.4);
+      fragColor.g += 0.2;
+      return;
+    }
+
+    vec3 p = e + dists.x * i;
+    vec3 n = normalize(p - cent.xyz);
+    float ratio = abs(length(dists.x - dists.y)) / (2. * r);
+    fragColor = vec4 ( pow( clamp(ratio, 0.001, 1.), 4. ) );
+  }
+
+  void main() {
+    mainImage(gl_FragColor, gl_FragCoord.xy);
+  }`
+ }
+}</a></li><li><a href="global.html#functionmeshColors(vparas)%257Bvarcolori='';//'uniformvec4u_color0;uniformfloatu_morph0;';varmorph='vec3morph=u_color0;';for(vari=0;i%253Cvparas.colors.length;i++)%257Bcolori+=%2560%255Cnuniformvec3u_color$%257Bi%257D;uniformfloatu_morph$%257Bi%257D;%2560;if(i%253E0)morph+=%2560%255Cnmorph=mix(morph,u_color$%257Bi%257D,u_morph$%257Bi-1%257D);%2560;%257Dif(i%253E0)morph+=%2560%255Cnmorph=mix(morph,u_color0,u_morph$%257Bi-1%257D);%2560;//debugnotes-mixColor()////working:returnvec4(0.4,0.5,0.0,0.7);//working:returnvec4(mix(u_color0,u_color1,0.1),1);//working:returnvec4(mix(u_color0,u_color1,u_morph0),1);/*working:morph=mix(u_color0,u_color1,u_morph0);morph=mix(morph,u_color2,u_morph1);returnvec4(morph,1.0);/return%257BvertexShader:%2560uniformfloatu_alpha;//uniformvec3u_color0;uniformfloatu_morph0;$%257Bcolori%257Dvaryingvec4vColor;varyingfloatvAlpha;vec4mixColor()%257B$%257Bmorph%257Dreturnvec4(morph,u_alpha);%257Dvoidmain()%257BvColor=mixColor();vAlpha=u_alpha;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1);%257D%2560,fragmentShader://%2560voidmain()%257Bgl_FragColor=vec4(1.0);%257D%2560%2560uniformsampler2Du_tex;varyingvec4vColor;varyingfloatvAlpha;voidmain()%257Bgl_FragColor=vColor;//gl_FragColor=gl_FragColor*texture2D(u_tex,gl_FragCoord);//gl_FragColor.a*=vAlpha;%257D%2560%257D%257D">function meshColors(vparas) {
+    var colori = ''; // 'uniform vec4 u_color0; uniform float u_morph0;';
+    var morph = 'vec3 morph = u_color0;';
+    for (var i = 0; i < vparas.colors.length; i++) {
+        colori += `\nuniform vec3 u_color${i}; uniform float u_morph${i};`;
+        if (i > 0)
+            morph += `\nmorph = mix(morph, u_color${i}, u_morph${i - 1});`;
+    }
+    if (i > 0)
+        morph += `\nmorph = mix(morph, u_color0, u_morph${i - 1});`;
+
+    // debug notes - mixColor()
+    //
+    // working: return vec4(0.4, 0.5, 0.0, 0.7);
+    // working: return vec4(mix(u_color0, u_color1, 0.1), 1);
+    // working: return vec4(mix(u_color0, u_color1, u_morph0), 1);
+    /* working:
+    morph = mix(u_color0, u_color1, u_morph0);
+    morph = mix(morph, u_color2, u_morph1);
+    return vec4(morph, 1.0);
+/
+    return { vertexShader:
+ `uniform float u_alpha;
+  //uniform vec3 u_color0; uniform float u_morph0;
+  ${colori}
+
+  varying vec4 vColor;
+  varying float vAlpha;
+
+  vec4 mixColor() {
+    ${morph}
+    return vec4(morph, u_alpha);
+  }
+
+  void main() {
+    vColor = mixColor();
+    vAlpha = u_alpha;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1);
+  }
+ `,
+
+        fragmentShader:
+ // `void main() { gl_FragColor = vec4(1.0); } `
+ `uniform sampler2D u_tex;
+  varying vec4 vColor;
+  varying float vAlpha;
+
+  void main() {
+    gl_FragColor = vColor;
+    // gl_FragColor = gl_FragColor * texture2D( u_tex, gl_FragCoord );
+    // gl_FragColor.a *= vAlpha;
+  } `
+ }
+}</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#staticcreateCurve(cmpObj3,paras)%257Bvar%257BgeomCurve,points%257D=xgeom.generateCurve(cmpObj3,paras);//e.g.newTHREE.Line(geometrySpline,newTHREE.LineDashedMaterial(%257Bcolor:0x0f0f0f,dashSize:1,gapSize:0.05%257D));varmatOpt=%257Btransparent:true,color:paras.color===undefined?0x0f7f8f:paras.color,vertexShader:%2560varyingvec2vUv;voidmain()%257BvUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);%257D%2560,fragmentShader:%2560uniformfloatopacity;uniformfloatu_alpha;//uniformsampler2DtDiffuse;uniformvec3u_color;varyingvec2vUv;voidmain()%257B//vec4texel=vec4(u_alpha);//gl_FragColor=opacity*u_alpha*texel;gl_FragColor=vec4(u_color,u_alpha);gl_FragColor.a=opacity*u_alpha;%257D%2560%257D;matOpt.uniforms=newObject();matOpt.uniforms.u_alpha=newObject();matOpt.uniforms.u_alpha.value=1;matOpt.uniforms.u_color=%257Bvalue:newTHREE.Vector3(...(paras.color%257C%257C%255B1,1,0,1%255D))%257D;matOpt.uniforms.opacity=newObject();matOpt.uniforms.opacity.value=1;if(paras.linewidth!==undefined)matOpt.linewidth=paras.linewidth;if(paras.dashSize!==undefined)matOpt.dashSize=paras.dashSize;if(paras.gapSize!==undefined)matOpt.gapSize=paras.gapSize;//varlinemat=newTHREE.LineBasicMaterial(matOpt);varlinemat=newTHREE.ShaderMaterial(matOpt);varline=newTHREE.Line(geomCurve,linemat);line.computeLineDistances();cmpObj3.mesh=line;return%257Bcurve:line,path:points%257D;%257D">static createCurve(cmpObj3, paras) {
+		var {geomCurve, points} = xgeom.generateCurve(cmpObj3, paras);
+
+		// e.g. new THREE.Line( geometrySpline, new THREE.LineDashedMaterial( { color: 0x0f0f0f, dashSize: 1, gapSize: 0.05 } ) );
+		var matOpt = {transparent: true,
+					  color: paras.color === undefined ? 0x0f7f8f : paras.color,
+					  vertexShader: `
+		    varying vec2 vUv;
+		    void main() {
+		      vUv = uv;
+		      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		  }`,
+					fragmentShader: `
+		    uniform float opacity;
+			uniform float u_alpha;
+		    // uniform sampler2D tDiffuse;
+			uniform vec3 u_color;
+
+		    varying vec2 vUv;
+		    void main() {
+		      // vec4 texel = vec4(u_alpha);
+		      // gl_FragColor = opacity * u_alpha * texel;
+			  gl_FragColor = vec4(u_color, u_alpha);
+			  gl_FragColor.a = opacity * u_alpha;
+		  }` };
+
+		matOpt.uniforms = new Object();
+		matOpt.uniforms.u_alpha = new Object();
+		matOpt.uniforms.u_alpha.value = 1;
+		matOpt.uniforms.u_color = {value: new THREE.Vector3(...(paras.color || [1, 1, 0, 1])) };
+		matOpt.uniforms.opacity = new Object();
+		matOpt.uniforms.opacity.value = 1;
+
+		if (paras.linewidth !== undefined)
+			matOpt.linewidth = paras.linewidth;
+		if (paras.dashSize !== undefined)
+			matOpt.dashSize = paras.dashSize;
+		if (paras.gapSize !== undefined)
+			matOpt.gapSize = paras.gapSize;
+
+		// var linemat = new THREE.LineBasicMaterial( matOpt );
+		var linemat = new THREE.ShaderMaterial( matOpt );
+
+		var line = new THREE.Line( geomCurve, linemat );
+		line.computeLineDistances();
+
+		cmpObj3.mesh = line;
+		return {curve: line, path: points};
+	}</a></li><li><a href="global.html#staticcreateDynaSects(cmpObj3,paras)%257Bvar%257Bgeoms,points%257D=xgeom.generateDynaSects(cmpObj3,paras);vargrp=newTHREE.Object3D();for(vargeomofgeoms)%257Bvarmopt=%257Bcolor:paras.color===undefined?0x0f7f8f:paras.color%257D;if(paras.linewidth!==undefined)mopt.linewidth=paras.linewidth;varline=newTHREE.Line(geom,newTHREE.LineBasicMaterial(mopt));line.computeLineDistances();grp.add(line)%257DcmpObj3.mesh=line;return%257Bgroup:grp,points%257D;%257D">static createDynaSects(cmpObj3, paras) {
+		var {geoms, points} = xgeom.generateDynaSects(cmpObj3, paras);
+
+		var grp = new THREE.Object3D();
+		for (var geom of geoms) {
+			var mopt = { color: paras.color === undefined ? 0x0f7f8f : paras.color };
+			if (paras.linewidth !== undefined)
+				mopt.linewidth = paras.linewidth;
+			var line = new THREE.Line( geom, new THREE.LineBasicMaterial( mopt ) );
+			line.computeLineDistances();
+			grp.add(line)
+		}
+
+		cmpObj3.mesh = line;
+		return {group: grp, points};
+	}</a></li><li><a href="global.html#staticgenerateDynaSects(cmpObj3,paras)%257Bswitch(cmpObj3.geom)%257BcaseObj3Type.RandomSect:thrownewXError('geom.generateLines:TODORandomSect');break;caseObj3Type.PointSects:varsects=%255B%255D;varthreeVec3s=%255B%255D;varo=Array.isArray(paras.origin)?paras.origin:%255B0,0,0%255D;vars=paras.scale===undefined?1:paras.scale;varsx,sy,sz;if(Array.isArray(s))%257Bsx=s%255B0%255D;sy=s%255B1%255D;sz=s%255B2%255D;%257Delseif(typeofs==='number')%257Bsx=sy=sz=s;%257Delsesx=sy=sz=1;for(varsegx=0;segx%253Cparas.sects.length;segx++)%257Bvarxyz=paras.sects%255Bsegx%255D%255B0%255D;varp1=newTHREE.Vector3((xyz%255B0%255D+o%255B0%255D)*sx,(xyz%255B1%255D+o%255B1%255D)*sy,(xyz%255B2%255D+o%255B2%255D)*sz);xyz=paras.sects%255Bsegx%255D%255B1%255D;varp2=newTHREE.Vector3((xyz%255B0%255D+o%255B0%255D)*sx,(xyz%255B1%255D+o%255B1%255D)*sy,(xyz%255B2%255D+o%255B2%255D)*sz);vargeom=newTHREE.BufferGeometry().setFromPoints(%255Bp1,p2%255D);threeVec3s.push(%255Bp1,p2%255D);sects.push(geom);%257Dreturn%257Bgeoms:sects,points:threeVec3s%257D;default:thrownewXError('geom.generateLines:Unsupportedlinegeometry:',cmpObj3.geom,cmpObj3);%257D%257D">static generateDynaSects(cmpObj3, paras) {
+		switch (cmpObj3.geom) {
+			case Obj3Type.RandomSect:
+				throw new XError('geom.generateLines: TODO RandomSect');
+				break;
+			case Obj3Type.PointSects:
+				var sects = [];
+				var threeVec3s = [];
+				var o = Array.isArray(paras.origin) ? paras.origin : [0, 0, 0];
+				var s = paras.scale === undefined ? 1 : paras.scale;
+				var sx, sy, sz;
+				if (Array.isArray(s)) {
+					sx = s[0]; sy = s[1]; sz = s[2];
+				}
+				else if (typeof s === 'number') {
+					sx = sy = sz = s;
+				}
+				else sx = sy = sz = 1;
+
+				for ( var segx = 0; segx < paras.sects.length; segx++ ) {
+					var xyz = paras.sects[segx][0];
+					var p1 = new THREE.Vector3( (xyz[0] + o[0]) * sx,
+												(xyz[1] + o[1]) * sy,
+												(xyz[2] + o[2]) * sz );
+					xyz = paras.sects[segx][1];
+					var p2 = new THREE.Vector3( (xyz[0] + o[0]) * sx,
+												(xyz[1] + o[1]) * sy,
+												(xyz[2] + o[2]) * sz );
+					var geom = new THREE.BufferGeometry().setFromPoints( [p1, p2] );
+					threeVec3s.push( [p1, p2] );
+					sects.push( geom );
+				}
+				return {geoms: sects, points: threeVec3s};
+			default:
+				throw new XError('geom.generateLines: Unsupported line geometry: ',
+								cmpObj3.geom, cmpObj3);
+		}
+	}</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Jun 27 2020
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Jul 12 2020
 </footer>
 
 <script> prettyPrint(); </script>

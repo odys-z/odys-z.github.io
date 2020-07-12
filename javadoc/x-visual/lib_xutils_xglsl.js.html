@@ -34,9 +34,19 @@ import {ShaderFlag, ShaderAlpha} from '../component/visual'
 import * as xutils from './xcommon'
 import AssetKeepr from './assetkeepr'
 
+import {randomParticl} from './shaders/random-particl.glsl'
+import {cubeVoxels, cubeVoxelGeom} from './shaders/cube-voxels.glsl'
+import {colorLine} from './shaders/color-line.glsl'
+import {phongMorph2} from './shaders/color-array.glsl'
+import {scaleOrb} from './shaders/orb-scale.glsl'
+import {orbGroups} from './shaders/orb-groups.glsl'
+import {worldOrbs} from './shaders/orb-world.glsl'
+import {thermalTile} from './shaders/tile-thermal.glsl'
+import {blinkStar, pointGeom} from './shaders/blink-star.glsl'
+import {fragShape} from './shaders/frag-shape.glsl'
+
 /**
  * Stub for jsdoc, a collection of common methods
- * &lt;b>NOTE: no 'xglsl.' prefix when calling functions.&lt;/b>
  * &lt;br>This class name is all in lower case. X-visual use this convention for a
  * collection of common global methods when using jsdoc generating API doc.
  * @class
@@ -68,8 +78,8 @@ export function xvShader(flag, vparas = {}) {
         case ShaderFlag.flameLight:
             s = flameLight(vparas);
             break;
-        case ShaderFlag.throbStar:
-            s = throbStar(vparas);
+        case ShaderFlag.blinkStar:
+            s = blinkStar(vparas);
             break;
         case ShaderFlag.colorArray:
             s = phongMorph2(vparas);
@@ -84,7 +94,14 @@ export function xvShader(flag, vparas = {}) {
         case ShaderFlag.orbGroups:
             s = orbGroups(vparas);
             break;
-        case ShaderFlag.frageShape:
+        case ShaderFlag.tiledOrbs:
+            // s = tileOrbs(vparas);
+            s = thermalTile(vparas);
+            break;
+        case ShaderFlag.colorLine:
+            s = colorLine(vparas);
+            break;
+        case ShaderFlag.fragShape:
             throw new XError('todo');
             break;
         case ShaderFlag.discard:
@@ -99,6 +116,20 @@ export function xvShader(flag, vparas = {}) {
         console.debug(`[5] flag: ${flag.toString(16)}, paras: `,
             vparas, '\nshaders: ', s);
     return s;
+}
+
+/**Is the shader support u_alpha?
+ * Shaders include AssetType.point, refPoint, GeomCurve, colorArray
+ * @param {ShaderFlag} shader
+ * @return {bool}
+ * @member xglsl.hasUAlpha
+ * @function
+ */
+export function hasUAlpha(shader) {
+	return  shader === ShaderFlag.randomParticles ||
+			shader === ShaderFlag.cubeVoxels ||
+			shader === ShaderFlag.colorArray ||
+			shader === ShaderFlag.colorLine;
 }
 
 /**
@@ -123,11 +154,6 @@ export function formatUniforms(visual, obj3) {
     }
     else if (visual.paras &amp;&amp; visual.paras.uniforms
         &amp;&amp; typeof visual.paras.uniforms.u_tex === 'string') {
-        // console.warn ( "formatUniforms(): takeing Visual.paras.uniforms.u_tex as uniform for shader.",
-        //                "The correct paras for u_tex is Visual.paras.u_tex.",
-        //                 visual.paras.uniforms.u_tex );
-
-        // uniforms.u_tex = { value: new THREE.TextureLoader().load(`assets/${visual.paras.uniforms.u_tex}`) };
         uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.paras.uniforms.u_tex) };
         delete visual.paras.uniforms.u_tex;
     }
@@ -148,7 +174,8 @@ export function formatUniforms(visual, obj3) {
     if (!uniforms.u_tex &amp;&amp;
         (  visual.shader === ShaderFlag.worldOrbs
         || visual.shader === ShaderFlag.scaleOrb
-        || visual.shader === ShaderFlag.orbGroups) ) {
+        || visual.shader === ShaderFlag.orbGroups
+        || visual.shader === ShaderFlag.tiledOrbs) ) {
         if (visual.asset)
             uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.asset) };
         else
@@ -159,7 +186,7 @@ export function formatUniforms(visual, obj3) {
     if (visual.paras &amp;&amp; visual.paras.uniforms)
         Object.assign(uniforms, obj2uniforms(visual.paras.uniforms));
 
-    if (visual.shader === ShaderFlag.colorArray &amp;&amp; visual.paras.colors) {
+    if (visual.shader === ShaderFlag.colorArray &amp;&amp; visual.paras &amp;&amp; visual.paras.colors) {
         // TODO should we use uniform array ?
         for (var i = 0; i &lt; visual.paras.colors.length; i++)
             uniforms[`u_color${i}`] = {value: new THREE.Vector3(...visual.paras.colors[i])};
@@ -223,7 +250,8 @@ export function formatUniforms(visual, obj3) {
                     ? new THREE.Vector3(1, 0.2, 0.2)
                     : new THREE.Vector3(os[0], os[1], os[2]) };
     }
-    else if (visual.shader === ShaderFlag.worldOrbs) {
+    else if (visual.shader === ShaderFlag.worldOrbs
+            || visual.shader === ShaderFlag.tiledOrbs) {
         var poses = [];
         var orbs = 0;
         if (visual.paras.offsets === undefined)
@@ -256,6 +284,20 @@ export function formatUniforms(visual, obj3) {
         uniforms.orbScale = { value: os === undefined
                     ? new THREE.Vector3(1, 0.2, 0.2)
                     : new THREE.Vector3(os[0], os[1], os[2]) };
+        if (visual.shader === ShaderFlag.tiledOrbs) {
+            uniforms.now = { value: 0 };
+            var groups = visual.paras.geostyle.groups || 1;
+            uniforms.speedVert = { value: new Array(groups).fill(0.01) };
+            uniforms.speedFrag = { value: new Array(groups).fill(0.01) };
+
+			var colrs = new Array();
+			var pcolrs = visual.paras.thermalColors || [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+			for (var c of pcolrs)
+				colrs.push(new THREE.Vector3(...c));
+			uniforms.thermalColors = { value: colrs };
+			uniforms.maxHeight = { value: visual.paras.geostyle.maxHeight
+						|| visual.paras.geostyle.height || 1 };
+        }
     }
     // TODO and more... see Thrender case PathTube
 
@@ -312,59 +354,6 @@ export function script2uniforms(svals, uniforms) {
     }
     uniforms = Object.assign(uniforms || new Object(), u);
     return {start: uniforms, to: v};
-}
-
-/**Get shader for ShaderFlag.randomParticles.
- * If u_morph is animated, must providing uniform vec3 &amp;amp a_target.
- * Used variables: position, color, size.
- * gl_position = mix(pos, taget, morph) + noise * dist;
- * @param {object} paras
- * paras.u_dist {float} in world
- * paras.u_morph {float}
- * paras.a_dest {vec3} in world
- * paras.a_noise {float}
- * paras.size_scale {float}
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.randomRarticl
- * @function */
-function randomParticl(paras) {
- return { vertexShader: `
-  uniform float u_alpha;
-  uniform float u_dist;
-  uniform float u_morph;
-
-  attribute vec3 color;
-  attribute float size;
-  ${paras.a_dest ? 'attribute vec3 a_dest;' : ''}
-  ${paras.a_noise ? 'attribute float a_noise;' : ''}
-
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  void main() {
-    vColor = color;
-    vAlpha = u_alpha;
-    ${!paras.a_dest &amp;&amp; !paras.a_noise ? 'vec3 pos = position * (1.0 + u_morph);' : ''}
-    ${ paras.a_dest &amp;&amp; !paras.a_noise ? 'vec3 pos = mix(position, a_dest, u_morph) + u_dist * 5.0;' : ''}
-    ${!paras.a_dest &amp;&amp; paras.a_noise ? 'vec3 pos = position + u_dist * 100 * a_noise;' : ''}
-    ${ paras.a_dest &amp;&amp; paras.a_noise ? 'vec3 pos = mix(position, a_dest, u_morph) + u_dist * 5.0 * a_noise;' : ''}
-    vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
-
-    // gl_PointSize = u_morph * ( 300.0 / -mvPosition.z );
-    gl_PointSize = size * ${paras.vert_scale || '10.0'};
-    gl_Position = projectionMatrix * mvPosition;
-  } `,
- fragmentShader: `
-  uniform sampler2D u_tex;
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  void main() {
-    gl_FragColor = vec4( vColor, 1.0 );
-    gl_FragColor = gl_FragColor * texture2D( u_tex, gl_PointCoord );
-    gl_FragColor.a *= vAlpha;
-  } `
- };
 }
 
 /**@deprecated this function can be completely covered by cubeVoxelGeom().
@@ -435,187 +424,6 @@ function testPnt(paras = {}) {
  };
 }
 
-/**Create vertex &amp; fragment shaders that can morphing between multiple positions.
- * @deprecated
- * @param {object} paras
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.cubeVoxels9
- * @function
- */
-function cubeVoxels9(paras) {
- return { vertexShader: `
-  uniform float u_alpha;
-  uniform vec3 u_sects;
-  uniform vec3 u_box0;
-  uniform vec3 u_box1; uniform float u_morph1; uniform mat4 u_trans1;
-  ${paras.a_dest2 ? 'uniform vec3 u_box2; uniform float u_morph2; uniform mat4 u_trans2' : ''}
-
-  attribute vec3 color;
-  attribute float size;
-  ${paras.a_noise ? 'attribute float a_noise;' : ''}
-  // attribute vec3 ix;    // use position as index
-
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  vec4 ix2world(vec3 sects, vec3 box) {
-    return modelViewMatrix * vec4(box * sects / u_sects, 1.0);
-  }
-
-  void main() {
-    vColor = color;
-    vAlpha = u_alpha;
-    vec4 pos0 = ix2world(position, u_box0);
-    vec4 pos1 = ix2world(position, u_box1);
-    pos0 = mix(modelViewMatrix * pos0, u_trans1 * pos1, u_morph1);
-    // ${paras.a_noise &amp;&amp; !paras.vert_scale ? 'pos0.xyz += a_noise * color' : ''}
-    // ${paras.a_noise &amp;&amp;  paras.vert_scale ? 'pos0.xyz += a_noise * color * ' + paras.vert_scale : ''}
-
-    ${paras.a_dest2 ? 'pos1 = ix2world(position, a_box2);' : ''}
-    ${paras.a_dest2 ? 'pos0 = mix(pos0, u_trans2 * pos1, u_morph2);' : ''}
-
-    ${paras.a_noise &amp;&amp; !paras.vert_scale ? 'pos0.xyz += a_noise * color' : ''}
-    ${paras.a_noise &amp;&amp;  paras.vert_scale ? 'pos0.xyz += a_noise * color * ' + paras.vert_scale : ''}
-
-    //vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
-    gl_PointSize = size * ${paras.vert_scale || '10.0'};
-    gl_Position = projectionMatrix * pos0; //mvPosition;
-    // gl_Position = projectionMatrix * vec4(0., 0., 0., 1.);
-
-    gl_PointSize = 100000.0;
-  }
-  `,
-
- fragmentShader: `
-  uniform sampler2D u_tex;
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  void main() {
-    gl_FragColor = vec4( vColor, 1.0 );
-    gl_FragColor = gl_FragColor * texture2D( u_tex, gl_PointCoord );
-    gl_FragColor.a *= vAlpha;
-  } `
- };
-}
-
-/**Create vertex &amp;amp; fragment shaders that can morphing between multiple box positions.
- * @param {object} paras
- * paras.uniforms.u_cubes array of boxes
- * param.uniforms.u_box1, 2, ... vec3 for position index (voxel index, not position)
- * param.uniforms.u_morph, morph animation, 0 - 1
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.cubeVoxels
- * @function
- */
-function cubeVoxels(paras) {
-    var boxi = ''; // 'uniform vec3 u_box0; uniform float u_morph0;';
-    var pos = '';
-    for (var i = 0; i &lt; paras.uniforms.u_cubes.length; i++) {
-        boxi += `\nuniform vec3 u_box${i}; uniform float u_morph${i};`;
-        if (i > 0)
-        pos += `pos = mix(pos, ix2model(u_sects, u_box${i}), u_morph${i-1});\n    `
-             + `p_ = mix(p_, next2model(u_sects, u_box${i}), u_morph${i-1});\n    `;
-    }
-    pos += `pos = mix(pos, ix2model(u_sects, u_box0), u_morph${i-1});\n    `;
-         + `p_ = mix(p_, next2model(u_sects, u_box0), u_morph${i-1});\n    `;
-
- return { vertexShader: `
-  uniform float u_alpha;
-  uniform vec3 u_sects;
-  //uniform vec3 u_box0; uniform float u_morph0;
-  ${boxi}
-
-  attribute vec3 color;
-
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  vec4 ix2model(vec3 sects, vec3 box) {
-    return vec4((position - sects / 2.) * box / sects, 1.);
-  }
-
-  vec3 next2model(vec3 sects, vec3 box) {
-    return (position + 1. - sects/ 2.) * box / sects;
-  }
-
-  void main() {
-    vColor = color;
-    vAlpha = u_alpha;
-
-    vec4 pos = ix2model(u_sects, u_box0);
-    vec3 p_ = next2model(u_sects, u_box0);    // also morph next grid
-    vec3 d0 = p_ - pos.xyz;                    // model 0 section length
-    // pos = mix(pos, ix2model(u_sects, u_box1), u_morph1);
-    ${pos}
-
-    gl_Position = projectionMatrix * modelViewMatrix * pos;
-    vec4 p1 = projectionMatrix * modelViewMatrix * vec4(p_, 1.);
-
-    gl_PointSize = 3.0 * ${paras.vert_scale !== undefined ? paras.vert_scale : '10.0'};
-    // scale point size as the same to section scale
-    vec3 d1 = p1.xyz - pos.xyz;
-    gl_PointSize *= length(d0) / length(d1);
-  }
-  `,
-
- fragmentShader:
- // `void main() { gl_FragColor = vec4(1.0); } `
- `uniform sampler2D u_tex;
-  varying vec3 vColor;
-  varying float vAlpha;
-
-  void main() {
-    gl_FragColor = vec4( vColor, 1.0 );
-    gl_FragColor = gl_FragColor * texture2D( u_tex, gl_PointCoord );
-    gl_FragColor.a *= vAlpha;
-  } `
- }
-};
-
-/**Get geometry buffer for cube voxels, with attributes that the shader can work,
- * each vertex has a random color, noise and size.&lt;br>
- * The uniform names are color, size (default by Three.js) and a_noise.
- * @param {object} vparas
- * u_sects: [w, h, d] segements in 3D
- * @return {THREE.BufferGeometry} the geometry buffer.
- * @member xglsl.cubeVoxels
- * @function
- */
-export function cubeVoxelGeom(vparas) {
-    var whd = vparas.u_sects;
-    var ixyz = []; // position, a.k.a vertex index
-    var colors = [];
-    var sizes = [];
-    var noise = [];
-    var count = (whd[0] + 1) * (whd[1] + 1) * (whd[2] + 1);
-    for (var iw = 0; iw &lt;= whd[0]; iw++)
-        for (var ih = 0; ih &lt;= whd[1]; ih++)
-            for (var id = 0; id &lt;= whd[2]; id++) {
-                ixyz.push(iw, ih, id);
-                var color = xutils.randomRGB();
-                colors.push( color.r, color.g, color.b );
-                sizes.push( (Math.random() * 2 - 1 ) );
-
-                if (vparas.a_noise)
-                    noise.push( (Math.random() * vparas.noise - vparas.noise / 2 ) );
-            }
-
-    var geometry = new THREE.BufferGeometry();
-    geometry.setAttribute( 'position', new THREE.Float32BufferAttribute(ixyz, 3) );
-
-    geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 )
-            .setUsage( THREE.DynamicDrawUsage ) );
-    geometry.setAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 )
-            .setUsage( THREE.DynamicDrawUsage ) );
-
-    if (vparas.a_noise)
-        geometry.setAttribute( 'a_noise', new THREE.Float32BufferAttribute( noise, 1 )
-                .setUsage( THREE.DynamicDrawUsage ) );
-
-    return geometry;
-}
-
 /**Example:
  * See docs/design memoe/shader samples
  *
@@ -627,92 +435,8 @@ function flameLight(vparas) {
     throw XError("TODO");
 }
 
-/**Example:
- * See docs/design memoe/shader samples
- *
- * @param {object} paras
- * paras.vert_scale: point scale
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.flameLight
- * @function
- */
-function throbStar(paras = {}) {
- return { vertexShader: `
-  uniform vec2 fragSize;
-  varying vec2 size;
-
-  void main() {
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    gl_PointSize = 3.0 * ${paras.vert_scale || '10.'};
-
-    if (fragSize.x == 0. &amp;&amp; fragSize.y == 0.)
-      size = vec2(gl_PointSize);
- }`,
- fragmentShader: `
-  uniform float iTime;
-
-  varying vec2 size;
-
-  float noise(vec3 p) {
-    vec3 i = floor(p);
-    vec4 a = dot(i, vec3(1., 57., 21.)) + vec4(0., 57., 21., 78.);
-    vec3 f = cos((p-i)*acos(-1.))*(-.5)+.5;
-    a = mix(sin(cos(a)*a),sin(cos(1.+a)*(1.+a)), f.x);
-    a.xy = mix(a.xz, a.yw, f.y);
-    return mix(a.x, a.y, f.z);
-  }
-
-  float sphere(vec3 p, vec4 spr) {
-    return length(spr.xyz-p) - spr.w;
-  }
-
-  float flame(vec3 p) {
-    float d = sphere(p, vec4(-0.460, -1.0, 0.0, 1.));
-    return d + (noise(p + vec3(.0, 0. * 2., .0)) + noise(p * 3.) * .5) * .25 * (p.y);
-  }
-
-  void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 size ) {
-    // can we use z for p?
-    vec4 p = 1.5 - vec4(flame(vec3(abs(fragCoord - vec2(0.5)), 0.)));
-    // vec4 p = 1.5 - vec4(flame(vec3(abs(fragCoord - size * 0.5), 0.) / 500.0));
-
-    float glow = p.w;
-    vec4 col = mix(vec4(1., .5, .1, 1.), vec4(0.1, .5, 1., 1.), p.y * .02 + .4);
-    fragColor = mix(vec4(0.), col, pow(glow * 0.75, 10.));
-  }
-
-  void main() {
-    // mainImage(gl_FragColor, gl_FragCoord.xy, size);
-    mainImage(gl_FragColor, gl_PointCoord, size);
-
-    // gl_FragColor.r = 0.5;
-    // gl_FragColor.a = max(gl_FragColor.a, 0.5);
-    // gl_FragColor = vec4(1.0);
-  }` };
-}
-
 /**
- * Get points geometry buffer for simulating flowing path.
- * @param {THREE.Vector3} point
- * @return {THREE.Geometry} point geometry
- * @member xglsl.pointGeom
- * @function
- */
-export function pointGeom(point) {
-    var geometry = new THREE.Geometry();
-    geometry.vertices.push(
-        point
-        // new THREE.Vector3( -10,  10, 0 )
-        // new THREE.Vector3( -10, -10, 0 ),
-        // new THREE.Vector3(  10, -10, 0 )
-    );
-    // geometry.faces.push( new THREE.Face3( 0, 1, 2 ) );
-    geometry.computeBoundingSphere();
-    return geometry;
-}
-
-/**
- * Get shaders for creating color-morphable materail (THREE.Material).
+ * Get shaders for creating color-morphable material (THREE.Material).
  *
  * &lt;b>Note:&lt;/b>&lt;br>
  * As this shader doesn't provide face color difference, it is replaced by
@@ -721,7 +445,6 @@ export function pointGeom(point) {
  * @return {object} {vertexShader, fragmentShader}
  * @member xglsl.meshColors
  * @function
- */
 function meshColors(vparas) {
     var colori = ''; // 'uniform vec4 u_color0; uniform float u_morph0;';
     var morph = 'vec3 morph = u_color0;';
@@ -742,7 +465,7 @@ function meshColors(vparas) {
     morph = mix(u_color0, u_color1, u_morph0);
     morph = mix(morph, u_color2, u_morph1);
     return vec4(morph, 1.0);
-    */
+    * /
     return { vertexShader:
  `uniform float u_alpha;
   //uniform vec3 u_color0; uniform float u_morph0;
@@ -777,317 +500,178 @@ function meshColors(vparas) {
   } `
  }
 }
-
-/**
- * Get shaders for creating color-morphable materail (THREE.Material).
- *
- * @param {object} paras
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.phongColorMorph
- * @function
  */
-function phongColorMorph(vparas) {
-    var colori = ''; // 'uniform vec4 u_color0; uniform float u_morph0;';
-    var morph = 'vec3 morph = u_color0;';
-    for (var i = 0; i &lt; vparas.colors.length; i++) {
-        colori += `\nuniform vec3 u_color${i}; uniform float u_morph${i};`;
-        if (i > 0)
-            morph += `\nmorph = mix(morph, u_color${i}, u_morph${i - 1});`;
-    }
-    if (i > 0)
-        morph += `\nmorph = mix(morph, u_color0, u_morph${i - 1});`;
 
-    // attribute vec3 position;
-    // attribute vec3 normal;
-    // uniform mat4 projection, modelview, normalMat;
-    // uniform int mode;   // Rendering mode
-    // uniform float Ka;   // Ambient reflection coefficient, e.g. 1.0,
-    // uniform float Kd;   // Diffuse reflection coefficient, e.g. 0.4,
-    // uniform float Ks;   // Specular reflection coefficient, e.g. 1.0,
-    // Material color
-    // uniform vec3 diffuseColor;
-    var ka = '1.0';
-    var kd = '1.0';
-    var ks = '1.0';
+// /**
+//  * orb-center = a_pos + u_tilePos + offset
+//  * uniform vec3 wpos: position offsets in world - should be in tile range for tile rendering
+//  * attribute vec3 a_loc: such as tile center in world.
+//  * @param {object} vparas paras.vert_scale [optional] number scale of vertices
+//  * @return {object} {vertexShader, fragmentShader}
+//  * @member xglsl.tiledOrbs
+//  * @function
+//  */
+// function tiledOrbs(vparas) {
+//  var orbs = vparas.offsets.length || 1;
+//  return {
+//   fragmentShader: `
+//     uniform float r[${orbs}];
+//     uniform vec4 orbColors[${orbs}];
+//
+//     uniform float whiteAlpha;
+//     uniform vec3 orbScale;
+//     uniform sampler2D u_tex;
+//
+//     varying vec2 vUv;
+//     varying vec3 P;
+//     varying vec3 vscale;
+//     varying vec4 vcent[${orbs}];
+//
+//     vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
+//       // e = o - c, where o = eye, c = center
+//       vec3 e = eye - centr;
+//       e = e / abc;
+//
+//       // delta = (u . e)^2 + r^2 - |e|^2
+//       u = normalize(u / abc);
+//
+//       float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
+//       if (delta &lt; 0.) return vec2(delta);
+//       // d = - u.e +/- delta^0.5
+//       delta = pow( delta, 0.5 );
+//       return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
+//     }
+//
+//     vec4 mainImage( in vec2 fragCoord ) {
+//       vec4 fragColor = vec4(0.);
+//       vec3 e = cameraPosition;
+//       vec3 u = normalize( P - cameraPosition );
+//
+//       for (int i = 0; i &lt; ${orbs}; i++) {
+//         vec3 ci = vcent[i].xyz;
+//         float ri = r[i];
+//         vec2 dists = sdEllipsoid( e, u, ri, ci, vscale );
+//
+//         if (dists.x &lt;= 0.00001) {
+//           ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
+//           continue;
+//         }
+//
+//         vec3 p = e + dists.x * u;
+//         vec3 n = normalize(p - ci);
+//         float ratio = abs(length(dists.x - dists.y)) / (2. * r[i]);
+//         fragColor += pow( clamp(ratio, 0.0, 1.), 4. ) * orbColors[i];
+//       }
+//       fragColor = clamp(fragColor, 0., 1.);
+//       float txAlpha = clamp(whiteAlpha, 0., 1.);
+//       fragColor.a = 1. - txAlpha;
+//
+//       vec4 texcolor = texture2D(u_tex, vUv);
+//       fragColor = mix(fragColor, texcolor, txAlpha);
+//       return fragColor;
+//     }
+//
+//     void main() {
+//       gl_FragColor += mainImage(gl_FragCoord.xy);
+//     }`,
+//
+//   vertexShader: `
+//     uniform vec3 wpos;
+//     uniform vec3 offsets[${orbs}];
+//     uniform vec3 orbScale;
+//
+//     attribute vec3 a_tan;
+//     attribute vec3 a_loc;
+//
+//     varying vec2 vUv;
+//     varying vec3 P;
+//     varying vec3 vscale;
+//     varying vec4 vcent[${orbs}];
+//
+//     void main() {
+//       vUv = uv;
+//
+//       // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+//       vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+//
+//       P = worldPosition.xyz;
+//       vscale = orbScale;
+//       for (int i = 0; i &lt; ${orbs}; i++) {
+//         vcent[i] = modelMatrix * vec4(a_loc + wpos + offsets[i], 1.);
+//       }
+//
+//       gl_Position = projectionMatrix * viewMatrix * worldPosition;
+//     } `
+//  }
+// }
 
-    return { vertexShader:
-  `    uniform float shininessVal; // Shininess, e.g. 80
-    uniform vec3 ambientColor;
-    uniform vec3 specularColor;
-    uniform vec3 u_lightPos; // Light position
-    uniform float u_alpha;
+export {cubeVoxelGeom, pointGeom}
+</code></pre>
+        </article>
+    </section>
 
-    ${colori}
 
-    varying vec3 normalInterp;
-    varying vec3 vertPos;
-    varying vec4 vColor; //color
-    varying float vAlpha;
 
-    vec3 morphColors() {
-        ${morph}
-        return morph;
-    }
 
-    void main(){
-        vAlpha = u_alpha;
-        float Ka = ${ka};
-        float Kd = ${kd};
-        float Ks = ${ks};
+</div>
 
-        vec4 vertPos4 = modelViewMatrix * vec4(position, 1.0);
-        vertPos = vec3(vertPos4) / vertPos4.w;
-        // normalInterp = vec3(modelMatrix  * vec4(normal, 0.0));
-        // normalInterp = vec3(normalMatrix * vec4(normal, 0.0)); // original
-           normalInterp = normalMatrix * normal; // three.js normalMatrix is 3 x 3
-        gl_Position = projectionMatrix * vertPos4;
+<nav>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#functioncubeVoxels9(paras)%257Breturn%257BvertexShader:%2560uniformfloatu_alpha;uniformvec3u_sects;uniformvec3u_box0;uniformvec3u_box1;uniformfloatu_morph1;uniformmat4u_trans1;$%257Bparas.a_dest2?'uniformvec3u_box2;uniformfloatu_morph2;uniformmat4u_trans2':''%257Dattributevec3color;attributefloatsize;$%257Bparas.a_noise?'attributefloata_noise;':''%257D//attributevec3ix;//usepositionasindexvaryingvec3vColor;varyingfloatvAlpha;vec4ix2world(vec3sects,vec3box)%257BreturnmodelViewMatrix*vec4(box*sects/u_sects,1.0);%257Dvoidmain()%257BvColor=color;vAlpha=u_alpha;vec4pos0=ix2world(position,u_box0);vec4pos1=ix2world(position,u_box1);pos0=mix(modelViewMatrix*pos0,u_trans1*pos1,u_morph1);//$%257Bparas.a_noise&&!paras.vert_scale?'pos0.xyz+=a_noise*color':''%257D//$%257Bparas.a_noise&&paras.vert_scale?'pos0.xyz+=a_noise*color*'+paras.vert_scale:''%257D$%257Bparas.a_dest2?'pos1=ix2world(position,a_box2);':''%257D$%257Bparas.a_dest2?'pos0=mix(pos0,u_trans2*pos1,u_morph2);':''%257D$%257Bparas.a_noise&&!paras.vert_scale?'pos0.xyz+=a_noise*color':''%257D$%257Bparas.a_noise&&paras.vert_scale?'pos0.xyz+=a_noise*color*'+paras.vert_scale:''%257D//vec4mvPosition=modelViewMatrix*vec4(pos,1.0);gl_PointSize=size*$%257Bparas.vert_scale%257C%257C'10.0'%257D;gl_Position=projectionMatrix*pos0;//mvPosition;//gl_Position=projectionMatrix*vec4(0.,0.,0.,1.);gl_PointSize=100000.0;%257D%2560,fragmentShader:%2560uniformsampler2Du_tex;varyingvec3vColor;varyingfloatvAlpha;voidmain()%257Bgl_FragColor=vec4(vColor,1.0);gl_FragColor=gl_FragColor*texture2D(u_tex,gl_PointCoord);gl_FragColor.a*=vAlpha;%257D%2560%257D;%257D">function cubeVoxels9(paras) {
+ return { vertexShader: `
+  uniform float u_alpha;
+  uniform vec3 u_sects;
+  uniform vec3 u_box0;
+  uniform vec3 u_box1; uniform float u_morph1; uniform mat4 u_trans1;
+  ${paras.a_dest2 ? 'uniform vec3 u_box2; uniform float u_morph2; uniform mat4 u_trans2' : ''}
 
-        vec3 N = normalize(normalInterp);
-        vec3 L = normalize(u_lightPos - vertPos);
+  attribute vec3 color;
+  attribute float size;
+  ${paras.a_noise ? 'attribute float a_noise;' : ''}
+  // attribute vec3 ix;    // use position as index
 
-        // Lambert's cosine law
-        float lambertian = max(dot(N, L), 0.0);
-        float specular = 0.0;
-        if(lambertian > 0.0) {
-            vec3 R = reflect(-L, N);      // Reflected light vector
-            vec3 V = normalize(-vertPos); // Vector to viewer
-            // Compute the specular term
-            float specAngle = max(dot(R, V), 0.0);
-            specular = pow(specAngle, shininessVal);
+  varying vec3 vColor;
+  varying float vAlpha;
 
-            // debug
-            // L = V;
-            specular = pow(specAngle, 1.0);
-        }
+  vec4 ix2world(vec3 sects, vec3 box) {
+    return modelViewMatrix * vec4(box * sects / u_sects, 1.0);
+  }
 
-        vec3 diffuseColor = morphColors();
+  void main() {
+    vColor = color;
+    vAlpha = u_alpha;
+    vec4 pos0 = ix2world(position, u_box0);
+    vec4 pos1 = ix2world(position, u_box1);
+    pos0 = mix(modelViewMatrix * pos0, u_trans1 * pos1, u_morph1);
+    // ${paras.a_noise && !paras.vert_scale ? 'pos0.xyz += a_noise * color' : ''}
+    // ${paras.a_noise &&  paras.vert_scale ? 'pos0.xyz += a_noise * color * ' + paras.vert_scale : ''}
 
-        vColor = vec4(Ka * ambientColor +
-                    Kd * lambertian * diffuseColor +
-                    Ks * specular * specularColor, u_alpha); // u_alpha = vparas.uniforms.u_alpha
-        // working: vColor = vec4(L * Ka, 1.0);
-        // working with normalMatrix: vColor = vec4(Kd * lambertian);
-        // working with normalMatrix: vColor = vec4(Ks * specular, 0.1, 0.2, 1.0);
-    }
+    ${paras.a_dest2 ? 'pos1 = ix2world(position, a_box2);' : ''}
+    ${paras.a_dest2 ? 'pos0 = mix(pos0, u_trans2 * pos1, u_morph2);' : ''}
+
+    ${paras.a_noise && !paras.vert_scale ? 'pos0.xyz += a_noise * color' : ''}
+    ${paras.a_noise &&  paras.vert_scale ? 'pos0.xyz += a_noise * color * ' + paras.vert_scale : ''}
+
+    //vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
+    gl_PointSize = size * ${paras.vert_scale || '10.0'};
+    gl_Position = projectionMatrix * pos0; //mvPosition;
+    // gl_Position = projectionMatrix * vec4(0., 0., 0., 1.);
+
+    gl_PointSize = 100000.0;
+  }
   `,
-    fragmentShader:
-  `
-    uniform sampler2D u_tex;
-    varying vec4 vColor;
-    varying float vAlpha;
 
-    void main() {
-        gl_FragColor = vColor;
-        // gl_FragColor = gl_FragColor * texture2D( u_tex, gl_FragCoord );
-        // gl_FragColor.a *= vAlpha;
-    }
-  `};
-}
+ fragmentShader: `
+  uniform sampler2D u_tex;
+  varying vec3 vColor;
+  varying float vAlpha;
 
-/**Get a shader that can be morphed with colors and textures.&lt;br>
- * Test page: test/html/morph-color.html&lt;br>
- * ShaderFlag: colorArray&lt;br>
- * See test page for different mixing mode results.
- * @param {object} vparas &lt;pre>{
-   texMix: vparas.texMix - ShaderAlpha, multiply | additive | mix, see {@link XComponent.ShaderAlpha}
-   uniforms: {
-     ambientColor: vec3
-     specularColor: vec3
-     u_lightPos: vec3 - light direction
-     u_alpha: float - object color alpha
-   } }&lt;/pre>
-*/
-function phongMorph2(vparas) {
-    // array uniform example:
-    // https://stackoverflow.com/questions/60154858/rotate-a-texture-map-on-only-one-face-of-a-cube/60158820#60158820
-    var tex = vparas.u_tex;
-    var colr = vparas.colors;
-
-    if (!colr || tex &amp;&amp; !Array.isArray(tex)
-        || !Array.isArray(colr)
-        || tex &amp;&amp; colr.length != tex.length
-        || colr.length &lt;= 0) {
-        console.error('paras: ', vparas);
-        throw new xutils.XError(`paras.u_tex and paras.colors not matching (required at least one color or texture): ${vparas}`);
-    }
-
-    var len = colr.length;
-    // u_tex can be eighter empty or same length with colors
-    var fragUnis = tex ? `uniform sampler2D u_tex[${len}];` : '';
-    var vertUnis = `uniform vec3 u_color[${len}];`;
-    var bothUnis = '';
-    var morphvert = '';
-
-    for (var i = 0; i &lt; len; i++) {
-        bothUnis += `\nuniform float u_morph${i};`;
-        if (i > 0)
-            // vec3 colori = u_color[0];
-            morphvert += `\ncolori = blend(colori, u_color[${i}], u_morph${i - 1});`;
-    }
-    if (i > 0)
-        morphvert += `\ncolori = blend(colori, u_color[0], u_morph${len - 1});`;
-
-    var morphfrag = '';
-    if ( tex ) {
-        // len > 0
-        morphfrag = `
-            tex0 = texture2D( u_tex[0], vUv );`;
-        for (var i = 1; i &lt; len; i++) {
-            morphfrag += `
-            texi = texture2D( u_tex[${i}], vUv );
-            if (texi.a > 0.01)
-                tex0 = blend( tex0, texi, u_morph${i-1} );` ;
-        }
-        if (len > 1)
-            morphfrag += `
-            texi = texture2D( u_tex[0], vUv );
-            tex0 = blend(tex0, texi, u_morph${len - 1});` ;
-    }
-    else morphfrag = `        tex0 = vColor;`;
-
-    // vec4 blend(txa, txb, t);
-    var statements = '';
-    if (vparas.texMix &amp; ShaderAlpha.product) {
-        statements = `clr = txa * txb;`;
-    }
-    if (vparas.texMix &amp; ShaderAlpha.multiply) {
-        statements = `clr = txa * txb * t;`;
-    }
-    if (vparas.texMix &amp; ShaderAlpha.differential) {
-        statements = `clr = txa * abs(0.5 - t) + txb * abs(t - 0.5);`;
-    }
-    else if (vparas.texMix &amp; ShaderAlpha.additive) {
-        // default ShaderAlpha.mix
-        statements = `clr = clamp(txa * (1.0 - t) + txb * t, 0.0, 1.0);`;
-    }
-    else {
-        statements = `clr = mix(txa, txb, t);`;
-    }
-
-    var vertBlender = `vec3 blend(vec3 txa, vec3 txb, float t) {
-        vec3 clr = vec3(0.4);
-        ${statements}
-        return clr;
-    } `;
-
-    var fragBlender = `vec4 blend(vec4 txa, vec4 txb, float t) {
-        vec4 clr = vec4(0.4);
-        ${statements}
-        return clr;
-    } `;
-
-    // uniform int mode;   // Rendering mode
-    // Material color
-    // uniform vec3 diffuseColor;
-    var ka = '1.0';   // Ambient reflection coefficient, e.g. 1.0,
-    var kd = '1.0';   // Diffuse reflection coefficient, e.g. 0.4,
-    var ks = '1.0';   // Specular reflection coefficient, e.g. 1.0,
-
-    return {
-  vertexShader: `
-    uniform float n;
-    uniform float shininessVal; // Shininess, e.g. 80
-    uniform vec3 ambientColor;
-    uniform vec3 specularColor;
-    uniform vec3 u_lightPos; // Light position
-    uniform float u_alpha;
-
-    ${vertUnis}
-    ${bothUnis}
-
-    varying vec3 normalInterp;
-    varying vec3 vertPos;
-    varying vec4 vColor;
-    varying float vAlpha;
-    varying vec2 vUv;
-
-    ${vertBlender}
-    vec3 morphColors() {
-        vec3 colori = u_color[0];
-        ${morphvert}
-        return colori;
-    }
-
-    void main(){
-        vUv = uv;
-        vAlpha = u_alpha;
-        float Ka = ${ka};
-        float Kd = ${kd};
-        float Ks = ${ks};
-
-        vec4 vertPos4 = modelViewMatrix * vec4(position, 1.0);
-        vertPos = vec3(vertPos4) / vertPos4.w;
-        // normalInterp = vec3(modelMatrix  * vec4(normal, 0.0));
-        // normalInterp = vec3(normalMatrix * vec4(normal, 0.0)); // original
-        normalInterp = normalMatrix * normal; // three.js normalMatrix is 3 x 3
-        gl_Position = projectionMatrix * vertPos4;
-
-        vec3 N = normalize(normalInterp);
-        vec3 L = normalize(u_lightPos - vertPos);
-
-        // Lambert's cosine law
-        float lambertian = max(dot(N, L), 0.0);
-        float specular = 0.0;
-        if(lambertian > 0.0) {
-            vec3 R = reflect(-L, N);      // Reflected light vector
-            vec3 V = normalize(-vertPos); // Vector to viewer
-            // Compute the specular term
-            float specAngle = max(dot(R, V), 0.0);
-            specular = pow(specAngle, shininessVal);
-
-            // debug
-            // L = V;
-            specular = pow(specAngle, 1.0);
-        }
-
-        vec3 diffuseColor = morphColors();
-
-        vColor = vec4(Ka * ambientColor +
-                    Kd * lambertian * diffuseColor +
-                    Ks * specular * specularColor, u_alpha); // u_alpha = vparas.uniforms.u_alpha
-    }
-  `,
-        // useful debug lines:
-        // working vColor = vec4(L * Ka, u_morph0);
-        // working with normalMatrix: vColor = vec4(Kd * lambertian);
-        // working with normalMatrix: vColor = vec4(Ks * specular, 0.1, 0.2, 1.0);
-
-  fragmentShader: `
-    ${fragUnis}
-    ${bothUnis}
-
-    uniform float u_texWeight;
-
-    varying vec4 vColor;
-    varying float vAlpha;
-    varying vec2 vUv;
-
-    ${fragBlender}
-    vec4 mixTexi() {
-        vec4 tex0 = vec4(0.0);
-        vec4 texi = vec4(0.0);
-        ${morphfrag}
-        if (tex0.a &lt; 0.01)
-            discard;
-        return tex0;
-    }
-
-    void main() {
-        // gl_FragColor = vColor;
-        // gl_FragColor = mix(gl_FragColor, mixTexi(), u_texWeight);
-        gl_FragColor = mix( vColor, mixTexi(), u_texWeight );
-    }
-  `};
-}
-
-/**Get shader of scaled orb, with respect to vertex dir &amp; cent attribute
- * @deprecated replaced by scaleOrb?
- * @param {object} paras paras.vert_scale [optional] number scale of vertices
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.dirOrb2
- * @function
- */
-function dirOrb2() {
+  void main() {
+    gl_FragColor = vec4( vColor, 1.0 );
+    gl_FragColor = gl_FragColor * texture2D( u_tex, gl_PointCoord );
+    gl_FragColor.a *= vAlpha;
+  } `
+ };
+}</a></li><li><a href="global.html#functiondirOrb2()%257Breturn%257BvertexShader:%2560uniformvec3wpos;uniformvec3orbScale;attributevec3a_tan;varyingvec2vUv;varyingvec3I;varyingvec3P;varyingvec3vtan;varyingvec4cent;//varyingmat3R3;varyingvec3vabc;mat3calcLookAtMatrix(vec3target,floatroll)%257Bvec3rr=vec3(sin(roll),cos(roll),0.0);vec3ww=normalize(target);vec3uu=normalize(cross(ww,rr));vec3vv=normalize(cross(uu,ww));//returnmat3(uu,vv,-ww);returnmat3(uu,vv,ww);%257Dvoidmain()%257BvUv=uv;vtan=a_tan;//gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);vec4worldPosition=modelMatrix*vec4(position,1.0);P=worldPosition.xyz;I=normalize(cameraPosition-P);mat3R3=calcLookAtMatrix(a_tan,0.);//vec4v=modelMatrix*vec4(R3*orbScale,1.);vabc=R3*orbScale;cent=modelMatrix*vec4(wpos,1.);gl_Position=projectionMatrix*viewMatrix*worldPosition;%257D%2560,fragmentShader:%2560//uniformfloatmodelAlpha;uniformfloatr;uniformvec3orbScale;varyingvec2vUv;varyingvec3P;varyingvec3vtan;varyingvec4cent;varyingvec3vabc;/**Vectordistancetoorignalpoint.https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray/vec2sdEllipsoid(vec3eye,vec3u,floatr,vec3cent,vec3abc)%257B//e=o-c,whereo=eye,c=centvec3e=eye-cent;e=e/vabc;//delta=(u.e)%255E2+r%255E2-%257Ce%257C%255E2u=normalize(u/vabc);floatdelta=pow(dot(u,e),2.)+pow(r,2.)-dot(e,e);if(delta%253C0.)returnvec2(delta);//d=-u.e+/-delta%255E0.5delta=pow(delta,0.5);returnvec2(-dot(u,e)+delta,-dot(u,e)-delta);%257DvoidmainImage(outvec4fragColor,invec2fragCoord)%257B//floatr=30.;vec3e=cameraPosition;vec3i=normalize(P-cameraPosition);//vec2dists=sdEllipsoid(e,i,r,cent.xyz,vec3(1.2,.25,.5));//vec2dists=sdEllipsoid(e,i,r,cent.xyz,orbScale);vec2dists=sdEllipsoid(e,i,r,cent.xyz,vabc);if(dists.x%253C0.0)%257B//Didn'thitanything//fragColor=mix(vec4(abs(modelAlpha)),texture2D(iChannel0,vUv),.3);fragColor=vec4(vtan,0.4);fragColor.g+=0.2;return;%257Dvec3p=e+dists.x*i;vec3n=normalize(p-cent.xyz);floatratio=abs(length(dists.x-dists.y))/(2.*r);fragColor=vec4(pow(clamp(ratio,0.001,1.),4.));%257Dvoidmain()%257BmainImage(gl_FragColor,gl_FragCoord.xy);%257D%2560%257D%257D">function dirOrb2() {
  return {
  vertexShader: `
   uniform vec3 wpos;
@@ -1142,8 +726,8 @@ function dirOrb2() {
   varying vec3 vabc;
 
   /**Vector distance  to orignal point.
-   * https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray
-   */
+https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray
+/
   vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 cent, vec3 abc ) {
       // e = o - c, where o = eye, c = cent
       vec3 e = eye - cent;
@@ -1153,7 +737,7 @@ function dirOrb2() {
       u = normalize(u / vabc);
 
       float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
-      if (delta &lt; 0.) return vec2(delta);
+      if (delta < 0.) return vec2(delta);
       // d = - u.e +/- delta^0.5
       delta = pow( delta, 0.5 );
       return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
@@ -1167,7 +751,7 @@ function dirOrb2() {
     // vec2 dists = sdEllipsoid( e, i, r, cent.xyz, orbScale );
     vec2 dists = sdEllipsoid( e, i, r, cent.xyz, vabc );
 
-    if (dists.x &lt; 0.0) {
+    if (dists.x < 0.0) {
       // Didn't hit anything
       // fragColor = mix(vec4( abs(modelAlpha) ), texture2D(iChannel0, vUv), .3);
       fragColor = vec4(vtan, 0.4);
@@ -1185,434 +769,167 @@ function dirOrb2() {
     mainImage(gl_FragColor, gl_FragCoord.xy);
   }`
  }
-}
-
-/**Get shader of scaled orb, with respect to vertex dir &amp; cent attribute
- * @param {object} paras paras.vert_scale [optional] number scale of vertices
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.scaleOrb
- * @function
- */
-function scaleOrb(vparas) {
- return { fragmentShader: `
-  uniform float r;
-  uniform float whiteAlpha;
-  uniform vec3 orbScale;
-  uniform sampler2D u_tex;
-
-  varying vec2 vUv;
-  varying vec3 P;
-  varying vec3 vtan;
-  varying vec3 vscale;
-  varying vec4 cent;
-  varying mat3 R3;
-
-  /**Vector distance  to orignal point.
-   * https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray
-   */
-  vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 cent, vec3 abc ) {
-      // abc = normalize(normalize(vtan) * normalize(abc));
-
-      // e = o - c, where o = eye, c = cent
-      vec3 e = eye - cent;
-      e = e / abc;
-
-      // delta = (u . e)^2 + r^2 - |e|^2
-      u = normalize(u / abc);
-
-      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
-      if (delta &lt; 0.) return vec2(delta);
-      // d = - u.e +/- delta^0.5
-      delta = pow( delta, 0.5 );
-      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
-  }
-
-  void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-    vec3 e = cameraPosition;
-    vec3 i = normalize( P - cameraPosition );
-    vec2 dists = sdEllipsoid( e, i, r, cent.xyz, vscale );
-
-    fragColor = texture2D(u_tex, vUv);
-    fragColor.a = clamp(whiteAlpha, 0.0, 1.);
-    if (dists.x &lt; 0.0) {
-      ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
-      return;
+}</a></li><li><a href="global.html#functionmeshColors(vparas)%257Bvarcolori='';//'uniformvec4u_color0;uniformfloatu_morph0;';varmorph='vec3morph=u_color0;';for(vari=0;i%253Cvparas.colors.length;i++)%257Bcolori+=%2560%255Cnuniformvec3u_color$%257Bi%257D;uniformfloatu_morph$%257Bi%257D;%2560;if(i%253E0)morph+=%2560%255Cnmorph=mix(morph,u_color$%257Bi%257D,u_morph$%257Bi-1%257D);%2560;%257Dif(i%253E0)morph+=%2560%255Cnmorph=mix(morph,u_color0,u_morph$%257Bi-1%257D);%2560;//debugnotes-mixColor()////working:returnvec4(0.4,0.5,0.0,0.7);//working:returnvec4(mix(u_color0,u_color1,0.1),1);//working:returnvec4(mix(u_color0,u_color1,u_morph0),1);/*working:morph=mix(u_color0,u_color1,u_morph0);morph=mix(morph,u_color2,u_morph1);returnvec4(morph,1.0);/return%257BvertexShader:%2560uniformfloatu_alpha;//uniformvec3u_color0;uniformfloatu_morph0;$%257Bcolori%257Dvaryingvec4vColor;varyingfloatvAlpha;vec4mixColor()%257B$%257Bmorph%257Dreturnvec4(morph,u_alpha);%257Dvoidmain()%257BvColor=mixColor();vAlpha=u_alpha;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1);%257D%2560,fragmentShader://%2560voidmain()%257Bgl_FragColor=vec4(1.0);%257D%2560%2560uniformsampler2Du_tex;varyingvec4vColor;varyingfloatvAlpha;voidmain()%257Bgl_FragColor=vColor;//gl_FragColor=gl_FragColor*texture2D(u_tex,gl_FragCoord);//gl_FragColor.a*=vAlpha;%257D%2560%257D%257D">function meshColors(vparas) {
+    var colori = ''; // 'uniform vec4 u_color0; uniform float u_morph0;';
+    var morph = 'vec3 morph = u_color0;';
+    for (var i = 0; i < vparas.colors.length; i++) {
+        colori += `\nuniform vec3 u_color${i}; uniform float u_morph${i};`;
+        if (i > 0)
+            morph += `\nmorph = mix(morph, u_color${i}, u_morph${i - 1});`;
     }
+    if (i > 0)
+        morph += `\nmorph = mix(morph, u_color0, u_morph${i - 1});`;
 
-    vec3 p = e + dists.x * i;
-    vec3 n = normalize(p - cent.xyz);
-    float ratio = abs(length(dists.x - dists.y)) / (2. * r);
-    fragColor += vec4 ( pow( clamp(ratio, 0.0, 1.), 4. ) );
-    fragColor = clamp(fragColor, 0., 1.);
+    // debug notes - mixColor()
+    //
+    // working: return vec4(0.4, 0.5, 0.0, 0.7);
+    // working: return vec4(mix(u_color0, u_color1, 0.1), 1);
+    // working: return vec4(mix(u_color0, u_color1, u_morph0), 1);
+    /* working:
+    morph = mix(u_color0, u_color1, u_morph0);
+    morph = mix(morph, u_color2, u_morph1);
+    return vec4(morph, 1.0);
+/
+    return { vertexShader:
+ `uniform float u_alpha;
+  //uniform vec3 u_color0; uniform float u_morph0;
+  ${colori}
+
+  varying vec4 vColor;
+  varying float vAlpha;
+
+  vec4 mixColor() {
+    ${morph}
+    return vec4(morph, u_alpha);
   }
 
   void main() {
-    mainImage(gl_FragColor, gl_FragCoord.xy);
-  }`,
+    vColor = mixColor();
+    vAlpha = u_alpha;
 
-  vertexShader: `
-  uniform vec3 wpos;
-  uniform vec3 orbScale;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1);
+  }
+ `,
 
-  attribute vec3 a_tan;
-
-  varying vec2 vUv;
-  varying vec3 I;
-  varying vec3 P;
-  varying vec3 vtan;
-  varying vec3 vscale;
-  varying vec4 cent;
-  varying mat3 R3;
+        fragmentShader:
+ // `void main() { gl_FragColor = vec4(1.0); } `
+ `uniform sampler2D u_tex;
+  varying vec4 vColor;
+  varying float vAlpha;
 
   void main() {
-    vUv = uv;
-    vec4 v = projectionMatrix * modelViewMatrix * vec4( a_tan, 1.0 );
-    vtan = v.xyz;
-
-    // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-
-    P = worldPosition.xyz;
-    I = normalize(cameraPosition - P);
-    vscale = orbScale;
-    cent = modelMatrix * vec4(wpos, 1.);
-
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
+    gl_FragColor = vColor;
+    // gl_FragColor = gl_FragColor * texture2D( u_tex, gl_FragCoord );
+    // gl_FragColor.a *= vAlpha;
   } `
  }
-}
+}</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#staticcreateCurve(cmpObj3,paras)%257Bvar%257BgeomCurve,points%257D=xgeom.generateCurve(cmpObj3,paras);//e.g.newTHREE.Line(geometrySpline,newTHREE.LineDashedMaterial(%257Bcolor:0x0f0f0f,dashSize:1,gapSize:0.05%257D));varmatOpt=%257Btransparent:true,color:paras.color===undefined?0x0f7f8f:paras.color,vertexShader:%2560varyingvec2vUv;voidmain()%257BvUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);%257D%2560,fragmentShader:%2560uniformfloatopacity;uniformfloatu_alpha;//uniformsampler2DtDiffuse;uniformvec3u_color;varyingvec2vUv;voidmain()%257B//vec4texel=vec4(u_alpha);//gl_FragColor=opacity*u_alpha*texel;gl_FragColor=vec4(u_color,u_alpha);gl_FragColor.a=opacity*u_alpha;%257D%2560%257D;matOpt.uniforms=newObject();matOpt.uniforms.u_alpha=newObject();matOpt.uniforms.u_alpha.value=1;matOpt.uniforms.u_color=%257Bvalue:newTHREE.Vector3(...(paras.color%257C%257C%255B1,1,0,1%255D))%257D;matOpt.uniforms.opacity=newObject();matOpt.uniforms.opacity.value=1;if(paras.linewidth!==undefined)matOpt.linewidth=paras.linewidth;if(paras.dashSize!==undefined)matOpt.dashSize=paras.dashSize;if(paras.gapSize!==undefined)matOpt.gapSize=paras.gapSize;//varlinemat=newTHREE.LineBasicMaterial(matOpt);varlinemat=newTHREE.ShaderMaterial(matOpt);varline=newTHREE.Line(geomCurve,linemat);line.computeLineDistances();cmpObj3.mesh=line;return%257Bcurve:line,path:points%257D;%257D">static createCurve(cmpObj3, paras) {
+		var {geomCurve, points} = xgeom.generateCurve(cmpObj3, paras);
 
-/**Get shader of a sequnce of orbs, with respect to vertex dir &amp; cent attribute
- * Test page: test/html/map3d/geopath-road.html&lt;br>
- * ShaderFlag: worldOrbs
-  &lt;pre>uniform float r;
-  uniform float whiteAlpha;
-  uniform sampler2D u_tex;
-  uniform vec3 wpos;
-  uniform vec3 offsets[${orbs}];
-  uniform vec3 orbScale;
-  uniform float r[${orbs}];
-  uniform vec4 orbColors[${orbs}];
+		// e.g. new THREE.Line( geometrySpline, new THREE.LineDashedMaterial( { color: 0x0f0f0f, dashSize: 1, gapSize: 0.05 } ) );
+		var matOpt = {transparent: true,
+					  color: paras.color === undefined ? 0x0f7f8f : paras.color,
+					  vertexShader: `
+		    varying vec2 vUv;
+		    void main() {
+		      vUv = uv;
+		      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+		  }`,
+					fragmentShader: `
+		    uniform float opacity;
+			uniform float u_alpha;
+		    // uniform sampler2D tDiffuse;
+			uniform vec3 u_color;
 
-  attribute vec3 a_tan;
-  attribute vec3 a_pos;&lt;/pre>
- *
- * sub function:&lt;br>
- * vec2 sdEllipsoid(): Vector distance  to orignal point.
- * param vec3 eye - raycast origin
- * param vec3 u - ray direction
- * param float r - orb radius
- * param vec3 cnetr - orb center
- * param vec3 abc - orb x y z scale
- * return vec2 distances where ray intercecting ellipsoid; less than zero if not.
- * see https://math.stackexchange.com/questions/778171/intersection-of-ellipsoid-with-ray
- * @param {object} paras paras.vert_scale [optional] number scale of vertices
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.worldOrbs
- * @function
- */
-function worldOrbs(vparas) {
- var orbs = vparas.offsets.length || 1;
- return { fragmentShader: `
-  uniform float r[${orbs}];
-  uniform vec4 orbColors[${orbs}];
+		    varying vec2 vUv;
+		    void main() {
+		      // vec4 texel = vec4(u_alpha);
+		      // gl_FragColor = opacity * u_alpha * texel;
+			  gl_FragColor = vec4(u_color, u_alpha);
+			  gl_FragColor.a = opacity * u_alpha;
+		  }` };
 
-  uniform float whiteAlpha;
-  uniform vec3 orbScale;
-  uniform sampler2D u_tex;
+		matOpt.uniforms = new Object();
+		matOpt.uniforms.u_alpha = new Object();
+		matOpt.uniforms.u_alpha.value = 1;
+		matOpt.uniforms.u_color = {value: new THREE.Vector3(...(paras.color || [1, 1, 0, 1])) };
+		matOpt.uniforms.opacity = new Object();
+		matOpt.uniforms.opacity.value = 1;
 
-  varying vec2 vUv;
-  varying vec3 P;
-  varying vec3 vscale;
-  varying vec4 cent[${orbs}];
+		if (paras.linewidth !== undefined)
+			matOpt.linewidth = paras.linewidth;
+		if (paras.dashSize !== undefined)
+			matOpt.dashSize = paras.dashSize;
+		if (paras.gapSize !== undefined)
+			matOpt.gapSize = paras.gapSize;
 
-  vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
-      // e = o - c, where o = eye, c = center
-      vec3 e = eye - centr;
-      e = e / abc;
+		// var linemat = new THREE.LineBasicMaterial( matOpt );
+		var linemat = new THREE.ShaderMaterial( matOpt );
 
-      // delta = (u . e)^2 + r^2 - |e|^2
-      u = normalize(u / abc);
+		var line = new THREE.Line( geomCurve, linemat );
+		line.computeLineDistances();
 
-      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
-      if (delta &lt; 0.) return vec2(delta);
-      // d = - u.e +/- delta^0.5
-      delta = pow( delta, 0.5 );
-      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
-  }
+		cmpObj3.mesh = line;
+		return {curve: line, path: points};
+	}</a></li><li><a href="global.html#staticcreateDynaSects(cmpObj3,paras)%257Bvar%257Bgeoms,points%257D=xgeom.generateDynaSects(cmpObj3,paras);vargrp=newTHREE.Object3D();for(vargeomofgeoms)%257Bvarmopt=%257Bcolor:paras.color===undefined?0x0f7f8f:paras.color%257D;if(paras.linewidth!==undefined)mopt.linewidth=paras.linewidth;varline=newTHREE.Line(geom,newTHREE.LineBasicMaterial(mopt));line.computeLineDistances();grp.add(line)%257DcmpObj3.mesh=line;return%257Bgroup:grp,points%257D;%257D">static createDynaSects(cmpObj3, paras) {
+		var {geoms, points} = xgeom.generateDynaSects(cmpObj3, paras);
 
-  // void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-  vec4 mainImage( in vec2 fragCoord ) {
-    vec4 fragColor = vec4(0.);
-    vec3 e = cameraPosition;
-    vec3 u = normalize( P - cameraPosition );
+		var grp = new THREE.Object3D();
+		for (var geom of geoms) {
+			var mopt = { color: paras.color === undefined ? 0x0f7f8f : paras.color };
+			if (paras.linewidth !== undefined)
+				mopt.linewidth = paras.linewidth;
+			var line = new THREE.Line( geom, new THREE.LineBasicMaterial( mopt ) );
+			line.computeLineDistances();
+			grp.add(line)
+		}
 
-    for (int i = 0; i &lt; ${orbs}; i++) {
-        vec3 ci = cent[i].xyz;
-        vec2 dists = sdEllipsoid( e, u, r[i], ci, vscale );
+		cmpObj3.mesh = line;
+		return {group: grp, points};
+	}</a></li><li><a href="global.html#staticgenerateDynaSects(cmpObj3,paras)%257Bswitch(cmpObj3.geom)%257BcaseObj3Type.RandomSect:thrownewXError('geom.generateLines:TODORandomSect');break;caseObj3Type.PointSects:varsects=%255B%255D;varthreeVec3s=%255B%255D;varo=Array.isArray(paras.origin)?paras.origin:%255B0,0,0%255D;vars=paras.scale===undefined?1:paras.scale;varsx,sy,sz;if(Array.isArray(s))%257Bsx=s%255B0%255D;sy=s%255B1%255D;sz=s%255B2%255D;%257Delseif(typeofs==='number')%257Bsx=sy=sz=s;%257Delsesx=sy=sz=1;for(varsegx=0;segx%253Cparas.sects.length;segx++)%257Bvarxyz=paras.sects%255Bsegx%255D%255B0%255D;varp1=newTHREE.Vector3((xyz%255B0%255D+o%255B0%255D)*sx,(xyz%255B1%255D+o%255B1%255D)*sy,(xyz%255B2%255D+o%255B2%255D)*sz);xyz=paras.sects%255Bsegx%255D%255B1%255D;varp2=newTHREE.Vector3((xyz%255B0%255D+o%255B0%255D)*sx,(xyz%255B1%255D+o%255B1%255D)*sy,(xyz%255B2%255D+o%255B2%255D)*sz);vargeom=newTHREE.BufferGeometry().setFromPoints(%255Bp1,p2%255D);threeVec3s.push(%255Bp1,p2%255D);sects.push(geom);%257Dreturn%257Bgeoms:sects,points:threeVec3s%257D;default:thrownewXError('geom.generateLines:Unsupportedlinegeometry:',cmpObj3.geom,cmpObj3);%257D%257D">static generateDynaSects(cmpObj3, paras) {
+		switch (cmpObj3.geom) {
+			case Obj3Type.RandomSect:
+				throw new XError('geom.generateLines: TODO RandomSect');
+				break;
+			case Obj3Type.PointSects:
+				var sects = [];
+				var threeVec3s = [];
+				var o = Array.isArray(paras.origin) ? paras.origin : [0, 0, 0];
+				var s = paras.scale === undefined ? 1 : paras.scale;
+				var sx, sy, sz;
+				if (Array.isArray(s)) {
+					sx = s[0]; sy = s[1]; sz = s[2];
+				}
+				else if (typeof s === 'number') {
+					sx = sy = sz = s;
+				}
+				else sx = sy = sz = 1;
 
-        if (dists.x &lt;= 0.00001) {
-          ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
-          continue;
-        }
-
-        vec3 p = e + dists.x * u;
-        vec3 n = normalize(p - ci);
-        float ratio = abs(length(dists.x - dists.y)) / (2. * r[i]);
-        // fragColor += vec4 ( pow( clamp(ratio, 0.0, 1.), 4. ) );
-        fragColor += pow( clamp(ratio, 0.0, 1.), 4. ) * orbColors[i];
-    }
-    fragColor = clamp(fragColor, 0., 1.);
-    float txAlpha = clamp(whiteAlpha, 0., 1.);
-    fragColor.a = 1. - txAlpha;
-
-    vec4 texcolor = texture2D(u_tex, vUv);
-    fragColor = mix(fragColor, texcolor, txAlpha);
-	return fragColor;
-  }
-
-  void main() {
-    // mainImage(gl_FragColor, gl_FragCoord.xy);
-    gl_FragColor += mainImage(gl_FragCoord.xy);
-  }`,
-
- vertexShader: `
-  uniform vec3 wpos;
-  uniform vec3 offsets[${orbs}];
-  uniform vec3 orbScale;
-
-  attribute vec3 a_tan;
-  attribute vec3 a_pos;
-
-  varying vec2 vUv;
-  varying vec3 P;
-  varying vec3 vscale;
-  varying vec4 cent[${orbs}];
-
-  void main() {
-    vUv = uv;
-
-    // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-
-    P = worldPosition.xyz;
-    vscale = orbScale;
-    for (int i = 0; i &lt; ${orbs}; i++){
-      cent[i] = modelMatrix * vec4(wpos + offsets[i], 1.); // offsets alon a_tan ...
-    }
-
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
-  } `
- }
-}
-
-/**Get shader of a sequnce of orb groups, each for a wpos - an vec3 array, with
- * respect to vertex dir &amp; cent attribute
- * Test page: test/html/map3d/geopaths.html&lt;br>
- * ShaderFlag: worldOrbs
- * @param {object} paras paras.vert_scale [optional] number scale of vertices
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.worldOrbs
- * @function
- */
-function orbGroups(vparas) {
- var grps = vparas.follows.length;
- var orbs = vparas.offsets.length;
- return { fragmentShader: `
-  uniform float r[${orbs}];
-  uniform vec3 orbColors[${orbs}];
-
-  uniform float u_t;
-  uniform float tmin;
-  uniform float tmax;
-  uniform float follows[${grps}];
-
-  uniform float whiteAlpha;
-  uniform vec3 orbScale;
-  uniform sampler2D u_tex;
-
-  varying vec2 vUv;
-  varying vec3 P;
-  varying vec3 vtan; // ignored in v0.3
-  varying vec3 vscale;
-  varying vec3 vcent[${grps * orbs}];
-
-  vec2 sdEllipsoid( vec3 eye, vec3 u, float r, vec3 centr, vec3 abc ) {
-      // e = o - c, where o = eye, c = center
-      vec3 e = eye - centr;
-      e = e / abc;
-
-      // delta = (u . e)^2 + r^2 - |e|^2
-      u = normalize(u / abc);
-
-      float delta = pow( dot( u, e ), 2. ) + pow( r, 2. ) - dot(e, e);
-      if (delta &lt; 0.) return vec2(delta);
-      // d = - u.e +/- delta^0.5
-      delta = pow( delta, 0.5 );
-      return vec2( -dot( u, e ) + delta, -dot( u, e ) - delta );
-  }
-
-  // void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-  vec4 mainImage( in vec2 fragCoord ) {
-    vec4 fragColor = vec4(0.);
-    vec3 e = cameraPosition;
-    vec3 u = normalize( P - cameraPosition );
-
-    fragColor = vec4(0.);
-    for (int j = 0; j &lt; ${grps}; j++) {
-      float flwj = follows[j] / 100.;
-      if (tmin &lt;= u_t - flwj &amp;&amp; u_t - flwj &lt;= tmax ) {
-        for (int i = 0; i &lt; ${orbs}; i++) {
-            vec3 ci = vcent[j*${grps} + i];
-            vec2 dists = sdEllipsoid( e, u, r[i], ci, vscale );
-
-            // if (dists.x &lt;= 0.00001) {
-            //   ${vparas.orbDebug ? 'fragColor.g += 0.2;' : ''}
-            //   continue;
-            // }
-
-            vec3 p = e + dists.x * u;
-            vec3 n = normalize(p - ci);
-            float ratio = abs(length(dists.x - dists.y)) / (2. * r[i]);
-            ratio = clamp(ratio, 0., 1.);
-            fragColor += vec4(pow( ratio, 4. ) * orbColors[i], ratio);
-        }
-      }
-    }
-    fragColor = clamp(fragColor, 0., 1.);
-
-    float txAlpha = clamp(whiteAlpha, 0., 1.);
-    // fragColor.a = 1. - txAlpha;
-
-    // fragColor = mix(fragColor, texcolor, txAlpha);
-    vec4 texcolor = texture2D(u_tex, vUv);
-    texcolor.a = txAlpha;
-    fragColor += texcolor;
-
-    return clamp(fragColor, 0., 1.);
-  }
-
-  void main() {
-    // mainImage(gl_FragColor, gl_FragCoord.xy);
-    gl_FragColor = mainImage(gl_FragCoord.xy);
-  }`,
-
- /* wpos[] group cent ( alone path )
-    vec3 tan = normalize(a_tan);
-    for (int i = 0; i &lt; ${grps}; i++) {
-      vfollows[i] = modelMatrix * (tan * follows[i] + cent[0]);
-    }
- */
- vertexShader: `
-  uniform vec3 wpos[${grps}];
-  uniform vec3 wtan[${grps}];
-  uniform float follows[${grps}];
-  uniform vec3 orbScale;
-
-  uniform float offsets[${orbs}];
-
-  attribute vec3 a_tan;
-  attribute vec3 a_pos;
-
-  varying vec2 vUv;
-  varying vec3 P;
-  varying vec3 vtan; // ignored in v0.3
-  varying vec3 vscale;
-  varying vec3 vcent[${grps * orbs}];
-
-  void main() {
-    vUv = uv;
-    vec4 v = projectionMatrix * modelViewMatrix * vec4( a_tan, 1.0 );
-    vtan = v.xyz;
-
-    // gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-
-    P = worldPosition.xyz;
-    vscale = orbScale;
-
-    for (int j = 0; j &lt; ${grps}; j++) {
-      for (int i = 0; i &lt; ${orbs}; i++) {
-        if (length(a_tan) > 0.) {
-          vec4 vc = modelMatrix * vec4(wpos[j] + normalize(a_tan) * offsets[i], 1.);
-          vcent[j*${grps} + i] = vc.xyz;
-        }
-        else if (length(wtan[j]) > 0.) {
-          vec4 vc = modelMatrix * vec4(wpos[j] + normalize(wtan[j]) * offsets[i], 1.);
-          vcent[j*${grps} + i] = vc.xyz;
-        }
-        else {
-          // vec4 vc = modelMatrix * vec4(wpos[j] + offsets[i], 1.);
-          vec4 vc = modelMatrix * vec4(wpos[j], 1.);
-          vcent[j*${grps} + i] = vc.xyz;
-        }
-      }
-    }
-
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
-  } `
- }
-}
-
-/**
- * https://thebookofshaders.com/05/
- * @param {object} paras paras.vert_scale [optional] number scale of vertices
- * @return {object} {vertexShader, fragmentShader}
- * @member xglsl.fragShape
- * @function
- */
-function fragShape(vparas) {
-  return {
-    fragmentShader: `
-    #ifdef GL_ES
-    precision mediump float;
-    #endif
-
-    uniform vec2 u_resolution;
-    uniform vec2 u_mouse;
-    uniform float u_time;
-
-    // Plot a line on Y using a value between 0.0-1.0
-    float plot(vec2 st, float pct){
-      return  smoothstep( pct-0.02, pct, st.y) -
-              smoothstep( pct, pct+0.02, st.y);
-    }
-
-    void main() {
-        vec2 st = gl_FragCoord.xy/u_resolution;
-
-        float y = st.x;
-
-        vec3 color = vec3(y);
-
-        // Plot a line
-        float pct = plot(st,y);
-        color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
-
-        gl_FragColor = vec4(color,1.0);
-    } `,
-    vertexShader: `
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    `
-    }
-}
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#phongMorph2">phongMorph2</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
+				for ( var segx = 0; segx < paras.sects.length; segx++ ) {
+					var xyz = paras.sects[segx][0];
+					var p1 = new THREE.Vector3( (xyz[0] + o[0]) * sx,
+												(xyz[1] + o[1]) * sy,
+												(xyz[2] + o[2]) * sz );
+					xyz = paras.sects[segx][1];
+					var p2 = new THREE.Vector3( (xyz[0] + o[0]) * sx,
+												(xyz[1] + o[1]) * sy,
+												(xyz[2] + o[2]) * sz );
+					var geom = new THREE.BufferGeometry().setFromPoints( [p1, p2] );
+					threeVec3s.push( [p1, p2] );
+					sects.push( geom );
+				}
+				return {geoms: sects, points: threeVec3s};
+			default:
+				throw new XError('geom.generateLines: Unsupported line geometry: ',
+								cmpObj3.geom, cmpObj3);
+		}
+	}</a></li><li><a href="global.html#streamGeojson">streamGeojson</a></li><li><a href="global.html#xcam">xcam</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xecs">xecs</a></li><li><a href="global.html#xscene">xscene</a></li><li><a href="global.html#xview">xview</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Jun 27 2020
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Jul 12 2020
 </footer>
 
 <script> prettyPrint(); </script>
