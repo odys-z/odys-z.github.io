@@ -28,24 +28,33 @@
   <tr><td colspan="3">Pro net</td></tr>
   <tr><td></td>
       <td></td>
-      <td><div class='code'>/opt/google/chrome/chrome --proxy-server="http=192.168.1.201:8580;https=192.168.1.201:8580"</div></td>
+      <td><div class='code'>/opt/google/chrome/chrome --proxy-server="http=....:...;https=....:..."</div></td>
   </tr>
 
   <tr><td></td>
-	  <td>Gradle Pro</td>
+	  <td>Gradle Proxy Settings</td>
 	  <td>~/.gradle/gradle.proterties
 	  <div class='code'><pre>
-	  systemProp.https.nonProxyHosts=192.168.*,baidu.com,127.0.0.1
-	  systemProp.http.proxyHost=192.168.3.101
-	  systemProp.https.proxyPort=8888
-	  systemProp.http.nonProxyHosts=192.168.*,baidu.com,127.0.0.1
-	  systemProp.https.proxyHost=192.168.3.101
-	  systemProp.http.proxyPort=8888
+	  systemProp.https.nonProxyHosts=...
+	  systemProp.http.proxyHost=...
+	  systemProp.https.proxyPort=####
+	  systemProp.http.nonProxyHosts=...
+	  systemProp.https.proxyHost=...
+	  systemProp.http.proxyPort=####
 	  </pre></div></td>
   </tr>
 
   <tr><td colspan="3">Gradle</td></tr>
   <tr><td></td>
+	  <td><p><a href='https://guides.gradle.org/building-java-applications/'>Offical Totorial (java project)</a></p>
+		  When project intialize, using local gradle without downloading bin.zip.
+	  </td>
+	  <td>project/gradle/wrapper/gradle-wrapper.properties<br>
+		  <div>distributionUrl=file\:///home/.../gradle-6.5.1-bin.zip</div>
+		  see <a href='https://stackoverflow.com/questions/39696159/how-to-stop-gradle-from-downloading-every-time'>
+			  StackOverFlow</a>
+	  </td>
+  </tr><td/>
 	  <td>Move .gradle</td>
 	  <td>1. change Android Studio gradle path
 		  <div class='code'>File - settings - Build, Execution, Deployment - Gradle - Service Directory Path</div>
@@ -193,12 +202,12 @@ com.android.ddmlib.InstallException: Connection reset by peer
       To import gradle project, a proxy must been set to let gradle down load files.<br>
       ~/.gradle/gradle.properties:
       <div class='code'>
-          systemProp.http.proxyHost=192.168.3.105<br>
-          systemProp.http.proxyPort=8580<br>
+          systemProp.http.proxyHost=....<br>
+          systemProp.http.proxyPort=...<br>
           # systemProp.http.proxyUser=userid<br>
           # systemProp.http.proxyPassword=password<br>
-          systemProp.https.proxyHost=192.168.3.105<br>
-          systemProp.https.proxyPort=8580<br>
+          systemProp.https.proxyHost=.......<br>
+          systemProp.https.proxyPort=....<br>
       </div>
       Eclipse Mars has another issue.<br>
       <dl>
@@ -210,12 +219,12 @@ com.android.ddmlib.InstallException: Connection reset by peer
           proxiesEnabled=true<br>
           # HTTP proxy settings<br>
           proxyData/HTTP/host=127.0.0.1<br>
-          proxyData/HTTP/port=8580<br>
+          proxyData/HTTP/port=....<br>
           proxyData/HTTP/hasAuth=false<br><br>
 
           # HTTPS proxy settings<br>
           proxyData/HTTPS/host=127.0.0.1<br>
-          proxyData/HTTPS/port=8580<br>
+          proxyData/HTTPS/port=....<br>
           proxyData/HTTPS/hasAuth=false<br>
 
           # Hosts that will not use proxy <br>
@@ -312,7 +321,9 @@ com.android.ddmlib.InstallException: Connection reset by peer
        [2016-03-14 13:31:54 - gdx-tests-android]  - libgdx-freetype64.so<br>
        Don't let the depending project (ligbdx-freetype) export the jar. And refresh and clean for the projects.<br>
        Error 9: Exception when running xoppa tutorial's desktop project<br>
-       <div class='exception'>Exception in thread "LWJGL Application" com.badlogic.gdx.utils.GdxRuntimeException: com.badlogic.gdx.utils.GdxRuntimeException: Couldn't load dependencies of asset: data/invaderscene.g3db</div>
+       <div class='exception'>Exception in thread "LWJGL Application"<br>
+		   com.badlogic.gdx.utils.GdxRuntimeException: com.badlogic.gdx.utils.GdxRuntimeException:
+		   Couldn't load dependencies of asset: data/invaderscene.g3db</div>
        There are some problem in the .g3db file. Don't save the links, download the raw files.
   </td>
 </tr>
@@ -322,18 +333,22 @@ com.android.ddmlib.InstallException: Connection reset by peer
   <td><img class="screenshot" title="click for large image"
             onclick="showFig(src)" src="imgs/011-prj-setup-err.png">
       The type android.os.handle cannot be resolved.<br>
-      This error occured while followed GDX tutorial:<a href="https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle">Project Setup Gradle</a>, which can be solved by updating ADT for Eclipse.<br>
+      This error occured while followed GDX tutorial:<a href="https://github.com/libgdx/libgdx/wiki/Project-Setup-Gradle">
+		  Project Setup Gradle</a>, which can be solved by updating ADT for Eclipse.<br>
       After updated, add <i>Android Library</i> to <i>Build Path</i>.<br>
-      See <a href="http://www.badlogicgames.com/forum/viewtopic.php?t=16251&p=69796">the libGDX topic</a>.
+      See <a href="http://www.badlogicgames.com/forum/viewtopic.php?t=16251&p=69796">
+		  the libGDX topic</a>.
       <hr>
       Error 1: Eclipse don't show <i>Android SDK Manager</i> menu.<br>
       Change the perspective to java.<br>
-      See <a href="http://stackoverflow.com/questions/13885051/cant-see-android-sdk-manager-option-after-installation-run-as-administrator-do">anwser at Stackoverflow</a>.
+      See <a href="http://stackoverflow.com/questions/13885051/cant-see-android-sdk-manager-option-after-installation-run-as-administrator-do">
+		  anwser at Stackoverflow</a>.
       <hr><img class="screenshot" title="click for large image"
             onclick="showFig(src)" src="imgs/012-eclipse-import.png">
       Null Pointer While Importing Gradle Project Into Eclipse<br>
       Don't set the eclipse workspace to the gradle imported folder.<br>
-      See <a href="http://stackoverflow.com/questions/23050695/null-pointer-importing-gradle-project-into-eclipse" target="_blank">Null Pointer Importing Gradle Project Into Eclipse At StackOverFlow</a>
+      See <a href="http://stackoverflow.com/questions/23050695/null-pointer-importing-gradle-project-into-eclipse" target="_blank">
+		  Null Pointer Importing Gradle Project Into Eclipse At StackOverFlow</a>
   </td>
 </tr>
 <tr><td></td>
@@ -420,11 +435,11 @@ com.android.ddmlib.InstallException: Connection reset by peer
           org.eclipse.core.net.hasMigrated=true<br>
           proxiesEnabled=true<br>
           proxyData/HTTP/hasAuth=false<br>
-          proxyData/HTTP/host=192.168.3.105<br>
-          proxyData/HTTP/port=8580<br>
+          proxyData/HTTP/host=.....<br>
+          proxyData/HTTP/port=....<br>
           proxyData/HTTPS/hasAuth=false<br>
-          proxyData/HTTPS/host=192.168.3.105<br>
-          proxyData/HTTPS/port=8580<br>
+          proxyData/HTTPS/host=.....<br>
+          proxyData/HTTPS/port=....<br>
           systemProxiesEnabled=fals</div>
       Please compare with <a href="#import-gradle">How to import gradle project to eclipse? in this tip</a>
       <hr>
@@ -505,7 +520,7 @@ else return new JBox2DWorld();
           /home/ody/d/ubuntu/JDK-1.8.0/bin/java -jar build/libs/spashole-game-1.1.1.jar
       </div>
       Gradle proxy must configured in home/.gradle/gradle.properties:
-      <div class='code'>systemProp.http.proxyHost=192.168.3.105<br>systemProp.http.proxyPort=8580<br>
+      <div class='code'>systemProp.http.proxyHost=......<br>systemProp.http.proxyPort=....<br>
           # systemProp.http.proxyUser=userid<br># systemProp.http.proxyPassword=password</div>
       Reference:
       <a href="http://stackoverflow.com/questions/18487406/how-do-i-tell-gradle-to-use-specific-jdk-version">How do I tell Gradle to use specific JDK version?</a>

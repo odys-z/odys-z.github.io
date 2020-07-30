@@ -32,7 +32,7 @@
               cd /tmp<br>
               wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb<br>
               sudo dpkg -i google-chrome-stable_current_amd64.deb<br>
-              /opt/google/chrome/chrome --proxy-server="http=192.168.1.201:8580;https=192.168.1.201:8580"</div>
+              /opt/google/chrome/chrome --proxy-server="http=*.*.*.*:dddd;https=..."</div>
           see <a target='_blank' href='https://askubuntu.com/questions/510056/how-to-install-google-chrome'>stackoverflow: How to install Google Chrome</a><br>
           There may be some problem like <div class='exception'><pre>
 Unpacking google-chrome-stable (61.0.3163.100-1) ...
@@ -418,7 +418,7 @@ E: Failed to fetch http://cn.archive.ubuntu.com/ubuntu/pool/main/s/ssh-import-id
             Error 2.<br>- Connection refused by host computer or<br>
             - Connection reset by peer (10054) after connected.<br>
             Check the Ubuntu server Ip is not in the router's DHCP IP range. Ubuntu will not check ip confliction and same ip will be used for Android devices.<br>
-            Explicitly specify the display prot ":1", a.k.a 192.168.0.200:1
+            Explicitly specify the display prot ":1",
             <hr>
             Tips for Ubuntu Server:<br>
             1. no need to install x desktop<br>
@@ -614,7 +614,7 @@ E: Failed to fetch http://cn.archive.ubuntu.com/ubuntu/pool/main/s/ssh-import-id
   <tr><td></td>
       <td>Ant [get] task trouble</td>
       <td>Using proxy for get task
-          <div class='code'>export ANT_OPTS="-Dhttp.proxyHost=192.168.3.201 -Dhttp.proxyPort=8580 -Dhttps.proxyHost=192.168.3.201 -Dhttps.proxyPort=8580"</div>
+          <div class='code'>export ANT_OPTS="-Dhttp.proxyHost=...... -Dhttp.proxyPort=.... -Dhttps.proxyHost=.... -Dhttps.proxyPort=...."</div>
           Using break proint continuing (no downloading for updated local copy)
           <div class='code'>&lt;get usetimestamp="true" src='...' dest='...'&gt;</div>
       </td>
@@ -677,8 +677,8 @@ E: Failed to fetch http://cn.archive.ubuntu.com/ubuntu/pool/main/s/ssh-import-id
           To check bison version: <div class='code'>apt-cache showpkg bison</div>
           <hr>
           FYI: wget proxy and deb install (wget --help for username and password)<br>
-          <div class='code'>set http_proxy="192.168.1.201:8580" &amp;&amp; wget http://launchpadlibrarian.net/140087283/libbison-dev_2.7.1.dfsg-1_amd64.deb<br>
-              set http_proxy="192.168.1.201:8580" &amp;&amp; wget http://launchpadlibrarian.net/140087282/bison_2.7.1.dfsg-1_amd64.deb<br>
+          <div class='code'>set http_proxy="....:..." &amp;&amp; wget http://launchpadlibrarian.net/140087283/libbison-dev_2.7.1.dfsg-1_amd64.deb<br>
+              set http_proxy="......:..." &amp;&amp; wget http://launchpadlibrarian.net/140087282/bison_2.7.1.dfsg-1_amd64.deb<br>
               dpkg -i libbison-dev_2.7.1.dfsg-1_amd64.deb<br>
               dpkg -i bison_2.7.1.dfsg-1_amd64.deb<br></div>
       </td>
@@ -1068,7 +1068,7 @@ In MySQL, databases correspond to directories within the data directory. Each ta
   <tr><td></td>
       <td>Workbench and Mysql command line don't connect to MySql server.</br>
               <div class='exception'>error 1 (10061) cannot connect to Database server (Wrokbench code: 10061).</div>
-              <div class='exception'>error 2 (111) can't connect MySQL Server on 192.168.2.200 (111).</div>
+              <div class='exception'>error 2 (111) can't connect MySQL Server on 192.168.##.## (111).</div>
       </td><td>
           update1: (111) means service not found. Tested by /etc/init.d/mysqld -stop<br>
           <h6>Key point 1.</h6>
@@ -1091,7 +1091,7 @@ bind-address = 0.0.0.0
           <h6>Key point 2.</h6>
           Make sure the user is granted. See <a target='_blank' href='https://support.rackspace.com/how-to/mysql-connect-to-your-database-remotely'>Connect to a MySQL database remotely</a>
           <div class='code'>mysql -u root -h localhost -port 3306 -ppswd<br>
-              mysql&gt; grant all on receipt.* to receipt@'192.168.0.200' identified by 'receipt'</div>
+              mysql&gt; grant all on receipt.* to receipt@'192.168.###.###' identified by 'receipt'</div>
           Note: The ip address in the grant sentence is the remote ip where workbench are using;
           the ip in mysql command line are mysql host ip.<br>
           After this, you will get:<br>

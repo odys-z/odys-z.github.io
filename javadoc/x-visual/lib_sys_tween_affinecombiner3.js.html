@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: lib/xv.js</title>
+    <title>JSDoc: Source: lib/sys/tween/affinecombiner3.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,7 +18,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: lib/xv.js</h1>
+    <h1 class="page-title">Source: lib/sys/tween/affinecombiner3.js</h1>
 
     
 
@@ -27,69 +27,157 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as xutils from './xutils/xcommon.js';
-import {XCamera} from './component/mvc'
-import {Visual, Canvas, Dynatex, AssetType, ShaderFlag, ShaderAlpha} from './component/visual'
-import {Obj3Type, Obj3} from './component/obj3'
-import {TweenScript, CmpTween} from './component/tween'
-import {AnimType, ModelSeqs} from './component/morph'
-import {Occluder, FlowingPath, Glow, Filming} from './component/ext/effects'
-import {Sankey, Pie, GridElem} from './component/ext/chart'
+            <pre class="prettyprint source linenums"><code>
+import * as ECS from '../../../packages/ecs-js/index';
 
-import XSys from './sys/xsys'
-import CanvTex from './sys/canvtex'
-import Htmltex from './sys/ext/htmltex'
-import XBar from './chart/shape/xbar'
-import XSankey from './chart/curve/xsankey'
-import D3Pie from './chart/svg/d3pie'
-import Axisys from './chart/axis'
-import GridVisuals from './chart/gridvisuals'
+import {AffineType} from '../../xmath/vec';
+import {Affine} from '../../xmath/affine';
 
-// https://stackoverflow.com/questions/44630265/how-can-i-set-z-up-coordinate-system-in-three-js
-// THREE.Object3D.DefaultUp = new THREE.Vector3(0, 0, 1);
-
-export {LayerChannel, Layers} from './xmath/layer'
-export {KeyFlag} from './sys/input'
-export {AssetType, ShaderFlag, ShaderAlpha, AnimType, Obj3Type, XSys, Htmltex, CanvTex}
-export * from './osm/osm3.js'
-export * from './sys/tween/animizer'
-export {default as XTweener, XEasing} from './sys/tween/xtweener'
-export {default as Thrender} from './sys/thrender'
-
-export {default as XWorld} from './xapp/xworld.js'
-export * from './xutils/assetkeepr.js'
-export {default as xgeom} from './xmath/geom'
-export {default as AssetKeepr} from './xutils/assetkeepr'
-// import * as xglsl from './xutils/xglsl'
-export {xutils}
-
-/**
- * Package of components exposed by x-visual.
+/**Combine affine transformation animated by XTweener.
  *
- * &lt;h4>Note&lt;/h4>
- * **Components can not created directly. See example for how to use.**
- *
- * see &lt;a href='../reference/components.html'>docs for more details about components&lt;/a>.
- * @class XComponent */
-export const XComponent = {
-	XCamera,
-	AssetType, ShaderFlag, ShaderAlpha, Visual, Canvas, Dynatex,
-	Obj3Type, Obj3,
-	TweenScript, CmpTween,
-	AnimType, AnimType, ModelSeqs,
-	FlowingPath, Glow, Filming, Occluder,
-	GridElem, Pie, Sankey,
+ * For details, see &lt;a href='https://odys-z.github.io/x-visual/design-memo/affine.html'>doc&lt;/a>
+ * @class AffineCombiner
+ */
+export default class AffineCombiner3 extends ECS.System {
+    constructor(ecs, x) {
+        super(ecs);
+        this.ecs = ecs;
+		console.log('AffineCombiner v3 ...');
+
+        var ents = ecs.queryEntities({iffall: ['Obj3', 'ModelSeqs', 'CmpTweens']});
+        if (ents || ents.length > 0)
+            this.initCombined(ents);
+    }
+
+	initCombined (entities) {
+		for (const e of entities) {
+			for (var seqx = 0; seqx &lt; e.CmpTweens.twindx.length; seqx++) {
+				for (const twn of e.CmpTweens.tweens[seqx]) {
+					if (twn.affineCombine) { // flag set by animizer
+						if (!e.Obj3.m0) {
+							e.Obj3.m0 = new Affine();
+							if (e.Obj3.mesh)
+								e.Obj3.m0.decompose(e.Obj3.mesh.matrix);
+
+							e.Obj3.mi = new Affine();
+							e.CmpTweens.idle = true;
+							e.CmpTweens.idleRising = false;
+							e.CmpTweens.playRising = false;
+							e.CmpTweens._mfs = new Array(e.CmpTweens.twindx.length);
+							e.CmpTweens.mf_buff = new Array(e.CmpTweens.twindx.length);
+						}
+						twn.mf = new Affine();
+					}
+				}
+				if (e.CmpTweens &amp;&amp; e.CmpTweens._mfs) {
+					e.CmpTweens._mfs[seqx] = new Affine();
+					e.CmpTweens.mf_buff[seqx] = new Affine();
+				}
+			}
+		}
+	}
+
+	update(tick, entities) {
+		for (const e of entities) {
+			// Only Obj3 with mi initialized by animizer is affine combinable,
+			// but we still handle ending events
+			if (e.Obj3.mi) {
+				e.Obj3.mi.i();
+
+				if (!e.CmpTweens.idle) {
+					var dirty = false;
+					dirty = this.combineUpdate(e.Obj3, e.CmpTweens);
+
+					if (dirty) {
+						this.combineEnd(e.Obj3, e.Obj3.mesh);
+					}
+				}
+
+				if (e.CmpTweens.idleRising) {
+					// see also XTweener.update of (twnx + 1 >= e.CmpTweens.tweens[seqx].length)
+					for (var fx = 0; fx &lt; e.CmpTweens.endingFiring.length; fx++) {
+						if (e.CmpTweens._mfs[fx] &amp;&amp; e.CmpTweens.endingFiring[fx]) {
+							e.CmpTweens.endingFiring[fx] = false;
+							e.CmpTweens._mfs[fx].copy(e.CmpTweens.mf_buff[fx]);
+							// if (e.CmpTweens.eFinished
+							// 	&amp;&amp; typeof e.CmpTweens.eFinished === 'function') {
+							// 	// eFinished is a copy of ModelSeqs.fFinished
+							// 	e.CmpTweens.eFinished(e.CmpTweens, fx);
+							// }
+						}
+					}
+				}
+			}
+
+			if (e.CmpTweens.idleRising) {
+				for (var fx = 0; fx &lt; e.CmpTweens.endingFiring.length; fx++)
+					if (e.CmpTweens.eFinished
+						&amp;&amp; typeof e.CmpTweens.eFinished === 'function')
+						// eFinished is a copy of ModelSeqs.fFinished
+						e.CmpTweens.eFinished(e.CmpTweens, fx);
+			}
+		}
+	}
+
+    /**Update affine combination for the object.
+     * @param {Obj3} obj3 combined target object with mi
+     * @param {CmpTweens} cmpTweens e.g. [{mi, translate: [x, y, z]}]
+	 * @return {bool} dirty
+     * @member AffineCombiner#combineUpdate
+     */
+    combineUpdate(obj3, cmpTweens) {
+		var dirty = false;
+		for (var seqx = 0; seqx &lt; cmpTweens.twindx.length; seqx++) {
+			var twindx = cmpTweens.twindx[seqx];
+			if (twindx &lt; cmpTweens.tweens[seqx].length
+				&amp;&amp; cmpTweens.mf_buff[seqx]) {
+				cmpTweens.mf_buff[seqx].i();
+				var tw = cmpTweens.tweens[seqx][twindx];
+				if ( tw.affineCombine ) {
+					dirty = true;
+					// combine the mf even it's stopped
+			        if ( tw.affines &amp;&amp; tw.affines.length > 0) {
+						if ( tw.isPlaying ) {
+							tw.mf.i();
+				            for (var ax = 0; ax &lt; tw.affines.length; ax++) {
+				                tw.mf.appAffine(tw.affines[ax]);
+				            }
+						}
+				        cmpTweens.mf_buff[seqx].mul(tw.mf);
+			        }
+				}
+			}
+	        if (cmpTweens.mf_buff[seqx])
+	        	obj3.mi.mul(cmpTweens.mf_buff[seqx]);
+		}
+		return dirty;
+    }
+
+    /**Update combined object transform to Obj3.mesh.matrix.
+     *
+     * Must been called when z-transform is really increased - tweens updated in one loop.
+     * - needing first updating mesh matrix, then apply affine transformation to it.
+     *
+     * Three.js docs about the order:
+     *
+     * Convenience properties and matrixAutoUpdate,
+     *
+     * https://threejs.org/docs/#manual/en/introduction/Matrix-transformations
+     * @param {Obj3} obj3 combined
+     * @param {THREE.Mesh} mesh
+     * @member AffineCombiner#combineEnd
+     */
+    combineEnd(obj3, mesh) {
+        mesh.matrixAutoUpdate = false;
+        if (obj3.mi) {
+			obj3.mi.mulpost(obj3.m0);
+            obj3.mi.composeTo( mesh.matrix );
+            mesh.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
+        }
+    }
 }
 
-/**
- * Package of components for chart extension exposed by x-visual.
- *
- * **Components can not created directly. See example for how to use.**
- * @class chart
- * */
-export const chart = {
-	Axisys, XBar, XSankey, D3Pie, GridVisuals
-}
+AffineCombiner3.query = {iffall: ['Obj3', 'ModelSeqs', 'CmpTweens']};
 </code></pre>
         </article>
     </section>
