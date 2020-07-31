@@ -33,6 +33,25 @@
 
   <tr><td></td>
 	  <td>Gradle Proxy Settings</td>
+	  <td>Final Solution<br>
+		  gradle.build
+		  <div class='code'><pre>
+          repositories {
+            // mavenLocal()
+            // mavenCentral()
+            // jcenter()
+            // google()
+            maven { url 'https://maven.aliyun.com/repository/google' }
+            maven { url 'https://maven.aliyun.com/repository/jcenter' }
+          }</pre><div>
+		  gvim ~/.gradle/gradle.properties
+		  <div>systemProp.http.socketTimeout=600000 <br>
+			  systemProp.Dhttp.connectionTimeout=600000
+		  </div>
+	  </td>
+  </tr>
+  <tr><td></td>
+	  <td>Gradle Proxy Settings</td>
 	  <td>~/.gradle/gradle.proterties
 	  <div class='code'><pre>
 	  systemProp.https.nonProxyHosts=...
