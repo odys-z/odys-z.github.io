@@ -32,7 +32,7 @@
   </tr>
 
   <tr><td></td>
-	  <td>Gradle Proxy Settings</td>
+	  <td>Gradle downloading failed</td>
 	  <td>Final Solution<br>
 		  gradle.build
 		  <div class='code'><pre>
@@ -50,6 +50,7 @@
 		  </div>
 	  </td>
   </tr>
+
   <tr><td></td>
 	  <td>Gradle Proxy Settings</td>
 	  <td>~/.gradle/gradle.proterties
@@ -92,8 +93,40 @@
 
   <tr><td colspan="3">GDX</td></tr>
   <tr><td></td>
-      <td>GDX</td>
-      <td>~/.gradle/gradle.proterties
+      <td>GDX: Ashley won't compile</td>
+      <td>error:
+		<div class='exception'><pre>
+        > Task :html:compileGwt
+        Compiling module io.odysz.g.en.GdxDefinition
+           Tracing compile failure path for type 'com.badlogic.ashley.utils.ImmutableArray'
+              [ERROR] Errors in 'jar:file:/home/ody/.gradle/caches/modules-2/files-2.1/com.badlogicgames.ashley
+              /ashley/1.7.0/761d4182b29162ddd88b5d49152b8d36acb628f4/ashley-1.7.0-sources.jar!/com/badlogic/ashley/utils/ImmutableArray.java'
+                 [ERROR] Line 74: Type mismatch: cannot convert from capture#1-of ?[] to V[]
+           [ERROR] Aborting compile due to errors in some input files</pre></div>
+		Cause:<br>
+		<a href='https://github.com/libgdx/ashley/pull/279'>
+			FILES: A bug fix not published (#279) ? </a><br>
+
+		Solution:<br>
+		Install local maven from source.
+		<a href='https://github.com/libgdx/ashley/wiki/Getting-started-with-Ashley#working-from-sources'>
+			See Ashley: Working from source</a>
+		After updloaded archives, try build the referecing project.<br>
+		If there are error like the bellow, Copy a pom.xml form central and change
+		the version number (1.7.3).
+		<div class='exception'><pre>
+         Task :core:compileJava FAILED
+
+        FAILURE: Build failed with an exception.
+
+        * What went wrong:
+        Execution failed for task ':core:compileJava'.
+        &gt; Could not resolve all files for configuration ':core:compileClasspath'.
+           &gt; Could not find com.badlogicgames.ashley:ashley:1.7.4.
+             Searched in the following locations:
+               file:/home/ody/.m2/repository/com/badlogicgames/ashley/ashley/1.7.4/ashley-1.7.4.pom
+               https://repo.maven.apache.org/maven2/com/badlogicgames/ashley/ashley/1.7.4/ashley-1.7.4.pom
+               ... </pre></div>
 	  </td>
   </tr>
 
