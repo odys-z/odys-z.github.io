@@ -253,7 +253,7 @@ scale: {scale}<br>
 
 
 <div class="description">
-    <p>Glsl sub functions</p>
+    <p>Glsl sub common configuration.</p>
 </div>
 
 
@@ -302,6 +302,486 @@ scale: {scale}<br>
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="lib_xutils_shaders_glx.glsl.js.html">lib/xutils/shaders/glx.glsl.js</a>, <a href="lib_xutils_shaders_glx.glsl.js.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="glx"><span class="type-signature">(constant) </span>glx<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>Glsl sub functions</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>u_alpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>uniform float u_alpha</p>
+Used for keep the name consists.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>u_whiteAlpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>uniform float whiteAlpha</p>
+Used for keep the name consists.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bitTrue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Is the bit is true?<br/>
+At least better than this:<br/>
+a = ...5, bit = 2 (start at 0), a_rem = a % 2^3 = 5, div = 5 / 4 &gt;= 1</p>
+<p>Reference: <a href='https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf'>
+WebGL 1.0 API Quick Reference Card</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fractuv</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get repeating uv for texture sampling.</p>
+<p>TODO doc: debug notes: uv must be continuous<br>
+https://community.khronos.org/t/texture-wrapping-in-shader-mipmapping/53799</br>
+https://www.shadertoy.com/view/4t2yRD</br>
+https://iquilezles.org/www/articles/tunnel/tunnel.htm</br></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>intenseAlpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Change intensity to mix argument t = :
+1 - 1/(2 * intense), when x &gt; 1
+1/2 * x, when 0 &lt;= x &lt;= 1
+0, when x &lt; 0</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sdEllipsoid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Find distance to ellipsoid</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>thermalColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Mix 3 colors of interposition t</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pointFace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><h6>Fragment Function.</h6></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>box2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><h6>Fragment Function.</h6>
+2D round box distance<br>
+parameters:<br>
+function: float box2(vec2 p, vec2 size, float r)<br>
+p {vec2}: varying from vertex poisition, transformed to world<br>
+size {vec2}: box size<br>
+r {float}: corner radius<br>
+return {float}: distance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>box3</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><h6>Fragment Function.</h6>
+3D round box distance<br>
+parameters:<br>
+function: float box2(vec2 p, vec2 size, float r)<br>
+p {vec3}: varying from vertex poisition, transformed to world<br>
+size {vec3}: box size<br>
+r {float}: corner radius<br>
+return {float}: distance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rotate2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Rotate in 2D for angle of radian.
+function: vec2 rotate2(float radi, vec2 v)
+parameters:<br>
+radi {float} angle in radian
+v {vec2} vectore to be rotated
+return m * v. where
+m =  c s
+-s c</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rotateY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rayPlaneInsec</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Ray plane intersection.
+function: vec4 rayPlaneInsec(vec3 l0, vec3 l, vec3 p0, vec3 n)
+return vec4 (pos, distance), distance &gt; 0 iff there is one point.
+Reference: <a href='https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection#Algebraic_form'>
+wikipedia</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>phongLight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get phong light.<br>
+sub function lambershine():<br>
+Lambert's cosine law<br>
+return: vec2(lambertian, specular)<br>
+To use in phong:<pre>
+vColor = vec4(Ka * ambientColor +
+Kd * lambertian * diffuseColor +
+Ks * specular * specular, u_alpha);
+</pre>
+Code Comments:<br>
+lambertian: angle between normal and incident<br>
+R: reflect direction<br>
+V: vector to viewer<br></p>
+<h6>External Link</h6>
+<a href='file:///home/ody/git/x-visual/docs/design-memo/shaders/phong.html'>
+x-visual doc: Morphing Phong Material</a><br>
+<a href='http://www.cs.toronto.edu/~jacobson/phong-demo/'>
+referencing implementation @ cs.toronto.edu</a><br>
+<a href='https://www.rp-photonics.com/lambertian_emitters_and_scatterers.html'>
+Lambertian Emitters and Scatters</a></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_xutils_shaders_glx.glsl.js.html">lib/xutils/shaders/glx.glsl.js</a>, <a href="lib_xutils_shaders_glx.glsl.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -1456,16 +1936,16 @@ e: MouseEvent, only for mouse event<br></p>
 
 
 <div class="description">
-    <p>This shader can render tessellated planes in a box model.
+    <p>Rendering tessellated planes in a box model.</p>
 The problem is it can't finding out distance to a polygon to restrict the floor
 area. There is an example by Inigo Quilez [2] that can figure out distance
 quickly in fragment shader but the problem is we can't find out an efficient
-way to send polygon info into fragment via with webgl [3].<br>
+way to send polygon info into fragment with webgl<sup>[3]</sup>.<br>
 Reference:<br>
 [1] <a href='https://www.shadertoy.com/view/MsjSzz'>Da Rasterizer,
-Example of fragment matrix operation</a>.
-Simplified: <pre>
-#define WEIGHT (12.0 / iResolution.x)</p>
+Example of fragment matrix operation</a>.<br>
+Simplified Example: <pre>
+    #define WEIGHT (12.0 / iResolution.x)
 <pre><code>// rasterize functions
 float line(vec2 p, vec2 p0, vec2 p1, float w) {
     vec2 d = p1 - p0;
@@ -1505,15 +1985,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     float time = iTime * 0.31415;
     vec3 c = vec3(mix(vec3(0.19,0.13,0.1),vec3(1.0), 0.5*pow(length(uv)*0.5,2.0)));
     mat4 cam = getPosMatrix(vec3(0.0,0.0,10.0));
-
     mat4 rot = getRotMatrix(vec3(time,time*0.86,time*0.473));
 
     vec3 instances[2];
     instances[0] = vec3( 0.0, 0.0,-1.0);
-
     // box pipeline
     for(int dip = 0; dip &lt; 2; dip++) {
-
         // input assembly
         vec3 vert[8];
         vert[0] = vec3(-1.0,-1.0, 1.0);
@@ -1530,10 +2007,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
         mat4 mat = pos * rot * cam;
 
         for(int i = 0; i &lt; 8; i++) {
-
             // transform
             vert[i] = (vec4(vert[i],1.0) * mat).xyz;
-
             // perspective
             vert[i].z = 1.0 / vert[i].z;
             vert[i].xy *= vert[i].z;
@@ -1562,21 +2037,17 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 </code></pre>
 <p>See also another <a href='https://www.shadertoy.com/view/Xlf3zl'>interesting
 example</a>.<br>
-[2]
-To find out distance to a polygon in a plane, one can use
-<a href='http://geomalgorithms.com/a03-_inclusion.html'>the Winding Number
-Algorithm</a>.<br>
-The shadertoy example can be found <a href='https://www.shadertoy.com/view/wdBXRW'>
-here by iq</a>. A simplified version showing wn=2 are rendered as outside:<pre>
+[2] <a href='http://geomalgorithms.com/a03-_inclusion.html'>the Winding Number Algorithm</a>.<br>
+To find out distance to a polygon in a plane, one can use [2].
+The shadertoy example can be found <a href='https://www.shadertoy.com/view/wdBXRW'>here</a>.
+A simplified version showing wn=2 are rendered as outside:<pre>
 // The MIT License
-// Copyright © 2019 Inigo Quilez</p>
-<pre><code>// Distance to a regular pentagon, without trigonometric functions.
+// Copyright © 2019 Inigo Quilez
+// Distance to a regular pentagon, without trigonometric functions.
 float dot2( in vec2 v ) { return dot(v,v); }
-float cross2d( in vec2 v0, in vec2 v1) { return v0.x*v1.y - v0.y*v1.x; }
-
-const int N = 9;
-
-float sdPoly( in vec2[N] v, in vec2 p ) {
+float cross2d( in vec2 v0, in vec2 v1) { return v0.x<em>v1.y - v0.y</em>v1.x; }
+const int N = 9;</p>
+<pre><code>float sdPoly( in vec2[N] v, in vec2 p ) {
     const int num = v.length();
     float d = dot(p-v[0],p-v[0]);
     float s = 1.0;
@@ -1586,12 +2057,10 @@ float sdPoly( in vec2[N] v, in vec2 p ) {
         vec2 w =    p - v[i];
         vec2 b = w - e*clamp( dot(w,e)/dot(e,e), 0.0, 1.0 );
         d = min( d, dot(b,b) );
-
         // winding number from http://geomalgorithms.com/a03-_inclusion.html
         bvec3 cond = bvec3( p.y&gt;=v[i].y, p.y&lt;v[j].y, e.x*w.y&gt;e.y*w.x ); // e.x / e.y &gt; w.x / w.y
         if( all(cond) || all(not(cond)) ) s *= -1.0;
     }
-
     return s * sqrt(d);
 }
 
@@ -1665,7 +2134,7 @@ discussion on stackoverflow: Get vertex positions in fragment shader</a><br></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_xutils_shaders_shape-layers.glsl.js.html">lib/xutils/shaders/shape-layers.glsl.js</a>, <a href="lib_xutils_shaders_shape-layers.glsl.js.html#line339">line 339</a>
+        <a href="lib_xutils_shaders_shape-layers.glsl.js.html">lib/xutils/shaders/shape-layers.glsl.js</a>, <a href="lib_xutils_shaders_shape-layers.glsl.js.html#line327">line 327</a>
     </li></ul></dd>
     
 
@@ -1711,13 +2180,13 @@ discussion on stackoverflow: Get vertex positions in fragment shader</a><br></p>
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Lighting.html">Lighting</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xyzLayer2">xyzLayer2</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Lighting.html">Lighting</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xyzLayer2">xyzLayer2</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Aug 11 2020
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Aug 13 2020
 </footer>
 
 <script> prettyPrint(); </script>
