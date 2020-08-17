@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/xutils/gluniform.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+    <link rel="shortcut icon" href="../../css/item.png"/>
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/xutils/gluniform.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {x} from '../xapp/xworld';
+import {ShaderFlag,ShaderAlpha} from '../component/visual';
+import * as xutils from './xcommon';
+import AssetKeepr from './assetkeepr';
+import {randomParticl} from './shaders/random-particl.glsl';
+import {cubeVoxels,cubeVoxelGeom} from './shaders/cube-voxels.glsl';
+import {colorLine} from './shaders/color-line.glsl';
+import {phongMorph2} from './shaders/color-array.glsl';
+import {scaleOrb} from './shaders/orb-scale.glsl';
+import {orbGroups} from './shaders/orb-groups.glsl';
+import {worldOrbs} from './shaders/orb-world.glsl';
+import {thermalTile} from './shaders/tile-thermal.glsl';
+import {texPrism, boxLayers, xyzLayer2} from './shaders/shape-layers.glsl';
+import {blinkStar,pointGeom} from './shaders/blink-star.glsl';
+import {testPoint} from './shaders/testpoint.glsl';
+import {fragShape} from './shaders/frag-shape.glsl';
+import {glConfig} from './shaders/glx.glsl';
+
+export default
+/**X-visual helper for handling shader material's unforms.
+ * @class gluniform
+ */
+class GlUniform {
+	/** @constructor gluniform */
+	constructor (config) {
+		this.cfg = Object.assign(glConfig, config);
+	}
+
+	/**
+	 * export function formatUniforms(visual, obj3, light)
+	 *
+	 * Merge Visual.paras.uniforms, load texture according to Visual.paras.u_tex.
+	 *
+	 * Scince v0.3.36, this method also modified obj3.lightened = true if the shader
+	 * using xlight's parameter. Only material of x-visual extension is possible, any
+	 * light effects of THEE.Materials is updated by xlight.hemisphereLight (instance
+	 * of THREE.HemisphereLight).
+	 * @param {Visual} visual Entities Visual component
+	 * @param {Obj3} obj3 not used?
+	 * @param {object=} ligth (optinal) light options
+	 * @return {object} uniforms for THREE.Mesh - properties are in format of name: {value}
+	 * @member gluniform.init
+	 * @function
+	 */
+	static init(visual, obj3, light) {
+		var uniforms = new Object();// make sure uniforms are not shared between materials
+		// common section
+		// u_tex
+		if (visual.paras &amp;&amp; visual.paras.uniforms &amp;&amp; visual.paras.uniforms.u_tex) {
+			console.warn ( "formatUniforms(): ignoring wrong paras: Visual.paras.uniforms.u_tex = ",
+							visual.paras.uniforms.u_tex,
+						   "Should been used as Visual.paras.u_tex." );
+			visual.paras = Object.assign(visual.paras || {}, {u_tex: visual.paras.uniforms.u_tex});
+			delete visual.paras.uniforms.u_tex;
+		}
+		// u_tex
+		if (visual.paras &amp;&amp; visual.paras.u_tex) {
+			if (typeof visual.paras.u_tex === 'string')
+				uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.paras.u_tex) };
+			else if (Array.isArray(visual.paras.u_tex)) {
+				// var texs = [];
+				for (var i = 0; i &lt; visual.paras.u_tex.length &amp;&amp; i &lt; 8; i++) {
+					var tex = new xutils.ramTexture(i + 1, i + 1, {alpha: 0.5});
+					// suppress RanderPass warning - but not working
+					tex.needsUpdate = false;
+					uniforms[`u_tex${i}`] = {value: tex};
+
+					AssetKeepr.loadTexure(visual.paras.u_tex[i],
+						(texture) => {
+							texture.needsUpdate = true;
+							// texs[i] = texture;
+							uniforms[`u_tex${i}`] = {value: texture};
+						});
+				}
+			}
+		}
+		else if (visual.paras &amp;&amp; visual.paras.uniforms
+			&amp;&amp; typeof visual.paras.uniforms.u_tex === 'string') {
+			uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.paras.uniforms.u_tex) };
+			delete visual.paras.uniforms.u_tex;
+		}
+		else if ((visual.shader &amp; ShaderFlag.defaultex) === ShaderFlag.defaultex) {
+			uniforms.u_tex = { value: AssetKeepr.cheapixelTex() };
+		}
+
+		// u_color
+		// Desgin Memo v0.3.33
+		// This must been set before uniPhongs() handling, which override u_color = light.skyColor
+		if (visual.paras &amp;&amp; visual.paras.color) {
+			uniforms.u_color = {value: new THREE.Vector4(...visual.paras.color)};
+		}
+
+		uniforms.side = {value: !visual.paras || visual.paras.side === undefined
+								? THREE.FrontSide : visual.paras.side};
+		uniforms.u_alpha = {value: visual.paras !== undefined &amp;&amp; visual.paras.tex_alpha !== undefined
+								? visual.paras.tex_alpha : 1};
+
+		// setup a default texture, a grey pixel to avoid this error:
+		// ERROR :GL_INVALID_OPERATION : glDrawElements: Source and destination textures of the draw are the same.
+		// Cause: It is not sufficient to bind the texture to a texture unit,
+		// the index of the texture unit has to be set to the texture sampler uniform, too.
+		// comments on https://stackoverflow.com/questions/50777793/gldrawelements-source-and-destination-textures-of-the-draw-are-the-same
+		if (!uniforms.u_tex &amp;&amp;
+			(  visual.shader === ShaderFlag.worldOrbs
+			|| visual.shader === ShaderFlag.scaleOrb
+			|| visual.shader === ShaderFlag.orbGroups
+			|| visual.shader === ShaderFlag.tiledOrbs) ) {
+			if (visual.asset)
+				uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.asset) };
+			else
+				uniforms.u_tex = { value: AssetKeepr.cheapixelTex() };
+		}
+
+		// switch of shader types
+		if (visual.paras &amp;&amp; visual.paras.uniforms)
+			Object.assign(uniforms, GlUniform.obj2uniforms(visual.paras.uniforms));
+
+		if (visual.shader === ShaderFlag.colorArray) {
+			phongMorph2.initUniform(uniforms, light, visual.paras);
+
+			if (visual.paras &amp;&amp; visual.paras.colors) {
+				// TODO should we use uniform array ?
+				for (var i = 0; i &lt; visual.paras.colors.length; i++)
+					uniforms[`u_colors${i}`] = {value: new THREE.Vector4(...visual.paras.colors[i])};
+			}
+		}
+		else if (visual.shader === ShaderFlag.scaleOrb) {
+			uniforms.wpos = {value: visual.paras.wpos ?
+							new THREE.Vector3(...p) : new THREE.Vector3(0, 0, 0)};
+			uniforms.r = {value: visual.paras.orbR === undefined
+								 ? 20 : visual.paras.orbR};
+			uniforms.whiteAlpha = {value: visual.paras.whiteAlpha === undefined
+						? 0 : visual.paras.whiteAlpha};
+			var os = visual.paras.orbScale;
+			uniforms.orbScale = {value: os === undefined
+						? new THREE.Vector3(1, 0.2, 0.2)
+						: new THREE.Vector3(os[0], os[1], os[2])};
+		}
+		else if (visual.shader === ShaderFlag.orbGroups) {
+			// orbs in a group (always have 1 orb)
+			var offsets = visual.paras.offsets || [0];
+			var orbs = visual.paras.offsets ? visual.paras.offsets.length : 1;
+			var rs = [];
+			for (var r of visual.paras.orbR || [10]) {
+				rs.push(r);
+			}
+			var orbColors = [];
+			for (var c of visual.paras.colors) {
+				orbColors.push(new THREE.Vector3(...c));
+			}
+			uniforms.orbs = { value: orbs };
+			uniforms.offsets = { value: offsets };
+			uniforms.orbColors = { value: orbColors };
+			uniforms.r = { value: rs };
+
+			// groups
+			if ( ! Array.isArray(visual.paras.follows)
+				|| visual.paras.follows.length &lt;= 0) {
+				console.error(visual);
+				throw new XError('Paras.follows for orbGroups\'s groups are not correct!');
+			}
+
+			uniforms.u_t = { value: 0 };
+			uniforms.tmin = { value: visual.paras.t_range ? visual.paras.t_range[0] : 0 };
+			uniforms.tmax = { value: visual.paras.t_range ? visual.paras.t_range[1] : 1 };
+
+			var wpos = [];
+			var wtan = [];
+			var flws = [];
+			for (var follow of visual.paras.follows) {
+				wpos.push(new THREE.Vector3(0));
+				wtan.push(new THREE.Vector3(1, 0, 0));
+				flws.push(follow);
+			}
+			uniforms.wpos = { value: wpos };
+			uniforms.wtan = { value: wtan };
+			uniforms.follows = { value: flws };
+
+			uniforms.whiteAlpha = { value: visual.paras.whiteAlpha === undefined
+						? 0 : visual.paras.whiteAlpha };
+			var os = visual.paras.orbScale;
+			uniforms.orbScale = { value: os === undefined
+						? new THREE.Vector3(1, 0.2, 0.2)
+						: new THREE.Vector3(os[0], os[1], os[2]) };
+		}
+		else if (visual.shader === ShaderFlag.worldOrbs
+				|| visual.shader === ShaderFlag.tiledOrbs) {
+			var poses = [];
+			var orbs = 0;
+			if (visual.paras.offsets === undefined)
+				visual.paras.offsets = [[0, 0, 0]];
+			for (var p of visual.paras.offsets) {
+				poses.push(new THREE.Vector3(...p));
+				orbs++;
+			}
+			var rs = [];
+			var orbRs = typeof visual.paras.orbR === 'number'
+						? [visual.paras.orbR] : visual.paras.orbR || [10];
+			for (var r of orbRs) {
+				rs.push(r);
+			}
+			var orbColors = [];
+			for (var c of visual.paras.colors) {
+				orbColors.push(new THREE.Vector3(...c));
+			}
+			var wpos = visual.paras.wpos
+				? new THREE.Vector3(...visual.paras.wpos) : new THREE.Vector3(0, 0, 0);
+
+			uniforms.orbs = { value: orbs };
+			uniforms.wpos = { value: wpos };
+			uniforms.offsets = { value: poses };
+			uniforms.orbColors = { value: orbColors };
+			uniforms.r = { value: rs };
+			uniforms.whiteAlpha = { value: visual.paras.whiteAlpha === undefined
+						? 0 : visual.paras.whiteAlpha };
+			var os = visual.paras.orbScale;
+			uniforms.orbScale = { value: os === undefined
+						? new THREE.Vector3(1, 0.2, 0.2)
+						: new THREE.Vector3(os[0], os[1], os[2]) };
+			if (visual.shader === ShaderFlag.tiledOrbs) {
+				uniforms.now = { value: 0 };
+				var groups = visual.paras.geostyle.groups || 1;
+				uniforms.speedVert = { value: new Array(groups).fill(0.01) };
+				uniforms.speedFrag = { value: new Array(groups).fill(0.01) };
+
+				var colrs = new Array();
+				var pcolrs = visual.paras.thermalColors || [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+				for (var c of pcolrs)
+					colrs.push(new THREE.Vector3(...c));
+				uniforms.thermalColors = { value: colrs };
+				uniforms.maxHeight = { value: visual.paras.geostyle.maxHeight
+							|| visual.paras.geostyle.height || 1 };
+			}
+		}
+		else if (visual.shader === ShaderFlag.texPrism
+				|| visual.shader === ShaderFlag.boxLayers) {
+
+			if (visual.shader === ShaderFlag.texPrism)
+				texPrism.initUniform(uniforms, light, visual.paras);
+			else
+				xyzLayer2.initUniform(uniforms, light, visual.paras);
+
+			// xz, xy, yz layers center
+			uniforms.wpos = { value: visual.paras.wpos ?
+				new THREE.Vector3(...visual.paras.wpos) : new THREE.Vector3(0, 0, 0) };
+
+			// xz, xy, yz layers offset
+			var offsetxyz = [0, 0, 0];
+			if (visual.paras.yztile)
+				offsetxyz[0] += visual.paras.yztile.x0 || 0;
+			if (visual.paras.xztile)
+				offsetxyz[1] += visual.paras.xztile.y0 || 0;
+			if (visual.paras.xytile)
+				offsetxyz[2] += visual.paras.xytile.z0 || 0;
+			uniforms.u_offsetxyz = {value: new THREE.Vector3(...offsetxyz)};
+
+			uniforms.now = { value: 0 };
+			var groups = visual.paras.geostyle ? visual.paras.geostyle.groups || 1 : 1;
+			uniforms.speedVert = { value: new Array(groups).fill(0.001) };
+			uniforms.speedFrag = { value: new Array(groups).fill(0.001) };
+
+			if (visual.paras.u_tex) {
+				uniforms.u_tex = { value: AssetKeepr.loadTexure(visual.paras.u_tex[0]) };
+				uniforms.u_basetex = { value: AssetKeepr.loadTexure(visual.paras.u_tex[1]) };
+			}
+
+			if (visual.paras.tile &amp;&amp; visual.paras.tile.hue) {
+				uniforms.u_hue = { value: new THREE.Vector4(...visual.paras.tile.hue) };
+			}
+			else
+				uniforms.u_hue = { value: new THREE.Vector4(0.4, 0.2, 0.8, 1.0) };
+
+			uniforms.u_north = { value: visual.paras.north || 0 };
+		}
+
+		if (visual &amp;&amp; (visual.shader &amp; ShaderFlag.lightened) === ShaderFlag.lightened )
+			obj3.lightened = true;
+
+		return uniforms;
+	}
+
+	/**
+	 * check uniforms exists&lt;br>
+	 * update uniforms in light if light.dirty = true;&lt;br>
+	 * update paras
+	 * @param {object} uniforms
+	 * @param {object} vparas paras in the same structure of Visual.paras
+	 * @param {object} ligth light options
+	 * @param {ShaderFlag=} shader Visual.shader, override vparas.shader
+	 * 					({@link XMaterial} doesn't have it)
+	 * @return {object} uniforms
+	 * @member gluniform.update
+	 * @function
+	 */
+	static update(uniforms, light, vparas, shader) {
+ 		if (typeof vparas.paras === "object") {
+ 			if (vparas.side !== undefined || vparas.tex_alpha !== undefined) {
+ 				uniforms.side.value = vparas.side;
+ 			}
+ 			if (vparas.tex_alpha !== undefined) {
+ 				uniforms.u_alpha.value = vparas.tex_alpha;
+ 			}
+ 		}
+
+		shader = shader || vparas.shader;
+ 		if (shader !== undefined) {
+ 			if (shader === ShaderFlag.colorArray) {
+ 				phongMorph2.updateUniform(uniforms, light, vparas);
+ 				if (vparas.colors) {
+ 					// TODO should we use uniform array ?
+ 					for (let i = 0; i &lt; vparas.colors.length; i++)
+ 						uniforms[`u_colors${i}`] = {
+ 							value: new THREE.Vector4(...vparas.colors[i])
+ 						};
+ 				}
+ 			}
+			else if (shader === ShaderFlag.scaleOrb) {
+				// TODO
+ 			}
+			else if (shader === ShaderFlag.orbGroups) {
+				// TODO
+ 			}
+ 			if (shader === ShaderFlag.tiledOrbs) {
+				// TODO
+ 			}
+			else if (shader === ShaderFlag.texPrism ||
+ 				shader === ShaderFlag.boxLayers) {
+ 				if (shader === ShaderFlag.texPrism)
+ 					texPrism.updateUniform(uniforms, light, vparas);
+ 				else
+ 					xyzLayer2.updateUniform(uniforms, light, vparas);
+
+ 				if (Array.isArray(vparas.wpos) &amp;&amp; vparas.wpos.length > 0) {
+ 					uniforms.wpos = new THREE.Vector3(...vparas.wpos);
+ 				}
+
+ 				// xz, xy, yz layers offset
+ 				let offsetxyz = uniforms.u_offsetxyz.value;
+ 				if (vparas.yztile !== undefined) {
+ 					offsetxyz.x = vparas.yztile.x0;
+ 				}
+ 				if (vparas.xztile !== undefined) {
+ 					offsetxyz.y = vparas.xztile.y0;
+ 				}
+ 				if (vparas.xytile !== undefined) {
+ 					offsetxyz.z = vparas.xytile.z0;
+ 				}
+
+ 				if (typeof vparas.geostyle === "object" &amp;&amp; vparas.geostyle.groups >= 1) {
+ 					let groups = vparas.geostyle.groups;
+ 					uniforms.speedVert.value = new Array(groups).fill(0.001);
+ 					uniforms.speedFrag.value = new Array(groups).fill(0.001);
+ 				}
+
+ 				if (vparas.u_tex) {
+ 					uniforms.u_tex = {
+ 						value: AssetKeepr.loadTexure(vparas.u_tex[0])
+ 					};
+ 					uniforms.u_basetex = {
+ 						value: AssetKeepr.loadTexure(vparas.u_tex[1])
+ 					};
+ 				}
+
+ 				if (vparas.tile &amp;&amp; vparas.tile.hue) {
+ 					uniforms.u_hue.value = new THREE.Vector4(...vparas.tile.hue);
+ 				}
+ 				if (vparas.north !== undefined) {
+ 					uniforms.u_north.value = vparas.north
+ 				}
+ 			}
+ 		}
+ 	}
+
+	/**
+	 * Convert object into THREE.Mesh.uniforms format (properties are {value} object).&lt;br>
+	 * x-visual v.s. Three.js material variable name mapping:&lt;pre>
+		three.js -&amp;gt; x-visual shader
+		opacity - u_alpha
+	 &lt;/pre>
+	 * @param {object} properties
+	 * @param {THREE.Uniforms} uniforms
+	 * @return {object} uniforms for THREE.Mesh - properties are in format of name: {value}
+	 * @member GlUniform.obj2uniforms
+	 * @function
+	 */
+	static obj2uniforms(properties, uniforms) {
+		var u = new Object();
+		for (var p in properties) {
+			if (p === 'opacity')
+				u.u_alpha = {value: properties[p]};
+			else
+				u[p] = {value: properties[p]};
+		}
+		return Object.assign(uniforms || new Object(), u);
+	}
+
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="gluniform.html">gluniform</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="XMaterials.html">XMaterials</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Aug 17 2020
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

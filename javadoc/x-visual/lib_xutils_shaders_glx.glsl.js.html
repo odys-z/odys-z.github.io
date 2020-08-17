@@ -32,11 +32,12 @@
  * @enum {string} */
 export const glConfig = {
   // diffuseWeight: 0.5,
-
-  ka: '(0.3)',   // Ambient reflection coefficient, e.g. 1.0,
-  kd: '(1.0)',   // Diffuse reflection coefficient, e.g. 0.4,
-  ks: '(0.8)',   // Specular reflection coefficient, e.g. 1.0,
-
+  /** Ambient reflection coefficient, default '0.3' */
+  ka: '(0.3)',
+  /** Diffuse reflection coefficient, default '1.0' */
+  kd: '(1.0)',
+  /** Specular reflection coefficient, default '0.8' */
+  ks: '(0.8)',
 
   /** * @deprecated
    * default is parallel light, to change to point light, set as:
@@ -246,19 +247,19 @@ const glx = {
   phongLight: `vec2 lambershine(vec3 n, vec3 lightpos, vec3 e, vec3 vertpos, float shininess) {
     vec3 L = normalize(lightpos - vertpos);
 	vec3 N = normalize(n);
-    float lambertian = max(dot(n, normalize(lightpos)), 0.0);
+    float lambertian = max(dot(N, L), 0.0);
     vec3 R = reflect(-L, N);
     float specAngle = max(dot(R, normalize(e - vertpos)), 0.0);
-    float specular = pow(specAngle * ${glConfig.ks}, shininess);
-    return vec2(lambertian, specular * lambertian);
+    float specular = pow(specAngle, shininess);
+    return vec2(lambertian, specular);
   }
-  vec4 phongLight(vec3 N, vec3 lightpos, vec3 eye, vec3 vertpos,
+  vec4 phongLight(vec3 n3, vec3 lightpos, vec3 eye, vec3 vertpos,
       vec3 ambient, vec3 diffuse, vec3 specular, float shininess) {
     float Ka = ${glConfig.ka};
     float Kd = ${glConfig.kd};
     float Ks = ${glConfig.ks};
 
-    vec2 lambshine = lambershine(N, lightpos, eye, vertpos, shininess);
+    vec2 lambshine = lambershine(n3, lightpos, eye, vertpos, shininess);
     return vec4(Ka * ambient
               + Kd * lambshine.s * diffuse
               + Ks * lambshine.t * specular
@@ -277,6 +278,74 @@ export function GlxError(err, code) {
     this.message = err;
     this.name = 'GlxError';
 }
+
+/** A common functionf for initialize phong uniforms. Supposed to be changed in
+ * the future - phong uniforms should not very common for different shader?
+ * &lt;p>&lt;b>Don't use this directly. This is only a shortcut of certain shaders.&lt;/b>&lt;/p>
+ * @param {object=} uniforms if undefined, will create one
+ * @param {object} light
+ * @param {paras=} paras usually Visual.paras
+ * @return {object} uniforms
+ * @member xglsl.initPhongUni
+ * @function
+ */
+export function initPhongUni(uniforms = {}, light, paras = {}) {
+	uniforms.u_shininess = { value: paras.shininess ||
+							 (uniforms.u_shininess ? uniforms.u_shininess.value : 1) };
+	uniforms.u_specularColor = { value: paras.shineColor ?
+							new THREE.Vector3(...paras.shineColor) :
+							new THREE.Vector3(1., 1., 1.) };
+
+	uniforms.u_ambientColor = { value: new THREE.Vector3( ...
+							(light.ambient || [0, 0, 0]) ) };
+
+	uniforms.u_lightPos = { value: new THREE.Vector3(...(light.position || [1, 1, 1]))};
+
+	uniforms.u_lightIntensity = { value: light.intensity === undefined ?
+										1 : light.intensity };
+
+	uniforms.u_color = {value: new THREE.Vector4(...light.diffuse)};
+
+	return uniforms;
+}
+
+/** A common functionf for undating phong uniforms. Supposed to be changed in the
+ * future - phong uniforms should not very common for different shader?
+ * &lt;p>&lt;b>Don't use this directly. This is only a shortcut of certain shaders.&lt;/b>&lt;/p>
+ * @param {object} uniforms uniforms to updated.
+ * @param {object=} light
+ * @param {paras=} paras usually Visual.paras
+ * @return {object} uniforms
+ * @member xglsl.updatePhongUni
+ * @function
+ */
+export function updatePhongUni(uniforms, light, paras = {}) {
+	if (!uniforms)
+		// nothing to bu updated
+		return;
+
+	if (typeof paras.shininess === "number") {
+		uniforms.u_shininess.value = paras.shininess;
+	}
+	if (Array.isArray(paras.shineColor) &amp;&amp; paras.shineColor.length === 3) {
+		uniforms.u_specularColor.value = new THREE.Vector3(...paras.shineColor);
+	}
+
+	if (light &amp;&amp; light.dirty) {
+		if (Array.isArray(light.ambient) &amp;&amp; light.ambient.length === 3) {
+			uniforms.u_ambientColor.value = new THREE.Vector3(...light.ambient);
+		}
+		if (Array.isArray(light.position) &amp;&amp; light.position.length === 3) {
+			uniforms.u_lightPos.value = new THREE.Vector3(...light.position);
+		}
+		if (typeof light.intensity === "number") {
+			uniforms.u_lightIntensity.value = light.intensity;
+		}
+		if (Array.isArray(light.diffuse) &amp;&amp; light.diffuse.length >= 3) {
+			uniforms.u_color.value = new THREE.Vector4(...light.diffuse, 1);
+		}
+	}
+}
 </code></pre>
         </article>
     </section>
@@ -287,13 +356,13 @@ export function GlxError(err, code) {
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Lighting.html">Lighting</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xyzLayer2">xyzLayer2</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="gluniform.html">gluniform</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="XMaterials.html">XMaterials</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Aug 13 2020
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Aug 17 2020
 </footer>
 
 <script> prettyPrint(); </script>
