@@ -162,7 +162,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line27">line 27</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -342,7 +342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line449">line 449</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line474">line 474</a>
     </li></ul></dd>
     
 
@@ -550,7 +550,7 @@ points (vertices) can basically rendered.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line941">line 941</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line954">line 954</a>
     </li></ul></dd>
     
 
@@ -734,7 +734,7 @@ points (vertices) can basically rendered.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1114">line 1114</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1127">line 1127</a>
     </li></ul></dd>
     
 
@@ -795,6 +795,13 @@ points (vertices) can basically rendered.</p>
 
 
 
+<div class="description">
+    <p>Setup light of <a href='https://threejs.org/docs/index.html#api/en/lights/DirectionalLight'>
+THREE.DirectionalLight</a> &amp; <a href='https://threejs.org/docs/index.html#api/en/lights/shadows/DirectionalLightShadow'>
+THREE.DirectionalLightShadow</a>.<br>
+For parameters' example, see test/html/ecs-basics/light.html</p>
+</div>
+
 
 
 
@@ -816,7 +823,11 @@ points (vertices) can basically rendered.</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -841,14 +852,467 @@ points (vertices) can basically rendered.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>light</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>skyColor: number, default 0ffffbb<br>
-groundColor: number, defualt 0x080820<br>
-pos: array, defualt [0, 1, 0.56]<br>
-intensity: number, default 1.1<br>
-See Three.js docs: HemisphereLight</p></td>
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>otpions.light.skyColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0xffffbb
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.light.groundColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0x080820
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.light.pos</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    [0, 1, 0.56]
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.light.intensity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1.1
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>otpions.light.castShadow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.shadow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mapSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {width: 1024, height: 1024}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>camera</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {near: 50, far: 2000}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    20
+                
+                </td>
+            
+
+            <td class="description last"><p>The shadow cull space size,
+scaled to default THREE.shadowCamera.width, height, like:<pre>
+light.shadow.camera.left *= size;
+light.shadow.camera.right *= size;
+light.shadow.camera.bottom *= size;
+light.shadow.camera.top *= size;</pre></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -889,7 +1353,7 @@ See Three.js docs: HemisphereLight</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1168">line 1168</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1184">line 1184</a>
     </li></ul></dd>
     
 
@@ -1100,7 +1564,7 @@ RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line609">line 609</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line639">line 639</a>
     </li></ul></dd>
     
 
@@ -1130,219 +1594,6 @@ RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
         
 <div class="param-desc">
     <p>{curve, path, points}</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, paras, material)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Create object mesh, put int <em>cmpObj3</em>.
-This method handle only AssetType.PathTube.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>cmpObj3</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Obj3</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>{geom: Obj3Type.GeomCurve (with future sects?)}</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>paras</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Visual.paras, @see xgeom.generateCurve</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>material</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">THREE.Materail</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line688">line 688</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="Thrender.html#.createObj3mesh">Thrender.createObj3mesh</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>{tube, path}, where geomCurve is THREE.BufferGeometry,</p>
 </div>
 
 
@@ -1577,7 +1828,7 @@ This method handle only AssetType.PathTube.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line665">line 665</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line695">line 695</a>
     </li></ul></dd>
     
 
@@ -1602,6 +1853,219 @@ This method handle only AssetType.PathTube.</p>
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, paras, material)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create object mesh, put int <em>cmpObj3</em>.
+This method handle only AssetType.PathTube.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cmpObj3</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Obj3</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>{geom: Obj3Type.GeomCurve (with future sects?)}</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paras</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Visual.paras, @see xgeom.generateCurve</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>material</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Materail</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line718">line 718</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Thrender.html#.createObj3mesh">Thrender.createObj3mesh</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>{tube, path}, where geomCurve is THREE.BufferGeometry,</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1762,7 +2226,7 @@ cmVisual.shader: parameters for generate vertex and framgment shaders. see xglsl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1062">line 1062</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1075">line 1075</a>
     </li></ul></dd>
     
 
@@ -1971,7 +2435,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line638">line 638</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line668">line 668</a>
     </li></ul></dd>
     
 
@@ -2202,7 +2666,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line55">line 55</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -2381,7 +2845,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line469">line 469</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line494">line 494</a>
     </li></ul></dd>
     
 
@@ -2649,7 +3113,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line724">line 724</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line754">line 754</a>
     </li></ul></dd>
     
 
@@ -2835,7 +3299,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line541">line 541</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line571">line 571</a>
     </li></ul></dd>
     
 
@@ -3013,7 +3477,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1203">line 1203</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1255">line 1255</a>
     </li></ul></dd>
     
 
@@ -3176,7 +3640,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1262">line 1262</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1330">line 1330</a>
     </li></ul></dd>
     
 
@@ -3291,7 +3755,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line22">line 22</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -3471,7 +3935,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line449">line 449</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line474">line 474</a>
     </li></ul></dd>
     
 
@@ -3679,7 +4143,7 @@ points (vertices) can basically rendered.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line941">line 941</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line954">line 954</a>
     </li></ul></dd>
     
 
@@ -3863,7 +4327,7 @@ points (vertices) can basically rendered.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1114">line 1114</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1127">line 1127</a>
     </li></ul></dd>
     
 
@@ -3924,6 +4388,13 @@ points (vertices) can basically rendered.</p>
 
 
 
+<div class="description">
+    <p>Setup light of <a href='https://threejs.org/docs/index.html#api/en/lights/DirectionalLight'>
+THREE.DirectionalLight</a> &amp; <a href='https://threejs.org/docs/index.html#api/en/lights/shadows/DirectionalLightShadow'>
+THREE.DirectionalLightShadow</a>.<br>
+For parameters' example, see test/html/ecs-basics/light.html</p>
+</div>
+
 
 
 
@@ -3945,7 +4416,11 @@ points (vertices) can basically rendered.</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -3970,14 +4445,467 @@ points (vertices) can basically rendered.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>light</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>skyColor: number, default 0ffffbb<br>
-groundColor: number, defualt 0x080820<br>
-pos: array, defualt [0, 1, 0.56]<br>
-intensity: number, default 1.1<br>
-See Three.js docs: HemisphereLight</p></td>
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>otpions.light.skyColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0xffffbb
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.light.groundColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0x080820
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.light.pos</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    [0, 1, 0.56]
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.light.intensity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1.1
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>otpions.light.castShadow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options.shadow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mapSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {width: 1024, height: 1024}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>camera</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    {near: 50, far: 2000}
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    20
+                
+                </td>
+            
+
+            <td class="description last"><p>The shadow cull space size,
+scaled to default THREE.shadowCamera.width, height, like:<pre>
+light.shadow.camera.left *= size;
+light.shadow.camera.right *= size;
+light.shadow.camera.bottom *= size;
+light.shadow.camera.top *= size;</pre></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -4018,7 +4946,7 @@ See Three.js docs: HemisphereLight</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1168">line 1168</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1184">line 1184</a>
     </li></ul></dd>
     
 
@@ -4229,7 +5157,7 @@ RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line609">line 609</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line639">line 639</a>
     </li></ul></dd>
     
 
@@ -4259,219 +5187,6 @@ RandomCurve, RandomSects, PointSects, CatmullRom, Spline from
         
 <div class="param-desc">
     <p>{curve, path, points}</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, paras, material)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Create object mesh, put int <em>cmpObj3</em>.
-This method handle only AssetType.PathTube.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>cmpObj3</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Obj3</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>{geom: Obj3Type.GeomCurve (with future sects?)}</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>paras</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Visual.paras, @see xgeom.generateCurve</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>material</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">THREE.Materail</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line688">line 688</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="Thrender.html#.createObj3mesh">Thrender.createObj3mesh</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>{tube, path}, where geomCurve is THREE.BufferGeometry,</p>
 </div>
 
 
@@ -4706,7 +5421,7 @@ This method handle only AssetType.PathTube.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line665">line 665</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line695">line 695</a>
     </li></ul></dd>
     
 
@@ -4731,6 +5446,219 @@ This method handle only AssetType.PathTube.</p>
 
 
 
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createObj3mesh"><span class="type-signature">(static) </span>createObj3mesh<span class="signature">(cmpObj3, paras, material)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create object mesh, put int <em>cmpObj3</em>.
+This method handle only AssetType.PathTube.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cmpObj3</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Obj3</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>{geom: Obj3Type.GeomCurve (with future sects?)}</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paras</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Visual.paras, @see xgeom.generateCurve</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>material</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">THREE.Materail</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line718">line 718</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Thrender.html#.createObj3mesh">Thrender.createObj3mesh</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>{tube, path}, where geomCurve is THREE.BufferGeometry,</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -4891,7 +5819,7 @@ cmVisual.shader: parameters for generate vertex and framgment shaders. see xglsl
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1062">line 1062</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1075">line 1075</a>
     </li></ul></dd>
     
 
@@ -5100,7 +6028,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line638">line 638</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line668">line 668</a>
     </li></ul></dd>
     
 
@@ -5331,7 +6259,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line55">line 55</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -5510,7 +6438,7 @@ with Obj3.box as constructor parameters.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line469">line 469</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line494">line 494</a>
     </li></ul></dd>
     
 
@@ -5778,7 +6706,7 @@ See <a href="XComponent.html#.Obj3Type"><code>Obj3Type</code></a> for parameters
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line724">line 724</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line754">line 754</a>
     </li></ul></dd>
     
 
@@ -5964,7 +6892,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line541">line 541</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line571">line 571</a>
     </li></ul></dd>
     
 
@@ -6142,7 +7070,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1203">line 1203</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1255">line 1255</a>
     </li></ul></dd>
     
 
@@ -6305,7 +7233,7 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1262">line 1262</a>
+        <a href="lib_sys_thrender.js.html">lib/sys/thrender.js</a>, <a href="lib_sys_thrender.js.html#line1330">line 1330</a>
     </li></ul></dd>
     
 
@@ -6351,13 +7279,13 @@ discussion: Change opacity using fat lines example for line opacity</a></p>
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="Lighting.html">Lighting</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li><li><a href="global.html#xyzLayer2">xyzLayer2</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="gluniform.html">gluniform</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="XMaterials.html">XMaterials</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Aug 13 2020
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Sep 09 2020
 </footer>
 
 <script> prettyPrint(); </script>
