@@ -32,6 +32,7 @@ import * as THREE from 'three'
 import {EffectComposer} from '../../packages/three/postprocessing/EffectComposer'
 import {RenderPass} from  '../../packages/three/postprocessing/RenderPass'
 import {OutlinePass} from '../../packages/three/postprocessing/OutlinePass'
+import {Reflector} from '../../packages/three/core/Reflector'
 
 import * as ECS from '../../packages/ecs-js/index'
 
@@ -105,9 +106,11 @@ export default class Thrender extends ECS.System {
 			// 1.1 paras for uniforms
 			var uniforms = new Object();
 			// 1.2 shader's uniforms
-			if (!e.Visual.material &amp;&amp; e.Visual.shader) {
-				// TODO test
-				// uniforms = xglsl.formatUniforms(e.Visual, e.Obj3, light);
+			if ( ! e.Visual.material &amp;&amp; e.Visual.shader
+				// reflectex is a special material + shader ported from Three.js example,
+				// Visaul.shader can be ignored
+				|| e.Visual.vtype === AssetType.reflectex
+				|| e.Visual.vtype === AssetType.reflector3js ) {
 				uniforms = GlUniform.init(e.Visual, e.Obj3, light);
 			}
 			// 2. TODO merge material handling
@@ -130,6 +133,10 @@ export default class Thrender extends ECS.System {
 
 			// create mesh of AssetType
 			switch (e.Visual.vtype) {
+				case AssetType.UserMesh:
+					// nothing to do
+					addObj3(scene, e.Obj3.mesh, e);
+					break;
 				case AssetType.Extension:
 					// some extesion like Canvtex (x-visual v0.3) will handle this
 					var g = new THREE.Group();
@@ -208,7 +215,7 @@ export default class Thrender extends ECS.System {
 						// FIXME material should handled in orthogonal fashion.
 						if (e.Visual.shader) {
 							// create ShaderMaterial
-							mat = Thrender.createXShaderMaterial(e.Visual.shader, uniforms, e.Visual.paras);
+							mat = Thrender.createXShaderMaterial(e.Visual.shader, uniforms, e.Visual.paras, e.Obj3);
 						}
 						else {
 							var def = {};
@@ -367,7 +374,7 @@ export default class Thrender extends ECS.System {
 						// FIXME see also createObj3particles(), AssetType.mesh
 						if (e.Visual.shader) {
 							// create ShaderMaterail
-							mat = Thrender.createXShaderMaterial(e.Visual.shader, uniforms, e.Visual.paras);
+							mat = Thrender.createXShaderMaterial(e.Visual.shader, uniforms, e.Visual.paras, e.Obj3);
 						}
 						else {
 							var def = {};
@@ -433,10 +440,6 @@ export default class Thrender extends ECS.System {
 						e.Obj3.datum.path = path;
 					}
 					break;
-				case AssetType.UserMesh:
-					// nothing to do
-					addObj3(scene, e.Obj3.mesh, e);
-					break;
 				case AssetType.Arrow:
 					var dir = new THREE.Vector3( e.Visual.paras.dir[0],
 								e.Visual.paras.dir[1], e.Visual.paras.dir[2]);
@@ -456,6 +459,28 @@ export default class Thrender extends ECS.System {
 							 	e.Visual.paras.headLength, e.Visual.paras.headWidth);
 					e.Obj3.mesh = a;
 					addObj3(scene, a, e);
+					break;
+				case AssetType.reflector3js:
+					var g = Thrender.geometryCase(e.Obj3.geom, e.Obj3.box,
+									e.Visual.paras, e.Obj3);
+					var m = new Reflector(g);
+					e.Obj3.mesh = m;
+					addObj3(scene, m, e);
+					break;
+				case AssetType.reflectex:
+					var g = Thrender.geometryCase(e.Obj3.geom, e.Obj3.box,
+									e.Visual.paras, e.Obj3);
+					var shader = xglsl.xvShader( ShaderFlag.reflectex, e.Visual.paras );
+					var m = new Reflector( g, {
+								shader,
+								receiveShadow: e.Obj3.mesh.receiveShadow } );
+					// otherwise WebGLRenderer.initMaterial won't set light uniforms
+					m.material.lights = true;
+					Object.assign(m.material.uniforms, uniforms);
+
+					// var m = new Reflector(g);
+					e.Obj3.mesh = m;
+					addObj3(scene, m, e);
 					break;
 				default:
 					console.error('TODO AssetType: ', e.Visual.vtype);
@@ -524,11 +549,12 @@ export default class Thrender extends ECS.System {
 	 * @param {ShaderFlag} shaderflag
 	 * @param {object} uniforms Mesh.material.uniforms
 	 * @param {object} vparas visual paras
+	 * @param {Obj3} obj3 Entity Obj3
 	 * @return {THREE.ShaderMaterial} material for x-shaders
 	 * @member Thrender.createXShaderMaterial
 	 * @function
 	 */
-	static createXShaderMaterial( shaderflag, uniforms = new Object(), vparas ) {
+	static createXShaderMaterial( shaderflag, uniforms = new Object(), vparas, obj3 ) {
 		if (shaderflag === ShaderFlag.colorArray) {
 			if (vparas &amp;&amp; vparas.u_texWeight !== undefined) {
 				uniforms.u_texWeight = {value: vparas.u_texWeight};
@@ -541,25 +567,25 @@ export default class Thrender extends ECS.System {
 				}
 				uniforms.u_colors = {value: clrs};
 			}
-			// TODO merge with glsl.formatUniforms()
+			// TODO merge with XMaterial.init()
 			if (vparas &amp;&amp; vparas.u_tex &amp;&amp; vparas.u_tex.length > 0) {
 				var texs = [];
 				for (var i = 0; i &lt; vparas.u_tex.length; i++) {
-					var tex = new ramTexture(i+1, i+1, {alpha: 0.5});
+					var tex = new ramTexture( i + 1, i + 1, { alpha: 0.5 } );
 					// suppres RanderPass warning - but not working
 					tex.needsUpdate = false;
-					texs.push(tex);
+					texs.push( tex );
 
-					AssetKeepr.loadTexure(vparas.u_tex[i],
-						(function() {
+					AssetKeepr.loadTexure( vparas.u_tex[i],
+						( function() {
 							var j = i;
 							return (texture) => {
 								texture.needsUpdate = true;
 								texs[j] = texture;
 							}
-						})());
+						} )() );
 				}
-				uniforms.u_tex = {value: texs};
+				uniforms.u_tex = { value: texs };
 
 				if (!vparas || !vparas.colors || vparas.colors.length === 0) {
 					// no diffuse colors
@@ -569,13 +595,23 @@ export default class Thrender extends ECS.System {
 			}
 		}
 
-		var {vertexShader, fragmentShader} = xglsl.xvShader(
-					shaderflag, vparas);
+		if ( obj3.mesh &amp;&amp; obj3.mesh.receiveShadow )
+			vparas.dirShadow = true;
+		let {vertexShader, fragmentShader} = xglsl.xvShader( shaderflag, vparas );
 
-		var side = !vparas || vparas.side === undefined
+		let side = !vparas || vparas.side === undefined
 					? THREE.FrontSide : vparas.side;
 
-		var mat = new THREE.ShaderMaterial( {
+		// TODO should this been moved to GlUniform?
+		if ( obj3.mesh &amp;&amp; obj3.mesh.receiveShadow ) {
+			// Three.js directional light and map co-orperate with a few special
+			// materials' uniforms
+			uniforms = Object.assign(uniforms, THREE.ShaderLib.shadow.uniforms);
+			delete uniforms.vertexShader;
+			delete uniforms.fragmentShader;
+		}
+
+		let mat = new THREE.ShaderMaterial( {
 			uniforms,
 			vertexShader,
 			fragmentShader,
@@ -586,6 +622,11 @@ export default class Thrender extends ECS.System {
 			shadowSide: vparas &amp;&amp; vparas.shadowSide !== undefined ?
 				vparas.shadowSide : THREE.BackSide,
 		} );
+
+		// This makes renderer update object's shadow map
+		// see WebGLRenderer.materialNeedsLights() called by initMaterial()
+		if ( obj3.mesh &amp;&amp; obj3.mesh.receiveShadow )
+			mat.lights = true;
 
 		if (shaderflag === ShaderFlag.discard)
 			// Debug Notes: avoid error message:
@@ -1131,7 +1172,7 @@ export default class Thrender extends ECS.System {
 		}
 
 		Object.assign(uniforms, GlUniform.obj2uniforms(cmpObj3.uniforms));
-		var material = Thrender.createXShaderMaterial(cmpVisual.shader, uniforms, cmpVisual.paras);
+		var material = Thrender.createXShaderMaterial(cmpVisual.shader, uniforms, cmpVisual.paras, cmpObj3);
 
 		var destEnt;
 		if (cmpVisual.vtype === AssetType.refPoint
@@ -1167,8 +1208,6 @@ export default class Thrender extends ECS.System {
 	static createCubeVoxel(cmpObj3, cmpVisual) {
 		// FIXME can this uniforms been orthogonal handled?
 
-		// TODO test
-		// var uniforms = xglsl.formatUniforms(cmpVisual, cmpObj3);
 		var uniforms = GlUniform.init(cmpVisual, cmpObj3);
 
 		var {vertexShader, fragmentShader} = xglsl.xvShader(cmpVisual.shader, cmpVisual.paras);
@@ -1230,11 +1269,13 @@ export default class Thrender extends ECS.System {
 	light.shadow.camera.right *= size;
 	light.shadow.camera.bottom *= size;
 	light.shadow.camera.top *= size;&lt;/pre>
+
+	 * @param {object} [cam] {near, far}, camera's near, far
 	 * @return {THREE.HemisphereLight} with options = arg-options
 	 * @member Thrender.createCubeVoxel
 	 * @function
 	 */
-	static createLight (options = {}) {
+	static createLight (options = {}, cam = {}) {
 		var s = options.shadow || {}; // for short
 		var l = options.light || {};
 
@@ -1248,8 +1289,10 @@ export default class Thrender extends ECS.System {
 		light.groundColor = ground;
 
 		light.castShadow = true;
+		/*
 		light.shadow.mapSize.width = 1024;  // default
 		light.shadow.mapSize.height = 1024; // default
+		light.shadow.bias = 0.00;
 
 		light.shadow.camera.near = s.near !== undefined ? s.near : 50;
 		light.shadow.camera.far  = s.far  !== undefined ? s.far : 2000;
@@ -1261,6 +1304,45 @@ export default class Thrender extends ECS.System {
 		light.shadow.camera.top *= ssz;
 
 		light.shadow.camera.zoom = s.zoom !== undefined ? s.zoom : 0.5;
+		*/
+		light.shadow.mapSize = Object.assign( {
+			x: 1024, y: 1024,
+			width: 1024,
+			height: 1024
+		}, s.mapSize);
+
+		light.shadow.bias = s.bias === undefined ? 0.001 : s.bias;
+
+		light.shadow.camera = Object.assign(light.shadow.camera,
+			Object.assign(
+				{ near: cam.near == undefined ? 1 : cam.near,
+				  far: cam.far == undefined ? 2000 : cam.far },
+				{ near: s.near, far: s.far} )
+		);
+
+		if (s.size === undefined || typeof s.size === 'number') {
+			let ssz = s.size !== undefined ? s.size : 20;
+			light.shadow.camera.left *= ssz;
+			light.shadow.camera.right *= ssz;
+			light.shadow.camera.top *= ssz;
+			light.shadow.camera.bottom *= ssz;
+		}
+		else if (Array.isArray(s.size)) {
+			light.shadow.camera.left *= s.size[0] || 20;
+			light.shadow.camera.right *= s.size[1] || 20;
+			light.shadow.camera.top *= s.size[2] || 20;
+			light.shadow.camera.bottom *= s.size[3] || 20;
+		}
+		else if (typeof s.size === 'object') {
+			light.shadow.camera.left *= s.size.left || 20;
+			light.shadow.camera.right *= s.size.right || 20;
+			light.shadow.camera.top *= s.size.top || 20;
+			light.shadow.camera.bottom *= s.size.bottom || 20;
+		}
+
+		light.shadow.camera.zoom = s.zoom !== undefined ? s.zoom : 0.5;
+
+		light.shadow.radius = s.radius === undefined ? 8 : s.radius;
 
 		if (l &amp;&amp; l.position) {
 			light.position.x = l.position[0];
@@ -1296,11 +1378,16 @@ export default class Thrender extends ECS.System {
 		var renderer = new THREE.WebGLRenderer( opt );
 
 		renderer.shadowMap.enabled = true;
-		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		// renderer.shadowMap.type = opt.shadowMap.type;
 		// renderer.shadowMapCullFace = THREE.CullFaceBack;
-		if (opt.shadow) {
-			renderer.shadowMap.enabled = !!opt.shadow.enabled;
-			renderer.shadowMap.type = opt.shadow.type || THREE.PCFSoftShadowMap;
+
+		if (! x.options.shadow)
+			x.options.shadow = {};
+
+		if (x.options.shadow) {
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = x.options.shadow.type === undefined ?
+						THREE.PCFSoftShadowMap : x.options.shadow.type;
 			// renderer.shadowMapCullFace = opt.shadow.CullFace || THREE.CullFaceBack;
 		}
 
@@ -1404,13 +1491,13 @@ function logGlInfo (renderer) {
 </div>
 
 <nav>
-    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="gluniform.html">gluniform</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="vec3.html">vec3</a></li><li><a href="Vec3_.html">Vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="XMaterials.html">XMaterials</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glConfig">glConfig</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li></ul>
+    <h2><a href="index.html">x-visual API</a></h2><h3>Classes</h3><ul><li><a href="AbsCluster.html">AbsCluster</a></li><li><a href="Affine.html">Affine</a></li><li><a href="AffineCombiner.html">AffineCombiner</a></li><li><a href="AssetKeepr.html">AssetKeepr</a></li><li><a href="Axisys.html">Axisys</a></li><li><a href="BaseComponent.html">BaseComponent</a></li><li><a href="CamCtrl.html">CamCtrl</a></li><li><a href="CanvTex.html">CanvTex</a></li><li><a href="ChannelFilter.html">ChannelFilter</a></li><li><a href="chart.html">chart</a></li><li><a href="chart.Axes.html">Axes</a></li><li><a href="chart.Bar.html">Bar</a></li><li><a href="chart.GridElem.html">GridElem</a></li><li><a href="chart.Pie.html">Pie</a></li><li><a href="chart.Sankey.html">Sankey</a></li><li><a href="CoordsGrid.html">CoordsGrid</a></li><li><a href="D3Pie.html">D3Pie</a></li><li><a href="ECS.html">ECS</a></li><li><a href="Entity.html">Entity</a></li><li><a href="FilmEffect.html">FilmEffect</a></li><li><a href="FinalComposer.html">FinalComposer</a></li><li><a href="gluniform.html">gluniform</a></li><li><a href="GlxError.html">GlxError</a></li><li><a href="GpuPicker.html">GpuPicker</a></li><li><a href="GridVisuals.html">GridVisuals</a></li><li><a href="Htmltex.html">Htmltex</a></li><li><a href="Hud.html">Hud</a></li><li><a href="Input.html">Input</a></li><li><a href="Layers.html">Layers</a></li><li><a href="map3.BoundCubes.html">BoundCubes</a></li><li><a href="Mapctrl.html">Mapctrl</a></li><li><a href="mat4.html">mat4</a></li><li><a href="MorphingAnim.html">MorphingAnim</a></li><li><a href="OSM3.html">OSM3</a></li><li><a href="OsmUtils.html">OsmUtils</a></li><li><a href="PathEffect.html">PathEffect</a></li><li><a href="pickuuid.html">pickuuid</a></li><li><a href="RayPicker.html">RayPicker</a></li><li><a href="rayuuid.html">rayuuid</a></li><li><a href="Request.html">Request</a></li><li><a href="System.html">System</a></li><li><a href="Textag.html">Textag</a></li><li><a href="ThreeExt.html">ThreeExt</a></li><li><a href="ThreeExt.DirTubeBufferGeometry.html">DirTubeBufferGeometry</a></li><li><a href="ThreeExt.DirTubeGeometry.html">DirTubeGeometry</a></li><li><a href="Thrender.html">Thrender</a></li><li><a href="TilesKeeper.html">TilesKeeper</a></li><li><a href="Tween.html">Tween</a></li><li><a href="Vec3.html">Vec3</a></li><li><a href="vec3_.html">vec3</a></li><li><a href="global.html#x">x</a></li><li><a href="XComponent.html">XComponent</a></li><li><a href="XComponent.Canvas.html">Canvas</a></li><li><a href="XComponent.CmdFlag.html">CmdFlag</a></li><li><a href="XComponent.CmpTween.html">CmpTween</a></li><li><a href="XComponent.CmpTweens.html">CmpTweens</a></li><li><a href="XComponent.Dynatex.html">Dynatex</a></li><li><a href="XComponent.Filming.html">Filming</a></li><li><a href="XComponent.FlowingPath.html">FlowingPath</a></li><li><a href="XComponent.Glow.html">Glow</a></li><li><a href="XComponent.GlowingEdge.html">GlowingEdge</a></li><li><a href="XComponent.GpuPickable.html">GpuPickable</a></li><li><a href="XComponent.HudChild.html">HudChild</a></li><li><a href="XComponent.HudGroup.html">HudGroup</a></li><li><a href="XComponent.Input.html">Input</a></li><li><a href="XComponent.ModelSeqs.html">ModelSeqs</a></li><li><a href="XComponent.Obj3.html">Obj3</a></li><li><a href="XComponent.Occluder.html">Occluder</a></li><li><a href="XComponent.RayCastee.html">RayCastee</a></li><li><a href="XComponent.TweenScript.html">TweenScript</a></li><li><a href="XComponent.UserCmd.html">UserCmd</a></li><li><a href="XComponent.UserTween.html">UserTween</a></li><li><a href="XComponent.Visual.html">Visual</a></li><li><a href="XComponent.XCamera.html">XCamera</a></li><li><a href="XError.html">XError</a></li><li><a href="xgeom.html">xgeom</a></li><li><a href="xglsl.html">xglsl</a></li><li><a href="XMaterials.html">XMaterials</a></li><li><a href="xmath.html">xmath</a></li><li><a href="XSankey.html">XSankey</a></li><li><a href="XSys.html">XSys</a></li><li><a href="XTweener.html">XTweener</a></li><li><a href="XTweenException.html">XTweenException</a></li><li><a href="xutils.html">xutils</a></li><li><a href="XWorld.html">XWorld</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AffineTrans">AffineTrans</a></li><li><a href="global.html#AffineType">AffineType</a></li><li><a href="global.html#browserVer">browserVer</a></li><li><a href="global.html#getEffectPass">getEffectPass</a></li><li><a href="global.html#glx">glx</a></li><li><a href="global.html#interpret">interpret</a></li><li><a href="global.html#KeyFlag">KeyFlag</a></li><li><a href="global.html#LayerChannel">LayerChannel</a></li><li><a href="global.html#onMouse">onMouse</a></li><li><a href="global.html#R">R</a></li><li><a href="global.html#XEasing">XEasing</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Sep 09 2020
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Oct 20 2020
 </footer>
 
 <script> prettyPrint(); </script>

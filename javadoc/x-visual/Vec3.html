@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: lib/sys/ext/htmltex.js</title>
+    <title>JSDoc: Class: Vec3</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -18,148 +18,137 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: lib/sys/ext/htmltex.js</h1>
+    <h1 class="page-title">Class: Vec3</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>
-import AssetKeepr from '../../xutils/assetkeepr.js';
-import XSys from '../xsys';
-import {Visual, Canvas, AssetType} from '../../component/visual.js'
-import {Obj3, Obj3Type} from '../../component/obj3.js'
+        <h2><span class="attribs"><span class="type-signature"></span></span>Vec3<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>A number[3] and number[3/4][3/4] operations' helper, not a data type.</p></div>
+        
+    
+</header>
 
-const iffall = ['Visual', 'Canvas', 'Obj3'];
-/**Rendering html content as dynamic texture.
- *
- * This system take each entity with one and only one html content, then rendering
- * to multiple THREE.Object3D in scene with help of xv.ecs.sys.Thrender.
- *
- * Htmltex is an extension of ECS.subsystems. User must add it to ECS explicitly.
- * To create a new instance, entities definition must provided as options arg of
- * constructor.
- *
- * These definition can be generated with help of Htmltex.createEntityDefs()
- * For exmaple, see htmltex.case.js
- *
- * @class Htmltex
- */
-export default class Htmltex extends XSys {
-	/**
-	 * @param {ECS} ecs
-	 * @param {object} options
-	 * @constructor Htmltex
-	 */
-	constructor(ecs, options) {
-		super(ecs);
-		this.ecs = ecs;
+<article>
+    <div class="container-overview">
+    
+        
 
-		// keeping canvas map for update later
-		this.canvas = new Object();
-		var canvEnts = ecs.queryEntities({iffall});
-		for(var e of canvEnts) {
-			this.canvas[e.Canvas.domId] = e.Canvas;
-		}
-	}
+    
+    <h2>Constructor</h2>
+    
 
-	/**
-	 * @param {int} tick
-	 * @param {Entity[]} entities
-	 * @member Htmltex#refresh
-	 * @function
-	 */
-	update(tick, entities) {
-		for (const e of entities) {
-			var m = e.Obj3.mesh
-			if (e.Canvas.dirty &amp;&amp; m) {
-				e.Canvas.dirty = false;
-				e.Canvas.tex.needsUpdate = true;
-				m.material.map = e.Canvas.tex;
-			}
-		}
-	}
+    
+    <h4 class="name" id="Vec3"><span class="type-signature"></span>new Vec3<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
-	/**
-	 * Reload a Canvas texture from html, which will be updated atuomatically
-	 * when it's ready.
-	 *
-	 * @param {string} htmlId
-	 * @param {function} onRefresh
-	 * @member Htmltex#refresh
-	 * @function
-	 */
-	refresh(htmlId, onRefresh) {
-		const canv = this.canvas[htmlId];
-		if (!canv) {
-			console.error(`Htmltex.refresh(${htmlId}): component not found.`);
-		}
-		else {
-			AssetKeepr.loadCanvtex(canv, undefined, onRefresh);
-		}
-	}
+    
 
-	/**
-	 * @param {object} options
-	 * options.objcanvas: array of [{domId, eid, texsize, visual}]&lt;br>
-	 * where&lt;br>
-	 * *objcanvas.domId*: string - canvs id for texture&lt;br>
-	 * *objcanvas.eid*: string - optinal&lt;br>
-	 * *objcanvas.texsize*: {width, height} - optinal, default 256x256&lt;br>
-	 * *objcanvas.visual*: {vtype: AssetType} - optional, default AssetType.DomCanvas&lt;br>
-	 * Other types are not supported.
-	 * @return {array&lt;object>} entity definitions
-	 * @member Htmltex.createEntityDefs
-	 * @function
-	 */
-	static createEntityDefs(options) {
-		var {w, h} = options.plane ?
-			{w: options.plane.w, h: options.plane.h} : {w: 100, h: 100};
 
-		const entDefines = [];
-		options.objcanvas.forEach(function(def, dx) {
-			if (def.eid === undefined)
-				def.eid = h5uuid();
 
-			const wh = Object.assign({width: 256, height: 256},
-				def.texsize || def.wh);
 
-			const obj3 = Object.assign({
-					geom: Obj3Type.PLANE,
-					box: [w, h, 0],       // plane size
-					mesh: undefined },    // Thrender will handle this
-				options.obj3);
 
-			const vis = Object.assign({vtype: AssetType.DomCanvas },
-				def.visual || def.Visual);
 
-			var entidef = { id: def.eid,
-							Obj3: obj3,
-							Visual: vis,
-							Canvas: {domId: def.domId,
-									 options: wh,	// buffer texture canvas size
-									},
-						  };
-			entDefines.push(entidef);
-		});
-		return entDefines;
-	}
-}
 
-Htmltex.query = { has: iffall };
 
-var myH5uuid = 0;
-/**
- * @memberof Htmltex */
-function h5uuid() {
-	return `htmltex-${myH5uuid++}`;
-}
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_osm_utils.js.html">lib/osm/utils.js</a>, <a href="lib_osm_utils.js.html#line367">line 367</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
