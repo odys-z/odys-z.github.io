@@ -1182,7 +1182,7 @@ Query OK, 0 rows affected, 1 warning (0.00 sec)
 
 mysql&gt; quit
 Bye
-PS D:\mysql-5.7.19-winx64\bin&gt; ./mysql -u inforise -h localhost -pinfochange emergency
+PS D:\mysql-5.7.19-winx64\bin&gt; ./mysql -u inforise -h localhost -p emergency
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 10122
@@ -1275,7 +1275,7 @@ COLLATE =%s: list = utf8_bin | utf8_general_ci | gbk_bin | gbk_chinese_ci, defau
   <tr><td></td>
       <td>Make mysql backup task for windows server</td>
       <td>Check <a target="_blank" href='https://stackoverflow.com/questions/14666819/mysql-database-backup-automatically-on-a-windows-server'>Answer on statckoverflow</a>
-          <div class='code'>mysqldump.exe --user=root --password=root  --host=localhost --port=3306 --result-file="c:\www\db\backup.%date:~10,4%%date:~7,2%%date:~4,2%.sql" --default-character-set=utf8 --single-transaction=TRUE --databases "dbtest1" "dbtest2"
+          <div class='code'>mysqldump.exe --user=root --password=...  --host=localhost --port=3306 --result-file="c:\www\db\backup.%date:~10,4%%date:~7,2%%date:~4,2%.sql" --default-character-set=utf8 --single-transaction=TRUE --databases "dbtest1" "dbtest2"
           </div>
           Check the date output in different environment.
       </td>
