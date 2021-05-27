@@ -1177,7 +1177,7 @@ Query OK, 0 rows affected (0.01 sec)
 mysql&gt; create database emergency;
 Query OK, 1 row affected (0.00 sec)
 
-mysql&gt; grant all on emergency.* to inforise@'localhost' identified by 'infochange';
+mysql&gt; grant all on emergency.* to inforise@'localhost' identified by 'your-pswd';
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 
 mysql&gt; quit
@@ -1195,6 +1195,10 @@ Query OK, 0 rows affected, 1 warning (0.00 sec)
 Query OK, 0 rows affected (0.21 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 mysql&gt;</pre></div>
+		Note:<br>
+		1. user@'%' for grant user from everywhere<br>
+		2. for mysql 8.0, the 'identified by' <a href='https://dev.mysql.com/doc/refman/8.0/en/grant.html'>
+			clause is deprecated</a>.
       </td>
   </tr>
 
@@ -1325,7 +1329,7 @@ eferences receipt.f_functions (FuncID) on delete restrict on update restrict;
   &lt;Resource name="jdbc/frameDs" global="jdbc/frameDs"
   			auth="Container" type="javax.sql.DataSource"
   			maxActive="10" maxIdle="3" maxWait="10000"
-  			username="inforise" password="infochange" driverClassName="com.mysql.jdbc.Driver"
+  			username="inforise" password="your-pswd" driverClassName="com.mysql.jdbc.Driver"
   			url="jdbc:mysql://localhost:3306/emergency"/&gt;
 &lt;/Context&gt;</pre></li>
               <li>setup emerge-server/WebContent/WEB-INF/web.xml:<br><pre>
