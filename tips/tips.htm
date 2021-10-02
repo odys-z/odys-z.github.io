@@ -1179,6 +1179,8 @@ Query OK, 1 row affected (0.00 sec)
 
 mysql&gt; grant all on emergency.* to inforise@'localhost' identified by 'your-pswd';
 Query OK, 0 rows affected, 1 warning (0.00 sec)
+# note: in mysql 8, no more identified clause in grant statement:
+# https://dev.mysql.com/doc/refman/8.0/en/grant.html
 
 mysql&gt; quit
 Bye
