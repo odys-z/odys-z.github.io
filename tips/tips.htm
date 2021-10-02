@@ -8,9 +8,8 @@
 	<link rel="icon" href="imgs/ic-2.png">
 </head>
 <body>
-
 <header>
-	<h1>Topic: Maven</h1>
+	<h1>Topic: System Admin</h1>
 	<p class="tips">updating: Odys' techincal troubleshootings</p>
 	<a href='index.htm'>Home</a>
 	<hr>
@@ -1071,6 +1070,21 @@ In MySQL, databases correspond to directories within the data directory. Each ta
               <div class='exception'>error 2 (111) can't connect MySQL Server on 192.168.##.## (111).</div>
       </td><td>
           update1: (111) means service not found. Tested by /etc/init.d/mysqld -stop<br>
+          <h6>Update: Docker Image</h6>
+          <p>1. The newest docker image can not connected with Ubuntu 16.04 LTS.<br>
+          (Mysql Connector / J only updated to mysql 5.7) </p>
+          <p>2. To check where mysql contianer to connect:
+            <div class='code'>
+                $ docker inspect mysql | grep -i ipaddress<br>
+                "SecondaryIPAddresses": null,<br>
+                "IPAddress": "172.17.0.2",<br>
+                "IPAddress": "172.17.0.2",<br>
+                mysql  -uody -h172.17.0.2 -p --protocol tcp<br>
+                Enter password: <br>
+                Welcome to the MySQL monitor.  Commands end with ; or \g.<br>
+                Your MySQL connection id is 3<br>
+                Server version: 5.7.35 MySQL Community Server (GPL)
+            </div>
           <h6>Key point 1.</h6>
           Make sure the server is bind to local internal ip address for the user. To config this, in my.conf:
           <div class='code'><pre>
