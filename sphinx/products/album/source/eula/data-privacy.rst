@@ -15,7 +15,7 @@ Famly Album Synchronizer has no plan to use third party services, e.g. Google's 
 
 We want to inform users of this application that your Personal Information will not be used anywhere except for managing files at server.
 
-Google's advertising requirements can be summed up by Google's Advertising Principles. They are put in place to provide a positive experience for users.
+AdMob & AdSense advertising requirements can be summed up by AdMob & AdSense advertising principles. They are put in place to provide a positive experience for users.
 
 https://support.google.com/admob/answer/6128543?hl=en
 
@@ -26,10 +26,13 @@ We want to inform you that whenever you use our Service, in a case of an error i
 Do Family Album Synchronizer use 'cookies'?
 -------------------------------------------
 
-Family Album Synchronizer do not use cookies in any case.
+Family Album Synchronizer for Android do not use cookies in any case.
+
+Family Album Synchronizer for web page browser will use cookie for identifying logged users. The data is handled at 
+client side, no transmission on network, and no further usages.
 
 Safeguards and Third-party disclosure
---------------------------------------
+-------------------------------------
 
 Family Album Synchronizer get reports from the third part services regularly.
 
