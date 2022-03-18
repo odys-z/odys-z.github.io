@@ -8,7 +8,7 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 
-PAGEDIR       = ../../products/album
+PAGEDIR       = ../../../products/album
 
 # Put it first so that "make" without argument is like "make help".
 help:
