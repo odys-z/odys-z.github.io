@@ -22,6 +22,7 @@ AdMob & AdSense advertising requirements can be summed up by AdMob & AdSense adv
 https://support.google.com/admob/answer/6128543?hl=en
 
 Log Data
+--------
 
 We want to inform you that whenever you use our Service, in a case of an error in the app we collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing Service, the time and date of your use of the Service, and other statistics.
 
@@ -32,6 +33,15 @@ Family Album Synchronizer for Android do not use cookies in any case.
 
 Family Album Synchronizer for web page browser will use cookie for identifying logged users. The data is handled at 
 client side, no transmission on network, and no further usages.
+
+EXIF & Geo Location
+-------------------
+
+EXIF is meta data of media files. 
+
+When each media file is uploaded to the family file server, the server will try to parse the EXIF data. All 
+exif data are saved separate from the original file, and geo location data are parsed and saved in database.
+When user share it's photos, the geo location are also accessible to other users.
 
 Safeguards and Third-party disclosure
 -------------------------------------
