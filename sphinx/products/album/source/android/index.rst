@@ -7,18 +7,9 @@ Welcome to Album Synchronizer's documentation!
 ==============================================
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+   :maxdepth: 2
+   :caption: Android Client:
 
-   eula/data-privacy
-   android/index
+   help
 ..
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
