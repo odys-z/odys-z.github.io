@@ -4,8 +4,8 @@ Quick Start (Android)
 Prerequisit
 -----------
 
-The Album Synchronizer Android client must run with a server (usually deplyed as a family file server).
-This server must installed on a personal computer (only for Windows & Docker).
+The Album Synchronizer Android client must run with a server (usually deployed as a family file server).
+This server must be installed on a personal computer (only for Windows & Docker).
 
 The server program, Album Service Installer for Windows, `Album_Install.msi <https://github.com/odys-z/semantic-jserv/releases/download/Album-0.5.1/Album_Install.msi>`_
 is released as a install file. The lastest version can be found at `here <https://github.com/odys-z/semantic-jserv>`_.
@@ -19,22 +19,21 @@ Setup
 Once the server installed and the service is started up, open Album Synchronizer for Android,
 and in the Settings page, setup device Id and user Id.
 
-.. image:: ../imgs/android_prefs.png
+.. image:: ../imgs/android_prfs.png
     :height: 320
 ..
 
 - Set Device Name
 
-Album Synchronizer use device name to distinguish files from varial file source.
-User must name their device with unique name in the domain of the file server.
+Album Synchronizer uses device name to distinguish files from varial file source.
+Users must name their device with a unique name in the domain of the file server.
 
 - Login
 
-Login with user Id and password set by server administrator. Once login successfully, pleade back to
-the home page. 
+Login with user Id and password set by server administrator. Once login successfully, please go back to
+the home page.
 
 Upload files
 ------------
 
-In home page, tap *Add Image*, *Add Video*, *Add Audio* button to select and upload files.
-
+In the home page, tap *Add Image*, *Add Video*, *Add Audio* button to select and upload files.
