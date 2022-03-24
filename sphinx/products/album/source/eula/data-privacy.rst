@@ -1,11 +1,10 @@
 Privacy Policy (Ads Version)
 ============================
 
-.. attention::
-    Product: Family Album Synchronizer Parent Version (Ads Supported)
+::
 
-    March 17, 2022
-..
+    Product: Family Album Synchronizer, Parent Version (Ads Supported)
+    March 17, 2022
 
 This privacy policy has been compiled to better serve those who are concerned with how their 'Personally Identifiable Information' (PII) is being used online. PII, as described in US privacy law and information security, is information that can be used on its own or with other information to identify, contact, or locate a single person, or to identify an individual in context. Please read our privacy policy carefully to get a clear understanding of how we collect, use, protect or otherwise handle your Personally Identifiable Information in accordance with our apps.
 
@@ -43,6 +42,10 @@ When each media file is uploaded to the family file server, the server will try 
 exif data are saved separately from the original file, and geo location data are parsed and saved in database.
 When a user shares photos, the geo locations are also accessible to other users.
 
+If the file doesn't has geo location data in it's EXIF data, no geo loaction is saved.
+
+This function is designed to support photo grouping according to geo location.
+
 Safeguards and Third-party disclosure
 -------------------------------------
 
@@ -59,7 +62,6 @@ safety.
 However, non-personally identifiable user information may be provided to other
 parties for marketing, advertising, or other uses.
 
-
 Acceptance of terms
 -------------------
 
@@ -70,7 +72,6 @@ We indicate the date of the current Privacy Policy above, so you know when it wa
 last updated. The continued use of our products after any revision of this Privacy
 Policy will be treated as acceptance of those changes, so please check the policy
 periodically for updates.
-
 
 Contacting Us
 -------------
