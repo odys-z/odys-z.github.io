@@ -5,6 +5,8 @@ Album Synchronizer is built on open source projects & freeware:
 
 - JDK 11
 
+- Tomcat
+
 - Jetty
 
 - Apache Daemon
@@ -15,7 +17,7 @@ Album Synchronizer is built on open source projects & freeware:
 
 - Node.js
 
-- Android File Picker
+- `MultiType-FilePicker (Android) <https://github.com/fishwjy/MultiType-FilePicker>`_
 
 - Delete: `WPF TreeView File Explorer <https://medium.com/@mikependon/designing-a-wpf-treeview-file-explorer-565a3f13f6f2>`_
 
