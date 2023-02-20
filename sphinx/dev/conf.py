@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Semantier'
+project = 'Developers Community'
 copyright = '2023, Ody Zhou'
 author = 'Ody Zhou'
 
