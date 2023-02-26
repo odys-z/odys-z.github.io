@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Semantic-* Tutorial Resources &#8212; Developers Community 0.1 documentation</title>
+    <title>Semantic-* Tutorials &#8212; Dev Community 0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -14,7 +14,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Welcome to Semantier’s documentation!" href="../index.html" />
+    <link rel="prev" title="Welcome to Dev Community!" href="../index.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -31,8 +31,45 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="semantic-tutorial-resources">
-<h1>Semantic-* Tutorial Resources<a class="headerlink" href="#semantic-tutorial-resources" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="semantic-tutorials">
+<h1>Semantic-* Tutorials<a class="headerlink" href="#semantic-tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="about-semantic">
+<h2>About Semantic-*<a class="headerlink" href="#about-semantic" title="Permalink to this headline">¶</a></h2>
+<p>The semantic-* is a cross platform enterprise B/S application framework. It
+includes 3 major modules working together to be used as a web application of
+which the server runs on servlet 3.1.</p>
+<p>There are (planned) multiple clients. For main dev stream quick start, it’s
+better starting from the typescript ReactJS client, see anclient/js/EasyUI quick
+start.</p>
+<p>Semantic-* includes:</p>
+<ul class="simple">
+<li><p>The semantic-transact</p></li>
+</ul>
+<p>A structured API for building SQL.</p>
+<ul class="simple">
+<li><p>The semantic-DA,</p></li>
+</ul>
+<p>A JDBC based datasource access layer, manages JDBC database connections and handles typical semantic data processing patterns.</p>
+<ul class="simple">
+<li><p>The semantic-jserv</p></li>
+</ul>
+<p>A servlet server framework for implementing web applications.</p>
+<p>It provides a protocol layer using json as data package as well as parsers based
+on <a class="reference external" href="https://www.antlr.org/">Antlr4</a> which is wrapped by <a class="reference external" href="https://github.com/odys-z/antson">Antson</a>,
+for handling (de)serialize structured data of java and c# (and c++ Python in the
+future) to / from json.</p>
+<p>Semantic-* also including some extensions such as a cheap workflow engine (deprecated
+&amp; would be refactored in the future), or a file autmatic synchronizing infrastructure
+of which files are not only handled in the ways of creating &amp; transfer, but also
+linked back into relational database for business usages.</p>
+<p>In addition to the library and extensions, there is also a maven sample project,
+<em>jserv-sample</em>, showing how to use sematnic-* that is embadded into it as a native
+module.</p>
+<p>It’s recommended clone and use this project as a web server project template which
+should be a good starting point.</p>
+</div>
+<div class="section" id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Semantic-* sample projects</p></li>
 </ul>
@@ -44,10 +81,11 @@
 <p><a class="reference external" href="https://github.com/odys-z/semantic-jserv/tree/master/jserv-sandbox">sandbox server (sessionless)</a>
 &amp; <a class="reference external" href="https://github.com/odys-z/Anclient/tree/master/js/test/sessionless">Typescript + React.js front end</a></p>
 <ul class="simple">
-<li><p>Spreadsheet (Ag-grid) front end</p></li>
+<li><p>Spreadsheet (Ag-grid) front end example</p></li>
 </ul>
 <p><a class="reference external" href="https://github.com/odys-z/semantic-jserv/tree/master/jserv-sandbox">AnSpreadsheet(ag-grid wrapper)</a>
 &amp; <a class="reference external" href="ahref=&quot;https://github.com/odys-z/Anclient/blob/master/examples/example.js/curriculum/views/north/kypci/tier.tsx">Speardsheet Tier (Semantier subclass)</a></p>
+</div>
 </div>
 
 
@@ -57,7 +95,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Developers Community</a></h1>
+<h1 class="logo"><a href="../index.html">Dev Community</a></h1>
 
 
 
@@ -69,14 +107,18 @@
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Semantic-* Tutorial Resources</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Semantic-* Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#about-semantic">About Semantic-*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to Semantier’s documentation!</a></li>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to Dev Community!</a></li>
   </ul></li>
 </ul>
 </div>

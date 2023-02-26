@@ -1,7 +1,7 @@
 .. Community documentation master file, created by
 
-Welcome to Semantier's documentation!
-=====================================
+Welcome to Dev Community!
+====================================
 
 .. toctree::
    :maxdepth: 2

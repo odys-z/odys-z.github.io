@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Developers Community'
+project = 'Dev Community'
 copyright = '2023, Ody Zhou'
 author = 'Ody Zhou'
 
