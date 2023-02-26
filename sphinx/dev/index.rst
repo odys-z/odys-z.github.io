@@ -8,6 +8,7 @@ Welcome to Semantier's documentation!
    :caption: Contents:
 
    tutorials/index
+   `Anclient Documentation`_
 
 
 Indices and tables
