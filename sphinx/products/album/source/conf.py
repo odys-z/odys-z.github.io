@@ -54,5 +54,6 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['static']
 
+# https://stackoverflow.com/a/62061439
 html_show_sourcelink = False
 html_copy_source = False

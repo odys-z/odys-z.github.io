@@ -9,6 +9,7 @@ Welcome to Dev Community!
 
    tutorials/index
 
+   javadoc-contents
 
 Indices and tables
 ==================

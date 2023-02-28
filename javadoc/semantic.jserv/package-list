@@ -9,3 +9,7 @@ io.odysz.semantic.jserv.helper
 io.odysz.semantic.jserv.user
 io.odysz.semantic.jserv.x
 io.odysz.semantic.jsession
+io.odysz.semantic.tier
+io.odysz.semantic.tier.docs
+io.oz.jsample.semantier
+io.oz.spreadsheet
