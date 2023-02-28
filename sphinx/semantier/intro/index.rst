@@ -8,6 +8,7 @@ Introduction
    :caption: Contents:
 
    about
+   ui-plan
 
 Indices and tables
 ==================

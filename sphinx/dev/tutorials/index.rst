@@ -9,8 +9,8 @@ includes 3 major modules working together to be used as a web application of
 which the server runs on servlet 3.1.
 
 There are (planned) multiple clients. For main dev stream quick start, it's
-better starting from the typescript ReactJS client, see anclient/js/EasyUI quick
-start.
+better starting from the typescript client built on ReactJS, see
+`anclient/js/tsample quick start <anclient-tsample-quickstart>`_.
 
 Semantic-* includes:
 
@@ -28,13 +28,13 @@ A servlet server framework for implementing web applications.
 
 It provides a protocol layer using json as data package as well as parsers based
 on `Antlr4 <https://www.antlr.org/>`_ which is wrapped by `Antson <https://github.com/odys-z/antson>`_,
-for handling (de)serialize structured data of java and c# (and c++ Python in the
-future) to / from json.
+for handling (de)serialize structured data of type-checking languages such as java
+and c# (and c++, Python in the future) to / from json.
 
 Semantic-* also including some extensions such as a cheap workflow engine (deprecated
 & would be refactored in the future), or a file automatic synchronizing infrastructure
-of which files are not only handled in the ways of creating & transfer, but also
-linked back into relational database for business usages.
+of which files are not only handled in the ways of creating & transferng, but also
+linked back into relational database for business management.
 
 In addition to the library and extensions, there is also a maven sample project,
 *jserv-sample*, showing how to use semantic-* that is embedded into it as a native
@@ -48,8 +48,20 @@ Tutorials
 
 - Semantic-* sample projects
 
+Release:
+
+TODO
+
+Sources:
+
 `jsample server (test project, managed session) <https://github.com/odys-z/semantic-jserv/tree/master/jserv-sample>`_
 & `jsample AnClient(?) <https://github.com/odys-z/Anclient/tree/master/js/test/tsample>`_
+
+.. _anclient-tsample-quickstart:
+Anclient/example/tsample quick start
+____________________________________
+
+TODO (`old tutorial <https://odys-z.github.io/archive/notes/semantics/jserv/jsample-quick-start.html>`_)
 
 - TS client (front end) samples
 
