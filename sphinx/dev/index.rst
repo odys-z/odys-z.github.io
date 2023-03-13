@@ -10,7 +10,7 @@ Welcome to Dev Community!
    tutorials/index
    javadoc-contents
 
-`中文文档 <https://hejiapeng2020.github.io/index.html>`_
+`中文教程 <https://hejiapeng2020.github.io/index.html>`_
 
 Indices and tables
 ==================
