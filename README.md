@@ -5,4 +5,4 @@
 
 His docs, notes, memos and lib documentations (javadoc, wiki, tutorial etc.)
 
-[Home Page](https://odys-z.github.io/)
+See [his documentations portal](https://odys-z.github.io/).
