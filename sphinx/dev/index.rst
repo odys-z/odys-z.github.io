@@ -8,6 +8,7 @@ Welcome to Dev Community!
    :caption: Contents:
 
    tutorials/index
+   topics/index
    `Semantic-* Documentation (Old) <https://odys-z.github.io/archive>`_
    `Anclient Documentation <https://odys-z.github.io/Anclient/>`_
 
