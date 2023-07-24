@@ -7,41 +7,56 @@ Let's encrypt certificate expired
 - Add PPA, install Certbot
 
 ::
+
     sudo apt-get update
     sudo apt-get install software-properties-common
     sudo add-apt-repository universe
     sudo add-apt-repository ppa:certbot/certbot
     sudo apt-get update
     sudo apt-get install certbot python-certbot-nginx
-..
 
 - update cert
 
 ::
+
     sudo certbot --nginx
 
 Deploy to Maven Central
 -----------------------
 
-Follow this tutorial.
+Follow this tutorial:
+`How to Publish Your Artifacts to Maven Central <https://dzone.com/articles/publish-your-artifacts-to-maven-central>`_.
 
-Tips:
+Some Tips:
+__________
 
 Maven GPG plugin can fail without these steps finished.
 
-- intall GPG and generate a certificate::
-
-   gpg --gen-key
-
-- publish public key
-
 ::
 
-   pgp --send-keys <key-id>
+    [ERROR] Failed to execute goal org.apache.maven.plugins:maven-gpg-plugin:1.5:sign
+    (###) on project ###: Exit code: 2 -> [Help 1]
+    [ERROR]
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR]
+    [ERROR] For more information about the errors and possible solutions, please
+    read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
 
-To find out key Ids::
+- intall GPG and generate a certificate::
 
-    gpg --fingerprint
+    gpg --gen-key
+
+- publish public key ::
+
+    pgp --send-keys <key-id>
+
+..
+
+    * To find out key Ids::
+
+        gpg --fingerprint
 
 - Setup repository's login in maven settings.xml,
 
@@ -60,14 +75,14 @@ To find out key Ids::
 
 For gpg 2.1.1, maven plugin needs an additional parameter for using local cert.
 
-This is `a nice explanation <https://myshittycode.com/2017/08/07/maven-gpg-plugin-prevent-signing-prompt-or-gpg-signing-failed-no-such-file-or-directory-error/>`_.
+There is `a nice explanation <https://myshittycode.com/2017/08/07/maven-gpg-plugin-prevent-signing-prompt-or-gpg-signing-failed-no-such-file-or-directory-error/>`_.
 
 .. code-block:: xml
 
     <configuration>
         <gpgArguments>
-                <arg>--pinentry-mode</arg>
-                <arg>loopback</arg>
+            <arg>--pinentry-mode</arg>
+            <arg>loopback</arg>
         </gpgArguments>
     </configuration>
 

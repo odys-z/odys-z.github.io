@@ -9,8 +9,7 @@ Welcome to Dev Community!
 
    tutorials/index
    topics/index
-   `Semantic-* Documentation (Old) <https://odys-z.github.io/archive>`_
-   `Anclient Documentation <https://odys-z.github.io/Anclient/>`_
+   links/res
    javadoc-contents
 
 `中文教程 <https://hejiapeng2020.github.io/index.html>`_
