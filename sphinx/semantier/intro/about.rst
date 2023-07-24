@@ -14,4 +14,4 @@ The sample page explained
 =========================
 
 The client of semantier is now focused on typescript version, tsample.
-See `tsample prject soruce at Github <https://github.com/odys-z/Anclient/tree/master/js/anreact/test/jsample>`_.
+See `tsample soruce, subfolder at Github <https://github.com/odys-z/Anclient/tree/master/js/anreact/test/jsample>`_.
