@@ -86,6 +86,8 @@ There is `a nice explanation <https://myshittycode.com/2017/08/07/maven-gpg-plug
         </gpgArguments>
     </configuration>
 
+Note: the configuration will result in same error report for gpg 1.4.20, the last
+version on Ubuntu 16.04 LTS.
 
 To verify gpg config::
 
