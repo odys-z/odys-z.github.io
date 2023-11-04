@@ -11,3 +11,4 @@ io.odysz.transact.sql.parts.insert
 io.odysz.transact.sql.parts.select
 io.odysz.transact.sql.parts.update
 io.odysz.transact.x
+org.apache.commons.io_odysz

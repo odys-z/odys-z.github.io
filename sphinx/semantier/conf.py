@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Semantier'
-copyright = '2021, Ody Zhou'
+copyright = '2023, Ody Zhou'
 author = 'Ody Zhou'
 
 # The full version, including alpha/beta/rc tags
@@ -54,3 +54,7 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# https://stackoverflow.com/a/62061439
+html_copy_source = False
+html_show_sourcelink = False
