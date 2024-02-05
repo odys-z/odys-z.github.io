@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Nginx &amp; Https &mdash; Tips/Ody.Z 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="My tips" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Tips/Ody.Z
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Nginx &amp; Https</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#let-s-encrypt-certificate-expired">Let’s encrypt certificate expired</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deploy-to-maven-central">Deploy to Maven Central</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#some-tips">Some Tips:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Tips/Ody.Z</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Nginx &amp; Https</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nginx-https">
+<h1>Nginx &amp; Https<a class="headerlink" href="#nginx-https" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="let-s-encrypt-certificate-expired">
+<h2>Let’s encrypt certificate expired<a class="headerlink" href="#let-s-encrypt-certificate-expired" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add PPA, install Certbot</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">software</span><span class="o">-</span><span class="n">properties</span><span class="o">-</span><span class="n">common</span>
+<span class="n">sudo</span> <span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="n">universe</span>
+<span class="n">sudo</span> <span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="n">ppa</span><span class="p">:</span><span class="n">certbot</span><span class="o">/</span><span class="n">certbot</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">certbot</span> <span class="n">python</span><span class="o">-</span><span class="n">certbot</span><span class="o">-</span><span class="n">nginx</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>update cert</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">certbot</span> <span class="o">--</span><span class="n">nginx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="deploy-to-maven-central">
+<h2>Deploy to Maven Central<a class="headerlink" href="#deploy-to-maven-central" title="Permalink to this headline">¶</a></h2>
+<p>Follow this tutorial:
+<a class="reference external" href="https://dzone.com/articles/publish-your-artifacts-to-maven-central">How to Publish Your Artifacts to Maven Central</a>.</p>
+<div class="section" id="some-tips">
+<h3>Some Tips:<a class="headerlink" href="#some-tips" title="Permalink to this headline">¶</a></h3>
+<p>Maven GPG plugin can fail without these steps finished.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ERROR</span><span class="p">]</span> <span class="n">Failed</span> <span class="n">to</span> <span class="n">execute</span> <span class="n">goal</span> <span class="n">org</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">maven</span><span class="o">.</span><span class="n">plugins</span><span class="p">:</span><span class="n">maven</span><span class="o">-</span><span class="n">gpg</span><span class="o">-</span><span class="n">plugin</span><span class="p">:</span><span class="mf">1.5</span><span class="p">:</span><span class="n">sign</span>
+<span class="p">(</span><span class="c1">###) on project ###: Exit code: 2 -&gt; [Help 1]</span>
+<span class="p">[</span><span class="n">ERROR</span><span class="p">]</span>
+<span class="p">[</span><span class="n">ERROR</span><span class="p">]</span> <span class="n">To</span> <span class="n">see</span> <span class="n">the</span> <span class="n">full</span> <span class="n">stack</span> <span class="n">trace</span> <span class="n">of</span> <span class="n">the</span> <span class="n">errors</span><span class="p">,</span> <span class="n">re</span><span class="o">-</span><span class="n">run</span> <span class="n">Maven</span> <span class="k">with</span> <span class="n">the</span> <span class="o">-</span><span class="n">e</span> <span class="n">switch</span><span class="o">.</span>
+<span class="p">[</span><span class="n">ERROR</span><span class="p">]</span> <span class="n">Re</span><span class="o">-</span><span class="n">run</span> <span class="n">Maven</span> <span class="n">using</span> <span class="n">the</span> <span class="o">-</span><span class="n">X</span> <span class="n">switch</span> <span class="n">to</span> <span class="n">enable</span> <span class="n">full</span> <span class="n">debug</span> <span class="n">logging</span><span class="o">.</span>
+<span class="p">[</span><span class="n">ERROR</span><span class="p">]</span>
+<span class="p">[</span><span class="n">ERROR</span><span class="p">]</span> <span class="n">For</span> <span class="n">more</span> <span class="n">information</span> <span class="n">about</span> <span class="n">the</span> <span class="n">errors</span> <span class="ow">and</span> <span class="n">possible</span> <span class="n">solutions</span><span class="p">,</span> <span class="n">please</span>
+<span class="n">read</span> <span class="n">the</span> <span class="n">following</span> <span class="n">articles</span><span class="p">:</span>
+<span class="p">[</span><span class="n">ERROR</span><span class="p">]</span> <span class="p">[</span><span class="n">Help</span> <span class="mi">1</span><span class="p">]</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">cwiki</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">confluence</span><span class="o">/</span><span class="n">display</span><span class="o">/</span><span class="n">MAVEN</span><span class="o">/</span><span class="n">MojoExecutionException</span>
+</pre></div>
+</div>
+<ul>
+<li><p>intall GPG and generate a certificate:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">gen</span><span class="o">-</span><span class="n">key</span>
+</pre></div>
+</div>
+</li>
+<li><p>publish public key</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pgp</span> <span class="o">--</span><span class="n">send</span><span class="o">-</span><span class="n">keys</span> <span class="o">&lt;</span><span class="n">key</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div><ul>
+<li><p>To find out key Ids:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gpg</span> <span class="o">--</span><span class="n">fingerprint</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Setup repository’s login in maven settings.xml,</p></li>
+</ul>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;settings&gt;</span>
+<span class="nt">&lt;servers&gt;</span>
+    <span class="nt">&lt;server&gt;</span>
+        <span class="nt">&lt;id&gt;</span>ossrh<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;username&gt;</span>usr-id<span class="nt">&lt;/username&gt;</span>
+        <span class="nt">&lt;password&gt;</span>...<span class="nt">&lt;/password&gt;</span>
+    <span class="nt">&lt;/server&gt;</span>
+<span class="nt">&lt;/servers&gt;</span>
+<span class="nt">&lt;/settings&gt;</span>
+</pre></div>
+</div>
+<p>For gpg 2.1.1, maven plugin needs an additional parameter for using local cert.</p>
+<p>There is <a class="reference external" href="https://myshittycode.com/2017/08/07/maven-gpg-plugin-prevent-signing-prompt-or-gpg-signing-failed-no-such-file-or-directory-error/">a nice explanation</a>.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;configuration&gt;</span>
+    <span class="nt">&lt;gpgArguments&gt;</span>
+        <span class="nt">&lt;arg&gt;</span>--pinentry-mode<span class="nt">&lt;/arg&gt;</span>
+        <span class="nt">&lt;arg&gt;</span>loopback<span class="nt">&lt;/arg&gt;</span>
+    <span class="nt">&lt;/gpgArguments&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+</div>
+<p>To verify gpg config:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mvn</span> <span class="n">verify</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://maven.apache.org/plugins/maven-gpg-plugin/usage.html">manve document: Usage - Sign artifacts with GnuPG</a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../index.html" class="btn btn-neutral float-left" title="My tips" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2023, Ody Zhou.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

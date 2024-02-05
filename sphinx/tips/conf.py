@@ -15,9 +15,10 @@ templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sphinx_rtd_theme'
-html_favicon = 'favicon.ico'
+html_favicon = '../favicon.png'
 
 html_static_path = ['_static']
 
+# https://stackoverflow.com/a/62061439
 html_copy_source = False
 html_show_sourcelink = False
