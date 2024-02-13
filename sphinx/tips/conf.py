@@ -1,6 +1,6 @@
 # Configuration file for the Sphinx documentation builder.
 project = "Ody's Tips"
-copyright = '2023, Ody Zhou'
+copyright = '2024, Ody Zhou'
 author = 'Ody Zelenskyy'
 
 release = '1.0'
