@@ -26,8 +26,8 @@ References
 
         <p style="height:5em">
         <a href="https://github.com/wms2537/esp32s2-camera" >
-        <img src="https://github.com/wms2537/esp32s2-camera/raw/main/images/pcb.jpeg"/>
-        <img src="https://raw.githubusercontent.com/wms2537/esp32s2-camera/main/images/Schematic_ESP32S2CAM.png">
+        <img style="height:5em" src="https://github.com/wms2537/esp32s2-camera/raw/main/images/pcb.jpeg"/>
+        <img style="height:5em" src="https://raw.githubusercontent.com/wms2537/esp32s2-camera/main/images/Schematic_ESP32S2CAM.png">
         </a>
         </p>
     ..
@@ -47,7 +47,7 @@ References
 
         <p style="height:5em">
         <a href="https://gist.github.com/askpatrickw/0179d09e74d5f2a4347d5666ea937c4d" >
-        <img src="https://user-images.githubusercontent.com/4002194/212280165-75d68f04-37dc-4334-a196-270e4212d141.png"/>
+        <img style="height:5em" src="https://user-images.githubusercontent.com/4002194/212280165-75d68f04-37dc-4334-a196-270e4212d141.png"/>
         </a>
         </p>
     ..
