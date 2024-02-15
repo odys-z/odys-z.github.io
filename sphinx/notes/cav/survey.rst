@@ -8,8 +8,8 @@ A general purpose wearable camera for open access.
 
 See `the wearable module presentation <https://odys-z.github.io/archive/market/imgs/CAV\ module.pdf>`_.
 
-Sample Products
-===============
+Available Products on the market
+================================
 
 Here is `a brief summary <https://odys-z.github.io/archive/market/cav-survey.html>`_.
 
