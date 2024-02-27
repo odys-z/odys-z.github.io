@@ -146,13 +146,13 @@ References
             :height: 5em
         
         .. image:: imgs/06-revw-esp32-s3-1.png
-            :target: https://youtu.be/_wvuOsRgmt4?si=2FMrOaeVPH6JDKhn
+            :target: https://youtu.be/_wvuOsRgmt4?si=5U3GQvcqQQMe5CGY&t=185
             :height: 5em
 
         .. image:: imgs/06-revw-esp32-s3-2.png
-            :target: https://youtu.be/_wvuOsRgmt4?si=aJE4VrekDpaDARy5
+            :target: https://youtu.be/_wvuOsRgmt4?si=fKvF3sRQASoMSEzx&t=405
             :height: 5em
 
         .. image:: imgs/06-revw-esp32-s3-3.png
-            :target: https://youtu.be/_wvuOsRgmt4?si=QjLPGd7ms_Cc4ZzR
+            :target: https://youtu.be/_wvuOsRgmt4?si=pN-4a3cq3P_VZQ5B&t=261
             :height: 5em
