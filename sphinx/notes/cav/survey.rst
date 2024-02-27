@@ -134,4 +134,25 @@ References
         .. image:: ./imgs/04-tut-esp32-arduino.png
             :height: 5em
         
-    * 
+    * DroneBot Workshop Forums, `XIAO ESP32S3 Sense - Tiny ESP32 Camera <https://forum.dronebotworkshop.com/2023-videos/xiao-esp32s3-sense-tiny-esp32-camera/>`_
+
+        .. image:: imgs/06-tut-esp32-s3-1.png
+            :height: 5em
+
+        .. image:: imgs/06-tut-esp32-s3-2.png
+            :height: 5em
+
+        .. image:: imgs/06-tut-esp32-s3-3.png
+            :height: 5em
+        
+        .. image:: imgs/06-revw-esp32-s3-1.png
+            :target: https://youtu.be/_wvuOsRgmt4?si=2FMrOaeVPH6JDKhn
+            :height: 5em
+
+        .. image:: imgs/06-revw-esp32-s3-2.png
+            :target: https://youtu.be/_wvuOsRgmt4?si=aJE4VrekDpaDARy5
+            :height: 5em
+
+        .. image:: imgs/06-revw-esp32-s3-3.png
+            :target: https://youtu.be/_wvuOsRgmt4?si=QjLPGd7ms_Cc4ZzR
+            :height: 5em
