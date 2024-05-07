@@ -1,11 +1,13 @@
-project = 'Tips/Ody.Z'
-copyright = '2023, Ody Zhou'
-author = 'Ody Zhou'
+# Configuration file for the Sphinx documentation builder.
+project = "Ody's Tips"
+copyright = '2024, Ody Zhou'
+author = 'Ody Zelenskyy'
 
 release = '1.0'
 
 extensions = [
-    'sphinx_rtd_theme'
+    'sphinx.ext.mathjax',
+    'sphinx_rtd_theme',
 ]
 
 templates_path = ['_templates']

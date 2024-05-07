@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Dev Community'
-copyright = '2023, Ody Zhou'
+copyright = '2024, Ody Zhou'
 author = 'Ody Zhou'
 
 # The full version, including alpha/beta/rc tags

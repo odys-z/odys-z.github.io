@@ -172,6 +172,7 @@ table.numbers {
 /************* screen shot, diagram ******************/
 .screenshot { height:60px; }
 .screenshot-big { height:120px; }
+.screenshot-large { height:160px; }
 .diag { width:200px; }
 .td-icon { height:80px; }
 
