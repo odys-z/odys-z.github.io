@@ -36,13 +36,15 @@ ____________
 *Using a semantics layer to facilitate and change users or engineers' behaviours.*
    
 That is, a backend infrastructure with relational databases and services to
-speed up application development and deployment.
+speed up application development and deployment, and multiple frontend for
+presenting, integrating data in business view.
 
 Hopefully with previous works on Semantic-\*, developers can directly publish a
 prototype system quickly without modifying a line of code, of course, with some
 extensive work for an overhaul.
 
 The backend developing process at the first step now is:
+________________________________________________________
 
 * Data module design
 * Service architecture planning
@@ -51,7 +53,6 @@ The backend developing process at the first step now is:
 * Having available data service visualized at design time.
 
 Works to be done:
-_________________
 
 * A VS Code plugin for browsing available exposed data service Backend data synchronizer
 * A VS Code database designer and a Java data service module compiler
