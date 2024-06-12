@@ -50,7 +50,7 @@ ________________________________________________________
 * Service architecture planning
 * Data service exposing policy
 * Business intelligence with traffic surveying and analyzing
-* Having available data service visualized at design time.
+* Having available data service visualized at design time for others.
 
 Works to be done:
 
