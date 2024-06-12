@@ -36,7 +36,7 @@ ____________
 *Using a semantics layer to facilitate and change users or engineers' behaviours.*
    
 That is, a backend infrastructure with relational databases and services to
-speed up application development and deployment, and multiple frontend for
+speed up application development and deployment, and multiple frontends for
 presenting, integrating data in business view.
 
 Hopefully with previous works on Semantic-\*, developers can directly publish a
@@ -75,9 +75,9 @@ Who will like this?
 
 Communities where data have close semantic relationships, e. g. giant
 organizations who build and extend their service upon each other, sharing common
-business achievements, but is difficult to plan an enterprise-wide data bus
+business achievements, but it is difficult to plan an enterprise-wide data bus
 service.
 
 A typical gas and oil company can be such a good example, of which their
 departments, engineering, analysing, etc., are depending on each other's data
-services.
+services, while everyone needs their special knowledge for optimization locally.
