@@ -16,11 +16,11 @@ API exposing and sharing or integrating, etc.
 The Take Aways
 ==============
 
-* An imaginary data community (baring data sharing in mind)
+* *The concept is an imaginary data community (baring data sharing in mind)*
 
 Users (developers) are intended to publish their results to be reused somewhere
 else, which behaviour is verified in the open source community. Another stronger
-evidence has already being exist for a long time, the imaginary political
+evidence is, has already being exist for a long time, the imaginary political
 community. The platform provides some basic modules and runtime environment for
 a limited industrial section, helping them to standardize and scale-up, by
 building applications on a common data sharing platform.
@@ -33,7 +33,7 @@ Decompositing the Concept
 The Strategy
 ____________
 
-*Using a semantics layer to facilitate and change users or engineers' behaviours.*
+* *Using a semantics layer to facilitate and change users or engineers' behaviours.*
    
 That is, a backend infrastructure with relational databases and services to
 speed up application development and deployment, and multiple frontends for
@@ -41,7 +41,7 @@ presenting, integrating data in business view.
 
 Hopefully with previous works on Semantic-\*, developers can directly publish a
 prototype system quickly without modifying a line of code, of course, with some
-extensive work for an overhaul.
+extensive work for an overhaul of the framework.
 
 The backend developing process at the first step now is:
 ________________________________________________________
@@ -73,11 +73,12 @@ ________________________________________
 Who will like this?
 ===================
 
-Communities where data have close semantic relationships, e. g. giant
-organizations who build and extend their service upon each other, sharing common
-business achievements, but it is difficult to plan an enterprise-wide data bus
-service.
+Communities where data have close semantic relationships, e. g. a giant
+organization's departments who build and extend their service upon each other,
+sharing common business achievements, but it is difficult to plan an enterprise-
+wide data service bus.
 
 A typical gas and oil company can be such a good example, of which their
 departments, engineering, analysing, etc., are depending on each other's data
-services, while everyone needs their special knowledge for optimization locally.
+services, while everyone needs their special knowledge for optimization their
+own business locally.
