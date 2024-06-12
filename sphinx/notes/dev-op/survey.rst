@@ -5,38 +5,41 @@ About
 =====
 
 *Semantic Dev-op* is a concept, a dev-op service, supporting semantics built upon
-online platforms that will faciliate developement of enterprise information
+online platforms that will facilitate development of enterprise information
 systems based on relational databases, with an explicit semantics layer and some
 tools or infrastructures such as relational database synchronizers, 3D model
 generators and renderer, etc, to influent developers or engineers to build their
-solutions attributing to a imaginary commnity, a sublime concept,  the common data
-sharing behaviour, which is solidfied by activities in the mundane, like service
-API exposeing and sharing or integrating, etc.
+solutions attributing to an imaginary community, a sublime concept,  the common data
+sharing behaviour, which is solidified by activities in the mundane, like service
+API exposing and sharing or integrating, etc.
 
 The Take Aways
 ==============
 
 * An imaginary data community (baring data sharing in mind)
 
-Users (developers) are intended to publish their results to be reused somewhere else,
-which behaviour is verified in the open source commnity. Another stronger evidence is
-already exists for a long, the imaginary political community. The platform provide some
-basic modules and runtime environment for a limited industrial section, helping them
-to sandardize and scale-up, by building applications on a common data sharing platform.
+Users (developers) are intended to publish their results to be reused somewhere
+else, which behaviour is verified in the open source community. Another stronger
+evidence has already being exist for a long time, the imaginary political
+community. The platform provides some basic modules and runtime environment for
+a limited industrial section, helping them to standardize and scale-up, by
+building applications on a common data sharing platform.
 
-Changing the engineering process itself is actually the standardization.
+Changing the engineering behaviour itself is actually the standardization.
 
 Decompositing the Concept
 =========================
 
-Using semantics layer to facilitate, change users and engineers' behaviours
-___________________________________________________________________________
+The Strategy
+____________
 
+*Using a semantics layer to facilitate and change users or engineers' behaviours.*
+   
 That is, a backend infrastructure with relational databases and services to
 speed up application development and deployment.
 
 Hopefully with previous works on Semantic-\*, developers can directly publish a
-prototype system quickly without modifying a line of code, of cause, with an
+prototype system quickly without modifying a line of code, of course, with some
 extensive work for an overhaul.
 
 The backend developing process at the first step now is:
@@ -69,9 +72,11 @@ ________________________________________
 Who will like this?
 ===================
 
-Commnities where data have close semantic relationship, e. g. giant organizations
-who build and extend their service upon each other, but difficult to plan an
-enterprise wide data bus.
+Communities where data have close semantic relationships, e. g. giant
+organizations who build and extend their service upon each other, sharing common
+business achievements, but is difficult to plan an enterprise-wide data bus
+service.
 
-A gas and oil company can be such a good example, of which their departments,
-engineering, analysing, etc., are depending on each other's data services.
+A typical gas and oil company can be such a good example, of which their
+departments, engineering, analysing, etc., are depending on each other's data
+services.
