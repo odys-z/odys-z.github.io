@@ -6,6 +6,7 @@ Tech Notes
    :caption: Contents:
 
    cav/survey
+   dev-op/survey
    topics/index
 
 
