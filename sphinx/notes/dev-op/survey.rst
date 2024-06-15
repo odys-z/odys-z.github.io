@@ -73,12 +73,20 @@ ________________________________________
 Who will like this?
 ===================
 
-Communities where data have close semantic relationships, e. g. a giant
+The communities where data have close semantic relationships, e. g. a giant
 organization's departments who build and extend their service upon each other,
-sharing common business achievements, but it is difficult to plan an enterprise-
-wide data service bus.
+sharing common business achievements, but is difficult to plan an enterprise-
+wide data service bus, and diversity is supposed to contribute to its thriving.
 
-A typical gas and oil company can be such a good example, of which their
+A typical gas and oil giant company can be such a scenario, of which their
 departments, engineering, analysing, etc., are depending on each other's data
-services, while everyone needs their special knowledge for optimization their
+services, while everyone needs their special knowledge for optimizating their
 own business locally.
+
+References
+==========
+
+#. Imagined Community, Wikipedia, https://en.wikipedia.org/wiki/Imagined_community 
+   on 15 June 2024.
+
+#. DevOps, Wikipedia, https://en.wikipedia.org/wiki/DevOps on 15 June 2024.
