@@ -86,15 +86,17 @@ References
     
     * `SimulIDE <https://launchpad.net/simulide>`_ 
 
-        ::
+    .. code-block:: text
+        
+        A simple real time electronic circuit simulator, intended for hobbyist
+        or students to learn and experiment with simple electronic circuits and
+        microcontrollers, supporting PIC, AVR and Arduino.
 
-            A simple real time electronic circuit simulator, intended for hobbyist
-            or students to learn and experiment with simple electronic circuits and
-            microcontrollers, supporting PIC, AVR and Arduino.
+        This is not an accurate simulator for circuit analysis, it aims to be
+        fast, simple and easy to use, this means simple and not very accurate
+        electronic models and limited features.
 
-            This is not an accurate simulator for circuit analysis, it aims to be
-            fast, simple and easy to use, this means simple and not very accurate
-            electronic models and limited features.
+    ..
 
     * A quick survey `Emma Lu, Best Free Circuit Simulator: The Best 13 Simulator Software <https://www.wellpcb.com/best-free-circuit-simulator.html>`_
 

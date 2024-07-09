@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>XTest.ext - D3 Pie</title>
+    <!-- <script type='text/javascript' src='../../../node_modules/three/build/three.min.js'></script> -->
+    <script type='text/javascript' src='../../../dist/three.min-r120.js'></script>
+    <script type='text/javascript' src='../../../dist/jquery-3.4.1.js'></script>
+    <script type='text/javascript' src='../../../dist/xv-0.3.0.min.js'></script>
+</head>
+<body>
+  <img id='splash'></img>
+  <!-- This stub is essential for D3Pie to render a inner texture.
+       1. The div id must provided as a neccessary option.
+       2. The div must presented before canvas - the unknown behaviour of a depending pageckage, Html2Canvas
+    -->
+  <div id='stub'></div>
+  <canvas id='canv'></canvas>
+  <script>
+    "use strict";
+
+    class TestD3Pie extends xv.XSys {
+        constructor(ecs, options) {
+            super(ecs);
+            this.ecs = ecs;
+        }
+
+        update(tick, entities) {
+        }
+    }
+
+    TestD3Pie.query = { iffall: ['CmdFlag', 'Pie'] };
+
+    // oinned lines referenced by docsphinx/desig-memo/extensions/chart.rst
+    // line 35 - 48
+    $.getJSON('../data/pie.json', function(json){
+        const xworld = new xv.XWorld(document.getElementById('canv'), window);
+        const ecs = xworld.xecs;
+        const xscene = xworld.xscene;
+
+        var d3pie = new xv.chart.D3Pie(ecs,
+            { stub: 'stub',
+              xy: [0, 25],   // texture start offset
+              xworld, chart: json.chart
+            }, json.pie);
+        xworld.addSystem('chart', d3pie);
+        xworld.addSystem('test', new TestD3Pie(ecs, {xworld, d3pie}));
+        xworld.startUpdate();
+    })
+    .fail(function(jqXhr, textStatus, error) {
+        console.error(jqXhr, textStatus, error);
+    });
+  </script>
+  </body>
+</html>

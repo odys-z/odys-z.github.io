@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>XTest-GPU Picking</title>
+	<!-- <script type='text/javascript' src='../../node_modules/three/build/three.min.js'></script> -->
+    <script type='text/javascript' src='../../dist/three.min-r120.js'></script>
+	<script type='text/javascript' src='../../dist/xv-0.3.0.min.js'></script>
+</head>
+<body>
+  <canvas id='canv'></canvas>
+  <p>Key Points:<br>
+	  1. Add texture to ShaderFlag.colorArray<br>
+	  2. Using a MeshPhongMaterial adding more saturation, ignoring alpha = 0 fragment.<br>
+	  see <a href='../try/three.example/webgl_materials_blending.html'>trying results</a>
+	  and <a href='https://learnopengl.com/Advanced-OpenGL/Blending'>learnopengl, Blending</a>
+  </p>
+  <script>
+	"use strict";
+
+	var log = true;
+	class Cubesys extends xv.XSys {
+		constructor(ecs, options) {
+			super(ecs);
+			this.ecs = ecs;
+			this.initCube(ecs);
+		}
+
+		update(tick, entities) {
+			if (log) {
+				log = false;
+				console.log('cube-sys');
+			}
+
+	    	for (const e of entities) {
+				if (e.CmdFlag) {
+				 	if (e.CmdFlag.flag > 0) {
+						// console.log(e.UserCmd);
+						this.cmd = e.UserCmd.cmds[0].cmd;
+					}
+					else this.cmd = undefined;
+				}
+			}
+		}
+
+		initCube(ecs) {
+			var cube = ecs.createEntity({
+				id: 'cube0',
+				Obj3: { geom: xv.XComponent.Obj3Type.BOX,
+						box: [200, 200, 300],
+						transform: [
+							{translate: [180, 0, -100]},
+							{scale: [1, 1, 1]}
+						],
+						uniforms: {opacity: 1.0},
+						mesh: undefined },		// Thrender will handle this
+				GpuPickable: {},
+				Visual:{vtype: xv.AssetType.mesh,
+						shader: xv.XComponent.ShaderFlag.colorArray,
+						paras:{ colors:[[1, 1, 0]] },
+						asset: 'tex/ruler256.png'}
+			});
+
+			cube = ecs.createEntity({
+				id: 'cube.0',
+				Obj3: { geom: xv.XComponent.Obj3Type.BOX,
+						box: [200, 200, 300],
+						transform: [
+							{translate: [-120, 0, -100]},
+							{scale: [1, 1, 1]}
+						],
+						uniforms: {opacity: 1.0},
+						mesh: undefined },		// Thrender will handle this
+				GpuPickable: {},
+				Visual:{vtype: xv.AssetType.mesh,
+						asset: 'tex/ruler256.png'}
+			});
+
+			var cube = ecs.createEntity({
+				id: 'cube1',
+				Obj3: { geom: xv.XComponent.Obj3Type.BOX,
+						box: [60, 60, 30],
+						mesh: undefined },
+				GpuPickable: {},
+				Visual: {vtype: xv.AssetType.mesh, asset: 'tex/rgb2x2.png'}
+			});
+		}
+	}
+
+	Cubesys.query = { iffall: ['GpuPickable', 'Obj3'] };
+
+	const xworld = new xv.XWorld(document.getElementById('canv'), window, {});
+	const ecs = xworld.xecs;
+	const xscene = xworld.xscene;
+
+	xworld.addSystem('test', new Cubesys(ecs, {xscene}));
+	xworld.startUpdate();
+  </script>
+</body>
+</html>

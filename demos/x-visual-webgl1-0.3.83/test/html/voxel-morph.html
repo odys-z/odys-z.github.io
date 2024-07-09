@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>XTest-Morph</title>
+	<!-- <script type='text/javascript' src='../../node_modules/three/build/three.min.js'></script> -->
+    <script type='text/javascript' src='../../dist/three.min-r120.js'></script>
+	<script type='text/javascript' src='../../dist/xv-0.3.0.min.js'></script>
+</head>
+<body>
+  <p>Same as <a href='./voxel-morph-particles.html'>test: voxel particles</a>
+	  only diffent of some uniforms parameters.</p>
+  <canvas id='canv'></canvas>
+  <script>
+	"use strict";
+
+	/**Senario: suppose you have 2 models to be morphed (animated). */
+	// initiating xworld
+	const defs = [];
+	defs.push({
+		id: 'ent1',
+		Obj3: { geom: xv.XComponent.Obj3Type.BOX,
+				box: [200, 120, 80],
+				// mesh is inited by thrender, can be ignored here - MorphSwitch's target
+				mesh: undefined,
+				invisible: true,
+				uniforms: {opacity: 0.5}},
+		Visual:{vtype: xv.AssetType.wireframe,
+				paras: {color: 0xe0e0ff},
+				asset: undefined },
+	});
+
+	defs.push({
+		id: 'ent2',
+		Obj3: { geom: xv.XComponent.Obj3Type.BOX,
+				box: [60, 200, 20],
+				mesh: undefined,
+				uniforms: {opacity: 0.3}},
+		Visual:{vtype: xv.AssetType.mesh,
+				paras: {},
+				asset: null },
+	});
+
+	defs.push({
+		id: 'ent3',
+		Obj3: { geom: xv.XComponent.Obj3Type.BOX,
+				box: [300, 10, 20],
+				mesh: undefined,
+				// invisible: true,
+				uniforms: {opacity: 0.1}},
+		Visual:{vtype: xv.AssetType.mesh,
+				paras: {},
+				asset: null },
+	});
+
+	defs.push({
+		id: 'points',
+		Obj3: { geom: xv.XComponent.Obj3Type.NA,    // use the geometry of ent1
+				box: [200, 2, 1],
+				mesh: undefined,                    // THREE.Points
+				invisible: false },                 // It's visible, but alpha 0?
+		Visual:{vtype: xv.AssetType.cubeVoxel,
+				asset: 'ent1',
+				shader: xv.XComponent.ShaderFlag.cubeVoxels,
+				paras: {vert_scale: '20.',          // NOTE "." is neccessary as this is a string in glsl source.
+						uniforms:{u_cubes: ['ent1', 'ent2', 'ent3'],// ent2.Obj3.mesh, matrix, etc.
+								  u_sects: [12, 8, 5] },            // sections in x, y, z
+								//u_tex: 'tex/spark1.png' } ,
+						u_tex: 'tex/spark1.png' }}, // v0.3.20 changed uniforms.u_tex to paras.u_tex like other paras
+		ModelSeqs: {
+			script: [[{ mtype: xv.XComponent.AnimType.U_MORPHi,
+						paras: {start: 0,
+								duration: 0.401,
+								uniforms: { u_morph0: [0, 0.4],
+											u_morph2: [0, 0],
+											a_noise: [0, 3] },
+		 						ease: undefined} },
+					  { mtype: xv.XComponent.AnimType.U_MORPHi,
+						paras: {start: 1.2,         // ignored
+								duration: 0.802,
+								uniforms: { u_morph0: [0.4, 1],
+											a_noise: [3, 0.02] },
+								ease: undefined} },
+					  { mtype: xv.XComponent.AnimType.U_MORPHi,
+						paras: {start: 0,
+								duration: 0.903,
+								uniforms: { u_morph0: [0, 0],
+											u_morph1: [0, 1],
+											a_noise: [0.2, 0.02] },
+		 						ease: undefined} },
+					  { mtype: xv.XComponent.AnimType.U_MORPHi,
+						paras: {start: 0,
+								duration: 1.004,
+								uniforms: { u_morph1: [0, 0],
+											u_morph2: [0, 1],
+											a_noise: [0.2, 0.02] },
+								ease: undefined },
+						followBy: [{entity: 'points',// repeat
+									seqx: 0,
+									start: 0.1}]
+								},
+					]] },
+		CmpTweens: {}
+	});
+
+	const xworld = new xv.XWorld(document.getElementById('canv'),
+						window, {canvasize: [480, 320]});
+	xworld.addEntities(defs);
+	xworld.startUpdate();
+  </script>
+</body>
+</html>

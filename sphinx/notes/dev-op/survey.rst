@@ -48,14 +48,14 @@ ________________________________________________________
 
 * Data module design
 * Service architecture planning
-* Data service exposing policy
+* Data service exposing policy publishing
 * Business intelligence with traffic surveying and analyzing
 * Having available data service visualized at design time for others.
 
 Works to be done:
 
-* A VS Code plugin for browsing available exposed data service Backend data synchronizer
-* A VS Code database designer and a Java data service module compiler
+* A VS Code plugin for browsing available exposed data service backend & data synchronizer
+* A VS Code database designer (CLI & scripts are enough) and a Java data service module compiler
 * A platform for experiment and deploy docker images
 * A paid cloud / edge runtime environment
 * A consulting service for data planning and integration or data quality verifying
@@ -64,11 +64,11 @@ Front end online modules to support this
 ________________________________________
 
 * JS/TS widgets library, e.g. Anclient.js + Anprism, for online frontend page
-  designing, opening and verifying.
+  designing, experimenting and optimizating.
 
 * Various plugins for Blender, Ravit, UE, etc., to access online data while
   creating 3D scenarios. A WebGL runtime for testing exported 3D scenes and
-  for integrating in frontend pages
+  for integrating in frontend pages (suppose Digital Twins is essential)
 
 Who will like this?
 ===================
@@ -76,7 +76,7 @@ Who will like this?
 The communities where data have close semantic relationships, e. g. a giant
 organization's departments who build and extend their service upon each other,
 sharing common business achievements, but is difficult to plan an enterprise-
-wide data service bus, and diversity is supposed to contribute to its thriving.
+wide data service bus, since diversity is supposed to contribute to its thriving.
 
 A typical gas and oil giant company can be such a scenario, of which their
 departments, engineering, analysing, etc., are depending on each other's data

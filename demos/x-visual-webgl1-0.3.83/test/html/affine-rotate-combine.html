@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>XTest-Script Linear Combination</title>
+    <!-- <script type='text/javascript' src='../../node_modules/three/build/three.min.js'></script> -->
+    <script type='text/javascript' src='../../../dist/three.min-r120.js'></script>
+    <script type='text/javascript' src='../../dist/xv-0.3.0.min.js'></script>
+</head>
+<body>
+  <canvas id='canv'></canvas>
+  <script>
+    /** use case:
+     * Using a command to plug in a tween for roatating and buncing */
+    "use strict";
+
+    var logged = false;
+    class Interaction extends xv.XSys {
+        constructor(ecs, options) {
+            super(ecs);
+            this.ecs = ecs;
+            this.cmd = [];
+        }
+
+        update(tick, entities) {
+            if (xworld.xview.flag > 0) {
+                // console.log(e.UserCmd);
+                this.cmd.push(...xworld.xview.cmds);
+            }
+            else this.cmd = [];
+
+            for (const e of entities) {
+                if (e.id === 'sphere') {
+                    for (var cmd of this.cmd) {
+                        if (cmd.code === 'key' && sphereCmdHandler(cmd.cmd, e))
+                            break;
+                    }
+                }
+                else if (e.id === 'torus') {
+                    for (var cmd of this.cmd) {
+                        if (cmd.code === 'key' && torusCmdHandler(cmd.cmd, e))
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    function sphereCmdHandler(cmd, e) {
+        if (e.CmpTweens)
+        switch (cmd) {
+            case 'up':
+                e.CmpTweens.startCmds.push(0);
+                break;
+            case 'down':
+                e.CmpTweens.startCmds.push(1);
+                break;
+            default:
+        }
+        else if (!logged){
+            console.error('No such tween.')
+            logged = true;
+        }
+    }
+
+    function torusCmdHandler(cmd, e) {
+        if (e.CmpTweens)
+        switch (cmd) {
+            case 'left':
+                e.CmpTweens.startCmds.push(0);
+                break;
+            case 'right':
+                e.CmpTweens.startCmds.push(1);
+                break;
+            default:
+        }
+        else if (!logged){
+            console.error('No such tween.');
+            logged = true;
+        }
+    }
+
+    Interaction.query = { any: ['GpuPickable', 'CmdFlag'] };
+
+    function defineObjects() {
+        var objs = [];
+        objs.push( {
+            id: 'sphere',
+            Obj3: { geom: xv.XComponent.Obj3Type.SPHERE,
+                    // args of THREE.SphereGeometry:
+                    // radius — sphere radius. Default is 1.
+                    // widthSegments — number of horizontal segments. Minimum value is 3, and the default is 8.
+                    // heightSegments — number of vertical segments. Minimum value is 2, and the default is 6.
+                    // phiStart — specify horizontal starting angle. Default is 0.
+                    // phiLength — specify horizontal sweep angle size. Default is Math.PI * 2.
+                    // thetaStart — specify vertical starting angle. Default is 0.
+                    // thetaLength — specify vertical sweep angle size. Default is Math.PI.
+                    box: [60, 8, 6],
+                    mesh: undefined },          // Thrender will handle this
+            GpuPickable: {},
+            Visual:{vtype: xv.AssetType.mesh,
+                    asset: 'tex/byr0.png'},
+            ModelSeqs: { script:[
+                [{ mtype: xv.XComponent.AnimType.ROTAXIS,
+                    paras: {start: Infinity,
+                            duration: 1.001,   // seconds
+                            axis: [1, 0, 0],
+                            deg: [0, 115],      // from, to
+                            ease: undefined}},  // default linear
+                  { mtype: xv.XComponent.AnimType.ROTAXIS,
+                    paras: {start: Infinity,
+                            duration: 4.002,
+                            axis: [0, 1, 0],
+                            deg: [0, -90],
+                            ease: undefined}}
+                 ],
+                 [{ mtype: xv.XComponent.AnimType.ORBIT,
+                    paras: {start: Infinity,    // auto start, follow previous
+                            duration: 5.009,    // seconds
+                            axis: [0, 0, 1],
+                            pivot: [80, 0, 0],
+                            deg: [0, 120],
+                            ease: undefined} } ]] },
+            CmpTweens: {}
+        });
+
+        objs.push ({
+            id: 'torus',
+            Obj3: { geom: xv.XComponent.Obj3Type.TORUS,
+                    // args of THREE.TorusGeometry:
+                    // THREE.TorusBufferGeometry
+                    // radius - Radius of the torus, from the center of the torus to the center of the tube. Default is 1.
+                    // tube — Radius of the tube. Default is 0.4.
+                    // radialSegments — Default is 8
+                    // tubularSegments — Default is 6.
+                    // arc — Central angle. Default is Math.PI * 2.
+                    box: [100, 10, 8, 50],
+                    // invisible: true,
+                    mesh: undefined },          // Thrender will handle this
+            GpuPickable: {},
+            Visual:{vtype: xv.AssetType.mesh,
+                    asset: 'tex/rgb2x2.png'},
+            ModelSeqs: { script:
+                [[{ mtype: xv.XComponent.AnimType.ROTATEX,
+                    paras: {start: Infinity,
+                            duration: 0.8,      // seconds
+                            deg: [0, 45],       // from, to
+                            ease: undefined}} ],// default linear
+                 [{ mtype: xv.XComponent.AnimType.ORBIT,
+                    paras: {start: Infinity,    // auto start, follow previous
+                            duration: 2,        // seconds
+                            axis: [0, 1, 0],
+                            pivot: [120, 0, 0],
+                            deg: [0, 90],
+                            ease: xv.XEasing.Elastic.InOut} } ]] },
+            CmpTweens: {}
+        });
+
+        return objs;
+    }
+
+    const xworld = new xv.XWorld(document.getElementById('canv'), window, {log: 6});
+    const ecs = xworld.xecs;
+    const xscene = xworld.xscene;
+
+    xworld.addEntities(defineObjects());
+    xworld.addSystem('test', new Interaction(ecs, {xscene}));
+
+    xworld.startUpdate();
+  </script>
+</body>
+</html>
