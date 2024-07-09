@@ -14,3 +14,7 @@ See the release section at x-visual. All pages are static html pages.
 - Documents
 
 See [the under building version here](https://odys-z.github.io/x-visual/tests/index.html)
+
+# Credits
+
+to [Three.js](https://threejs.org/).
