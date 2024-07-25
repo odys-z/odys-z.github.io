@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DA Semantics &#8212; Dev Community 0.1 documentation</title>
+    <title>What’s DASemantics for? &#8212; Dev Community 0.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -32,9 +32,123 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="da-semantics">
-<h1>DA Semantics<a class="headerlink" href="#da-semantics" title="Permalink to this headline">¶</a></h1>
-<p>TODO</p>
+  <div class="section" id="what-s-dasemantics-for">
+<h1>What’s DASemantics for?<a class="headerlink" href="#what-s-dasemantics-for" title="Permalink to this headline">¶</a></h1>
+<p>Well, the word semantics is a computer science term. The author doesn’t want to
+redefine this word, but here is some explanation of what semantic-DA with
+semantic-transact is trying to support.</p>
+<p>In a typical relational database based application, the main operation of data is
+CRUD. And most often such data operations can be abstracted to some operation
+pattern, and they are always organized as a database transaction/batch operation
+described in SQL.</p>
+<p>Take the “book-author” relation for example, the author’s ID is also the parent
+referenced by book’s author FK. If trying to delete an author in DB, there are 2
+typical policies that can be applied by the application. The first is delete all
+books by the author accordingly; the second is warning and denying the operation
+if some books are referencing the author. Both of these must/can be organized
+into a transact/batch operation, with the second transact as check-then-delete.</p>
+<p>In this case, the FK relationship can be handled in a generalized operation,
+through parameterizing some variables like table name, child referencing column
+name and parent ID.</p>
+<p>Take the DASemantics.smtype.parentChildrenOnDel for example, it automatically
+supports “deleting all children when deleting parent” semantics. What the user
+(application developer) needs to do is configure a semantics item then delete the
+parent directly.</p>
+<p>Now we understand what the “parentChildrenOnDel” is for. Semantic-DA abstract and
+hide these patterns, automatically be wrapped then be committed in a transaction.
+That’s how semantics-DA facilitate development and tablize applications.</p>
+</div>
+<div class="section" id="da-semantics-handlers">
+<h1>DA Semantics Handlers<a class="headerlink" href="#da-semantics-handlers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="about-automatic-semantics-handling">
+<h2>About automatic semantics handling<a class="headerlink" href="#about-automatic-semantics-handling" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/odys-z/semantic-DA">Semantic.DA</a> has a few semantics
+handler for automatically handling data structure while operating CRUD.</p>
+<p>See <a class="reference external" href="https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html">Semantics handlers’ API documents</a> .</p>
+<ul>
+<li><p>Auto Key Format</p>
+<p>The manage a table for generating varchar type key for entities’ primitive key.
+See</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">smtype</span><span class="o">.</span><span class="n">autoInc</span>
+</pre></div>
+</div>
+<p>The generataed key is a Radix 64 integer encoded with Base 64 charactors, and can
+be used for name of files and folders, so must be careful when configure for Windows,
+on which the file path is case insensitive.</p>
+<p>Semantic.DA accepts configurations form the xml file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>which is usually located in web applications’ root folder, e. g. WEB-INF for servlet.
+To generate auto-key for Windows, configure the <em>file-sys</em> like</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;configs&gt;</span>
+  <span class="nt">&lt;t</span> <span class="na">id=</span><span class="s">&quot;default&quot;</span> <span class="na">pk=</span><span class="s">&quot;k&quot;</span> <span class="na">columns=</span><span class="s">&quot;k,v&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;c&gt;</span>
+        <span class="nt">&lt;k&gt;</span>file-sys<span class="nt">&lt;/k&gt;</span>
+        <span class="nt">&lt;v&gt;</span>windows<span class="nt">&lt;/v&gt;</span>
+    <span class="nt">&lt;/c&gt;</span>
+  <span class="nt">&lt;/t&gt;</span>
+<span class="nt">&lt;/config&gt;</span>
+</pre></div>
+</div>
+<p>The Id generator, DASemantext#genIdPrefix(), will generate string of radix 32 integer.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="extending-default-handler-plugin">
+<h2>Extending default handler plugin<a class="headerlink" href="#extending-default-handler-plugin" title="Permalink to this headline">¶</a></h2>
+<p>Semantic.DA implements a default handler, DASemantics, which can be replaced by
+subclasses of it. 2.0.0 has provided another plugin, and the docsync.jserv
+Syntier.start() can be a good example for extending DASEmantics.</p>
+<p>First load the semantics configured in the xml file from which the new semantics
+cannot be explained by the default static loader, then create a new transaction
+builder depending on it, i. e. DBSyntableBuilder.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">SemanticsMap</span> <span class="n">ss</span> <span class="o">=</span> <span class="n">DATranscxt</span><span class="p">.</span><span class="na">initConfigs</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">DATranscxt</span><span class="p">.</span><span class="na">loadSemantics</span><span class="p">(</span><span class="n">conn</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">DBSyntableBuilder</span><span class="p">.</span><span class="na">SynmanticsMap</span><span class="p">(</span><span class="n">synode</span><span class="p">,</span> <span class="n">c</span><span class="p">));</span>
+
+<span class="n">doctrb</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">DBSyntableBuilder</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">myconn</span><span class="p">,</span> <span class="n">synode</span><span class="p">,</span> <span class="n">mod</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The extending type, SynmanticsMap, will have initConfigs() depending on new parser
+providen by DBSyntableBuilder.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DBSyntableBuilder</span> <span class="kd">extends</span> <span class="n">DATranscxt</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SynmanticsMap</span> <span class="kd">extends</span> <span class="n">SemanticsMap</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">synode</span><span class="p">;</span>
+
+        <span class="kd">public</span> <span class="nf">SynmanticsMap</span><span class="p">(</span><span class="n">String</span> <span class="n">synode</span><span class="p">,</span> <span class="n">String</span> <span class="n">conn</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">synode</span> <span class="o">=</span> <span class="n">synode</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">DASemantics</span> <span class="nf">createSemantics</span><span class="p">(</span><span class="n">Transcxt</span> <span class="n">trb</span><span class="p">,</span> <span class="n">String</span> <span class="n">tabl</span><span class="p">,</span> <span class="n">String</span> <span class="n">pk</span><span class="p">,</span> <span class="kt">boolean</span> <span class="n">debug</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DBSynmantics</span><span class="p">(</span><span class="n">trb</span><span class="p">,</span> <span class="n">synode</span><span class="p">,</span> <span class="n">tabl</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span> <span class="n">debug</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DBSynmantics</span> <span class="kd">extends</span> <span class="n">DASemantics</span> <span class="p">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">SemanticHandler</span> <span class="nf">parseHandler</span><span class="p">(</span><span class="n">Transcxt</span> <span class="n">tsx</span><span class="p">,</span> <span class="n">String</span> <span class="n">tabl</span><span class="p">,</span> <span class="n">smtype</span> <span class="n">smtp</span><span class="p">,</span>
+            <span class="n">String</span> <span class="n">pk</span><span class="p">,</span> <span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">SemanticException</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">smtype</span><span class="p">.</span><span class="na">synChange</span> <span class="o">==</span> <span class="n">smtp</span><span class="p">)</span>
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">DBSynmantics</span><span class="p">.</span><span class="na">ShSynChange</span><span class="p">(</span><span class="n">tsx</span><span class="p">,</span> <span class="n">synode</span><span class="p">,</span> <span class="n">tabl</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">TransException</span> <span class="o">|</span> <span class="n">SQLException</span> <span class="o">|</span> <span class="n">SAXException</span> <span class="o">|</span> <span class="n">IOException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="kd">super</span><span class="p">.</span><span class="na">parseHandler</span><span class="p">(</span><span class="n">tsx</span><span class="p">,</span> <span class="n">tabl</span><span class="p">,</span> <span class="n">smtp</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -60,7 +174,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Topics: Using Semantier</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../protocol/anson.html">Protocol Convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ansession/iuser.html">IUser &amp; Session Manage</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DA Semantics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">What’s DASemantics for?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#da-semantics-handlers">DA Semantics Handlers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resulve.html">Protocol Convention</a></li>
 <li class="toctree-l2"><a class="reference internal" href="anson-field.html">Implementing NoSql with Anson</a></li>
 </ul>

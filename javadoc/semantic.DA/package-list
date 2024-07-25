@@ -5,5 +5,7 @@ io.odysz.semantic
 io.odysz.semantic.DA
 io.odysz.semantic.DA.cp
 io.odysz.semantic.DA.drvmnger
+io.odysz.semantic.meta
+io.odysz.semantic.syn
 io.odysz.semantic.util
 io.odysz.semantics.x
