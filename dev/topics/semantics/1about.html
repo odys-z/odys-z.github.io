@@ -1,0 +1,256 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>What’s DASemantics for? &mdash; Dev Community 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="DA Semantics Handlers" href="2semantypes.html" />
+    <link rel="prev" title="Data Accessing layaer Semantics" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Dev Community
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Semantic-* Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Topics: Using Semantier</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../protocol/anson.html">Protocol Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ansession/iuser.html">IUser &amp; Session Manage</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Data Accessing layaer Semantics</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">What’s DASemantics for?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2semantypes.html">DA Semantics Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3plugin.html">Extending default semantics plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4resulve.html">Protocol Convention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5anson-field.html">Implementing NoSql with Anson</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../links/res.html">Semantic-* Documentation (deprecated)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../links/res.html#id2">Anclient Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../javadoc-contents.html">API Documents</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Dev Community</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Topics: Using Semantier</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Accessing layaer Semantics</a> &raquo;</li>
+        
+      <li>What’s DASemantics for?</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="what-s-dasemantics-for">
+<h1>What’s DASemantics for?<a class="headerlink" href="#what-s-dasemantics-for" title="Permalink to this headline">¶</a></h1>
+<p>The word semantics is a computer science term. The author doesn’t want to redefine
+this term, but here are some explanations for what semantic-DA with semantic-transact
+is trying to support.</p>
+<p>In a typical relational database based application, the main operation of data is
+CRUD. And most often such data operations can be abstracted to some operation
+pattern, and they are always organized as a database transaction/batch operation
+described in SQL.</p>
+<p>Take the “book-author” relation for example, the author’s ID is also the parent
+referenced by book’s author FK. If trying to delete an author in DB, there are 2
+typical policies that can be applied by the application. The first is delete all
+books by the author accordingly; the second is warning and denying the operation
+if some books are referencing the author. Both of these must/can be organized
+into a transact/batch operation, with the second transact as check-then-delete.</p>
+<p>In this case, the FK relationship can be handled in a generalized operation,
+through parameterizing some variables like table name, child referencing column
+name and parent ID.</p>
+<p>Take the DASemantics.smtype.parentChildrenOnDel for example, it automatically
+supports “deleting all children when deleting parent” semantics. What the user
+(application developer) needs to do is configure a semantics item then delete the
+parent directly.</p>
+<p>Now we understand what the “parentChildrenOnDel” is for. Semantic-DA abstract and
+hide these patterns, automatically be wrapped then be committed in a transaction.
+That’s how semantics-DA facilitate development and tablize applications.</p>
+<p><a class="reference external" href="https://github.com/odys-z/semantic-DA">Semantic.DA</a> has a few semantics
+handler for automatically handling data structure while operating CRUD.</p>
+<p>See <a class="reference external" href="https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html">Semantics handlers’ API documents</a> .</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="2semantypes.html" class="btn btn-neutral float-right" title="DA Semantics Handlers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Data Accessing layaer Semantics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2024, Ody Zhou.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
