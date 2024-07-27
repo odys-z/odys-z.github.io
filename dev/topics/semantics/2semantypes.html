@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>DA Semantics Handlers &mdash; Dev Community 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Extending default semantics plugin" href="3plugin.html" />
+    <link rel="prev" title="What’s DASemantics for?" href="1about.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Dev Community
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Semantic-* Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Topics: Using Semantier</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../protocol/anson.html">Protocol Convention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ansession/iuser.html">IUser &amp; Session Manage</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Data Accessing layaer Semantics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="1about.html">What’s DASemantics for?</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DA Semantics Handlers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configure-semantics-handlers">Configure Semantics Handlers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#auto-key">Auto Key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#external-file-field">External File Field</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="3plugin.html">Extending default semantics plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4resulve.html">Protocol Convention</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5anson-field.html">Implementing NoSql with Anson</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../links/res.html">Semantic-* Documentation (deprecated)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../links/res.html#id2">Anclient Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../javadoc-contents.html">API Documents</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Dev Community</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Topics: Using Semantier</a> &raquo;</li>
+        
+          <li><a href="index.html">Data Accessing layaer Semantics</a> &raquo;</li>
+        
+      <li>DA Semantics Handlers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="da-semantics-handlers">
+<h1>DA Semantics Handlers<a class="headerlink" href="#da-semantics-handlers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configure-semantics-handlers">
+<h2>Configure Semantics Handlers<a class="headerlink" href="#configure-semantics-handlers" title="Permalink to this headline">¶</a></h2>
+<p>Handlers can be configured in xml file of which the path is defined in config.xml.</p>
+<p>connects.xml</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;c&gt;</span>
+        <span class="nt">&lt;id&gt;</span>local-sqlite<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;type&gt;</span>sqlite<span class="nt">&lt;/type&gt;</span>
+        <span class="nt">&lt;isdef&gt;</span>true<span class="nt">&lt;/isdef&gt;</span>
+        <span class="c">&lt;!-- For sqlite, src = relative path from this configure file.</span>
+<span class="c">                So connection string can be: jdbc:sqlite:WEB-INF/remote.db --&gt;</span>
+        <span class="nt">&lt;src&gt;</span>semantic-DA.db<span class="nt">&lt;/src&gt;</span>
+        <span class="nt">&lt;usr&gt;</span>test<span class="nt">&lt;/usr&gt;</span>
+        <span class="nt">&lt;pswd&gt;</span>test<span class="nt">&lt;/pswd&gt;</span>
+        <span class="c">&lt;!-- enable sql printing --&gt;</span>
+        <span class="nt">&lt;dbg&gt;</span>true<span class="nt">&lt;/dbg&gt;</span>
+        <span class="nt">&lt;smtcs&gt;</span>semantics.xml<span class="nt">&lt;/smtcs&gt;</span>
+<span class="nt">&lt;/c&gt;</span>
+</pre></div>
+</div>
+<p>semantics.xml</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;semantics&gt;</span>
+    <span class="nt">&lt;t</span> <span class="na">id=</span><span class="s">&quot;semantics&quot;</span> <span class="na">pk=</span><span class="s">&quot;id&quot;</span> <span class="na">columns=</span><span class="s">&quot;id,smtc,tabl,pk,args&quot;</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- smtc: semantics type, e.g. auto: auto increase key.</span>
+<span class="c">            see javadoc: https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html</span>
+<span class="c">        tabl: database table name</span>
+<span class="c">        pk:</span>
+<span class="c">        args: arguments for sementics handlers. For args for different handlers, see above javadoc link.</span>
+<span class="c">    --&gt;</span>
+        <span class="nt">&lt;s&gt;</span>
+            <span class="nt">&lt;id&gt;</span>01<span class="nt">&lt;/id&gt;</span>
+            <span class="nt">&lt;smtc&gt;</span>pk<span class="nt">&lt;/smtc&gt;</span>
+            <span class="nt">&lt;tabl&gt;</span>a_functions<span class="nt">&lt;/tabl&gt;</span>
+            <span class="nt">&lt;pk&gt;</span>funcId<span class="nt">&lt;/pk&gt;</span>
+            <span class="nt">&lt;args&gt;</span>funcId<span class="nt">&lt;/args&gt;</span>
+        <span class="nt">&lt;/s&gt;</span>
+        <span class="nt">&lt;s&gt;</span>
+            <span class="nt">&lt;id&gt;</span>02<span class="nt">&lt;/id&gt;</span>
+            <span class="nt">&lt;smtc&gt;</span>fullpath<span class="nt">&lt;/smtc&gt;</span>
+            <span class="nt">&lt;tabl&gt;</span>a_functions<span class="nt">&lt;/tabl&gt;</span>
+            <span class="nt">&lt;pk&gt;</span>funcId<span class="nt">&lt;/pk&gt;</span>
+            <span class="nt">&lt;args&gt;</span>parentId,sibling,fullpath<span class="nt">&lt;/args&gt;</span>
+        <span class="nt">&lt;/s&gt;</span>
+    <span class="nt">&lt;/t&gt;</span>
+<span class="nt">&lt;/semantics&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="auto-key">
+<h2>Auto Key<a class="headerlink" href="#auto-key" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The manage a table for generating varchar type key for entities’ primitive key.
+See</p>
+<blockquote>
+<div><p>smtype: <a class="reference external" href="https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html#autoInc">autoInc</a></p>
+</div></blockquote>
+<p>The generataed key is a Radix 64 integer encoded with Base 64 charactors, and can
+be used for name of files and folders, so must be careful when configure for Windows,
+on which the file path is case insensitive.</p>
+<p>Semantic.DA accepts configurations form the xml file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span><span class="o">.</span><span class="n">xml</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>which is usually located in web applications’ root folder, e. g. WEB-INF for servlet.
+To generate auto-key for Windows, configure the <em>file-sys</em> like</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;configs&gt;</span>
+  <span class="nt">&lt;t</span> <span class="na">id=</span><span class="s">&quot;default&quot;</span> <span class="na">pk=</span><span class="s">&quot;k&quot;</span> <span class="na">columns=</span><span class="s">&quot;k,v&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;c&gt;</span>
+        <span class="nt">&lt;k&gt;</span>file-sys<span class="nt">&lt;/k&gt;</span>
+        <span class="nt">&lt;v&gt;</span>windows<span class="nt">&lt;/v&gt;</span>
+    <span class="nt">&lt;/c&gt;</span>
+  <span class="nt">&lt;/t&gt;</span>
+<span class="nt">&lt;/config&gt;</span>
+</pre></div>
+</div>
+<p>The Id generator, DASemantext#genIdPrefix(), will generate string of radix 32 integer.</p>
+</div></blockquote>
+</div>
+<div class="section" id="external-file-field">
+<h2>External File Field<a class="headerlink" href="#external-file-field" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>smtype: <a class="reference external" href="https://odys-z.github.io/javadoc/semantic.DA/io/odysz/semantic/DASemantics.smtype.html">extfilev2</a></p>
+<p>Save a special field as file from file system.</p>
+<p>This handler can manage subfolder in path, configered in xml as field name of data table.
+The file content providen with <em>uri</em> should be a Base 64 encoded block.</p>
+<p>This semantics only used for handling small files. If the file is large, there are an
+example in Semantic.jserv which uses a block sequence for uploading files.</p>
+<p>semantics.xml</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;semantics&gt;</span>
+    <span class="nt">&lt;t</span> <span class="na">id=</span><span class="s">&quot;semantics&quot;</span> <span class="na">pk=</span><span class="s">&quot;id&quot;</span> <span class="na">columns=</span><span class="s">&quot;id,smtc,tabl,pk,args&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;s&gt;</span>
+            <span class="nt">&lt;id&gt;</span>53<span class="nt">&lt;/id&gt;</span>
+            <span class="nt">&lt;smtc&gt;</span>ef<span class="nt">&lt;/smtc&gt;</span>
+            <span class="nt">&lt;tabl&gt;</span>a_attaches<span class="nt">&lt;/tabl&gt;</span>
+            <span class="nt">&lt;pk&gt;</span>attId<span class="nt">&lt;/pk&gt;</span>
+            <span class="c">&lt;!-- Try delete, save to ./uploads/[busiTbl]/[uri],</span>
+<span class="c">                in table attches, pk attId.</span>
+<span class="c">             --&gt;</span>
+            <span class="nt">&lt;args&gt;</span>uploads,uri,busiTbl,busiId,attName<span class="nt">&lt;/args&gt;</span>
+        <span class="nt">&lt;/s&gt;</span>
+    <span class="nt">&lt;/t&gt;</span>
+<span class="nt">&lt;/semantics&gt;</span>
+</pre></div>
+</div>
+<p>To load the file, use function <em>exfFile()</em> provided in Semantic.transact.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// read the field</span>
+<span class="n">assertEquals</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;uploads/zsu.ua/ody/2022-10/%s Sun Yet-sen.jpg&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">),</span>
+             <span class="n">DAHelper</span><span class="p">.</span><span class="na">getValstr</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">connId</span><span class="p">,</span> <span class="n">phm</span><span class="p">,</span> <span class="n">phm</span><span class="p">.</span><span class="na">uri</span><span class="p">,</span> <span class="n">phm</span><span class="p">.</span><span class="na">pk</span><span class="p">,</span> <span class="n">pid</span><span class="p">));</span>
+
+<span class="c1">// read the file</span>
+<span class="n">assertEquals</span><span class="p">(</span><span class="n">content64</span><span class="p">,</span> <span class="n">DAHelper</span><span class="p">.</span><span class="na">getExprstr</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">connId</span><span class="p">,</span> <span class="n">phm</span><span class="p">,</span>
+      <span class="n">Funcall</span><span class="p">.</span><span class="na">extfile</span><span class="p">(</span><span class="n">phm</span><span class="p">.</span><span class="na">uri</span><span class="p">),</span> <span class="n">phm</span><span class="p">.</span><span class="na">uri</span><span class="p">,</span>
+      <span class="n">phm</span><span class="p">.</span><span class="na">pk</span><span class="p">,</span> <span class="n">pid</span><span class="p">));</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="3plugin.html" class="btn btn-neutral float-right" title="Extending default semantics plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="1about.html" class="btn btn-neutral float-left" title="What’s DASemantics for?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2024, Ody Zhou.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

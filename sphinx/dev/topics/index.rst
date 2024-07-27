@@ -7,6 +7,4 @@ Topics: Using Semantier
 
    protocol/anson
    ansession/iuser
-   semantics/semantypes
-   semantics/resulve
-   semantics/anson-field
+   semantics/index

@@ -1,4 +1,0 @@
-DA Semantics
-============
-
-TODO
