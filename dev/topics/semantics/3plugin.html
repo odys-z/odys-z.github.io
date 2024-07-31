@@ -182,15 +182,21 @@ subclasses of it. 2.0.0 has provided another plugin, and the docsync.jserv
 Syntier.start() can be a good example for extending DASEmantics.</p>
 <p>First load the semantics configured in the xml file from which the new semantics
 cannot be explained by the default static loader, then create a new transaction
-builder depending on it, i. e. DBSyntableBuilder.</p>
+builder depending on it, e. g. DBSyntableBuilder.</p>
+<p>Code snipet for creating DBSyntableBuilder by Synoder:</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">SemanticsMap</span> <span class="n">ss</span> <span class="o">=</span> <span class="n">DATranscxt</span><span class="p">.</span><span class="na">initConfigs</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">DATranscxt</span><span class="p">.</span><span class="na">loadSemantics</span><span class="p">(</span><span class="n">conn</span><span class="p">),</span>
-    <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">DBSyntableBuilder</span><span class="p">.</span><span class="na">SynmanticsMap</span><span class="p">(</span><span class="n">synode</span><span class="p">,</span> <span class="n">c</span><span class="p">));</span>
+        <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="n">DBSyntableBuilder</span><span class="p">.</span><span class="na">SynmanticsMap</span><span class="p">(</span><span class="n">synode</span><span class="p">,</span> <span class="n">c</span><span class="p">));</span>
 
-<span class="n">doctrb</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">DBSyntableBuilder</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">myconn</span><span class="p">,</span> <span class="n">synode</span><span class="p">,</span> <span class="n">mod</span><span class="p">);</span>
+<span class="n">Synoder</span> <span class="n">synoder</span> <span class="o">=</span> <span class="n">domains</span>
+                <span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+                <span class="p">.</span><span class="na">born</span><span class="p">(</span><span class="n">ss</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">smtype</span><span class="p">.</span><span class="na">synChange</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="n">doctrb</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">DBSyntableBuilder</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">myconn</span><span class="p">,</span> <span class="n">synode</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+                <span class="p">.</span><span class="na">loadNyquvect</span><span class="p">(</span><span class="n">conn</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>The extending type, SynmanticsMap, will have initConfigs() depending on new parser
-providen by DBSyntableBuilder.</p>
+<p>The extending type, SynmanticsMap, will have initConfigs() depending on the new
+parser providen by DBSyntableBuilder.</p>
 <div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DBSyntableBuilder</span> <span class="kd">extends</span> <span class="n">DATranscxt</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SynmanticsMap</span> <span class="kd">extends</span> <span class="n">SemanticsMap</span> <span class="p">{</span>
         <span class="n">String</span> <span class="n">synode</span><span class="p">;</span>
