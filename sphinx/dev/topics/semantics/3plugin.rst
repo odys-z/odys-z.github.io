@@ -9,7 +9,7 @@ First load the semantics configured in the xml file from which the new semantics
 cannot be explained by the default static loader, then create a new transaction 
 builder depending on it, e. g. DBSyntableBuilder.  
 
-Code snipet for creating DBSyntableBuilder by Synoder:
+Code snipet creating DBSyntableBuilder for starting Syntier:
 
 .. code-block:: java
 
@@ -24,8 +24,8 @@ Code snipet for creating DBSyntableBuilder by Synoder:
 				.loadNyquvect(conn);
 ..
 
-The extending type, SynmanticsMap, will have initConfigs() depending on the new
-parser providen by DBSyntableBuilder.
+The extending type, DBSyntableBuilder.SynmanticsMap, will have initConfigs()
+depending on the new parser overriden by DBSyntableBuilder.
 
 .. code-block:: java
 
@@ -44,6 +44,11 @@ parser providen by DBSyntableBuilder.
             }
         }
     }
+..
+
+The extended parser now can parse new semantics. 
+
+.. code-block:: java
 
     public class DBSynmantics extends DASemantics {
 
