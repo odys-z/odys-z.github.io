@@ -5,4 +5,18 @@
 
 His docs, notes, memos and lib documentations (javadoc, wiki, tutorial etc.)
 
+### sphinx
+
+* dev: developer community, tutorial, wiki, ...
+
+* notes: learning materials
+
+* products: App publishs 
+
+* semantier: semantic-* documents
+
+* docsync: docsync.jserv documents
+
+* tips: administator's memos
+
 See [his documentations portal](https://odys-z.github.io/).

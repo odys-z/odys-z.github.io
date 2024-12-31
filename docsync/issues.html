@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>1. Issues &mdash; Docsync.jserv 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. Closed Issues" href="issues-closed.html" />
+    <link rel="prev" title="Welcome to Docsync.jserv!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Docsync.jserv
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Issues</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#injecting-jservs-at-runtime">1.1. Injecting <em>jservs</em> at runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#only-one-syn-worker-thread">1.2. Only one syn-worker thread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overhaul-sending-exception-to-client">1.3. Overhaul: sending exception to client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data">1.4. How long will the syn-worker can work without clean buffered data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enable-cors-for-jetty-12">1.5. Enable CORS for Jetty 12</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="issues-closed.html">2. Closed Issues</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Docsync.jserv</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li><span class="section-number">1. </span>Issues</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="issues">
+<h1><span class="section-number">1. </span>Issues<a class="headerlink" href="#issues" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="injecting-jservs-at-runtime">
+<h2><span class="section-number">1.1. </span>Injecting <em>jservs</em> at runtime<a class="headerlink" href="#injecting-jservs-at-runtime" title="Permalink to this headline">¶</a></h2>
+<p>When the application server is installed, it should know peer jservs
+through dictionary.json, wich is version controlled in source.</p>
+<p>The test uses a simple cheap way to setup this.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="n">SynotierJettyApp</span> <span class="nf">main_</span><span class="p">(</span><span class="n">String</span> <span class="n">vol_home</span><span class="p">,</span>
+    <span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">,</span> <span class="n">PrintstreamProvider</span> <span class="p">...</span> <span class="n">oe</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// @Option(name=&quot;-peer-jservs&quot;,</span>
+    <span class="c1">// usage=only for test, e. g.</span>
+    <span class="c1">// &quot;X:http://127.0.0.1:8964/album-jserv Y:http://127.0.0.1/album-jserv&quot;)</span>
+    <span class="c1">// public String CliArgs.jservs;</span>
+    <span class="n">CliArgs</span> <span class="n">cli</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CliArgs</span><span class="p">();</span>
+
+    <span class="n">CmdLineParser</span> <span class="n">parser</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CmdLineParser</span><span class="p">(</span><span class="n">cli</span><span class="p">);</span>
+    <span class="n">parser</span><span class="p">.</span><span class="na">parseArgument</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isblank</span><span class="p">(</span><span class="n">cli</span><span class="p">.</span><span class="na">installkey</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">YellowPages</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="n">FilenameUtils</span><span class="p">.</span><span class="na">concat</span><span class="p">(</span>
+            <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">).</span><span class="na">getAbsolutePath</span><span class="p">(),</span>
+            <span class="n">webinf</span><span class="p">,</span>
+            <span class="n">EnvPath</span><span class="p">.</span><span class="na">replaceEnv</span><span class="p">(</span><span class="n">vol_home</span><span class="p">)));</span>
+        <span class="n">AppSettings</span><span class="p">.</span><span class="na">setupdb</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">webinf</span><span class="p">,</span> <span class="n">vol_home</span><span class="p">,</span> <span class="s">&quot;config.xml&quot;</span><span class="p">,</span> <span class="n">cli</span><span class="p">.</span><span class="na">installkey</span><span class="p">,</span>
+                <span class="c1">// inject jservs args to the peers&#39; configuration</span>
+                <span class="n">cli</span><span class="p">.</span><span class="na">jservs</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Where the <em>jservs</em> for peers are injected into SynodeConfig, and then updated into
+table <em>syn_nodes</em>, planning future extension for providing <em>jservs</em> in a separate json.</p>
+</div>
+<div class="section" id="only-one-syn-worker-thread">
+<h2><span class="section-number">1.2. </span>Only one syn-worker thread<a class="headerlink" href="#only-one-syn-worker-thread" title="Permalink to this headline">¶</a></h2>
+<p>Multiple synodes cannot work in one (test) running.</p>
+<p>commit: 2079991c2cfda1a46ac532b94ebb836e41590377</p>
+<p>See ExpSynodetier.syncIns().</p>
+</div>
+<div class="section" id="overhaul-sending-exception-to-client">
+<h2><span class="section-number">1.3. </span>Overhaul: sending exception to client<a class="headerlink" href="#overhaul-sending-exception-to-client" title="Permalink to this headline">¶</a></h2>
+<p>Re-design ServPort.err(MsgCode code, Exceptiion e);</p>
+</div>
+<div class="section" id="how-long-will-the-syn-worker-can-work-without-clean-buffered-data">
+<h2><span class="section-number">1.4. </span>How long will the syn-worker can work without clean buffered data<a class="headerlink" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data" title="Permalink to this headline">¶</a></h2>
+<p>The maximum distance between stamps in syn-change and synode’s stamp is half of
+Nyquence range, Long.MAX_VALUE, 2 ^ 63 -1 in Java. Each time the stamp will be
+increased by 1 for a syn-workers looping. The longest buffering is the difference
+of the earliest buffered change logs and the latest stamp.</p>
+<p>If each interval is one second, a year has 3.15 * 10 ^ 7 seconds, the longest time
+can be correctly buffered is approx. 300 billion years.</p>
+</div>
+<div class="section" id="enable-cors-for-jetty-12">
+<h2><span class="section-number">1.5. </span>Enable CORS for Jetty 12<a class="headerlink" href="#enable-cors-for-jetty-12" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dec</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">2024</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">Jetty EE10 deprecated CrossOriginFilter</a>,
+but Jetty 12 together with EE8 is not likely will be supported in the near future:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">It</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">possible</span> <span class="n">to</span> <span class="n">add</span> <span class="n">handles</span> <span class="n">after</span> <span class="n">ee10</span> <span class="n">ServletContextHandler</span><span class="o">.</span>
+
+<span class="n">However</span> <span class="k">for</span> <span class="n">ee8</span><span class="o">/</span><span class="mi">9</span> <span class="n">it</span> <span class="n">might</span> <span class="n">be</span> <span class="n">a</span> <span class="n">bit</span> <span class="n">more</span> <span class="n">fiddly</span> <span class="n">to</span> <span class="n">insert</span> <span class="n">a</span> <span class="n">core</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">right</span> <span class="n">location</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://github.com/jetty/jetty.project/issues/10220">Jetty.project #10220</a>.</p>
+<p>And Semantic.jserv is built upon Servlet 3.1, and
+<a class="reference external" href="https://stackoverflow.com/a/66368511/7362888">can only depends on EE8</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mvn</span> <span class="n">dependency</span><span class="p">:</span><span class="n">tree</span>
+
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">---</span> <span class="n">dependency</span><span class="p">:</span><span class="mf">3.6.0</span><span class="p">:</span><span class="n">tree</span> <span class="p">(</span><span class="n">default</span><span class="o">-</span><span class="n">cli</span><span class="p">)</span> <span class="o">@</span> <span class="n">docsync</span><span class="o">.</span><span class="n">jserv</span> <span class="o">---</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">docsync</span><span class="o">.</span><span class="n">jserv</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.2.0</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">javax</span><span class="o">.</span><span class="n">servlet</span><span class="p">:</span><span class="n">javax</span><span class="o">.</span><span class="n">servlet</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">3.1.0</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantic</span><span class="o">.</span><span class="n">DA</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.8</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantics</span><span class="o">.</span><span class="n">transact</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.53</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">|</span>  \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">antson</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.9.104</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">anclient</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.6</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantic</span><span class="o">.</span><span class="n">jserv</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.6</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">synodict</span><span class="o">-</span><span class="n">jclient</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.0.9</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">server</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">http</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">util</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">io</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">webapp</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">xml</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">servlet</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">nested</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">security</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">session</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">toolchain</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">servlet</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">4.0.6</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">security</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">syndoc</span><span class="o">-</span><span class="n">lib</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.7</span><span class="p">:</span><span class="n">test</span>
+</pre></div>
+</div>
+<p>So can only solve this with
+<a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">CrossOriginFilter</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="issues-closed.html" class="btn btn-neutral float-right" title="2. Closed Issues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Docsync.jserv!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2025, Ody Zhou.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
