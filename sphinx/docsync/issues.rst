@@ -110,5 +110,55 @@ And Semantic.jserv is built upon Servlet 3.1, and
     [INFO] |     \- org.eclipse.jetty.ee8:jetty-ee8-security:jar:12.0.11:test
     [INFO] \- io.github.odys-z:syndoc-lib:jar:0.5.7:test
 
-So can only solve this with
-`CrossOriginFilter <https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html>`_.
+FIY
+
+    The jetty source project has tests of `CrosOriginHandler <https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101>`_
+    which can be the example. The start() method explains details.
+
+    .. code-block:: java
+
+        public void start(CrossOriginHandler crossOriginHandler) throws Exception
+        {
+            server = new Server();
+            connector = new LocalConnector(server);
+            server.addConnector(connector);
+            ContextHandler context = new ContextHandler("/");
+            server.setHandler(context);
+            context.setHandler(crossOriginHandler);
+            crossOriginHandler.setHandler(new ApplicationHandler());
+            server.start();
+        }
+
+See `CrossOriginFilter <https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html>`_.
+document.
+
+Using CrossOriginFilter:
+
+.. code-block:: java
+
+    private SynotierJettyApp allowCors(ServletContextHandler context) {
+      CrossOriginFilter.synode(syngleton().synode());
+
+      FilterHolder holder = new FilterHolder(CrossOriginFilter.class);
+      holder.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+      holder.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+      holder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,HEAD");
+      holder.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "X-Requested-With,Content-Type,Accept,Origin");
+      holder.setName("cross-origin");
+      FilterMapping fm = new FilterMapping();
+      fm.setFilterName("cross-origin");
+      fm.setPathSpec("*");
+      
+      context.addFilter(holder, "/*", EnumSet.of(DispatcherType.REQUEST));
+      
+      return this;
+    }
+..
+
+References:
+
+#. `Jetty test: CrossOriginHandlerTest <https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101>`_
+   (Jan 1, 2025)
+
+#. `Cross Origin Filter with embedded Jetty <https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty>`_
+

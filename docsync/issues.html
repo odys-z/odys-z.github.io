@@ -258,8 +258,52 @@ but Jetty 12 together with EE8 is not likely will be supported in the near futur
 <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">syndoc</span><span class="o">-</span><span class="n">lib</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.7</span><span class="p">:</span><span class="n">test</span>
 </pre></div>
 </div>
-<p>So can only solve this with
-<a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">CrossOriginFilter</a>.</p>
+<p>FIY</p>
+<blockquote>
+<div><p>The jetty source project has tests of <a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">CrosOriginHandler</a>
+which can be the example. The start() method explains details.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="p">(</span><span class="n">CrossOriginHandler</span> <span class="n">crossOriginHandler</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span>
+<span class="p">{</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Server</span><span class="p">();</span>
+    <span class="n">connector</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LocalConnector</span><span class="p">(</span><span class="n">server</span><span class="p">);</span>
+    <span class="n">server</span><span class="p">.</span><span class="na">addConnector</span><span class="p">(</span><span class="n">connector</span><span class="p">);</span>
+    <span class="n">ContextHandler</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ContextHandler</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+    <span class="n">server</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+    <span class="n">context</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">crossOriginHandler</span><span class="p">);</span>
+    <span class="n">crossOriginHandler</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="k">new</span> <span class="n">ApplicationHandler</span><span class="p">());</span>
+    <span class="n">server</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>See <a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">CrossOriginFilter</a>.
+document.</p>
+<p>Using CrossOriginFilter:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span> <span class="n">SynotierJettyApp</span> <span class="nf">allowCors</span><span class="p">(</span><span class="n">ServletContextHandler</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">synode</span><span class="p">(</span><span class="n">syngleton</span><span class="p">().</span><span class="na">synode</span><span class="p">());</span>
+
+  <span class="n">FilterHolder</span> <span class="n">holder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FilterHolder</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+  <span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_ORIGINS_PARAM</span><span class="p">,</span> <span class="s">&quot;*&quot;</span><span class="p">);</span>
+  <span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span> <span class="s">&quot;*&quot;</span><span class="p">);</span>
+  <span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_METHODS_PARAM</span><span class="p">,</span> <span class="s">&quot;GET,POST,HEAD&quot;</span><span class="p">);</span>
+  <span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_HEADERS_PARAM</span><span class="p">,</span> <span class="s">&quot;X-Requested-With,Content-Type,Accept,Origin&quot;</span><span class="p">);</span>
+  <span class="n">holder</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
+  <span class="n">FilterMapping</span> <span class="n">fm</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FilterMapping</span><span class="p">();</span>
+  <span class="n">fm</span><span class="p">.</span><span class="na">setFilterName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
+  <span class="n">fm</span><span class="p">.</span><span class="na">setPathSpec</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+
+  <span class="n">context</span><span class="p">.</span><span class="na">addFilter</span><span class="p">(</span><span class="n">holder</span><span class="p">,</span> <span class="s">&quot;/*&quot;</span><span class="p">,</span> <span class="n">EnumSet</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">DispatcherType</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">));</span>
+
+  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>References:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">Jetty test: CrossOriginHandlerTest</a>
+(Jan 1, 2025)</p></li>
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty">Cross Origin Filter with embedded Jetty</a></p></li>
+</ol>
 </div>
 </div>
 
