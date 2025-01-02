@@ -155,6 +155,15 @@ Using CrossOriginFilter:
     }
 ..
 
+TIP
+    
+For error::
+
+    Status Code: 405 Method Not Allowed
+
+The possible reason is that the incorrect request URL is handled by the default handler,
+by which the POST method is not allowed by the server.
+
 References:
 
 #. `Jetty test: CrossOriginHandlerTest <https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101>`_
