@@ -132,7 +132,8 @@ FIY
 See `CrossOriginFilter <https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html>`_.
 document.
 
-Using CrossOriginFilter:
+Using CrossOriginFilter, with
+`source <https://github.com/odys-z/semantic-jserv/blob/one-step/jserv-album/src/main/java/io/oz/syntier/serv/CrossOriginFilter.java>`_:
 
 .. code-block:: java
 
