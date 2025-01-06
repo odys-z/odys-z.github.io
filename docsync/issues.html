@@ -50,6 +50,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#overhaul-sending-exception-to-client">1.3. Overhaul: sending exception to client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data">1.4. How long will the syn-worker can work without clean buffered data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#enable-cors-for-jetty-12">1.5. Enable CORS for Jetty 12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#different-filesystem-providers-of-jdk-1-8-android">1.6. Different FileSystem Providers of JDK 1.8 &amp; Android</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="issues-closed.html">2. Closed Issues</a></li>
@@ -227,6 +228,63 @@ by which the POST method is not allowed by the server.</p>
 (Jan 1, 2025)</p></li>
 <li><p><a class="reference external" href="https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty">Cross Origin Filter with embedded Jetty</a></p></li>
 </ol>
+</section>
+<section id="different-filesystem-providers-of-jdk-1-8-android">
+<h2><span class="section-number">1.6. </span>Different FileSystem Providers of JDK 1.8 &amp; Android<a class="headerlink" href="#different-filesystem-providers-of-jdk-1-8-android" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>::</dt><dd><p>Jan 05, 2025
+Semantic.DA 1.5.13</p>
+</dd>
+</dl>
+<p>Loading text file for jar requires a zip file system provider. This is implemented differently
+in JDK 1.8 (Semantic.DA dependency) and Android environment.</p>
+<p>At least API 26, the Zip file system provider is
+<a class="reference external" href="https://issuetracker.google.com/issues/153773248?pli=1">not available on Android</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Response</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">engineering</span> <span class="n">team</span><span class="p">:</span>
+<span class="o">=================================</span>
+
+<span class="n">The</span> <span class="n">missing</span> <span class="n">implementation</span> <span class="ow">is</span> <span class="n">com</span><span class="o">.</span><span class="n">sun</span><span class="o">.</span><span class="n">nio</span><span class="o">.</span><span class="n">zipfs</span><span class="o">.</span><span class="n">ZipFileSystemProvider</span><span class="p">,</span> <span class="n">which</span>
+<span class="ow">is</span> <span class="ow">not</span> <span class="n">available</span> <span class="n">on</span> <span class="n">Android</span><span class="o">.</span> <span class="n">We</span> <span class="n">recommend</span> <span class="n">using</span> <span class="n">ZipInputStream</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="ow">not</span>
+<span class="n">a</span> <span class="n">replacement</span> <span class="n">but</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">achieve</span> <span class="n">similar</span> <span class="n">functionality</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Current fixing for loading files from jar package:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">protected</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">loadSqlite</span><span class="p">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">clzz</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">filename</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// https://stackoverflow.com/a/46468788/7362888</span>
+<span class="w">        </span><span class="c1">// URI uri = Paths.get(clzz.getResource(filename).toURI()).toUri();</span>
+<span class="w">        </span><span class="n">URI</span><span class="w"> </span><span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clzz</span><span class="p">.</span><span class="na">getResource</span><span class="p">(</span><span class="n">filename</span><span class="p">).</span><span class="na">toURI</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="o">!</span><span class="n">eq</span><span class="p">(</span><span class="n">uri</span><span class="p">.</span><span class="na">getScheme</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;file&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">            </span><span class="n">zipfs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="n">env</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;create&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="n">zipfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FileSystems</span><span class="p">.</span><span class="na">newFileSystem</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span><span class="w"> </span><span class="n">env</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Utils</span><span class="p">.</span><span class="na">warnT</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Object</span><span class="p">()</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">                    </span><span class="s">&quot;File %s shouldn&#39;t be load in the runtime environment.\ntarget URI: %s&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">uri</span><span class="p">);</span>
+<span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Paths</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">uri</span><span class="p">).</span><span class="na">toUri</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Files</span><span class="p">.</span><span class="na">readAllLines</span><span class="p">(</span>
+<span class="w">            </span><span class="n">Paths</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">uri</span><span class="p">),</span><span class="w"> </span><span class="n">Charset</span><span class="p">.</span><span class="na">defaultCharset</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">joining</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Utils</span><span class="p">.</span><span class="na">warnT</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Object</span><span class="p">()</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">            </span><span class="s">&quot;File %s can&#39;t be loaded in the runtime environment.\n%s&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span>
+<span class="w">        </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
 </section>
 

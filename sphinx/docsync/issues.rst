@@ -172,3 +172,64 @@ References:
 
 #. `Cross Origin Filter with embedded Jetty <https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty>`_
 
+
+Different FileSystem Providers of JDK 1.8 & Android
+---------------------------------------------------
+
+::
+    Jan 05, 2025
+    Semantic.DA 1.5.13
+
+Loading text file for jar requires a zip file system provider. This is implemented differently
+in JDK 1.8 (Semantic.DA dependency) and Android environment. 
+
+At least API 26, the Zip file system provider is
+`not available on Android <https://issuetracker.google.com/issues/153773248?pli=1>`_.
+
+::
+
+    Response from the engineering team:
+    =================================
+
+    The missing implementation is com.sun.nio.zipfs.ZipFileSystemProvider, which
+    is not available on Android. We recommend using ZipInputStream, which is not
+    a replacement but can be used to achieve similar functionality.
+
+Current fixing for loading files from jar package:
+
+.. code-block:: java
+
+    protected static String loadSqlite(Class<?> clzz, String filename) {
+        try {
+            // https://stackoverflow.com/a/46468788/7362888
+            // URI uri = Paths.get(clzz.getResource(filename).toURI()).toUri();
+            URI uri = clzz.getResource(filename).toURI();
+            if (
+                !eq(uri.getScheme(), "file") &&
+                zipfs == null)
+                try {
+                    Map<String, String> env = new HashMap<>(); 
+                    env.put("create", "true");
+                    zipfs = FileSystems.newFileSystem(uri, env);
+                }
+                catch (Exception e) {
+                    Utils.warnT(new Object() {},
+                        "File %s shouldn't be load in the runtime environment.\ntarget URI: %s",
+                        filename, uri);
+                    e.printStackTrace();
+                    return null;
+                }
+
+            uri = Paths.get(uri).toUri();
+
+            return Files.readAllLines(
+                Paths.get(uri), Charset.defaultCharset())
+                .stream().collect(Collectors.joining("\n"));
+        } catch (Exception e) {
+            Utils.warnT(new Object() {},
+                "File %s can't be loaded in the runtime environment.\n%s",
+                filename, e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
