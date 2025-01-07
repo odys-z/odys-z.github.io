@@ -175,24 +175,30 @@ References:
 Android PreferenceEdit Saves Violate OOP Encapsulation Principle
 ----------------------------------------------------------------
 
+::
+
+    CompileSDK 34
+    TargetSDK 34
+    Virtual Device: Pixel 2 API 26
+    Tue 07 Jan 2025
+
 When modified PreferenceEdit, the changes are saved to the xml storage after user's
 confirmation. To discard the dirty changes next time, the initial value must be reloaded,
 which is already lost.
 
-.. img :: imgs/00-android-prefs-eidt.png
-   :alter: Android PreferenceEdit, value = 'X'.
-   :hight: 5em
+.. image:: imgs/00-android-prefs-edit.png
+   :height: 5em
 
-.. img :: imgs/00-android-prefs-eidt.png
-   :alter: Android PreferenceEdit Saved as 'X'.
-   :hight: 5em
+.. image:: imgs/00-android-prefs-saving.jpg
+   :height: 5em
 
-Current solution: use an Anson object by pass the behavior and only save as needed.
+Current solution: use an Anson object to by pass the behavior and only save as needed.
 
 Different FileSystem Providers of JDK 1.8 & Android
 ---------------------------------------------------
 
 ::
+
     Jan 05, 2025
     Semantic.DA 1.5.13
 
