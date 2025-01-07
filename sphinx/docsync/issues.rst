@@ -162,8 +162,8 @@ For error::
 
     Status Code: 405 Method Not Allowed
 
-The possible reason is that the incorrect request URL is handled by the default handler,
-by which the POST method is not allowed by the server.
+The possible reason is that the incorrect request URL is handled by the default
+Jetty handler, by which the POST method is not allowed by the server.
 
 References:
 
