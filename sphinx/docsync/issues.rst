@@ -171,3 +171,19 @@ References:
 
 #. `Cross Origin Filter with embedded Jetty <https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty>`_
 
+Android PreferenceEdit Saves Violate OOP Encapsulation Principle
+----------------------------------------------------------------
+
+When modified PreferenceEdit, the changes are saved to the xml storage after user's
+confirmation. To discard the dirty changes next time, the initial value must be reloaded,
+which is already lost.
+
+.. img :: imgs/00-android-prefs-eidt.png
+   :alter: Android PreferenceEdit, value = 'X'.
+   :hight: 5em
+
+.. img :: imgs/00-android-prefs-eidt.png
+   :alter: Android PreferenceEdit Saved as 'X'.
+   :hight: 5em
+
+Current solution: use an Anson object by pass the behavior and only save as needed.
