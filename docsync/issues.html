@@ -45,13 +45,14 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Issues</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#injecting-jservs-at-runtime">1.1. Injecting <em>jservs</em> at runtime</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#only-one-syn-worker-thread">1.2. Only one syn-worker thread</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#overhaul-sending-exception-to-client">1.3. Overhaul: sending exception to client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data">1.4. How long will the syn-worker can work without clean buffered data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#enable-cors-for-jetty-12">1.5. Enable CORS for Jetty 12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#android-preferenceedit-saves-violate-oop-encapsulation-principle">1.6. Android PreferenceEdit Saves Violate OOP Encapsulation Principle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#different-filesystem-providers-of-jdk-1-8-android">1.7. Different FileSystem Providers of JDK 1.8 &amp; Android</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#to-be-verified-different-configurations-of-ext-filev2">1.1. To be verified: Different configurations of Ext-filev2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#injecting-jservs-at-runtime">1.2. Injecting <em>jservs</em> at runtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#only-one-syn-worker-thread">1.3. Only one syn-worker thread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overhaul-sending-exception-to-client">1.4. Overhaul: sending exception to client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data">1.5. How long will the syn-worker can work without clean buffered data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enable-cors-for-jetty-12">1.6. Enable CORS for Jetty 12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#android-preferenceedit-saves-violate-oop-encapsulation-principle">1.7. Android PreferenceEdit Saves Violate OOP Encapsulation Principle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#different-filesystem-providers-of-jdk-1-8-android">1.8. Different FileSystem Providers of JDK 1.8 &amp; Android</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="issues-closed.html">2. Closed Issues</a></li>
@@ -82,8 +83,33 @@
              
   <section id="issues">
 <h1><span class="section-number">1. </span>Issues<a class="headerlink" href="#issues" title="Link to this heading"></a></h1>
+<section id="to-be-verified-different-configurations-of-ext-filev2">
+<h2><span class="section-number">1.1. </span>To be verified: Different configurations of Ext-filev2<a class="headerlink" href="#to-be-verified-different-configurations-of-ext-filev2" title="Link to this heading"></a></h2>
+<p>To be verified:</p>
+<p>$VOLUME_HUB</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;s&gt;</span>
+<span class="w">    </span><span class="nt">&lt;id&gt;</span>pho.extfile<span class="nt">&lt;/id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;smtc&gt;</span>ef2.0<span class="nt">&lt;/smtc&gt;</span>
+<span class="w">    </span><span class="nt">&lt;tabl&gt;</span>h_photos<span class="nt">&lt;/tabl&gt;</span>
+<span class="w">    </span><span class="nt">&lt;pk&gt;</span>pid<span class="nt">&lt;/pk&gt;</span>
+<span class="w">    </span><span class="nt">&lt;args&gt;</span>$VOLUME_HUB,uri,family,shareby,folder,docname<span class="nt">&lt;/args&gt;</span>
+<span class="nt">&lt;/s&gt;</span>
+</pre></div>
+</div>
+<p>$VOLUME_PRV</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;s&gt;</span>
+<span class="w">    </span><span class="nt">&lt;id&gt;</span>pho.extfile<span class="nt">&lt;/id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;smtc&gt;</span>ef2.0<span class="nt">&lt;/smtc&gt;</span>
+<span class="w">    </span><span class="nt">&lt;tabl&gt;</span>h_photos<span class="nt">&lt;/tabl&gt;</span>
+<span class="w">    </span><span class="nt">&lt;pk&gt;</span>pid<span class="nt">&lt;/pk&gt;</span>
+<span class="w">    </span><span class="nt">&lt;args&gt;</span>$VOLUME_PRV,uri,shareby,folder,docname<span class="nt">&lt;/args&gt;</span>
+<span class="nt">&lt;/s&gt;</span>
+</pre></div>
+</div>
+<p>Different saving paths should still working.</p>
+</section>
 <section id="injecting-jservs-at-runtime">
-<h2><span class="section-number">1.1. </span>Injecting <em>jservs</em> at runtime<a class="headerlink" href="#injecting-jservs-at-runtime" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.2. </span>Injecting <em>jservs</em> at runtime<a class="headerlink" href="#injecting-jservs-at-runtime" title="Link to this heading"></a></h2>
 <p>When the application server is installed, it should know peer jservs
 through dictionary.json, wich is version controlled in source.</p>
 <p>The test uses a simple cheap way to setup this.</p>
@@ -115,17 +141,17 @@ through dictionary.json, wich is version controlled in source.</p>
 table <em>syn_nodes</em>, planning future extension for providing <em>jservs</em> in a separate json.</p>
 </section>
 <section id="only-one-syn-worker-thread">
-<h2><span class="section-number">1.2. </span>Only one syn-worker thread<a class="headerlink" href="#only-one-syn-worker-thread" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.3. </span>Only one syn-worker thread<a class="headerlink" href="#only-one-syn-worker-thread" title="Link to this heading"></a></h2>
 <p>Multiple synodes cannot work in one (test) running.</p>
 <p>commit: 2079991c2cfda1a46ac532b94ebb836e41590377</p>
 <p>See ExpSynodetier.syncIns().</p>
 </section>
 <section id="overhaul-sending-exception-to-client">
-<h2><span class="section-number">1.3. </span>Overhaul: sending exception to client<a class="headerlink" href="#overhaul-sending-exception-to-client" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.4. </span>Overhaul: sending exception to client<a class="headerlink" href="#overhaul-sending-exception-to-client" title="Link to this heading"></a></h2>
 <p>Re-design ServPort.err(MsgCode code, Exceptiion e);</p>
 </section>
 <section id="how-long-will-the-syn-worker-can-work-without-clean-buffered-data">
-<h2><span class="section-number">1.4. </span>How long will the syn-worker can work without clean buffered data<a class="headerlink" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.5. </span>How long will the syn-worker can work without clean buffered data<a class="headerlink" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data" title="Link to this heading"></a></h2>
 <p>The maximum distance between stamps in syn-change and synode’s stamp is half of
 Nyquence range, Long.MAX_VALUE, 2 ^ 63 -1 in Java. Each time the stamp will be
 increased by 1 for a syn-workers looping. The longest buffering is the difference
@@ -134,7 +160,7 @@ of the earliest buffered change logs and the latest stamp.</p>
 can be correctly buffered is approx. 300 billion years.</p>
 </section>
 <section id="enable-cors-for-jetty-12">
-<h2><span class="section-number">1.5. </span>Enable CORS for Jetty 12<a class="headerlink" href="#enable-cors-for-jetty-12" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.6. </span>Enable CORS for Jetty 12<a class="headerlink" href="#enable-cors-for-jetty-12" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dec</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">2024</span>
 </pre></div>
 </div>
@@ -221,8 +247,8 @@ document.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Status</span> <span class="n">Code</span><span class="p">:</span> <span class="mi">405</span> <span class="n">Method</span> <span class="n">Not</span> <span class="n">Allowed</span>
 </pre></div>
 </div>
-<p>The possible reason is that the incorrect request URL is handled by the default handler,
-by which the POST method is not allowed by the server.</p>
+<p>The possible reason is that the incorrect request URL is handled by the default
+Jetty handler, by which the POST method is not allowed by the server.</p>
 <p>References:</p>
 <ol class="arabic simple">
 <li><p><a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">Jetty test: CrossOriginHandlerTest</a>
@@ -231,7 +257,7 @@ by which the POST method is not allowed by the server.</p>
 </ol>
 </section>
 <section id="android-preferenceedit-saves-violate-oop-encapsulation-principle">
-<h2><span class="section-number">1.6. </span>Android PreferenceEdit Saves Violate OOP Encapsulation Principle<a class="headerlink" href="#android-preferenceedit-saves-violate-oop-encapsulation-principle" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.7. </span>Android PreferenceEdit Saves Violate OOP Encapsulation Principle<a class="headerlink" href="#android-preferenceedit-saves-violate-oop-encapsulation-principle" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CompileSDK</span> <span class="mi">34</span>
 <span class="n">TargetSDK</span> <span class="mi">34</span>
 <span class="n">Virtual</span> <span class="n">Device</span><span class="p">:</span> <span class="n">Pixel</span> <span class="mi">2</span> <span class="n">API</span> <span class="mi">26</span>
@@ -248,7 +274,7 @@ which is already lost.</p>
 <p>Current solution: use an Anson object to by pass the behavior and only save as needed.</p>
 </section>
 <section id="different-filesystem-providers-of-jdk-1-8-android">
-<h2><span class="section-number">1.7. </span>Different FileSystem Providers of JDK 1.8 &amp; Android<a class="headerlink" href="#different-filesystem-providers-of-jdk-1-8-android" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.8. </span>Different FileSystem Providers of JDK 1.8 &amp; Android<a class="headerlink" href="#different-filesystem-providers-of-jdk-1-8-android" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Jan</span> <span class="mi">05</span><span class="p">,</span> <span class="mi">2025</span>
 <span class="n">Semantic</span><span class="o">.</span><span class="n">DA</span> <span class="mf">1.5.13</span>
 </pre></div>

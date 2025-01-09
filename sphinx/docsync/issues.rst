@@ -1,6 +1,38 @@
 Issues
 ======
 
+To be verified: Different configurations of Ext-filev2
+------------------------------------------------------
+
+To be verified:
+
+$VOLUME_HUB
+
+.. code-block:: xml
+
+    <s>
+        <id>pho.extfile</id>
+        <smtc>ef2.0</smtc>
+        <tabl>h_photos</tabl>
+        <pk>pid</pk>
+        <args>$VOLUME_HUB,uri,family,shareby,folder,docname</args>
+    </s>
+
+
+$VOLUME_PRV
+
+.. code-block:: xml
+
+    <s>
+        <id>pho.extfile</id>
+        <smtc>ef2.0</smtc>
+        <tabl>h_photos</tabl>
+        <pk>pid</pk>
+        <args>$VOLUME_PRV,uri,shareby,folder,docname</args>
+    </s>
+
+Different saving paths should still working.
+
 Injecting *jservs* at runtime
 -----------------------------
 
@@ -162,8 +194,8 @@ For error::
 
     Status Code: 405 Method Not Allowed
 
-The possible reason is that the incorrect request URL is handled by the default handler,
-by which the POST method is not allowed by the server.
+The possible reason is that the incorrect request URL is handled by the default
+Jetty handler, by which the POST method is not allowed by the server.
 
 References:
 
