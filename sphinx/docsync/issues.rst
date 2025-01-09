@@ -255,3 +255,11 @@ Current fixing for loading files from jar package:
             return null;
         }
     }
+
+Shoud forcing Radix-32 for syn-uids
+-----------------------------------
+
+To be verified:
+
+Auto-key will generate Radix 64 number in Linux automatically for syn-uids,
+which shouldn't be confused across different platforms. 
