@@ -13,6 +13,7 @@ Welcome to Album Synchronizer's documentation!
    eula/data-privacy
    android/index
    winserv/index
+   support/index
    credits
 ..
 
