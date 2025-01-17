@@ -16,8 +16,8 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Family Album Synchronizer'
-copyright = '2024, Ody Zhou'
+project = 'Portfolio Home Page'
+copyright = '2025, Ody Zhou'
 author = 'Ody Zhou'
 
 # The full version, including alpha/beta/rc tags

@@ -45,8 +45,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="issues.html">1. Issues</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Closed Issues</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#closed-album-jserv-denpendencies">2.1. [closed] Album.jserv Denpendencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#closed-design-synssion-and-syncuser">2.2. [closed] Design Synssion and SyncUser:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">2.1. [closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-album-jserv-denpendencies">2.2. [closed] Album.jserv Denpendencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-design-synssion-and-syncuser">2.3. [closed] Design Synssion and SyncUser:</a></li>
 </ul>
 </li>
 </ul>
@@ -76,11 +77,48 @@
              
   <section id="closed-issues">
 <h1><span class="section-number">2. </span>Closed Issues<a class="headerlink" href="#closed-issues" title="Link to this heading"></a></h1>
+<section id="closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">
+<h2><span class="section-number">2.1. </span>[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease<a class="headerlink" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">NoSuchMethodError</span><span class="p">:</span> <span class="s1">&#39;boolean org.eclipse.jetty.io.ByteBufferPool.removeAndRelease(org.eclipse.jetty.io.RetainableByteBuffer)&#39;</span>
+    <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">lockedReleaseBuffer</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">593</span><span class="p">)</span>
+    <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">onWriteComplete</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">302</span><span class="p">)</span>
+    <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">flush</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">657</span><span class="p">)</span>
+    <span class="n">at</span> <span class="n">io</span><span class="o">.</span><span class="n">odysz</span><span class="o">.</span><span class="n">anson</span><span class="o">.</span><span class="n">Anson</span><span class="o">.</span><span class="n">toEnvelope</span><span class="p">(</span><span class="n">Anson</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">132</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/x-00-jetty-no-such-method.png"><img alt="_images/x-00-jetty-no-such-method.png" src="_images/x-00-jetty-no-such-method.png" style="height: 12em;" />
+</a>
+<p>Jetty HttpOutput class:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">lockedReleaseBuffer</span><span class="p">(</span><span class="kt">boolean</span><span class="w"> </span><span class="n">failure</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">assert</span><span class="w"> </span><span class="n">_channelState</span><span class="p">.</span><span class="na">isLockHeldByCurrentThread</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_aggregate</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failure</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">_pool</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">            </span><span class="n">_pool</span><span class="p">.</span><span class="na">removeAndRelease</span><span class="p">(</span><span class="n">_aggregate</span><span class="p">);</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="n">_aggregate</span><span class="p">.</span><span class="na">release</span><span class="p">();</span>
+<span class="w">        </span><span class="n">_aggregate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">        </span><span class="n">_pool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Where this._pool is an instance of</p>
+<blockquote>
+<div><p><a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/io/ArrayByteBufferPool.html">org.eclipse.jetty.io.ArrayByteBufferPool</a></p>
+</div></blockquote>
+<p>For <a class="reference external" href="https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server/12.0.16">Jetty Server 12.0.16</a>,
+ArrayByteBufferPool comes with the method removeAndRelease(…).</p>
+<p>Solved with (not verified - break ponts not reached any more):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span> <span class="n">jetty</span><span class="o">-</span><span class="n">server</span><span class="p">:</span> <span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">webapp</span><span class="p">:</span> <span class="mf">12.0.16</span> <span class="p">(</span><span class="n">Dec</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2024</span><span class="p">)</span>
+<span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span> <span class="n">jetty</span><span class="o">-</span><span class="n">server</span><span class="p">:</span> <span class="n">jetty</span><span class="o">-</span><span class="n">server</span>    <span class="p">:</span> <span class="mf">12.0.16</span> <span class="p">(</span><span class="n">Dec</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">2024</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="closed-album-jserv-denpendencies">
-<h2><span class="section-number">2.1. </span>[closed] Album.jserv Denpendencies<a class="headerlink" href="#closed-album-jserv-denpendencies" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.2. </span>[closed] Album.jserv Denpendencies<a class="headerlink" href="#closed-album-jserv-denpendencies" title="Link to this heading"></a></h2>
 <p>Thu Dec 12 12:41:54 2024 +0800</p>
 <p>Refactor: move DocsException to semantic.jserv, in the package io…tier.docs, shared by anclient and docsync.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">..&gt;</span> <span class="n">albumtier</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">--&gt;</span> <span class="n">albumtier</span>
  <span class="o">^</span>    <span class="o">|</span>     <span class="o">|</span>
  <span class="o">.</span>    <span class="o">|</span>     <span class="o">+--</span> <span class="n">anclient</span><span class="o">.</span><span class="n">java</span>
  <span class="o">.</span>    <span class="o">|</span>     <span class="o">|</span>    <span class="o">+--</span><span class="p">[</span><span class="n">Doclientier</span><span class="p">,</span>  <span class="o">...</span><span class="p">]</span>
@@ -98,7 +136,7 @@
 </div>
 </section>
 <section id="closed-design-synssion-and-syncuser">
-<h2><span class="section-number">2.2. </span>[closed] Design Synssion and SyncUser:<a class="headerlink" href="#closed-design-synssion-and-syncuser" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.3. </span>[closed] Design Synssion and SyncUser:<a class="headerlink" href="#closed-design-synssion-and-syncuser" title="Link to this heading"></a></h2>
 <p>commit f7c7c8d6bbd3f383d5d4d295059dfabeeb9f861e</p>
 <p>Date:   Tue Oct 29 19:41:16 2024 -0400</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>√ 0. Docsync 0.2.0: config.xml/class-IUser for IUser object used at serverside,

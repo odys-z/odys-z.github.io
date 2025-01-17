@@ -1,6 +1,48 @@
 Closed Issues
 =============
 
+[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease
+-----------------------------------------------------------------
+
+::
+
+    java.lang.NoSuchMethodError: 'boolean org.eclipse.jetty.io.ByteBufferPool.removeAndRelease(org.eclipse.jetty.io.RetainableByteBuffer)'
+	at org.eclipse.jetty.ee8.nested.HttpOutput.lockedReleaseBuffer(HttpOutput.java:593)
+	at org.eclipse.jetty.ee8.nested.HttpOutput.onWriteComplete(HttpOutput.java:302)
+	at org.eclipse.jetty.ee8.nested.HttpOutput.flush(HttpOutput.java:657)
+	at io.odysz.anson.Anson.toEnvelope(Anson.java:132)
+
+.. image:: imgs/x-00-jetty-no-such-method.png
+    :height: 12em
+
+Jetty HttpOutput class:
+
+.. code-block:: java
+
+    private void lockedReleaseBuffer(boolean failure) {
+        assert _channelState.isLockHeldByCurrentThread();
+        if (_aggregate != null) {
+            if (failure && _pool != null)
+                _pool.removeAndRelease(_aggregate);
+            else
+                _aggregate.release();
+            _aggregate = null;
+            _pool = null;
+        }
+    }
+
+Where this._pool is an instance of 
+
+    `org.eclipse.jetty.io.ArrayByteBufferPool <https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/io/ArrayByteBufferPool.html>`_
+
+For `Jetty Server 12.0.16 <https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server/12.0.16>`_,
+ArrayByteBufferPool comes with the method removeAndRelease(...).
+
+Solved with (not verified - break ponts not reached any more)::
+
+    org.eclipse.jetty: jetty-server: jetty-ee8-webapp: 12.0.16 (Dec 11, 2024)
+    org.eclipse.jetty: jetty-server: jetty-server    : 12.0.16 (Dec 11, 2024)
+
 [closed] Album.jserv Denpendencies
 ----------------------------------
 
@@ -10,7 +52,7 @@ Refactor: move DocsException to semantic.jserv, in the package io...tier.docs, s
 
 ::
 
-        ..> albumtier
+        --> albumtier
         ^    |     |
         .    |     +-- anclient.java
         .    |     |    +--[Doclientier,  ...]

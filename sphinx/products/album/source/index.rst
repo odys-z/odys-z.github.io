@@ -11,6 +11,7 @@ Welcome to Album Synchronizer's documentation!
    :caption: Contents:
 
    eula/data-privacy
+   portfolio-0.7/preview
    android/index
    winserv/index
    support/index
