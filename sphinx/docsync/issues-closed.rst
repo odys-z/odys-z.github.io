@@ -1,6 +1,38 @@
 Closed Issues
 =============
 
+[closed] To be verified: Different configurations of Ext-filev2
+---------------------------------------------------------------
+
+VERIFIED: 2024-12-31
+
+$VOLUME_HUB
+
+.. code-block:: xml
+
+    <s>
+        <id>pho.extfile</id>
+        <smtc>ef2.0</smtc>
+        <tabl>h_photos</tabl>
+        <pk>pid</pk>
+        <args>$VOLUME_HUB,uri,family,shareby,folder,docname</args>
+    </s>
+
+
+$VOLUME_PRV
+
+.. code-block:: xml
+
+    <s>
+        <id>pho.extfile</id>
+        <smtc>ef2.0</smtc>
+        <tabl>h_photos</tabl>
+        <pk>pid</pk>
+        <args>$VOLUME_PRV,uri,shareby,folder,docname</args>
+    </s>
+
+Different saving paths should still working.
+
 [closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease
 -----------------------------------------------------------------
 
