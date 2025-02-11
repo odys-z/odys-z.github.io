@@ -14,6 +14,7 @@ Welcome to Album Synchronizer's documentation!
    portfolio-0.7/preview
    android/index
    winserv/index
+   support/index
    credits
 ..
 

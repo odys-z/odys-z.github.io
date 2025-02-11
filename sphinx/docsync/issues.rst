@@ -1,38 +1,6 @@
 Issues
 ======
 
-To be verified: Different configurations of Ext-filev2
-------------------------------------------------------
-
-To be verified:
-
-$VOLUME_HUB
-
-.. code-block:: xml
-
-    <s>
-        <id>pho.extfile</id>
-        <smtc>ef2.0</smtc>
-        <tabl>h_photos</tabl>
-        <pk>pid</pk>
-        <args>$VOLUME_HUB,uri,family,shareby,folder,docname</args>
-    </s>
-
-
-$VOLUME_PRV
-
-.. code-block:: xml
-
-    <s>
-        <id>pho.extfile</id>
-        <smtc>ef2.0</smtc>
-        <tabl>h_photos</tabl>
-        <pk>pid</pk>
-        <args>$VOLUME_PRV,uri,shareby,folder,docname</args>
-    </s>
-
-Different saving paths should still working.
-
 Injecting *jservs* at runtime
 -----------------------------
 
@@ -226,8 +194,8 @@ which is already lost.
 
 Current solution: use an Anson object to by pass the behavior and only save as needed.
 
-Different FileSystem Providers of JDK 1.8 & Android
----------------------------------------------------
+Different FileSystem Providers of JDK 1.8, Windows & Android
+------------------------------------------------------------
 
 ::
 
@@ -250,6 +218,50 @@ At least API 26, the Zip file system provider is
     a replacement but can be used to achieve similar functionality.
 
 Current fixing for loading files from jar package:
+
+TODO Add Tests 2025-01-25 (Antson 0.9.113)::
+
+    1. In deployed server side (Windows), separatlly load zip file within another branch.
+    2. In Android, avoid loading zip file.
+
+References
+
+#. Answer by Google AI of search results of "java proper path string format for jdk.zipfs.ZipFileSystem"
+
+    .. code-block:: java
+
+        import java.io.IOException;
+        import java.io.InputStream;
+        import java.nio.file.*;
+        import java.util.HashMap;
+        import java.util.Map;
+
+        public class ZipFileExample {
+
+            public static void main(String[] args) throws IOException {
+                String zipFilePath = "/path/to/your/zipfile.zip";
+                String entryPath = "path/to/file/inside/zip.txt";
+
+                try (FileSystem zipfs = FileSystems.newFileSystem(Paths.get(zipFilePath), null)) {
+                    Path pathInZip = zipfs.getPath(entryPath);
+
+                    try (InputStream is = Files.newInputStream(pathInZip)) {
+                        // Process the InputStream
+                        // ...
+                    }
+                }
+            }
+        }
+
+#. Java Documentation, `Zip File System Provider <https://docs.oracle.com/javase/8/docs/technotes/guides/io/fsp/zipfilesystemprovider.html>`_,
+Java SE 8 Documentation, Oracle.
+
+#. by Qusay H. Mahmoud, `Compressing and Decompressing Data Using Java APIs <https://web.archive.org/web/20110427091148/http://java.sun.com/developer/technicalArticles/Programming/compression/>`_,
+with contributions from Konstantin Kladko, February 2002,
+SDN Home / Java Technology / Reference / Technical Articles and Tips
+retrieved on 2025-01-25.
+
+TODO To be edit (replace with loadTxt()):
 
 .. code-block:: java
 
