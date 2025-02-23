@@ -11,7 +11,9 @@ Album Synchronizer is built on open source projects & freeware:
 
 - Apache Daemon
 
-- Apache Tika
+- `Exiftool <https://exiftool.org/index.html#license>`_,
+  by `Phil Harvey <https://exiftool.org/index.html#license>`_,
+  with `a free license <https://exiftool.org/index.html#license>`_.
 
 - React.js
 
