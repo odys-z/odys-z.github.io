@@ -3,11 +3,11 @@ Credits
 
 Album Synchronizer is built on open source projects & freeware:
 
-- JDK 11
+- JDK 1.8, 17
 
-- Tomcat
+- Tomcat & Docker
 
-- Jetty
+- Jetty Server 12 & Jetty EE8 12
 
 - Apache Daemon
 
@@ -19,10 +19,12 @@ Album Synchronizer is built on open source projects & freeware:
 
 - Node.js
 
+- Material-UI (React) 4
+
+- `Zxing <https://zxing.org/w/decode.jspx>`_
+
 - `MultiType-FilePicker (Android) <https://github.com/fishwjy/MultiType-FilePicker>`_
 
-- Delete: `WPF TreeView File Explorer <https://medium.com/@mikependon/designing-a-wpf-treeview-file-explorer-565a3f13f6f2>`_
+- `Image Viewer, PhotoView <https://github.com/bm-x/PhotoView>`_
 
-- `A Much Easier to Use ListView <https://www.codeproject.com/Articles/16009/A-Much-Easier-to-Use-ListView-2>`_
-
-- `sm-abdullah / winform-image-gallery-Controls <https://github.com/sm-abdullah/winform-image-gallery-Controls>`_
+- `Image Loader, Glide <https://github.com/bumptech/glide>`_
