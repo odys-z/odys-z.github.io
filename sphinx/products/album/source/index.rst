@@ -16,6 +16,7 @@ Welcome to Album Synchronizer's documentation!
    winserv/index
    support/index
    credits
+   privacy-policy
 ..
 
 
