@@ -4,6 +4,7 @@ Install Portfolio-synode
 ========================
 
 .. note:: This document is the 0.7.0 demo version. Some function in the UI is still in developing.
+..
 
 **Prerequisit** Portfolio-synode requires Python 3.9 and JDK 17.
 
