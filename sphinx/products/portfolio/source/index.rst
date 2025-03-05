@@ -1,5 +1,5 @@
-Welcome to Album Synchronizer's documentation!
-==============================================
+Welcome to Portfolio documentation!
+===================================
 
 .. toctree::
    :maxdepth: 1
