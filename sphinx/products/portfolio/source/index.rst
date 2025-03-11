@@ -5,6 +5,7 @@ Welcome to Portfolio documentation!
    :maxdepth: 1
    :caption: Contents:
 
+   about-download
    android/index
    synode/index
    credits

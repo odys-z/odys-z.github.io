@@ -1,4 +1,4 @@
-_`setup-synode`
+.. _setup-synode:
 
 Install Portfolio-synode
 ========================
@@ -40,6 +40,8 @@ Install Steps
         pip show portfolio-synode
     
 #. Start Portfolio-synode
+
+    **Don't run this in VS Code Termnial**, See :ref:`the issue<trouble-vscode-linux>`.
 
     Run ::
 

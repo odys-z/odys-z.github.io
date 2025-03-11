@@ -44,8 +44,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about-download.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-download.html#download">Download</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../android/index.html">Portfolio Android Demo</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Portfolio Synode Help</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Portfolio Synode (Demo)</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="setup.html">Install Portfolio-synode</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Troubleshootings</a></li>
 </ul>
@@ -68,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Portfolio Synode Help</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Portfolio Synode (Demo)</a></li>
       <li class="breadcrumb-item active">Troubleshootings</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -80,6 +82,9 @@
              
   <section id="troubleshootings">
 <h1>Troubleshootings<a class="headerlink" href="#troubleshootings" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Windows Network Firewall / Defender</p></li>
+</ul>
 <p>For Windows with Firewall enabled, please make sure your filewall settings allow the port you configured.</p>
 <p><a class="reference external" href="https://docs.microsoft.com/en-us/sql/reporting-services/report-server/configure-a-firewall-for-report-server-access?view=sql-server-ver15#opening-ports-in-windows-firewall">Microsoft Docs</a></p>
 <a class="reference internal image-reference" href="../_images/windows-firewall-0.png"><img alt="../_images/windows-firewall-0.png" src="../_images/windows-firewall-0.png" style="width: 200px;" />
@@ -88,6 +93,19 @@
 </a>
 <a class="reference internal image-reference" href="../_images/windows-firewall-2.png"><img alt="../_images/windows-firewall-2.png" src="../_images/windows-firewall-2.png" style="width: 200px;" />
 </a>
+<ul class="simple" id="trouble-vscode-linux">
+<li><p>Run with VS Code in Linux</p></li>
+</ul>
+<p><strong>Only tested in Ubuntu 24.04</strong></p>
+<p>To run Portfolio-synode from VS Code terminal in Ubuntu / Linux will result
+in errors like <a class="reference external" href="https://github.com/microsoft/vscode/issues/179274">the report #179274</a>.</p>
+<a class="reference internal image-reference" href="../_images/04-portfolio-vscode-issue.png"><img alt="../_images/04-portfolio-vscode-issue.png" src="../_images/04-portfolio-vscode-issue.png" style="width: 36em;" />
+</a>
+<p>This error can be avoid by running like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">GTK_PATH</span><span class="o">=</span> <span class="o">&amp;&amp;</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+</pre></div>
+</div>
+<p>which is strongly discuraged as this is not fully tested.</p>
 </section>
 
 

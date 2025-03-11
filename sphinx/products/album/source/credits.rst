@@ -1,7 +1,7 @@
 Credits
 =======
 
-Album Synchronizer is built on open source projects & freeware:
+Album / Portfolio Synchronizer is built upon open source projects & freeware:
 
 - JDK 1.8, 17
 
@@ -20,6 +20,8 @@ Album Synchronizer is built on open source projects & freeware:
 - Node.js
 
 - Material-UI (React) 4
+
+- `QrCode for Python3 <https://pypi.org/project/qrcode/>`_
 
 - `Zxing <https://zxing.org/w/decode.jspx>`_
 

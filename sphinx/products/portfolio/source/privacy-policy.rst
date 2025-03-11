@@ -17,7 +17,7 @@ Please read our privacy policy carefully to get a clear understanding of how we
 collect, use, protect or otherwise handle user's Personally Identifiable Information
 in accordance with our apps.
 
-What personal information do we collect from the people using Portfolio parent version?
+What personal information do we collect from the people using Portfolio?
 
 When installing Family Album Synchronizer, as appropriate, you may be asked to
 allow Portfolio to have the permissions to access user's audio record, external
@@ -41,8 +41,8 @@ Log Data
 
 We want to inform you that whenever you use our Service, in the case of an error
 in the app we collect data and information (through third party products) on user's
-phone called Log Data. This Log Data may include information such as user's device
-Internet Protocol (“IP”) address, device name, operating system version, the
+phone called Log Data. This Log Data may include information such as the user's
+device Internet Protocol (“IP”) address, device name, operating system version, the
 configuration of the app when utilizing Service, the time and date of user's use of
 the Service, and other statistics.
 
@@ -61,11 +61,11 @@ EXIF & Geolocation
 EXIF is metadata of media files.
 
 When each media file is uploaded to the family file server, the server will try to
-parse the EXIF data, and geolocation data are parsed and saved in database. 
+parse the EXIF data, and geolocation data are parsed and saved in databases. 
 When a user shares photos, the geolocations are also accessible to other users.
 
 If the file doesn't have geolocation data in the EXIF section, no geolocation is
-saved, and the user's current loacation is not be accessed, hence the geolocation
+saved, and the user's current location is not be accessed, hence the geolocation
 data is not always guaranteed to be parsed correctly.
 
 This function is designed to support photo grouping according to geolocation.
@@ -77,7 +77,7 @@ Portfolio gets reports from the third part services regularly, includes Google P
 & Admob.
 
 The support team of Portfolio do not sell, trade, or otherwise transfer to outside
-parties Personally Identifiable Information unless we provide users with advance notice.
+parties Personal Identifiable Information unless we provide users with advance notice.
 
 We may release information when its release is appropriate to comply with the
 law, enforce our app policies, or protect ours or others' rights, property or
@@ -113,7 +113,7 @@ Portfolio (Demo for Android) requests the following permissions:
 - **Camera Permission:**
 
     Portfolio Demo requests access to your device's camera to provide QR code recognition,
-    which is used for adding server address. We are committed to protecting your privacy
+    which is used for adding server addresses. We are committed to protecting your privacy
     and ensuring that your personal information is handled responsibly. Below is how we
     use and manage camera access:
 
