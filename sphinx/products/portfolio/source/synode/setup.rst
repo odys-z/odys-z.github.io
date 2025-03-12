@@ -41,7 +41,9 @@ Install Steps
     
 #. Start Portfolio-synode
 
-    **Don't run this in VS Code Termnial**, See :ref:`the issue<trouble-vscode-linux>`.
+    **Don't run this in VS Code Termnial in Linux. See**
+    :ref:`the issue<trouble-vscode-linux>` & :ref:`troubleshootings<trouble-vscode-linux>`
+    **if you have to, while it's recommended to run this in VS Code in Windows.**
 
     Run ::
 
@@ -76,5 +78,5 @@ Install Steps
 
     There should be the files once are uploaded with Portfolio Android.
 
-    .. image:: ../imgs/03-portfolio-web-pics.png
+    .. image:: ../../../album/source/imgs/07-portfolio-web.png
         :width: 300px
