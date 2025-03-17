@@ -1,5 +1,5 @@
-SoC Topics
-==========
+Topics
+======
 
 .. toctree::
    :maxdepth: 2

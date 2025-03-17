@@ -41,6 +41,9 @@ Best for converting docx except Googel & Office 365, can be deploved with docker
 
     sudo docker run -i -t -d -p 80:80 --restart=always -e JWT_SECRET=my_jwt_secret onlyoffice/documentserver
 
+Performance:
+
+  20 - 80 MiB download for a simple docx file.
 
 .. code-block:: typescript
 
@@ -96,13 +99,20 @@ To build demo::
 
     make setup
 
-.. images:: imgs/20-mammoth-docx-1.png
+The target:
+
+.. image:: imgs/20-target-docx.png
     :height: 12em
 
-.. images:: imgs/20-mammoth-docx-2.png
+And results:
+
+.. image:: imgs/20-mammoth-docx-1.png
     :height: 12em
 
-.. images:: imgs/20-mammoth-docx-3.png
+.. image:: imgs/20-mammoth-docx-2.png
+    :height: 12em
+
+.. image:: imgs/20-mammoth-docx-3.png
     :height: 12em
 
 **Pro:**
@@ -118,15 +128,15 @@ Build::
 
     gradlew clean build -x test
 
-Not perfect conversion
+Not Perfect Conversion
 ______________________
 
 Size of build/distributions/jodconverter-4.4.8.zip: 8 MiB
 
-.. images:: imgs/21-jodconvert-docx-1.png
+.. image:: imgs/21-jodconvert-docx-1.png
     :height: 12em
 
-.. images:: imgs/20-jodconvert-docx-2.png
+.. image:: imgs/21-jodconvert-docx-2.png
     :height: 12em
 
 Import Gradle Project In Eclipse
@@ -138,6 +148,8 @@ Then update gradle project from context menu.
 
 Project Structure
 _________________
+
+::
 
     .
     ├── build.gradle

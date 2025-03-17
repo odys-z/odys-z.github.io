@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Survey on HTML Office / PDF Viewers &mdash; Study Notes 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2882ecd3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Long Range Wireless Module" href="wireless.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Study Notes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../cav/survey.html">CAV SDK Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-op/survey.html">Semantic Dev-op White Paper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="wireless.html">Long Range Wireless Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">A Survey on HTML Office / PDF Viewers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-known-answer">The known answer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">OnlyOffice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mammoth-js">Mammoth.js</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#a-hack-into-jodconverter">A Hack into JODConverter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#not-perfect-conversion">Not Perfect Conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Study Notes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Topics</a></li>
+      <li class="breadcrumb-item active">A Survey on HTML Office / PDF Viewers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="a-survey-on-html-office-pdf-viewers">
+<h1>A Survey on HTML Office / PDF Viewers<a class="headerlink" href="#a-survey-on-html-office-pdf-viewers" title="Link to this heading"></a></h1>
+<section id="the-known-answer">
+<h2>The known answer<a class="headerlink" href="#the-known-answer" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Google &amp; Microsoft provide online API for viewing office document.</p>
+<p>Grok:</p>
+<p><strong>Microsoft 365 Business Standard (~$12.50 USD/user/month, annual commitment):</strong></p>
+<blockquote>
+<div><p>Includes: Everything in Business Basic plus desktop versions of Office apps.</p>
+<p>Viewing/Editing: Same web capabilities as Business Basic.</p>
+<p>Best for: If your users need both web and desktop access, though your focus seems to be web-based viewing.</p>
+</div></blockquote>
+</li>
+</ul>
+<p>..https://grok.com/share/bGVnYWN5_1a781c3c-f4e7-4bc4-a17d-3c536b615b17</p>
+<ul>
+<li><p>Comparison and Recommendation</p>
+<img alt="../_images/20-compare-js-docviewers.png" src="../_images/20-compare-js-docviewers.png" />
+<p>Recommendation for Your Use Case</p>
+<p>If you need a simple, free solution for all Office formats: Use ViewerJS for basic viewing of DOCX and PPTX, paired with SheetJS for XLSX. This avoids Microsoft 365 licensing entirely but sacrifices advanced formatting fidelity.</p>
+<p>If you prioritize DOCX only: Mammoth.js is lightweight and easy to integrate for Word documents.</p>
+<p>If you need Excel support: SheetJS is your best bet for spreadsheets.</p>
+<p>If you want a full-featured, self-hosted option: Set up ONLYOFFICE Document Server with its JS SDK for a comprehensive viewer (and editor) without Microsoft dependency.</p>
+<p>If Microsoft 365 is still an option: Integrate with Office for the web using the Microsoft Graph API (as discussed earlier), which provides the most accurate rendering but requires user licenses.</p>
+</li>
+</ul>
+</section>
+<section id="id1">
+<h2><a class="reference external" href="https://github.com/ONLYOFFICE/DocumentServer">OnlyOffice</a><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Best for converting docx except Googel &amp; Office 365, can be deploved with docker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">i</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">80</span><span class="p">:</span><span class="mi">80</span> <span class="o">--</span><span class="n">restart</span><span class="o">=</span><span class="n">always</span> <span class="o">-</span><span class="n">e</span> <span class="n">JWT_SECRET</span><span class="o">=</span><span class="n">my_jwt_secret</span> <span class="n">onlyoffice</span><span class="o">/</span><span class="n">documentserver</span>
+</pre></div>
+</div>
+<p>Performance:</p>
+<blockquote>
+<div><p>20 - 80 MiB download for a simple docx file.</p>
+</div></blockquote>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="nx">jwt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;jsonwebtoken&#39;</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">export const only_payload = {</span>
+<span class="cm">    &quot;document&quot;: {</span>
+<span class="cm">        &quot;fileType&quot;: &quot;doc&quot;,</span>
+<span class="cm">        &quot;key&quot;: &quot;unique-key-&quot; + new Date().getTime(), // Unique key for each session</span>
+<span class="cm">        &quot;title&quot;: &quot;Sample Document&quot;,</span>
+<span class="cm">        // &quot;url&quot;: &quot;http://ieee802.org:80/secmail/docIZSEwEqHFr.doc&quot;</span>
+<span class="cm">        &quot;url&quot;: &quot;doc-res.docx&quot;</span>
+<span class="cm">    },</span>
+<span class="cm">    &quot;documentType&quot;: &quot;word&quot;, // Can be &quot;word&quot;, &quot;cell&quot; (spreadsheet), or &quot;slide&quot; (presentation)</span>
+<span class="cm">    &quot;editorConfig&quot;: {</span>
+<span class="cm">        &quot;mode&quot;: &quot;view&quot;, // &quot;view&quot; for read-only, &quot;edit&quot; for editing</span>
+<span class="cm">        // &quot;callbackUrl&quot;: &quot;http://localhost:3000/save&quot; // Where changes are sent (optional)</span>
+<span class="cm">    },</span>
+<span class="cm">    &quot;height&quot;: &quot;100%&quot;,</span>
+<span class="cm">    &quot;width&quot;: &quot;100%&quot;,</span>
+<span class="cm">};</span>
+<span class="cm">*/</span>
+
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">config_docx</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./doc-res-config.mjs&#39;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">secret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;mysecretkey&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">// Replace with your ONLYOFFICE or custom secret</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">onlyoffice_token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">jwt</span><span class="p">.</span><span class="nx">sign</span><span class="p">(</span><span class="nx">config_docx</span><span class="p">,</span><span class="w"> </span><span class="nx">secret</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">algorithm</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;HS256&#39;</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+<p>In viewer.tsx:</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">config_docx</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">config</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./ext/doc-res-config.mjs&#39;</span><span class="p">;</span>
+
+<span class="nx">loadOnlyOffice</span><span class="p">(</span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="nx">conf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">structuredClone</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+<span class="w">            </span><span class="nx">conf</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">dockey</span>
+<span class="w">            </span><span class="nx">conf</span><span class="p">.</span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">token</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">DocsAPI</span><span class="p">)</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">DocsAPI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="p">(</span><span class="nb">window</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">any</span><span class="p">).</span><span class="nx">DocsAPI</span><span class="p">.</span><span class="nx">DocEditor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">docdiv</span><span class="p">,</span><span class="w"> </span><span class="nx">conf</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Word document is acctually converted into html at OnlyOffice Docment Server.</p>
+</section>
+<section id="mammoth-js">
+<h2>Mammoth.js<a class="headerlink" href="#mammoth-js" title="Link to this heading"></a></h2>
+<p>Open source at <a class="reference external" href="https://github.com/mwilliamson/mammoth.js">Github</a>.</p>
+<p>To build demo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">setup</span>
+</pre></div>
+</div>
+<p>The target:</p>
+<a class="reference internal image-reference" href="../_images/20-target-docx.png"><img alt="../_images/20-target-docx.png" src="../_images/20-target-docx.png" style="height: 12em;" />
+</a>
+<p>And results:</p>
+<a class="reference internal image-reference" href="../_images/20-mammoth-docx-1.png"><img alt="../_images/20-mammoth-docx-1.png" src="../_images/20-mammoth-docx-1.png" style="height: 12em;" />
+</a>
+<a class="reference internal image-reference" href="../_images/20-mammoth-docx-2.png"><img alt="../_images/20-mammoth-docx-2.png" src="../_images/20-mammoth-docx-2.png" style="height: 12em;" />
+</a>
+<a class="reference internal image-reference" href="../_images/20-mammoth-docx-3.png"><img alt="../_images/20-mammoth-docx-3.png" src="../_images/20-mammoth-docx-3.png" style="height: 12em;" />
+</a>
+<p><strong>Pro:</strong></p>
+<p>Pure client js even load as the local file protocol.</p>
+</section>
+<section id="a-hack-into-jodconverter">
+<h2>A Hack into JODConverter<a class="headerlink" href="#a-hack-into-jodconverter" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jodconverter/jodconverter">source</a></p>
+<p>Build:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gradlew</span> <span class="n">clean</span> <span class="n">build</span> <span class="o">-</span><span class="n">x</span> <span class="n">test</span>
+</pre></div>
+</div>
+<section id="not-perfect-conversion">
+<h3>Not Perfect Conversion<a class="headerlink" href="#not-perfect-conversion" title="Link to this heading"></a></h3>
+<p>Size of build/distributions/jodconverter-4.4.8.zip: 8 MiB</p>
+<a class="reference internal image-reference" href="../_images/21-jodconvert-docx-1.png"><img alt="../_images/21-jodconvert-docx-1.png" src="../_images/21-jodconvert-docx-1.png" style="height: 12em;" />
+</a>
+<a class="reference internal image-reference" href="../_images/21-jodconvert-docx-2.png"><img alt="../_images/21-jodconvert-docx-2.png" src="../_images/21-jodconvert-docx-2.png" style="height: 12em;" />
+</a>
+<p>Import Gradle Project In Eclipse</p>
+<blockquote>
+<div><p>./gradlew eclepse
+File -&gt; import…</p>
+</div></blockquote>
+<p>Then update gradle project from context menu.</p>
+</section>
+<section id="project-structure">
+<h3>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.
+├── build.gradle
+├── gradle
+│   ├── java-config.gradle
+│   ├── publish-config.gradle
+│   └── wrapper
+├── jodconverter-cli
+│   ├── build.gradle
+│   ├── conf
+│   └── src
+├── jodconverter-core
+│   ├── build.gradle
+│   └── src
+├── jodconverter-local
+│   ├── build.gradle
+│   └── src
+├── jodconverter-local-lo
+│   ├── build.gradle
+│   └── src
+├── jodconverter-local-oo
+│   ├── build.gradle
+│   └── src
+├── jodconverter-remote
+│   ├── build.gradle
+│   └── src
+├── jodconverter-spring
+│   ├── build.gradle
+│   └── src
+├── jodconverter-spring-boot-starter
+│   ├── build.gradle
+│   └── src
+├── ...
+└── LICENSE
+</pre></div>
+</div>
+<p>In jodconvert-cli:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CliConverter</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">convertFile</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">convert</span><span class="p">(</span><span class="n">inputFile</span><span class="p">,</span> <span class="n">outputFile</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <em>jodconverter/jodconverter-local/integTest/…/DrawITest.java</em> Should be an example
+of the process.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span> <span class="nc">DrawITest</span><span class="w"> </span><span class="p">{</span>
+
+<span class="nd">@Test</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">withDrawDocument_ShouldSucceed</span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="nd">@TempDir</span><span class="w"> </span><span class="n">File</span><span class="w"> </span><span class="n">testFolder</span><span class="p">,</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">OfficeManager</span><span class="w"> </span><span class="n">manager</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">Filter</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">document</span><span class="p">,</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">assertThat</span><span class="p">(</span><span class="n">Draw</span><span class="p">.</span><span class="na">isDraw</span><span class="p">(</span><span class="n">document</span><span class="p">)).</span><span class="na">isTrue</span><span class="p">();</span>
+<span class="w">        </span><span class="n">assertThat</span><span class="p">(</span><span class="n">Draw</span><span class="p">.</span><span class="na">isImpress</span><span class="p">(</span><span class="n">document</span><span class="p">)).</span><span class="na">isFalse</span><span class="p">();</span>
+<span class="w">      </span><span class="p">};</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">File</span><span class="w"> </span><span class="n">sourceFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">documentFile</span><span class="p">(</span><span class="s">&quot;test.odg&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">File</span><span class="w"> </span><span class="n">outputFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="p">(</span><span class="n">testFolder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;out.pdf&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">assertThatCode</span><span class="p">(</span>
+<span class="w">          </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">              </span><span class="n">LocalConverter</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">officeManager</span><span class="p">(</span><span class="n">manager</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">filterChain</span><span class="p">(</span><span class="n">filter</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">convert</span><span class="p">(</span><span class="n">sourceFile</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">to</span><span class="p">(</span><span class="n">outputFile</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">execute</span><span class="p">())</span>
+<span class="w">      </span><span class="p">.</span><span class="na">doesNotThrowAnyException</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where <em>Filter</em> “represents a step where a document is transformed.”</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">doFilter</span><span class="p">(</span>
+<span class="w">      </span><span class="nd">@NonNull</span><span class="w"> </span><span class="n">OfficeContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="nd">@NonNull</span><span class="w"> </span><span class="n">XComponent</span><span class="w"> </span><span class="n">document</span><span class="p">,</span><span class="w"> </span><span class="nd">@NonNull</span><span class="w"> </span><span class="n">FilterChain</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span>
+<span class="w">      </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://api.libreoffice.org/docs/idl/ref/interfacecom_1_1sun_1_1star_1_1lang_1_1XComponent.html">XComponent</a>
+represents document elements as <a class="reference external" href="https://wiki.documentfoundation.org/Documentation/DevGuide/Professional_UNO">UNO Objects</a>
+for representing data across OpenOffice &amp; LibreOffice.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="wireless.html" class="btn btn-neutral float-left" title="Long Range Wireless Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ody Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
