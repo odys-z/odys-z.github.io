@@ -34,6 +34,37 @@ The known answer
 
   If Microsoft 365 is still an option: Integrate with Office for the web using the Microsoft Graph API (as discussed earlier), which provides the most accurate rendering but requires user licenses.
 
+* Exmaple: `syntler/react-doc-viewer <https://github.com/cyntler/react-doc-viewer>`_
+
+  Quote::
+
+    This library uses the official MS Office online document viewing service.
+    This means it works on an iframe basis and only supports public file URLs!
+    Therefore, it may not be compatible with all projects. Currently, there is
+    no way to natively render MS Office documents in the browser.
+
+  `Source <https://github.com/Alcumus/react-doc-viewer/blob/master/src/plugins/msdoc/index.tsx>`_
+  at the forked project can be an example of Office 365 API usage.
+
+  .. code-block:: tsx
+
+    const MSDocRenderer: DocRenderer = ({ mainState: { currentDocument } }) => {
+        if (!currentDocument) return null;
+
+        return (
+            <Container id="msdoc-renderer">
+            <IFrame
+                id="msdoc-iframe"
+                title="msdoc-iframe"
+                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                currentDocument.uri
+                )}`}
+                frameBorder="0"
+            />
+            </Container>
+        );
+    };
+
 `OnlyOffice <https://github.com/ONLYOFFICE/DocumentServer>`_
 ------------------------------------------------------------
 
