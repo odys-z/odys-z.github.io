@@ -112,6 +112,37 @@
 <p>If you want a full-featured, self-hosted option: Set up ONLYOFFICE Document Server with its JS SDK for a comprehensive viewer (and editor) without Microsoft dependency.</p>
 <p>If Microsoft 365 is still an option: Integrate with Office for the web using the Microsoft Graph API (as discussed earlier), which provides the most accurate rendering but requires user licenses.</p>
 </li>
+<li><p>Exmaple: <a class="reference external" href="https://github.com/cyntler/react-doc-viewer">syntler/react-doc-viewer</a></p>
+<p>Quote:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>This library uses the official MS Office online document viewing service.
+This means it works on an iframe basis and only supports public file URLs!
+Therefore, it may not be compatible with all projects. Currently, there is
+no way to natively render MS Office documents in the browser.
+</pre></div>
+</div>
+<dl class="simple">
+<dt><a class="reference external" href="https://github.com/Alcumus/react-doc-viewer/blob/master/src/plugins/msdoc/index.tsx">Source at the forked project</a></dt><dd><p>can be an example of Office 365 API usage.</p>
+</dd>
+</dl>
+<div class="highlight-jsx notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">MSDocRenderer</span><span class="o">:</span><span class="w"> </span><span class="nx">DocRenderer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">({</span><span class="w"> </span><span class="nx">mainState</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">currentDocument</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">currentDocument</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span>
+<span class="w">        </span><span class="p">&lt;</span><span class="nt">Container</span><span class="w"> </span><span class="na">id</span><span class="o">=</span><span class="s">&quot;msdoc-renderer&quot;</span><span class="p">&gt;</span>
+<span class="w">        </span><span class="p">&lt;</span><span class="nt">IFrame</span>
+<span class="w">            </span><span class="na">id</span><span class="o">=</span><span class="s">&quot;msdoc-iframe&quot;</span>
+<span class="w">            </span><span class="na">title</span><span class="o">=</span><span class="s">&quot;msdoc-iframe&quot;</span>
+<span class="w">            </span><span class="na">src</span><span class="o">=</span><span class="p">{</span><span class="sb">`https://view.officeapps.live.com/op/embed.aspx?src=</span><span class="si">${</span><span class="nb">encodeURIComponent</span><span class="p">(</span>
+<span class="w">            </span><span class="nx">currentDocument</span><span class="p">.</span><span class="nx">uri</span>
+<span class="w">            </span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">}</span>
+<span class="w">            </span><span class="na">frameBorder</span><span class="o">=</span><span class="s">&quot;0&quot;</span>
+<span class="w">        </span><span class="p">/&gt;</span>
+<span class="w">        </span><span class="p">&lt;/</span><span class="nt">Container</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </section>
 <section id="id1">

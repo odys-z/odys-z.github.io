@@ -1,8 +1,8 @@
 Long Range Wireless Module
---------------------------
+==========================
 
 Lora Module SX1276 Tranceiver
-=============================
+-----------------------------
 
 Lora Module SX1276 Wireless Transceiver, Long-Range Wireless Communication(915Mhz)
 
