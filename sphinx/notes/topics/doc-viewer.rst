@@ -16,7 +16,7 @@ The known answer
 
     Best for: If your users need both web and desktop access, though your focus seems to be web-based viewing.
 
-..https://grok.com/share/bGVnYWN5_1a781c3c-f4e7-4bc4-a17d-3c536b615b17
+.. https://grok.com/share/bGVnYWN5_1a781c3c-f4e7-4bc4-a17d-3c536b615b17
 
 * Comparison and Recommendation
 
