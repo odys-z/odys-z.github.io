@@ -44,7 +44,7 @@ The known answer
     no way to natively render MS Office documents in the browser.
 
   `Source at the forked project <https://github.com/Alcumus/react-doc-viewer/blob/master/src/plugins/msdoc/index.tsx>`_
-   can be an example of Office 365 API usage.
+  can be an example of Office 365 API usage.
 
   .. code-block:: jsx
 
