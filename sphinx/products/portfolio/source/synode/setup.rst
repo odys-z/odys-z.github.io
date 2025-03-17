@@ -1,9 +1,10 @@
-_`setup-synode`
+.. _setup-synode:
 
 Install Portfolio-synode
 ========================
 
 .. note:: This document is the 0.7.0 demo version. Some function in the UI is still in developing.
+..
 
 **Prerequisit** Portfolio-synode requires Python 3.9 and JDK 17.
 
@@ -40,6 +41,10 @@ Install Steps
     
 #. Start Portfolio-synode
 
+    **Don't run this in VS Code Termnial in Linux. See**
+    :ref:`the issue<trouble-vscode-linux>` & :ref:`troubleshootings<trouble-vscode-linux>`
+    **if you have to, while it's recommended to run this in VS Code in Windows.**
+
     Run ::
 
         python3 -m portfolio-synode
@@ -73,5 +78,5 @@ Install Steps
 
     There should be the files once are uploaded with Portfolio Android.
 
-    .. image:: ../imgs/03-portfolio-web-pics.png
+    .. image:: ../../../album/source/imgs/07-portfolio-web.png
         :width: 300px

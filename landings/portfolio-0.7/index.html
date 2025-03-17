@@ -4,6 +4,7 @@
 <title>Welcome to Album</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script rel="text/script" src="./css/links.js"></script>
 <link rel="stylesheet" href="./css/w3.css">
 <!--
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -17,7 +18,7 @@
 .fa-anchor,.fa-coffee {font-size:200px} */
 .w3-bar,.fa-anchor,.fa-coffee {font-size:200px}
 
-.qr { background: url('css/url.svg');
+.qr { background: url('css/qr-inforise.com.cn.svg');
       background-position: right;
       background-size: contain;
       background-repeat: no-repeat;
@@ -29,25 +30,35 @@
 <!-- Navbar -->
 <div class="w3-top">
   <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
-    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-    <a href="http://github.com/odys-z" class="w3-bar-item w3-button w3-padding-large w3-white">Ody Zhou</a>
-    <a href="https://www.inforise.com.cn" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Inforise Ltd.</a>
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue"
+       href="javascript:void(0);" onclick="setHeader()" title="Toggle Navigation Menu">
+       <i class="fa fa-bars"></i></a>
+    <a href="http://github.com/odys-z" class="w3-bar-item w3-button w3-padding-large w3-white">
+      Sources</a>
+    <a href="https://odys-z.github.io/products/portfolio/" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">
+      Documents</a>
   </div>
 
   <!-- Navbar on small screens -->
   <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-    <a href="https://www.inforise.com.cn" class="w3-bar-item w3-button w3-padding-large">Inforise Ltd.</a>
+    <a href="https://odys-z.github.io/products/portfolio" class="w3-bar-item w3-button w3-padding-large">Documents</a>
   </div>
 </div>
 
 <!-- Header -->
 <header class="w3-container w3-blue w3-center" style="padding:128px 16px">
-  <h1 class="qr">&nbsp;</h1>
+  <!-- <h1 class="qr">&nbsp;</h1> -->
   <h1 id="qrh1" class="w3-margin w3-jumbo">Portfolio 0.7</h1>
   <h4 class="w3-xlarge">For Android 8.0 +</h4>
   <p class="w3-xlarge">Built on <a href='https://odys-z.github.io'>Semantic-*</a></p>
   <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
-      onclick="getElementById('download').click()">Download for Andorid</button>
+      onclick="getElementById('download-apk').click()">Download for Andorid</button>
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
+      onclick="getElementById('download-synode').click()">
+      Download Synode</button>
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
+      onclick="getElementById('download-registry').click()">
+      Registry Demo</button>
 </header>
 
 <!-- First Grid -->
@@ -67,16 +78,17 @@
 
     <div class="w3-third w3-center">
       <p><i class="fa fa-download w3-padding-64 w3-text-indigo">
-          <a id='download' download href="./res/portfolio-0.7.0-debug.apk">
+          <a id='download-apk' download >
               Portfolio 0.7 for Android</a>
       </i></p>
       <p><i class="fa fa-download w3-padding-64 w3-text-indigo">
-          <a id='download' download href="./res/portfolio-0.7.0-debug.apk">
-              Portfolio 0.7 Synode</a>
+          <a id='download-synode' download >
+              Portfolio 0.7 Synode</a> &amp;
+          <a id='download-registry' download>Registry Demo</a>
       </i></p>
       <p class="fa w3-text-indigo">
-          <a href="../../products/portfolio/android/quick-start.html">
-              文檔：如何安裝</a>
+          <a id='doc-install' href="../../products/portfolio/android/quick-start.html">
+              Document: Install Portfolio</a>
       </p>
     </div>
   </div>
@@ -119,7 +131,7 @@
 
 <script>
 // Used to toggle the menu on small screens when clicking on the menu button
-function myFunction() {
+function setHeader() {
   var x = document.getElementById("navDemo");
   if (x.className.indexOf("w3-show") == -1) {
     x.className += " w3-show";
@@ -133,6 +145,10 @@ function myFunction() {
   // else
   //   y.className += " qr";
 }
+
+setHref('download-apk', 'apk');
+setHref('download-synode', 'synode-gui');
+setHref('download-registry', 'registry-demo');
 </script>
 
 </body>

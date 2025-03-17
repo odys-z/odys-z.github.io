@@ -1,5 +1,5 @@
-Portfolio Synode Help
-=====================
+Portfolio Synode (Demo)
+=======================
 
 .. toctree::
    :maxdepth: 2

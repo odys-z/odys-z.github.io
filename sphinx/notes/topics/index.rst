@@ -6,3 +6,4 @@ SoC Topics
    :caption: Contents:
 
    wireless
+   doc-viewer
