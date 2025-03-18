@@ -1,6 +1,18 @@
 Troubleshootings
 ================
 
+.. _install-anson-py3:
+
+- Failed to install portfolio-synode
+  
+  Error::
+
+    ERROR: Could not find a version that satisfies the requirement anson.py3 (from portfolio-synode) (from versions: none)
+
+  Portfolio-synode requires a module which is still not published in PyPI. Install with this command:
+
+    pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
+
 - Windows Network Firewall / Defender
 
 For Windows with Firewall enabled, please make sure your filewall settings allow the port you configured.

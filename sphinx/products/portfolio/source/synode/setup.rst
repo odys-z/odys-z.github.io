@@ -8,6 +8,10 @@ Install Portfolio-synode
 
 **Prerequisit** Portfolio-synode requires Python 3.9 and JDK 17.
 
+After installed Python & JDK, also please install Anson.py3, which is not published to PyPI yet::
+
+    pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
+
 Install Steps
 -------------
 
