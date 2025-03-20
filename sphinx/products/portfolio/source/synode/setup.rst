@@ -14,7 +14,8 @@ After installed Python & JDK, also please install Anson.py3, which is not publis
 
     pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
 
-* Install Exiftool For Unix
+Install Exiftool For Unix
+_________________________
 
 **Only Verified on Ubunut 24.04**
 
