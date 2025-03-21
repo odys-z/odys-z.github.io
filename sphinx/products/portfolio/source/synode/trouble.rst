@@ -13,6 +13,10 @@ Troubleshootings
 
     pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
 
+  If have to remove a package installed by a previous python version, e.g. installed by python 3.9, uninstall it with::
+
+    pip3.9 uninstall portfolio-synode 
+
 - Windows Network Firewall / Defender
 
 For Windows with Firewall enabled, please make sure your filewall settings allow the port you configured.
