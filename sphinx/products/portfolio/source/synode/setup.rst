@@ -3,15 +3,31 @@
 Install Portfolio-synode
 ========================
 
-.. note:: This document is the 0.7.0 demo version. Some function in the UI is still in developing.
+**This document is the 0.7.0 demo version. Some function in the UI is still in developing.**
 
-..
+Prerequisit
+-----------
 
-**Prerequisit** Portfolio-synode requires Python 3.9 and JDK 17.
+Portfolio-synode requires Python 3.9 and JDK 17.
 
 After installed Python & JDK, also please install Anson.py3, which is not published to PyPI yet::
 
     pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
+
+Install Exiftool For Unix
+_________________________
+
+**Only Verified on Ubunut 24.04**
+
+Portfolio-synode requires *Exiftool* to run.
+
+Follow the `document <https://exiftool.org/install.html#Unix>`_ or use *apt* to install::
+
+    sudo apt install exiftool
+
+and make sure this command runs smoothly::
+
+    exiftool -ver
 
 Install Steps
 -------------
