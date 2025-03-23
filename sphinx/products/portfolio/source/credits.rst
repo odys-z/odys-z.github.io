@@ -19,7 +19,9 @@ Album Synchronizer is built on open source projects & freeware:
 
 - Node.js
 
-- Material-UI (React) 4
+- `Material-UI (React) 4 <https://v4.mui.com/>`_
+
+- `Mozilla PDF.js <https://github.com/mozilla/pdf.js>`_, Copyright 2016 Mozilla Foundation
 
 - `Zxing <https://zxing.org/w/decode.jspx>`_
 
