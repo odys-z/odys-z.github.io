@@ -3,10 +3,114 @@ Hacking PDF.js
 
 Source Code: `PDF.js@github <https://github.com/mozilla/pdf.js>`_
 
-How the pan events are handled
+Not working on Android 10
+-------------------------
+
+Error::
+
+    Uncaught SyntaxtError: Unexpected Token '{' at line 18046 in pdf.mjs.
+    
+The lines here are:
+
+.. code-block:: javascript
+
+    class PDFWorker {
+        static fakeWorkerId = 0;
+        static isWorkerDisabled = false;
+        static workerPorts;
+        static {            // line 18046
+            if (isNodeJS) {
+                this.isWorkerDisabled = true;
+                GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs";
+            }
+            this._isSameOrigin = (baseUrl, otherUrl) => {
+            const base = URL.parse(baseUrl);
+            if (!base?.origin || base.origin === "null") {
+                return false;
+        }
+
+        // ...
+    }
+
+Grok::
+
+    The static block (introduced in ECMAScript 2022) is used to initialize static
+    properties when the class is first evaluated. However, if the Android WebView
+    or the JavaScript environment doesn't support static blocks (e.g., due to an
+    older JavaScript engine) ...
+
+This can be fixed by Grok:
+
+.. code-block:: javascript
+
+    // Define static properties and methods outside the class
+    const PDFWorkerStatics = {
+        fakeWorkerId: 0,
+        isWorkerDisabled: false,
+        workerPorts: undefined,
+    };
+
+    // Initialize static properties and methods
+    (function initializePDFWorkerStatics() {
+    if (typeof isNodeJS !== "undefined" && isNodeJS) { // Assuming isNodeJS is globally available
+        PDFWorkerStatics.isWorkerDisabled = true;
+        GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs"; // Assuming GlobalWorkerOptions is global
+    }
+
+    PDFWorkerStatics._isSameOrigin = (baseUrl, otherUrl) => {
+        const base = URL.parse(baseUrl);
+        if (!base?.origin || base.origin === "null") {
+            return false;
+        }
+        const other = new URL(otherUrl, base);
+        return base.origin === other.origin;
+    };
+
+    PDFWorkerStatics._createCDNWrapper = url => {
+        const wrapper = `await import("${url}");`;
+            return URL.createObjectURL(new Blob([wrapper], {
+            type: "text/javascript"
+        }));
+    };
+    })();
+
+    class PDFWorker {
+        static fakeWorkerId = PDFWorkerStatics.fakeWorkerId;
+        static isWorkerDisabled = PDFWorkerStatics.isWorkerDisabled;
+        static workerPorts = PDFWorkerStatics.workerPorts;
+        static _isSameOrigin = PDFWorkerStatics._isSameOrigin;
+        static _createCDNWrapper = PDFWorkerStatics._createCDNWrapper;
+
+        constructor({
+            name = null,
+            port = null,
+            verbosity = getVerbosityLevel()
+        } = {}) {
+            // Constructor logic here
+        }
+        // Rest of the class implementation...
+    }
+
+There is a similar issue in pdf.work.mjs. Fixed in f665e6fb.
+
+Building Example/mobile-viewer
 ------------------------------
 
-A Hack into web/viewer.js.
+Look like all dependencies are installed by::
+
+    pdf.js/package.json.
+
+Follow the examples/mobile-viewer/README.md:: 
+
+    gulp dist-install
+    gulp server
+
+And can only works on local host's browswer?
+
+How the pan events are handled by web/viewer.js
+-----------------------------------------------
+
+Source folder: web/viewer.js.
 
 Why? Since the question, `Just need zoom and pan with viewer #17670 <https://github.com/mozilla/pdf.js/discussions/17670>`_
 is not answered (23 Mar, 2025).
