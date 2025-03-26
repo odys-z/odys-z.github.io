@@ -3,96 +3,6 @@ Hacking PDF.js
 
 Source Code: `PDF.js@github <https://github.com/mozilla/pdf.js>`_
 
-Not working on Android 10
--------------------------
-
-Error::
-
-    Uncaught SyntaxtError: Unexpected Token '{' at line 18046 in pdf.mjs.
-    
-The lines here are:
-
-.. code-block:: javascript
-
-    class PDFWorker {
-        static fakeWorkerId = 0;
-        static isWorkerDisabled = false;
-        static workerPorts;
-        static {            // line 18046
-            if (isNodeJS) {
-                this.isWorkerDisabled = true;
-                GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs";
-            }
-            this._isSameOrigin = (baseUrl, otherUrl) => {
-            const base = URL.parse(baseUrl);
-            if (!base?.origin || base.origin === "null") {
-                return false;
-        }
-
-        // ...
-    }
-
-Grok::
-
-    The static block (introduced in ECMAScript 2022) is used to initialize static
-    properties when the class is first evaluated. However, if the Android WebView
-    or the JavaScript environment doesn't support static blocks (e.g., due to an
-    older JavaScript engine) ...
-
-This can be fixed by Grok:
-
-.. code-block:: javascript
-
-    // Define static properties and methods outside the class
-    const PDFWorkerStatics = {
-        fakeWorkerId: 0,
-        isWorkerDisabled: false,
-        workerPorts: undefined,
-    };
-
-    // Initialize static properties and methods
-    (function initializePDFWorkerStatics() {
-    if (typeof isNodeJS !== "undefined" && isNodeJS) { // Assuming isNodeJS is globally available
-        PDFWorkerStatics.isWorkerDisabled = true;
-        GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs"; // Assuming GlobalWorkerOptions is global
-    }
-
-    PDFWorkerStatics._isSameOrigin = (baseUrl, otherUrl) => {
-        const base = URL.parse(baseUrl);
-        if (!base?.origin || base.origin === "null") {
-            return false;
-        }
-        const other = new URL(otherUrl, base);
-        return base.origin === other.origin;
-    };
-
-    PDFWorkerStatics._createCDNWrapper = url => {
-        const wrapper = `await import("${url}");`;
-            return URL.createObjectURL(new Blob([wrapper], {
-            type: "text/javascript"
-        }));
-    };
-    })();
-
-    class PDFWorker {
-        static fakeWorkerId = PDFWorkerStatics.fakeWorkerId;
-        static isWorkerDisabled = PDFWorkerStatics.isWorkerDisabled;
-        static workerPorts = PDFWorkerStatics.workerPorts;
-        static _isSameOrigin = PDFWorkerStatics._isSameOrigin;
-        static _createCDNWrapper = PDFWorkerStatics._createCDNWrapper;
-
-        constructor({
-            name = null,
-            port = null,
-            verbosity = getVerbosityLevel()
-        } = {}) {
-            // Constructor logic here
-        }
-        // Rest of the class implementation...
-    }
-
-There is a similar issue in pdf.work.mjs. Fixed in f665e6fb.
-
 Building Example/mobile-viewer
 ------------------------------
 
@@ -330,3 +240,136 @@ parameter in constructor:
             this.overlay.remove();
         }
     }
+
+Not working on Android 10
+-------------------------
+
+Error::
+
+    Uncaught SyntaxtError: Unexpected Token '{' at line 18046 in pdf.mjs.
+    
+The lines here are:
+
+.. code-block:: javascript
+
+    class PDFWorker {
+        static fakeWorkerId = 0;
+        static isWorkerDisabled = false;
+        static workerPorts;
+        static {            // line 18046
+            if (isNodeJS) {
+                this.isWorkerDisabled = true;
+                GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs";
+            }
+            this._isSameOrigin = (baseUrl, otherUrl) => {
+            const base = URL.parse(baseUrl);
+            if (!base?.origin || base.origin === "null") {
+                return false;
+        }
+
+        // ...
+    }
+
+Grok::
+
+    The static block (introduced in ECMAScript 2022) is used to initialize static
+    properties when the class is first evaluated. However, if the Android WebView
+    or the JavaScript environment doesn't support static blocks (e.g., due to an
+    older JavaScript engine) ...
+
+This can be fixed by Grok:
+
+.. code-block:: javascript
+
+    // Define static properties and methods outside the class
+    const PDFWorkerStatics = {
+        fakeWorkerId: 0,
+        isWorkerDisabled: false,
+        workerPorts: undefined,
+    };
+
+    // Initialize static properties and methods
+    (function initializePDFWorkerStatics() {
+    if (typeof isNodeJS !== "undefined" && isNodeJS) { // Assuming isNodeJS is globally available
+        PDFWorkerStatics.isWorkerDisabled = true;
+        GlobalWorkerOptions.workerSrc ||= "./pdf.worker.mjs"; // Assuming GlobalWorkerOptions is global
+    }
+
+    PDFWorkerStatics._isSameOrigin = (baseUrl, otherUrl) => {
+        const base = URL.parse(baseUrl);
+        if (!base?.origin || base.origin === "null") {
+            return false;
+        }
+        const other = new URL(otherUrl, base);
+        return base.origin === other.origin;
+    };
+
+    PDFWorkerStatics._createCDNWrapper = url => {
+        const wrapper = `await import("${url}");`;
+            return URL.createObjectURL(new Blob([wrapper], {
+            type: "text/javascript"
+        }));
+    };
+    })();
+
+    class PDFWorker {
+        static fakeWorkerId = PDFWorkerStatics.fakeWorkerId;
+        static isWorkerDisabled = PDFWorkerStatics.isWorkerDisabled;
+        static workerPorts = PDFWorkerStatics.workerPorts;
+        static _isSameOrigin = PDFWorkerStatics._isSameOrigin;
+        static _createCDNWrapper = PDFWorkerStatics._createCDNWrapper;
+
+        constructor({
+            name = null,
+            port = null,
+            verbosity = getVerbosityLevel()
+        } = {}) {
+            // Constructor logic here
+        }
+        // Rest of the class implementation...
+    }
+
+There is a similar issue in pdf.work.mjs. Fixed in f665e6fb.
+
+Fonts not Rendered
+------------------
+
+The errors reported in browser console::
+
+    Warning: Error during font loading: Ensure that the `cMapUrl`
+    and `cMapPacked` API parameters are provided.
+
+`The similar troubleshooting <https://github.com/wojtekmaj/react-pdf/issues/197#issuecomment-651625440>`_
+helped resolving the font resources error:
+
+.. code-block:: typescript
+
+    script.onload = () => {
+      console.log('pdf.mjs loaded!');
+      let loadingTask: PDFDocumentLoadingTask = pdfjsLib.getDocument({
+        url: pdflink,
+        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.0.375/cmaps/'
+      }) as PDFDocumentLoadingTask;
+      // ...
+    }
+
+See `pdfjsLib.getDocument() API <https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib.html>`_::
+
+    Methods
+    (inner) getDocument(src) → {PDFDocumentLoadingTask}
+
+    Parameters:
+    Name    Type	
+    src     string | URL | TypedArray | ArrayBuffer | DocumentInitParameters
+
+    Type Definitions
+    DocumentInitParameters
+    Document initialization / loading parameters object.
+    
+    Type: Object
+    Properties:
+    Name	Type	Attributes	Description
+    url		string | URL
+    cMapUrl	string	<optional>
+    ...
+

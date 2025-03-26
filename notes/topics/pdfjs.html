@@ -49,9 +49,10 @@
 <li class="toctree-l2"><a class="reference internal" href="wireless.html">Long Range Wireless Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doc-viewer.html">A Survey on HTML Office / PDF Viewers</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Hacking PDF.js</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#not-working-on-android-10">Not working on Android 10</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#building-example-mobile-viewer">Building Example/mobile-viewer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-the-pan-events-are-handled-by-web-viewer-js">How the pan events are handled by web/viewer.js</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#not-working-on-android-10">Not working on Android 10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fonts-not-rendered">Fonts not Rendered</a></li>
 </ul>
 </li>
 </ul>
@@ -85,91 +86,6 @@
   <section id="hacking-pdf-js">
 <h1>Hacking PDF.js<a class="headerlink" href="#hacking-pdf-js" title="Link to this heading"></a></h1>
 <p>Source Code: <a class="reference external" href="https://github.com/mozilla/pdf.js">PDF.js&#64;github</a></p>
-<section id="not-working-on-android-10">
-<h2>Not working on Android 10<a class="headerlink" href="#not-working-on-android-10" title="Link to this heading"></a></h2>
-<p>Error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Uncaught</span> <span class="n">SyntaxtError</span><span class="p">:</span> <span class="n">Unexpected</span> <span class="n">Token</span> <span class="s1">&#39;{&#39;</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">18046</span> <span class="ow">in</span> <span class="n">pdf</span><span class="o">.</span><span class="n">mjs</span><span class="o">.</span>
-</pre></div>
-</div>
-<p>The lines here are:</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nx">PDFWorker</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">fakeWorkerId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">workerPorts</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="p">{</span><span class="w">            </span><span class="c1">// line 18046</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isNodeJS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">            </span><span class="nx">GlobalWorkerOptions</span><span class="p">.</span><span class="nx">workerSrc</span><span class="w"> </span><span class="o">||=</span><span class="w"> </span><span class="s2">&quot;./pdf.worker.mjs&quot;</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_isSameOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">otherUrl</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">base</span><span class="o">?</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">base</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="c1">// ...</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Grok:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">static</span> <span class="n">block</span> <span class="p">(</span><span class="n">introduced</span> <span class="ow">in</span> <span class="n">ECMAScript</span> <span class="mi">2022</span><span class="p">)</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">initialize</span> <span class="n">static</span>
-<span class="n">properties</span> <span class="n">when</span> <span class="n">the</span> <span class="k">class</span> <span class="nc">is</span> <span class="n">first</span> <span class="n">evaluated</span><span class="o">.</span> <span class="n">However</span><span class="p">,</span> <span class="k">if</span> <span class="n">the</span> <span class="n">Android</span> <span class="n">WebView</span>
-<span class="ow">or</span> <span class="n">the</span> <span class="n">JavaScript</span> <span class="n">environment</span> <span class="n">doesn</span><span class="s1">&#39;t support static blocks (e.g., due to an</span>
-<span class="n">older</span> <span class="n">JavaScript</span> <span class="n">engine</span><span class="p">)</span> <span class="o">...</span>
-</pre></div>
-</div>
-<p>This can be fixed by Grok:</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define static properties and methods outside the class</span>
-<span class="kd">const</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">fakeWorkerId</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">isWorkerDisabled</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">workerPorts</span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
-<span class="p">};</span>
-
-<span class="c1">// Initialize static properties and methods</span>
-<span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="nx">initializePDFWorkerStatics</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">isNodeJS</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;undefined&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">isNodeJS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Assuming isNodeJS is globally available</span>
-<span class="w">    </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<span class="w">    </span><span class="nx">GlobalWorkerOptions</span><span class="p">.</span><span class="nx">workerSrc</span><span class="w"> </span><span class="o">||=</span><span class="w"> </span><span class="s2">&quot;./pdf.worker.mjs&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// Assuming GlobalWorkerOptions is global</span>
-<span class="p">}</span>
-
-<span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_isSameOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">otherUrl</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">);</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">base</span><span class="o">?</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">base</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">other</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="nx">otherUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">base</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">base</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">other</span><span class="p">.</span><span class="nx">origin</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_createCDNWrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">wrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`await import(&quot;</span><span class="si">${</span><span class="nx">url</span><span class="si">}</span><span class="sb">&quot;);`</span><span class="p">;</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Blob</span><span class="p">([</span><span class="nx">wrapper</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text/javascript&quot;</span>
-<span class="w">    </span><span class="p">}));</span>
-<span class="p">};</span>
-<span class="p">})();</span>
-
-<span class="kd">class</span><span class="w"> </span><span class="nx">PDFWorker</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">fakeWorkerId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">fakeWorkerId</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">isWorkerDisabled</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">workerPorts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">workerPorts</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">_isSameOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_isSameOrigin</span><span class="p">;</span>
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">_createCDNWrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_createCDNWrapper</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kr">constructor</span><span class="p">({</span>
-<span class="w">        </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">verbosity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getVerbosityLevel</span><span class="p">()</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Constructor logic here</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="c1">// Rest of the class implementation...</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>There is a similar issue in pdf.work.mjs. Fixed in f665e6fb.</p>
-</section>
 <section id="building-example-mobile-viewer">
 <h2>Building Example/mobile-viewer<a class="headerlink" href="#building-example-mobile-viewer" title="Link to this heading"></a></h2>
 <p>Look like all dependencies are installed by:</p>
@@ -390,6 +306,131 @@ parameter in constructor:</p>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">overlay</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="not-working-on-android-10">
+<h2>Not working on Android 10<a class="headerlink" href="#not-working-on-android-10" title="Link to this heading"></a></h2>
+<p>Error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Uncaught</span> <span class="n">SyntaxtError</span><span class="p">:</span> <span class="n">Unexpected</span> <span class="n">Token</span> <span class="s1">&#39;{&#39;</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">18046</span> <span class="ow">in</span> <span class="n">pdf</span><span class="o">.</span><span class="n">mjs</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>The lines here are:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">class</span><span class="w"> </span><span class="nx">PDFWorker</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">fakeWorkerId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">workerPorts</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="p">{</span><span class="w">            </span><span class="c1">// line 18046</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isNodeJS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">            </span><span class="nx">GlobalWorkerOptions</span><span class="p">.</span><span class="nx">workerSrc</span><span class="w"> </span><span class="o">||=</span><span class="w"> </span><span class="s2">&quot;./pdf.worker.mjs&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_isSameOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">otherUrl</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">base</span><span class="o">?</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">base</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Grok:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">static</span> <span class="n">block</span> <span class="p">(</span><span class="n">introduced</span> <span class="ow">in</span> <span class="n">ECMAScript</span> <span class="mi">2022</span><span class="p">)</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">initialize</span> <span class="n">static</span>
+<span class="n">properties</span> <span class="n">when</span> <span class="n">the</span> <span class="k">class</span> <span class="nc">is</span> <span class="n">first</span> <span class="n">evaluated</span><span class="o">.</span> <span class="n">However</span><span class="p">,</span> <span class="k">if</span> <span class="n">the</span> <span class="n">Android</span> <span class="n">WebView</span>
+<span class="ow">or</span> <span class="n">the</span> <span class="n">JavaScript</span> <span class="n">environment</span> <span class="n">doesn</span><span class="s1">&#39;t support static blocks (e.g., due to an</span>
+<span class="n">older</span> <span class="n">JavaScript</span> <span class="n">engine</span><span class="p">)</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>This can be fixed by Grok:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define static properties and methods outside the class</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">fakeWorkerId</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">isWorkerDisabled</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">workerPorts</span><span class="o">:</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="c1">// Initialize static properties and methods</span>
+<span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="nx">initializePDFWorkerStatics</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">isNodeJS</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;undefined&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">isNodeJS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Assuming isNodeJS is globally available</span>
+<span class="w">    </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">GlobalWorkerOptions</span><span class="p">.</span><span class="nx">workerSrc</span><span class="w"> </span><span class="o">||=</span><span class="w"> </span><span class="s2">&quot;./pdf.worker.mjs&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// Assuming GlobalWorkerOptions is global</span>
+<span class="p">}</span>
+
+<span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_isSameOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">otherUrl</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">baseUrl</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">base</span><span class="o">?</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">base</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">other</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">URL</span><span class="p">(</span><span class="nx">otherUrl</span><span class="p">,</span><span class="w"> </span><span class="nx">base</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">base</span><span class="p">.</span><span class="nx">origin</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">other</span><span class="p">.</span><span class="nx">origin</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_createCDNWrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">wrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`await import(&quot;</span><span class="si">${</span><span class="nx">url</span><span class="si">}</span><span class="sb">&quot;);`</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">Blob</span><span class="p">([</span><span class="nx">wrapper</span><span class="p">],</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;text/javascript&quot;</span>
+<span class="w">    </span><span class="p">}));</span>
+<span class="p">};</span>
+<span class="p">})();</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">PDFWorker</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">fakeWorkerId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">fakeWorkerId</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">isWorkerDisabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">isWorkerDisabled</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">workerPorts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">workerPorts</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">_isSameOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_isSameOrigin</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">_createCDNWrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PDFWorkerStatics</span><span class="p">.</span><span class="nx">_createCDNWrapper</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kr">constructor</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">verbosity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">getVerbosityLevel</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Constructor logic here</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// Rest of the class implementation...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There is a similar issue in pdf.work.mjs. Fixed in f665e6fb.</p>
+</section>
+<section id="fonts-not-rendered">
+<h2>Fonts not Rendered<a class="headerlink" href="#fonts-not-rendered" title="Link to this heading"></a></h2>
+<p>The errors reported in browser console:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Warning: Error during font loading: Ensure that the `cMapUrl`
+and `cMapPacked` API parameters are provided.
+</pre></div>
+</div>
+<p><a class="reference external" href="https://github.com/wojtekmaj/react-pdf/issues/197#issuecomment-651625440">The similar troubleshooting</a>
+helped resolving the font resources error:</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">script</span><span class="p">.</span><span class="nx">onload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;pdf.mjs loaded!&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">loadingTask</span><span class="o">:</span><span class="w"> </span><span class="kt">PDFDocumentLoadingTask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pdfjsLib</span><span class="p">.</span><span class="nx">getDocument</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">pdflink</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">cMapUrl</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://cdn.jsdelivr.net/npm/pdfjs-dist@5.0.375/cmaps/&#39;</span>
+<span class="w">  </span><span class="p">})</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">PDFDocumentLoadingTask</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib.html">pdfjsLib.getDocument() API</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Methods
+(inner) getDocument(src) → {PDFDocumentLoadingTask}
+
+Parameters:
+Name    Type
+src     string | URL | TypedArray | ArrayBuffer | DocumentInitParameters
+
+Type Definitions
+DocumentInitParameters
+Document initialization / loading parameters object.
+
+Type: Object
+Properties:
+Name        Type    Attributes      Description
+url         string | URL
+cMapUrl     string  &lt;optional&gt;
+...
 </pre></div>
 </div>
 </section>
