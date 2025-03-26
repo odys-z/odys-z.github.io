@@ -373,3 +373,11 @@ See `pdfjsLib.getDocument() API <https://mozilla.github.io/pdf.js/api/draft/modu
     cMapUrl	string	<optional>
     ...
 
+To avoid CDN access impossible, a CMAPS version, 5.0.375, is installed in::
+
+    js/anreact/node_modules
+    
+by::
+
+    npm install pdfjs-dist --save-dev
+
