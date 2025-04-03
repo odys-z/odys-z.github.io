@@ -8,3 +8,4 @@ Topics
    wireless
    doc-viewer
    winsrv
+   pdfjs
