@@ -1,0 +1,256 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registering Py / Jar as Windows Service &mdash; Study Notes 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2882ecd3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Hacking PDF.js" href="pdfjs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Study Notes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../cav/survey.html">CAV SDK Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-op/survey.html">Semantic Dev-op White Paper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="wireless.html">Long Range Wireless Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc-viewer.html">A Survey on HTML Office / PDF Viewers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdfjs.html">Hacking PDF.js</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Registering Py / Jar as Windows Service</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#about-windows-service">About Windows Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pywin32">Pywin32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nssm">NSSM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rais-uac-level-by-python3">Rais UAC Level by Python3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Study Notes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Topics</a></li>
+      <li class="breadcrumb-item active">Registering Py / Jar as Windows Service</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="registering-py-jar-as-windows-service">
+<h1>Registering Py / Jar as Windows Service<a class="headerlink" href="#registering-py-jar-as-windows-service" title="Link to this heading"></a></h1>
+<section id="about-windows-service">
+<h2>About Windows Service<a class="headerlink" href="#about-windows-service" title="Link to this heading"></a></h2>
+<p>Which is scheduled at the system booting, according to Registry Key,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HKEY_LOCAL_MACHINE</span>\<span class="n">SYSTEM</span>\<span class="n">CurrentControlSet</span>\<span class="n">Services</span>\<span class="o">&lt;</span><span class="n">serice</span> <span class="n">name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>where ImagePath is the executable path.</p>
+<p>The service program has it’s design, see</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://learn.microsoft.com/en-us/windows/win32/services/service-configuration-program-tasks">Service Configuration Program Tasks</a>, Windows App Development</p></li>
+<li><p><cite>CreateServiceW function (winsvc.h) &lt;https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew&gt;</cite></p></li>
+</ol>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">SC_HANDLE</span><span class="w"> </span><span class="nf">CreateServiceW</span><span class="p">(</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w">            </span><span class="n">SC_HANDLE</span><span class="w"> </span><span class="n">hSCManager</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w">            </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpServiceName</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w">  </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpDisplayName</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w">            </span><span class="n">DWORD</span><span class="w">     </span><span class="n">dwDesiredAccess</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w">            </span><span class="n">DWORD</span><span class="w">     </span><span class="n">dwServiceType</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w">            </span><span class="n">DWORD</span><span class="w">     </span><span class="n">dwStartType</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w">            </span><span class="n">DWORD</span><span class="w">     </span><span class="n">dwErrorControl</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w">  </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpBinaryPathName</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w">  </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpLoadOrderGroup</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">out</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w"> </span><span class="n">LPDWORD</span><span class="w">   </span><span class="n">lpdwTagId</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w">  </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpDependencies</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w">  </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpServiceStartName</span><span class="p">,</span>
+<span class="w">    </span><span class="p">[</span><span class="n">in</span><span class="p">,</span><span class="w"> </span><span class="n">optional</span><span class="p">]</span><span class="w">  </span><span class="n">LPCWSTR</span><span class="w">   </span><span class="n">lpPassword</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>where the lpBinaryPathName is the executable name, with args.</p>
+</section>
+<section id="pywin32">
+<h2>Pywin32<a class="headerlink" href="#pywin32" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/mhammond/pywin32">Home page</a></p>
+<p><a class="reference external" href="https://github.com/mhammond/pywin32/tree/main/win32/Demos/service">Pywin32 Sevice Demo</a></p>
+<ul class="simple">
+<li><p>Install Service</p></li>
+</ul>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+
+    <span class="n">pythonClassStr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">exeArg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot; run&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pythonClassStr&#39;</span><span class="p">,</span> <span class="n">pythonClassStr</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;exeArgs&#39;</span><span class="p">,</span> <span class="n">exeArg</span><span class="p">,</span> <span class="s1">&#39;len =&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">exeArg</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">log_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">LOG_FILE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">log_dir</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">log_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">log_dir</span><span class="p">)</span>
+        <span class="n">win32serviceutil</span><span class="o">.</span><span class="n">InstallService</span><span class="p">(</span>
+            <span class="n">pythonClassString</span> <span class="o">=</span> <span class="n">pythonClassStr</span><span class="p">,</span>  <span class="c1"># Just the Windows Registry class name</span>
+            <span class="n">serviceName</span>       <span class="o">=</span> <span class="n">web_srvname</span><span class="p">,</span>
+            <span class="n">displayName</span>       <span class="o">=</span> <span class="s1">&#39;Album-web Service&#39;</span><span class="p">,</span>
+            <span class="n">startType</span>         <span class="o">=</span> <span class="n">win32service</span><span class="o">.</span><span class="n">SERVICE_AUTO_START</span><span class="p">,</span>  <span class="c1"># Auto-start at boot</span>
+            <span class="n">errorControl</span>      <span class="o">=</span> <span class="n">win32service</span><span class="o">.</span><span class="n">SERVICE_ERROR_NORMAL</span><span class="p">,</span>  <span class="c1"># Default error control</span>
+            <span class="n">bRunInteractive</span>   <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  <span class="c1"># Do not run interactively</span>
+            <span class="n">serviceDeps</span>       <span class="o">=</span> <span class="p">[],</span>  <span class="c1"># No dependencies</span>
+            <span class="n">userName</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Run as SYSTEM (default)</span>
+            <span class="n">password</span>          <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># No password for SYSTEM</span>
+            <span class="n">exeName</span>           <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="si">}</span><span class="s1"> -m&#39;</span><span class="p">,</span>  <span class="c1"># Path to Python interpreter</span>
+            <span class="n">exeArgs</span>           <span class="o">=</span> <span class="n">exeArg</span><span class="p">,</span>  <span class="c1"># Script and run argument</span>
+            <span class="n">description</span>       <span class="o">=</span> <span class="s1">&#39;Album-web Windows Service&#39;</span><span class="p">,</span>
+            <span class="n">delayedstart</span>      <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># No delayed start</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Album-web service installed successfully.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to install service: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where InstallService will use a C++ API for the task.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">InstallService</span><span class="p">(</span><span class="n">pythonClassString</span><span class="p">,</span> <span class="n">sercieName</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+    <span class="n">hs</span> <span class="o">=</span> <span class="n">win32service</span><span class="o">.</span><span class="n">CreateService</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">InstallPythonClassString</span><span class="p">(</span><span class="n">pythonClassString</span><span class="p">,</span> <span class="n">serviceName</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <em>win32service.CreateService()</em> is the API.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">CreateService</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="c1"># real signature unknown</span>
+    <span class="k">pass</span> <span class="c1"># Yes</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">InstallPythonClassString</span><span class="p">(</span><span class="n">pythonClassString</span><span class="p">,</span> <span class="n">serviceName</span><span class="p">):</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">win32api</span><span class="o">.</span><span class="n">RegCreateKey</span><span class="p">(</span>
+        <span class="n">win32con</span><span class="o">.</span><span class="n">HKEY_LOCAL_MACHINE</span><span class="p">,</span>
+        <span class="s2">&quot;System</span><span class="se">\\</span><span class="s2">CurrentControlSet</span><span class="se">\\</span><span class="s2">Services</span><span class="se">\\</span><span class="si">%s</span><span class="se">\\</span><span class="s2">PythonClass&quot;</span> <span class="o">%</span> <span class="n">serviceName</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">win32api</span><span class="o">.</span><span class="n">RegSetValue</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">win32con</span><span class="o">.</span><span class="n">REG_SZ</span><span class="p">,</span> <span class="n">pythonClassString</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Problem</strong></p>
+<p>Service installation succeed with problem: can’t start the service:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span> <span class="n">start</span> <span class="n">Album</span><span class="o">-</span><span class="n">Web</span>
+<span class="n">Error</span> <span class="mi">1053</span><span class="p">:</span> <span class="n">Error</span> <span class="n">starting</span> <span class="n">service</span><span class="p">:</span> <span class="n">The</span> <span class="n">service</span> <span class="n">did</span> <span class="ow">not</span> <span class="n">respond</span> <span class="n">to</span> <span class="n">the</span> <span class="n">start</span> <span class="ow">or</span> <span class="n">control</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">timely</span> <span class="n">fashion</span>
+</pre></div>
+</div>
+<p>like <a class="reference external" href="https://github.com/mhammond/pywin32/issues/2056">the issue</a>
+and <a class="reference external" href="https://stackoverflow.com/q/41200068/7362888">question</a>.</p>
+</section>
+<section id="nssm">
+<h2>NSSM<a class="headerlink" href="#nssm" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://nssm.cc/">nssm</a> also features a graphical service installation and removal facility.</p>
+<p><a class="reference external" href="https://nssm.cc/download">Souce is available at git://git.nssm.cc/nssm/nssm.git.</a></p>
+<p>Also errors when starting services.</p>
+</section>
+<section id="rais-uac-level-by-python3">
+<h2>Rais UAC Level by Python3<a class="headerlink" href="#rais-uac-level-by-python3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/">User Acount Control</a>
+can be rasied level in Python3 like 1c5f59302092d18fea50f4c16d27a9eb5105846e:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="k">if</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;install-web&#39;</span> <span class="ow">or</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;i-web&#39;</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">win32api</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">win32com.shell.shell</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">shell</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_winadmin</span><span class="p">():</span>
+            <span class="n">py_args</span> <span class="o">=</span> <span class="s1">&#39;-m src.synodepy3.cli i-web&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Requesting administrative privileges for </span><span class="si">{</span><span class="n">py_args</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="n">shell</span><span class="o">.</span><span class="n">ShellExecuteEx</span><span class="p">(</span>
+                <span class="n">lpVerb</span><span class="o">=</span><span class="s2">&quot;runas&quot;</span><span class="p">,</span>
+                <span class="n">lpFile</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+                <span class="n">lpParameters</span><span class="o">=</span><span class="n">py_args</span><span class="p">,</span>
+                <span class="n">nShow</span><span class="o">=</span><span class="mi">1</span>  <span class="c1"># Show the window</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># goes here in another window</span>
+            <span class="nb">input</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">exe_cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">exe_cmd</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;===========================&#39;</span><span class="p">)</span>
+            <span class="n">AlbumWeb</span><span class="o">.</span><span class="n">install</span><span class="p">()</span>
+            <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;pausing elevated...&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This code will be removed in the future.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pdfjs.html" class="btn btn-neutral float-left" title="Hacking PDF.js" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ody Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
