@@ -1,7 +1,7 @@
 Credits
 =======
 
-Album Synchronizer is built on open source projects & freeware:
+Portfolio, the personal documents synchronizer, is built on open source projects & freeware:
 
 - JDK 1.8, 17
 
