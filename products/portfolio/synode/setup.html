@@ -53,6 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#install-steps">Install Steps</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#uninstall-portfolio-synode">Uninstall Portfolio-synode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trouble.html">Troubleshootings</a></li>
 </ul>
 </li>
@@ -186,6 +187,25 @@ permissions.</p>
 </li>
 </ol>
 </section>
+</section>
+<section id="uninstall-portfolio-synode">
+<h1>Uninstall Portfolio-synode<a class="headerlink" href="#uninstall-portfolio-synode" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>For Windows:</p></li>
+</ul>
+<p>In CMD Termnial, or VS Code Bash Termnial,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># cd portfolio-synode</span>
+<span class="n">synode</span><span class="o">-</span><span class="n">uninstall</span><span class="o">-</span><span class="n">srv</span>
+</pre></div>
+</div>
+<p>This will uninstall the Windows services.</p>
+<p>Then uninstall python modules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">synode</span><span class="o">.</span><span class="n">py3</span>
+<span class="n">pip</span> <span class="n">uninstall</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span>
+</pre></div>
+</div>
+<p>No it’s safe to delete the <em>portfolio-synode</em> folder. The files saving location is specified by the <em>volume</em>
+path. You can delete the folder if you don’t need the files anymore.</p>
 </section>
 
 

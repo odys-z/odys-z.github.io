@@ -108,3 +108,28 @@ Install Steps
     permissions.
 
     Please also be aware of the permission confirmation's dialogs can be hidden behind current Window.
+
+Uninstall Portfolio-synode
+==========================
+
+* For Windows:
+
+In CMD Termnial, or VS Code Bash Termnial,
+
+::
+
+    # cd portfolio-synode 
+    synode-uninstall-srv
+
+This will uninstall the Windows services.
+
+Then uninstall python modules:
+
+::
+
+    pip uninstall synode.py3
+    pip uninstall anson.py3
+
+No it's safe to delete the *portfolio-synode* folder. The files saving location is specified by the *volume*
+path. You can delete the folder if you don't need the files anymore.
+
