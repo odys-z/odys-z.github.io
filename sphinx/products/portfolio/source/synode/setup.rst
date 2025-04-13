@@ -10,24 +10,20 @@ Prerequisit
 
 Portfolio-synode requires Python 3.9 and JDK 17.
 
-After installed Python & JDK, also please install Anson.py3, which is not published to PyPI yet::
-
-    pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
-
-Install Exiftool For Unix
-_________________________
-
-**Only Verified on Ubunut 24.04**
-
-Portfolio-synode requires *Exiftool* to run.
+For Linux, please also install *Exiftool*.
 
 Follow the `document <https://exiftool.org/install.html#Unix>`_ or use *apt* to install::
 
     sudo apt install exiftool
 
-and make sure this command runs smoothly::
+And make sure "exiftool -ver" is running.
 
-    exiftool -ver
+The services are acturally started by command::
+
+    java -jar bin/jserv-album-0.7.0.jar
+    java -jar bin/html-service-0.1.1.jar
+
+Please make sure your JDK is running.
 
 Install Steps
 -------------
@@ -40,25 +36,25 @@ Install Steps
    *Portfolio Synode 0.7.0 can only work as a stand alone service node. Registry is
    used in the future for synchronizing register.*
 
-#. Download `jserv-album-0.7.0.zip <https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/jserv-album-0.7.0.zip>`_
+#. Download `jserv-album-0.7.1.zip <https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/jserv-album-0.7.0.zip>`_
    or check lastest version at
    `the project's releas page <https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0>`_.
 
 #. Unzip in a floder, say, *protfolio-synode*
 
-#. Setup Portfolio-synode' Python module
+#. Setup Portfolio-synode's Python module
 
     in *portfolio-synode*, run:
 
     ::
 
-        pip install portfolio_synode-#.#.#-py3-non-any.whl
+        pip install bin/synode_py3-0.7-py3-non-any.whl
 
     To check if it's installed successfully, run:
 
     ::
 
-        pip show portfolio-synode
+        pip show synode.pye
     
 #. Start Portfolio-synode
 
@@ -68,11 +64,11 @@ Install Steps
 
     Run ::
 
-        python3 -m portfolio-synode
+        python3 -m src.synodepy3
 
     - Click the top button for opening registry dir.
 
-      *User Id, password and Login function are not available in demo version.*
+      *User Id, password and Login function are not available in demo version. Leave the fields untouched.*
 
     - Click *Setup* if everything is OK.
  
@@ -86,18 +82,29 @@ Install Steps
     .. image:: ../imgs/00-portfolio-synode.png
         :width: 300px
 
-#. Check firewall configurations
+#. Test Run
 
-    Protfolio-synode by default will listening on TCP port 8964, the data service,
-    and port 8900, the web page server.
+    * Check firewall configurations
 
-#. Open the webpage in a browser
+        Protfolio-synode by default will listening on TCP port 8964, the data service,
+        and port 8900, the web page server.
 
-    Open the home page for listing uploaded files, e.g.::
+    * Open the webpage in a browser
 
-        url: http://127.0.0.1:8900
+        Open the home page for listing uploaded files, e.g.::
 
-    There should be the files once are uploaded with Portfolio Android.
+            url: http://127.0.0.1:8900
+
+        There should be the files once are uploaded with Portfolio Android.
 
     .. image:: ../../../album/source/imgs/07-portfolio-web.png
         :width: 300px
+
+#. Install Windows Services
+
+    *Portfolio-Synode* must be installed as Windows serices if is running in Windows. Click the *install
+    Windows Service* button to install. This process requires administrator permission, which will asks for
+    4 times, 2 separate service for Web pages and data service, each requires a *install* and a *start*
+    permissions.
+
+    Please also be aware of the permission confirmation's dialogs can be hidden behind current Window.
