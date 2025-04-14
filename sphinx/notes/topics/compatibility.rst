@@ -1,4 +1,4 @@
-Comaptibllity Issues
+Compatibility Issues
 ====================
 
 H256 and the Codec Names
