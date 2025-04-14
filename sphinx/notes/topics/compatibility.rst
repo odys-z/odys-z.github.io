@@ -1,10 +1,10 @@
 Compatibility Issues
 ====================
 
-H264 and the Codec Names
-------------------------
+H.265 and the Codec Names
+-------------------------
 
-Exiftool 12.69 parsed codec name for H264 is 'hvc1'.
+Exiftool 12.69 parsed codec name for H.265 is 'hvc1'.
 
 ::
 
