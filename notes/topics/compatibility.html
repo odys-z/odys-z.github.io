@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comaptibllity Issues &mdash; Study Notes 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2882ecd3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Registering Py / Jar as Windows Service" href="winsrv.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Study Notes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../cav/survey.html">CAV SDK Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-op/survey.html">Semantic Dev-op White Paper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="wireless.html">Long Range Wireless Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc-viewer.html">A Survey on HTML Office / PDF Viewers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdfjs.html">Hacking PDF.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="winsrv.html">Registering Py / Jar as Windows Service</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Comaptibllity Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#h256-and-the-codec-names">H256 and the Codec Names</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#references">References:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Study Notes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Topics</a></li>
+      <li class="breadcrumb-item active">Comaptibllity Issues</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="comaptibllity-issues">
+<h1>Comaptibllity Issues<a class="headerlink" href="#comaptibllity-issues" title="Link to this heading"></a></h1>
+<section id="h256-and-the-codec-names">
+<h2>H256 and the Codec Names<a class="headerlink" href="#h256-and-the-codec-names" title="Link to this heading"></a></h2>
+<p>Exiftool 12.69 parsed codec name for H256 is ‘hvc1’.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exiftool</span> <span class="o">*.</span><span class="n">mp4</span>
+<span class="o">...</span>
+<span class="n">Compressor</span> <span class="n">ID</span>                   <span class="p">:</span> <span class="n">hvc1</span>
+<span class="o">...</span>
+<span class="n">Compressor</span> <span class="n">ID</span>                   <span class="p">:</span> <span class="n">avc1</span>
+    <span class="mi">2</span> <span class="n">image</span> <span class="n">files</span> <span class="n">read</span>
+</pre></div>
+</div>
+<p>According to <a class="reference external" href="https://fourcc.org/avc1/">FourCC.org, AVC1</a>, <em>avc1</em> is</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fourcc</span><span class="p">:</span> <span class="n">AVC1</span>
+<span class="n">AVC1</span> <span class="n">info</span>
+<span class="n">Owner</span><span class="p">:</span> <span class="n">Apple</span>
+<span class="n">Apple</span><span class="s1">&#39;s version of the MPEG4 part 10/H.264 standard apparently.</span>
+</pre></div>
+</div>
+<p>and no <em>hvc1</em>.</p>
+<p>Grok:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Why &#39;hvc1&#39; Appears in Your Files
+
+Your exiftool output showing &#39;hvc1&#39; indicates that the MP4 file was likely
+created or optimized for streaming or playback in environments expecting MP4
+compatibility (e.g., web browsers, mobile devices). This is consistent with
+the &quot;Multimedia Cloud Transcode (cloud.baidu.com)&quot; encoder you saw, which
+probably used &#39;hvc1&#39; to ensure compatibility with modern players while
+leveraging H.265’s efficiency.
+</pre></div>
+</div>
+<p>To convert codec</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">ffmpeg</span> <span class="o">-</span><span class="n">i</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">07</span><span class="o">/</span><span class="mi">010</span><span class="n">V</span>\ <span class="n">mda</span><span class="o">-</span><span class="n">qc38bb8jwum66ied</span><span class="o">.</span><span class="n">mp4</span> <span class="o">-</span><span class="n">c</span><span class="p">:</span><span class="n">v</span> <span class="n">libx264</span> <span class="o">-</span><span class="n">c</span><span class="p">:</span><span class="n">a</span> <span class="n">aac</span> <span class="s2">&quot;010V mda-qc38bb8jwum66ied.h264.mp4&quot;</span>
+</pre></div>
+</div>
+<p>Tests shows Android 10 WebView cannot display ‘hvc1’.</p>
+<section id="references">
+<h3>References:<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://grok.com/share/bGVnYWN5_8a5396bb-d7df-4ee1-b517-58f5aa1fa564">Grok Answers</a></p></li>
+<li><p><a class="reference external" href="https://fourcc.org">FourCC.org</a></p></li>
+<li><p>Information technology — Coding of audio-visual objects, Part 15: Carriage of network abstraction layer (NAL) unit structured video in the ISO base media file format, <a class="reference external" href="https://www.iso.org/standard/89118.html">ISO/IEC 14496-15:2024</a></p></li>
+<li><p><a class="reference external" href="https://www.ffmpeg.org/download.html">FFMPEG</a></p></li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="winsrv.html" class="btn btn-neutral float-left" title="Registering Py / Jar as Windows Service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ody Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

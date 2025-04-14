@@ -9,3 +9,4 @@ Topics
    doc-viewer
    pdfjs
    winsrv
+   compatibility

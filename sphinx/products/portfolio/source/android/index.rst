@@ -6,5 +6,6 @@ Portfolio Android Demo
    :caption: Android Client:
 
    quick-start
+   trouble
 ..
 
