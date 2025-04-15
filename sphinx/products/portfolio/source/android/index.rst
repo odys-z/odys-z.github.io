@@ -7,5 +7,6 @@ Portfolio Android Demo
 
    quick-start
    trouble
+   synode
 ..
 
