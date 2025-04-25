@@ -40,7 +40,7 @@ Install Steps
    or check lastest version at
    `the project's releas page <https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0>`_.
 
-#. Unzip in a floder, say, *protfolio-synode*
+#. Unzip into a floder, say, *protfolio-synode*
 
 #. Setup Portfolio-synode's Python module
 
@@ -54,13 +54,13 @@ Install Steps
 
     ::
 
-        pip show synode.pye
+        pip show synode.py3
     
 #. Start Portfolio-synode
 
     **Don't run this in VS Code Termnial in Linux. See**
     :ref:`the issue<trouble-vscode-linux>` & :ref:`troubleshootings<trouble-vscode-linux>`
-    **if you have to, while it's recommended to run this in VS Code in Windows.**
+    **if you have to, while it's recommended to run this in VS Code Bash terminal in Windows.**
 
     Run ::
 
@@ -130,6 +130,6 @@ Then uninstall python modules:
     pip uninstall synode.py3
     pip uninstall anson.py3
 
-No it's safe to delete the *portfolio-synode* folder. The files saving location is specified by the *volume*
+Now it's safe to delete the *portfolio-synode* folder. The files saving location is specified by the *volume*
 path. You can delete the folder if you don't need the files anymore.
 
