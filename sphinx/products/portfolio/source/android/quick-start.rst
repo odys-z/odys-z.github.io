@@ -14,6 +14,8 @@ is released as an excutable on Python 3 and JDK 17.
 
 See :ref:`How to setup Portfolio Synode <setup-synode>`, the private file server.
 
+.. _setup_android:
+
 Setup Protfolio Android
 -----------------------
 

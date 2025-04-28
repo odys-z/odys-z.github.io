@@ -109,6 +109,22 @@ Install Steps
 
     Please also be aware of the permission confirmation's dialogs can be hidden behind current Window.
 
+#. Test in Browser
+==================
+
+Visit 
+
+    http://127.0.0.1:8900
+
+It will access a json data service at
+
+    http://127.0.0.1:8964
+
+if no default arguments were changed during installation.
+
+**And this is the time to scan and download the Android client**.
+:ref:`It also needs some setup <setup_android>`.
+
 Uninstall Portfolio-synode
 ==========================
 
