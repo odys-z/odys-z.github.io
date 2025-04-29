@@ -128,7 +128,7 @@ if no default arguments were changed during installation.
 Uninstall Portfolio-synode
 ==========================
 
-* For Windows:
+* Uninstall Services for Windows:
 
 In CMD Termnial, or VS Code Bash Termnial,
 
@@ -139,13 +139,13 @@ In CMD Termnial, or VS Code Bash Termnial,
 
 This will uninstall the Windows services.
 
-Then uninstall python modules:
+Then uninstall python packages:
 
 ::
 
     pip uninstall synode.py3
     pip uninstall anson.py3
 
-Now it's safe to delete the *portfolio-synode* folder. The files saving location is specified by the *volume*
-path. You can delete the folder if you don't need the files anymore.
-
+Now it's safe to delete the *portfolio-synode* folder, where the zip file is unzipped.
+The files saving location is specified by the *volume* path. You can delete the
+folder if you don't need the uploaded files anymore.
