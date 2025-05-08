@@ -9,4 +9,5 @@ Topics
    doc-viewer
    pdfjs
    winsrv
+   python
    compatibility

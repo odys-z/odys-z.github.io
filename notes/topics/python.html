@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Namespace and Anson Packages &mdash; Study Notes 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2882ecd3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Compatibility Issues" href="compatibility.html" />
+    <link rel="prev" title="Registering Py / Jar as Windows Service" href="winsrv.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Study Notes
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../cav/survey.html">CAV SDK Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-op/survey.html">Semantic Dev-op White Paper</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="wireless.html">Long Range Wireless Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc-viewer.html">A Survey on HTML Office / PDF Viewers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdfjs.html">Hacking PDF.js</a></li>
+<li class="toctree-l2"><a class="reference internal" href="winsrv.html">Registering Py / Jar as Windows Service</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Python Namespace and Anson Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-brief-overview-of-python-namespaces">A Brief Overview of Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anclient-py3-tests-summary">Anclient.py3 Tests Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anson-packages-namespace">Anson Packages Namespace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="compatibility.html">Compatibility Issues</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Study Notes</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Topics</a></li>
+      <li class="breadcrumb-item active">Python Namespace and Anson Packages</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="python-namespace-and-anson-packages">
+<h1>Python Namespace and Anson Packages<a class="headerlink" href="#python-namespace-and-anson-packages" title="Link to this heading"></a></h1>
+<section id="a-brief-overview-of-python-namespaces">
+<h2>A Brief Overview of Python Namespaces<a class="headerlink" href="#a-brief-overview-of-python-namespaces" title="Link to this heading"></a></h2>
+<p>Grok, May 8th 2025</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>I have two library project. I need install them into one location,
+so another project can import both packages.
+What&#39;s the structure should like?
+</pre></div>
+</div>
+<p><strong>Key Points About the Structure</strong></p>
+<p>Namespace Package Levels:</p>
+<ul class="simple">
+<li><p>src, io, and oz are namespace packages (or hybrid packages) that form the shared prefix src.io.oz.</p></li>
+<li><p>Each can have an empty __init__.py to mark it as a package, ensuring compatibility with older Python
+versions and tools (e.g., linters, IDEs).</p></li>
+<li><p>Per PEP 420, __init__.py files are optional for pure namespace packages, but including empty ones
+is safer for broader compatibility.</p></li>
+</ul>
+<p>Subpackages p1 and p2:</p>
+<ul class="simple">
+<li><p>p1 and p2 are regular subpackages under src.io.oz, each with their own __init__.py (empty or minimal).</p></li>
+<li><p>p1 contains jclient.py (with Clients class).</p></li>
+<li><p>p2 contains its modules (e.g., some_module.py).</p></li>
+</ul>
+<p>Installation Target:</p>
+<ul class="simple">
+<li><p>Both projects install their contents into site-packages/src/io/oz, merging p1 and p2 under the same oz directory.</p></li>
+<li><p>The namespace package structure ensures src.io.oz.p1 and src.io.oz.p2 are distinct and importable.</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Packaging Configuration</p></li>
+</ol>
+<p>Each project needs a packaging configuration to install its contents into site-packages/src/io/oz.</p>
+<p>Project 1 (pyproject.toml):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">project</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;project1&quot;</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Library providing src.io.oz.p1&quot;</span>
+<span class="n">dependencies</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">setuptools</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">find</span><span class="p">]</span>
+<span class="n">where</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+<span class="n">include</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src.io.oz.p1*&quot;</span><span class="p">]</span>  <span class="c1"># Install only src.io.oz.p1</span>
+<span class="n">namespaces</span> <span class="o">=</span> <span class="n">true</span>  <span class="c1"># Enable namespace package support</span>
+
+<span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">setuptools</span><span class="o">.</span><span class="n">package</span><span class="o">-</span><span class="nb">dir</span><span class="p">]</span>
+<span class="s2">&quot;src.io.oz.p1&quot;</span> <span class="o">=</span> <span class="s2">&quot;src/io/oz/p1&quot;</span>
+</pre></div>
+</div>
+<p>Project 2 (pyproject.toml):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">project</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;project2&quot;</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0.0&quot;</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Library providing src.io.oz.p2&quot;</span>
+<span class="n">dependencies</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">setuptools</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">find</span><span class="p">]</span>
+<span class="n">where</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+<span class="n">include</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src.io.oz.p2*&quot;</span><span class="p">]</span>  <span class="c1"># Install only src.io.oz.p2</span>
+<span class="n">namespaces</span> <span class="o">=</span> <span class="n">true</span>  <span class="c1"># Enable namespace package support</span>
+
+<span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">setuptools</span><span class="o">.</span><span class="n">package</span><span class="o">-</span><span class="nb">dir</span><span class="p">]</span>
+<span class="s2">&quot;src.io.oz.p2&quot;</span> <span class="o">=</span> <span class="s2">&quot;src/io/oz/p2&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Installation</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>site-packages/
+└── src/
+    ├── __init__.py
+    └── io/
+        ├── __init__.py
+        └── oz/
+            ├── __init__.py
+            ├── p1/
+            │   ├── __init__.py
+            │   └── jclient.py
+            └── p2/
+                ├── __init__.py
+                └── some_module.py
+</pre></div>
+</div>
+<p><strong>Citations</strong></p>
+<ol class="arabic">
+<li><p>Python Documentation on Modules and Packages:</p>
+<blockquote>
+<div><p>Source: Python Official Documentation
+URL: <a class="reference external" href="https://docs.python.org/3/tutorial/modules.html">https://docs.python.org/3/tutorial/modules.html</a>
+Relevance: Explains Python’s module and package system, including the role of
+__init__.py for regular packages and how modules are resolved via sys.path.
+This forms the basis for understanding regular package behavior and sys.path
+precedence.</p>
+</div></blockquote>
+</li>
+<li><p>PEP 420 – Implicit Namespace Packages:</p>
+<blockquote>
+<div><p>Source: Python Enhancement Proposals (PEP)
+URL: <a class="reference external" href="https://peps.python.org/pep-0420/">https://peps.python.org/pep-0420/</a>
+Relevance: Defines namespace packages, introduced in Python 3.3, which allow multiple directories to contribute to a single namespace without requiring __init__.py. This is central to the recommendation for structuring src.io.oz as a namespace package to combine p1 and p2.</p>
+</div></blockquote>
+</li>
+<li><p>Python Documentation on Namespace Packages:</p>
+<blockquote>
+<div><p>Source: Python Official Documentation
+URL: <a class="reference external" href="https://docs.python.org/3/reference/import.html#namespace-packages">https://docs.python.org/3/reference/import.html#namespace-packages</a>
+Relevance: Details how namespace packages work, including their behavior with or without __init__.py and how Python merges submodules from multiple directories. This supports the explanation of why src.io.oz.p1 and src.io.oz.p2 can coexist.</p>
+</div></blockquote>
+</li>
+<li><p>Setuptools Documentation on Namespace Packages:</p>
+<blockquote>
+<div><p>Source: Setuptools Documentation
+URL: <a class="reference external" href="https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#namespace-packages">https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#namespace-packages</a>
+Relevance: Describes how to configure namespace packages using setuptools (e.g., find_namespace_packages or namespaces = true in pyproject.toml). This informed the packaging configuration for installing project1 and project2 into site-packages/src/io/oz.</p>
+</div></blockquote>
+</li>
+<li><p>Python Packaging User Guide:</p>
+<blockquote>
+<div><p>Source: Python Packaging Authority (PyPA)
+URL: <a class="reference external" href="https://packaging.python.org/en/latest/guides/creating-and-discovering-packages/">https://packaging.python.org/en/latest/guides/creating-and-discovering-packages/</a>
+Relevance: Provides best practices for structuring and packaging Python projects, including the use of pyproject.toml and setup.py. This guided the recommended pyproject.toml configurations for project1 and project2.</p>
+</div></blockquote>
+</li>
+<li><p>Python Documentation on sys.path and Module Search Path:</p>
+<blockquote>
+<div><p>Source: Python Official Documentation
+URL: <a class="reference external" href="https://docs.python.org/3/library/sys.html#sys.path">https://docs.python.org/3/library/sys.html#sys.path</a>
+Relevance: Explains how Python searches for modules and packages, which is critical for understanding sys.path order and potential collisions in regular packages versus namespace package merging.</p>
+</div></blockquote>
+</li>
+<li><p>PEP 518 - Specifying Minimum Build System Requirements for Python Projects:</p>
+<blockquote>
+<div><p>Source: Python Enhancement Proposals (PEP)
+URL: <a class="reference external" href="https://peps.python.org/pep-0518/">https://peps.python.org/pep-0518/</a>
+Relevance: Defines the pyproject.toml format, which was used in the recommended packaging configurations for project1 and project2.</p>
+</div></blockquote>
+</li>
+<li><p>How These Were Applied</p></li>
+</ol>
+<p><strong>Namespace vs. Regular Packages:</strong></p>
+<p>PEP 420 and the Python documentation on namespace packages informed the distinction between regular packages (requiring __init__.py, single directory) and namespace packages (merging multiple directories). This was key to recommending a namespace package structure for src.io.oz to combine p1 and p2.</p>
+<p><strong>Directory Structure:</strong></p>
+<p>The Python Packaging User Guide and Setuptools documentation guided the recommended structure (site-packages/src/io/oz/p1 and p2) and the use of empty __init__.py files for compatibility.</p>
+<p><strong>Packaging Configuration:</strong></p>
+<p>Setuptools documentation and PEP 518 supported the pyproject.toml examples, ensuring project1 and project2 install correctly into site-packages/src/io/oz with namespace package support.</p>
+<p><strong>Import Resolution:</strong></p>
+<p>The Python documentation on modules and sys.path explained why regular packages cause collisions (first src in sys.path wins) and how namespace packages avoid this, directly addressing your initial import issue with src.io.odysz.jclient.</p>
+</section>
+<section id="anclient-py3-tests-summary">
+<h2>Anclient.py3 Tests Summary<a class="headerlink" href="#anclient-py3-tests-summary" title="Link to this heading"></a></h2>
+<p>To install <em>io.odysz.anson.py</em> and <em>io.odysz.semantic.jprotocol.py</em> is out of the
+question since this structure will beweildered the python interpretor and PyCharm.</p>
+<p>Look like whenever there is a package with the same name in the project directory,
+which is the way of java protocal packages, it will stop continuing to search for
+the next path, and then report package not found.</p>
+<p>And debugging with python 3.9, Windows, shows that the site package path in sys.path
+is <em>lib/site-packages</em>, in lower case, is not working for finding <em>anson</em> packages.</p>
+</section>
+<section id="anson-packages-namespace">
+<h2>Anson Packages Namespace<a class="headerlink" href="#anson-packages-namespace" title="Link to this heading"></a></h2>
+<p><em>Decision on May 8th 2025</em></p>
+<p>Have Anclient.py3 distributed with the protocol runtime, copied to application’s Source
+location when initialized.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>anson.py3/
+└── anson/  [the src equivalent]
+    ├── __init__.py
+    └── io/
+        ├── __init__.py
+        └── odysz/
+            ├── __init__.py
+            ├── anson.py   [Anson, AnsonField]
+            ├── common.py  [LangExt, Utils]
+            └── anson/
+                ├── __init__.py
+                └── x.py       [AnsonException]
+</pre></div>
+</div>
+<p>Anclient.py3 with the protocol layer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>anclient.py3/
+├── io/
+│   ├── __init__.py
+│   └── odysz/
+│       ├── __init__.py
+│       ├── semantics.py        [SessionInf, SemanticObject]
+│       └── semantic/
+│           ├── __init__.py
+│           ├── jprotocol.py/   [AnsonHeader, AnsonBody, AnsonMsg, AnsonReq, AnsonResp]
+│           └── jserv/
+│               ├── __init__.py
+│               └── echo.py     [EchoReq]
+└── src/
+    └── anclient/
+        ├── __init__.py
+        └── io/
+            ├── __init__.py
+            └── odysz/
+                ├── __init__.py
+                └── jclient.py  [Clients, SessionClient, InsecueClient, Ping()]
+</pre></div>
+</div>
+<p>Synode.py3 with the docsync protocol layer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>synode.py3/
+├── io/ (copied)
+│   ├── __init__.py
+│   └── odysz/
+│       ├── __init__.py
+│       ├── semantics.py        [SessionInf, SemanticObject]
+│       └── semantic/
+│           ├── __init__.py
+│           ├── jprotocol.py/   [AnsonHeader, AnsonBody, AnsonMsg, AnsonReq, AnsonResp]
+│           └── jserv/
+│               ├── __init__.py
+│               └── echo.py     [EchoReq]
+└── src/
+    └── synode/
+        ├── __init__.py
+        ├── __main__.py
+        ├── installer.py
+        └── ...
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://grok.com/chat/8c910b33-2987-4a2d-925a-4d5e3446d68c">Implementation Reference</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="winsrv.html" class="btn btn-neutral float-left" title="Registering Py / Jar as Windows Service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compatibility.html" class="btn btn-neutral float-right" title="Compatibility Issues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ody Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
