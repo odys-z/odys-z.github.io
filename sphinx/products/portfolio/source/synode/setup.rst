@@ -109,20 +109,20 @@ Install Steps
 
     Please also be aware of the permission confirmation's dialogs can be hidden behind current Window.
 
-#. Test in Browser
-==================
+Test in Browser
+===============
 
 Visit 
 
-    http://127.0.0.1:8900
+    http://127.0.0.1:8900/login.html
 
 It will access a json data service at
 
-    http://127.0.0.1:8964
+    http://127.0.0.1:8964/jserv-album
 
 if no default arguments were changed during installation.
 
-**And this is the time to scan and download the Android client**.
+**And this is the time to download and scan with the Android client for login**.
 :ref:`It also needs some setup <setup_android>`.
 
 Uninstall Portfolio-synode
@@ -149,3 +149,20 @@ Then uninstall python packages:
 Now it's safe to delete the *portfolio-synode* folder, where the zip file is unzipped.
 The files saving location is specified by the *volume* path. You can delete the
 folder if you don't need the uploaded files anymore.
+
+Uninstall Window Service Manually
+---------------------------------
+
+**This is not recommended**
+
+If you have to uninstall the Windows service manually, please follow the steps below:
+
+#. Open CMD terminal as administrator, go to the install folder.
+#. Run the command below to uninstall the service (replace version numbers and synode ID):
+
+   .. code-block:: shell
+
+      py -m src.synodepy3.cli uninstall-srvname Synode.web-#.#.# # or try sc delete Synode.web-#.#.#
+      py -m src.synodepy3.cli uninstall-srvname Synode-#.#.#-ID # or try sc delete Synode-#.#.#-ID
+
+#. Refresh the Windows Service Control Panel if needed.

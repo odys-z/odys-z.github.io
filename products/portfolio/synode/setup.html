@@ -53,8 +53,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#install-steps">Install Steps</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#test-in-browser">#. Test in Browser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uninstall-portfolio-synode">Uninstall Portfolio-synode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-in-browser">Test in Browser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uninstall-portfolio-synode">Uninstall Portfolio-synode</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uninstall-window-service-manually">Uninstall Window Service Manually</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="trouble.html">Troubleshootings</a></li>
 </ul>
 </li>
@@ -190,17 +193,17 @@ permissions.</p>
 </section>
 </section>
 <section id="test-in-browser">
-<h1>#. Test in Browser<a class="headerlink" href="#test-in-browser" title="Link to this heading"></a></h1>
+<h1>Test in Browser<a class="headerlink" href="#test-in-browser" title="Link to this heading"></a></h1>
 <p>Visit</p>
 <blockquote>
-<div><p><a class="reference external" href="http://127.0.0.1:8900">http://127.0.0.1:8900</a></p>
+<div><p><a class="reference external" href="http://127.0.0.1:8900/login.html">http://127.0.0.1:8900/login.html</a></p>
 </div></blockquote>
 <p>It will access a json data service at</p>
 <blockquote>
-<div><p><a class="reference external" href="http://127.0.0.1:8964">http://127.0.0.1:8964</a></p>
+<div><p><a class="reference external" href="http://127.0.0.1:8964/jserv-album">http://127.0.0.1:8964/jserv-album</a></p>
 </div></blockquote>
 <p>if no default arguments were changed during installation.</p>
-<p><strong>And this is the time to scan and download the Android client</strong>.
+<p><strong>And this is the time to download and scan with the Android client for login</strong>.
 <a class="reference internal" href="../android/quick-start.html#setup-android"><span class="std std-ref">It also needs some setup</span></a>.</p>
 </section>
 <section id="uninstall-portfolio-synode">
@@ -222,6 +225,21 @@ permissions.</p>
 <p>Now it’s safe to delete the <em>portfolio-synode</em> folder, where the zip file is unzipped.
 The files saving location is specified by the <em>volume</em> path. You can delete the
 folder if you don’t need the uploaded files anymore.</p>
+<section id="uninstall-window-service-manually">
+<h2>Uninstall Window Service Manually<a class="headerlink" href="#uninstall-window-service-manually" title="Link to this heading"></a></h2>
+<p><strong>This is not recommended</strong></p>
+<p>If you have to uninstall the Windows service manually, please follow the steps below:</p>
+<ol class="arabic">
+<li><p>Open CMD terminal as administrator, go to the install folder.</p></li>
+<li><p>Run the command below to uninstall the service (replace version numbers and synode ID):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>py<span class="w"> </span>-m<span class="w"> </span>src.synodepy3.cli<span class="w"> </span>uninstall-srvname<span class="w"> </span>Synode.web-#.#.#<span class="w"> </span><span class="c1"># or try sc delete Synode.web-#.#.#</span>
+py<span class="w"> </span>-m<span class="w"> </span>src.synodepy3.cli<span class="w"> </span>uninstall-srvname<span class="w"> </span>Synode-#.#.#-ID<span class="w"> </span><span class="c1"># or try sc delete Synode-#.#.#-ID</span>
+</pre></div>
+</div>
+</li>
+<li><p>Refresh the Windows Service Control Panel if needed.</p></li>
+</ol>
+</section>
 </section>
 
 
