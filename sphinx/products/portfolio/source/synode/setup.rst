@@ -150,19 +150,25 @@ Now it's safe to delete the *portfolio-synode* folder, where the zip file is unz
 The files saving location is specified by the *volume* path. You can delete the
 folder if you don't need the uploaded files anymore.
 
-Uninstall Window Service Manually
----------------------------------
+Uninstall Windows Service Manually
+----------------------------------
 
 **This is not recommended**
 
 If you have to uninstall the Windows service manually, please follow the steps below:
+
+#. From the Startup Menu, open the Windows Service Control Panel to check the two service name,
+   which should like::
+
+    Synode.web-0.7.2-X29
+    Synode-0.7.2-X29
 
 #. Open CMD terminal as administrator, go to the install folder.
 #. Run the command below to uninstall the service (replace version numbers and synode ID):
 
    .. code-block:: shell
 
-      py -m src.synodepy3.cli uninstall-srvname Synode.web-#.#.# # or try sc delete Synode.web-#.#.#
-      py -m src.synodepy3.cli uninstall-srvname Synode-#.#.#-ID # or try sc delete Synode-#.#.#-ID
+      py -m src.synodepy3.cli uninstall Synode.web-#.#.#-ID 
+      py -m src.synodepy3.cli uninstall Synode-#.#.#-ID 
 
 #. Refresh the Windows Service Control Panel if needed.
