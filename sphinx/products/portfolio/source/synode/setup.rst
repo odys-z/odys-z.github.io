@@ -168,7 +168,7 @@ If you have to uninstall the Windows service manually, please follow the steps b
 
    .. code-block:: shell
 
-      py -m src.synodepy3.cli uninstall Synode.web-#.#.#-ID 
-      py -m src.synodepy3.cli uninstall Synode-#.#.#-ID 
+      py -m src.synodepy3.cli uninstall-srvname Synode.web-#.#.#-ID 
+      py -m src.synodepy3.cli uninstall-srvname Synode-#.#.#-ID 
 
 #. Refresh the Windows Service Control Panel if needed.
