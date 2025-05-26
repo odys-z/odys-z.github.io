@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Semantic-* Documentation (deprecated) &mdash; Dev Community 0.1 documentation</title>
+  <title>Issues &mdash; Dev Community 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Documents" href="../javadoc-contents.html" />
-    <link rel="prev" title="Issues" href="../issues/file-blocks.html" /> 
+    <link rel="next" title="Semantic-* Documentation (deprecated)" href="../links/res.html" />
+    <link rel="prev" title="Implementing NoSql with Anson" href="../topics/semantics/5anson-field.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,9 +46,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Semantic-* Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topics/index.html">Topics: Using Semantier</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../issues/file-blocks.html">Issues</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Semantic-* Documentation (deprecated)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#id2">Anclient Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Issues</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#file-block-chain-vs-synstream">File Block Chain vs. SynStream</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../links/res.html">Semantic-* Documentation (deprecated)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../links/res.html#id2">Anclient Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../javadoc-contents.html">API Documents</a></li>
 </ul>
 
@@ -66,7 +69,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Semantic-* Documentation (deprecated)</li>
+      <li class="breadcrumb-item active">Issues</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,19 +78,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1><a class="reference external" href="https://odys-z.github.io/archive">Semantic-* Documentation (deprecated)</a><a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+  <section id="issues">
+<h1>Issues<a class="headerlink" href="#issues" title="Link to this heading"></a></h1>
+<section id="file-block-chain-vs-synstream">
+<h2>File Block Chain vs. SynStream<a class="headerlink" href="#file-block-chain-vs-synstream" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">May</span> <span class="mi">26</span> <span class="mi">2025</span>
+</pre></div>
+</div>
+<p>File block chain works will in Portolio 0.7.2 (Semantic.jserv 1.5.16,
+Semantic.DA 1.5.18), but the cons are using a lot of memory at server
+side, as all blocks are buffered and updated to database, by semantics
+<em>extfile</em>. Base 64 file content is committed like a database field. the
+intended function, resume at breakpoint, is not implemented.</p>
+<p>In May 2025, a new semantics, the DocRef stream, without database semantics
+handler, only has Funcalls, is introduced to asynchronously upload file content
+and synchronize files. SynssionClient and SynssionServ use this schema for
+synchronize files asynchronously.</p>
+<p>The pushBlock() schema is planned to replace stream uploading in the future
+for breakpoint resumming.</p>
+<p>If this object is the reply to client’s Doclientier.pushBlock(), clients
+can simultaneously upload files in streams mode.</p>
+<p>DocRef Stream is used to resolve file reference, while file’s json block chains
+are used to transfere data. The only possible confliction is extfilev2 triggering
+by semantics.DA handler and the DocRef is resolving by a Synode. Since Semantic.DA
+1.5.18, ShExtFilev2, the handler, will ignore the field is the content is starting
+with an envelope’s beginning data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>\<span class="n">s</span><span class="o">*</span><span class="s2">&quot;type&quot;</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>The Base64 string cannot has such characters like the curely brace ({), double
+quotes (”) or colon (:).</p>
 </section>
-<section id="id2">
-<h1><a class="reference external" href="https://odys-z.github.io/Anclient/">Anclient Documentation</a><a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../issues/file-blocks.html" class="btn btn-neutral float-left" title="Issues" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../javadoc-contents.html" class="btn btn-neutral float-right" title="API Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../topics/semantics/5anson-field.html" class="btn btn-neutral float-left" title="Implementing NoSql with Anson" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../links/res.html" class="btn btn-neutral float-right" title="Semantic-* Documentation (deprecated)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
