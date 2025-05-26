@@ -35,3 +35,38 @@ with an envelope's beginning data::
 
 The Base64 string cannot has such characters like the curely brace ({), double
 quotes (") or colon (:). 
+
+Reference
+
+[1] Grok Answer: Java client for uploading files that can resumming at breakpoint. 
+
+    which is actually the block based style.
+
+    .. code-block:: java
+
+        try (RandomAccessFile file = new RandomAccessFile(localFilePath.toFile(), "r");
+             OutputStream outputStream = connection.getOutputStream()) {
+
+            file.seek(startByte);
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead;
+
+            while ((bytesRead = file.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+                bytesSent += bytesRead;
+
+                // Save progress
+                Files.writeString(progressFile, String.valueOf(bytesSent),
+                        StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+                // Report progress
+                if (progressCallback != null) {
+                    progressCallback.onProgress(bytesSent, totalSize);
+                }
+            }
+
+            outputStream.flush();
+        }
+
+    Conclusion (decision?): To reduce memory usage at the server side, no need to find better
+    algorithm other than write a temporary file.

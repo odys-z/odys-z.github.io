@@ -108,6 +108,38 @@ with an envelope’s beginning data:</p>
 </div>
 <p>The Base64 string cannot has such characters like the curely brace ({), double
 quotes (”) or colon (:).</p>
+<p>Reference</p>
+<p>[1] Grok Answer: Java client for uploading files that can resumming at breakpoint.</p>
+<blockquote>
+<div><p>which is actually the block based style.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">RandomAccessFile</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RandomAccessFile</span><span class="p">(</span><span class="n">localFilePath</span><span class="p">.</span><span class="na">toFile</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
+<span class="w">     </span><span class="n">OutputStream</span><span class="w"> </span><span class="n">outputStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connection</span><span class="p">.</span><span class="na">getOutputStream</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">file</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">startByte</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[</span><span class="n">BUFFER_SIZE</span><span class="o">]</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">bytesRead</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">bytesRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="na">read</span><span class="p">(</span><span class="n">buffer</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">outputStream</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">bytesRead</span><span class="p">);</span>
+<span class="w">        </span><span class="n">bytesSent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">bytesRead</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Save progress</span>
+<span class="w">        </span><span class="n">Files</span><span class="p">.</span><span class="na">writeString</span><span class="p">(</span><span class="n">progressFile</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">bytesSent</span><span class="p">),</span>
+<span class="w">                </span><span class="n">StandardOpenOption</span><span class="p">.</span><span class="na">CREATE</span><span class="p">,</span><span class="w"> </span><span class="n">StandardOpenOption</span><span class="p">.</span><span class="na">WRITE</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Report progress</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">progressCallback</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">progressCallback</span><span class="p">.</span><span class="na">onProgress</span><span class="p">(</span><span class="n">bytesSent</span><span class="p">,</span><span class="w"> </span><span class="n">totalSize</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">outputStream</span><span class="p">.</span><span class="na">flush</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Conclusion (decision?): To reduce memory usage at the server side, no need to find better
+algorithm other than write a temporary file.</p>
+</div></blockquote>
 </section>
 </section>
 
