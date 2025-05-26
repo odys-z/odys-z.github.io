@@ -38,7 +38,7 @@ quotes (") or colon (:).
 
 Reference
 
-[1] Grok Answer: Java client for uploading files that can resumming at breakpoint. 
+[1] Grok Answer: A Java client for uploading files that can resumming at breakpoints, 
 
     which is actually the block based style.
 
@@ -68,5 +68,5 @@ Reference
             outputStream.flush();
         }
 
-    Conclusion (decision?): To reduce memory usage at the server side, no need to find better
+    Conclusion (decision?): To optimize memory usage at the server side, no need to find better
     algorithm other than write a temporary file.
