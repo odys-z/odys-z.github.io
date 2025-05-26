@@ -1,8 +1,8 @@
 Issues
 ======
 
-File Block Chain vs. SynStream
-------------------------------
+File Block Chain vs. DocRef Stream
+----------------------------------
 
 ::
 
