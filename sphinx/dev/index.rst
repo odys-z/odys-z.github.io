@@ -9,7 +9,6 @@ Welcome to Dev Community!
 
    tutorials/index
    topics/index
-   issues/file-blocks
    links/res
    javadoc-contents
 

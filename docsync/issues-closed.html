@@ -45,9 +45,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="issues.html">1. Issues</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Closed Issues</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">2.1. [closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#closed-album-jserv-denpendencies">2.2. [closed] Album.jserv Denpendencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#closed-design-synssion-and-syncuser">2.3. [closed] Design Synssion and SyncUser:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-to-be-verified-different-configurations-of-ext-filev2">2.1. [closed] To be verified: Different configurations of Ext-filev2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">2.2. [closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-album-jserv-denpendencies">2.3. [closed] Album.jserv Denpendencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-design-synssion-and-syncuser">2.4. [closed] Design Synssion and SyncUser:</a></li>
 </ul>
 </li>
 </ul>
@@ -77,8 +78,33 @@
              
   <section id="closed-issues">
 <h1><span class="section-number">2. </span>Closed Issues<a class="headerlink" href="#closed-issues" title="Link to this heading"></a></h1>
+<section id="closed-to-be-verified-different-configurations-of-ext-filev2">
+<h2><span class="section-number">2.1. </span>[closed] To be verified: Different configurations of Ext-filev2<a class="headerlink" href="#closed-to-be-verified-different-configurations-of-ext-filev2" title="Link to this heading"></a></h2>
+<p>VERIFIED: 2024-12-31</p>
+<p>$VOLUME_HUB</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;s&gt;</span>
+<span class="w">    </span><span class="nt">&lt;id&gt;</span>pho.extfile<span class="nt">&lt;/id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;smtc&gt;</span>ef2.0<span class="nt">&lt;/smtc&gt;</span>
+<span class="w">    </span><span class="nt">&lt;tabl&gt;</span>h_photos<span class="nt">&lt;/tabl&gt;</span>
+<span class="w">    </span><span class="nt">&lt;pk&gt;</span>pid<span class="nt">&lt;/pk&gt;</span>
+<span class="w">    </span><span class="nt">&lt;args&gt;</span>$VOLUME_HUB,uri,family,shareby,folder,docname<span class="nt">&lt;/args&gt;</span>
+<span class="nt">&lt;/s&gt;</span>
+</pre></div>
+</div>
+<p>$VOLUME_PRV</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;s&gt;</span>
+<span class="w">    </span><span class="nt">&lt;id&gt;</span>pho.extfile<span class="nt">&lt;/id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;smtc&gt;</span>ef2.0<span class="nt">&lt;/smtc&gt;</span>
+<span class="w">    </span><span class="nt">&lt;tabl&gt;</span>h_photos<span class="nt">&lt;/tabl&gt;</span>
+<span class="w">    </span><span class="nt">&lt;pk&gt;</span>pid<span class="nt">&lt;/pk&gt;</span>
+<span class="w">    </span><span class="nt">&lt;args&gt;</span>$VOLUME_PRV,uri,shareby,folder,docname<span class="nt">&lt;/args&gt;</span>
+<span class="nt">&lt;/s&gt;</span>
+</pre></div>
+</div>
+<p>Different saving paths should still working.</p>
+</section>
 <section id="closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">
-<h2><span class="section-number">2.1. </span>[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease<a class="headerlink" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.2. </span>[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease<a class="headerlink" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">NoSuchMethodError</span><span class="p">:</span> <span class="s1">&#39;boolean org.eclipse.jetty.io.ByteBufferPool.removeAndRelease(org.eclipse.jetty.io.RetainableByteBuffer)&#39;</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">lockedReleaseBuffer</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">593</span><span class="p">)</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">onWriteComplete</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">302</span><span class="p">)</span>
@@ -115,7 +141,7 @@ ArrayByteBufferPool comes with the method removeAndRelease(…).</p>
 </div>
 </section>
 <section id="closed-album-jserv-denpendencies">
-<h2><span class="section-number">2.2. </span>[closed] Album.jserv Denpendencies<a class="headerlink" href="#closed-album-jserv-denpendencies" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.3. </span>[closed] Album.jserv Denpendencies<a class="headerlink" href="#closed-album-jserv-denpendencies" title="Link to this heading"></a></h2>
 <p>Thu Dec 12 12:41:54 2024 +0800</p>
 <p>Refactor: move DocsException to semantic.jserv, in the package io…tier.docs, shared by anclient and docsync.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">--&gt;</span> <span class="n">albumtier</span>
@@ -136,7 +162,7 @@ ArrayByteBufferPool comes with the method removeAndRelease(…).</p>
 </div>
 </section>
 <section id="closed-design-synssion-and-syncuser">
-<h2><span class="section-number">2.3. </span>[closed] Design Synssion and SyncUser:<a class="headerlink" href="#closed-design-synssion-and-syncuser" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.4. </span>[closed] Design Synssion and SyncUser:<a class="headerlink" href="#closed-design-synssion-and-syncuser" title="Link to this heading"></a></h2>
 <p>commit f7c7c8d6bbd3f383d5d4d295059dfabeeb9f861e</p>
 <p>Date:   Tue Oct 29 19:41:16 2024 -0400</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>√ 0. Docsync 0.2.0: config.xml/class-IUser for IUser object used at serverside,
