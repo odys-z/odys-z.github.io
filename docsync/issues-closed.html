@@ -45,10 +45,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="issues.html">1. Issues</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Closed Issues</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#closed-to-be-verified-different-configurations-of-ext-filev2">2.1. [closed] To be verified: Different configurations of Ext-filev2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">2.2. [closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#closed-album-jserv-denpendencies">2.3. [closed] Album.jserv Denpendencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#closed-design-synssion-and-syncuser">2.4. [closed] Design Synssion and SyncUser:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-enable-cors-for-jetty-12">2.1. [closed]Enable CORS for Jetty 12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-to-be-verified-different-configurations-of-ext-filev2">2.2. [closed] To be verified: Different configurations of Ext-filev2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">2.3. [closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-album-jserv-denpendencies">2.4. [closed] Album.jserv Denpendencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closed-design-synssion-and-syncuser">2.5. [closed] Design Synssion and SyncUser:</a></li>
 </ul>
 </li>
 </ul>
@@ -78,8 +79,105 @@
              
   <section id="closed-issues">
 <h1><span class="section-number">2. </span>Closed Issues<a class="headerlink" href="#closed-issues" title="Link to this heading"></a></h1>
+<section id="closed-enable-cors-for-jetty-12">
+<h2><span class="section-number">2.1. </span>[closed]Enable CORS for Jetty 12<a class="headerlink" href="#closed-enable-cors-for-jetty-12" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dec</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">2024</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">Jetty EE10 deprecated CrossOriginFilter</a>,
+but Jetty 12 together with EE8 is not likely will be supported in the near future:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">It</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">possible</span> <span class="n">to</span> <span class="n">add</span> <span class="n">handles</span> <span class="n">after</span> <span class="n">ee10</span> <span class="n">ServletContextHandler</span><span class="o">.</span>
+
+<span class="n">However</span> <span class="k">for</span> <span class="n">ee8</span><span class="o">/</span><span class="mi">9</span> <span class="n">it</span> <span class="n">might</span> <span class="n">be</span> <span class="n">a</span> <span class="n">bit</span> <span class="n">more</span> <span class="n">fiddly</span> <span class="n">to</span> <span class="n">insert</span> <span class="n">a</span> <span class="n">core</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">right</span> <span class="n">location</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://github.com/jetty/jetty.project/issues/10220">Jetty.project #10220</a>.</p>
+<p>And Semantic.jserv is built upon Servlet 3.1, and
+<a class="reference external" href="https://stackoverflow.com/a/66368511/7362888">can only depends on EE8</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mvn</span> <span class="n">dependency</span><span class="p">:</span><span class="n">tree</span>
+
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">---</span> <span class="n">dependency</span><span class="p">:</span><span class="mf">3.6.0</span><span class="p">:</span><span class="n">tree</span> <span class="p">(</span><span class="n">default</span><span class="o">-</span><span class="n">cli</span><span class="p">)</span> <span class="o">@</span> <span class="n">docsync</span><span class="o">.</span><span class="n">jserv</span> <span class="o">---</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">docsync</span><span class="o">.</span><span class="n">jserv</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.2.0</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">javax</span><span class="o">.</span><span class="n">servlet</span><span class="p">:</span><span class="n">javax</span><span class="o">.</span><span class="n">servlet</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">3.1.0</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantic</span><span class="o">.</span><span class="n">DA</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.8</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantics</span><span class="o">.</span><span class="n">transact</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.53</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">|</span>  \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">antson</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.9.104</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">anclient</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.6</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantic</span><span class="o">.</span><span class="n">jserv</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.6</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">synodict</span><span class="o">-</span><span class="n">jclient</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.0.9</span><span class="p">:</span><span class="nb">compile</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">server</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">http</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">util</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">io</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">webapp</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">xml</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">servlet</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">nested</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">security</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">session</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">toolchain</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">servlet</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">4.0.6</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">security</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
+<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">syndoc</span><span class="o">-</span><span class="n">lib</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.7</span><span class="p">:</span><span class="n">test</span>
+</pre></div>
+</div>
+<p>FIY</p>
+<blockquote>
+<div><p>The jetty source project has tests of <a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">CrosOriginHandler</a>
+which can be the example. The start() method explains details.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="n">CrossOriginHandler</span><span class="w"> </span><span class="n">crossOriginHandler</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Server</span><span class="p">();</span>
+<span class="w">    </span><span class="n">connector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LocalConnector</span><span class="p">(</span><span class="n">server</span><span class="p">);</span>
+<span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">addConnector</span><span class="p">(</span><span class="n">connector</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ContextHandler</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ContextHandler</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+<span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">crossOriginHandler</span><span class="p">);</span>
+<span class="w">    </span><span class="n">crossOriginHandler</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ApplicationHandler</span><span class="p">());</span>
+<span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>See <a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">CrossOriginFilter</a>.
+document.</p>
+<p>Using CrossOriginFilter, with
+<a class="reference external" href="https://github.com/odys-z/semantic-jserv/blob/one-step/jserv-album/src/main/java/io/oz/syntier/serv/CrossOriginFilter.java">source</a>:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span><span class="w"> </span><span class="n">SynotierJettyApp</span><span class="w"> </span><span class="nf">allowCors</span><span class="p">(</span><span class="n">ServletContextHandler</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">synode</span><span class="p">(</span><span class="n">syngleton</span><span class="p">().</span><span class="na">synode</span><span class="p">());</span>
+
+<span class="w">  </span><span class="n">FilterHolder</span><span class="w"> </span><span class="n">holder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FilterHolder</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_ORIGINS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_METHODS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;GET,POST,HEAD&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_HEADERS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;X-Requested-With,Content-Type,Accept,Origin&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">FilterMapping</span><span class="w"> </span><span class="n">fm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FilterMapping</span><span class="p">();</span>
+<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setFilterName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setPathSpec</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="na">addFilter</span><span class="p">(</span><span class="n">holder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/*&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">EnumSet</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">DispatcherType</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">));</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>TIP</p>
+<p>For error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Status</span> <span class="n">Code</span><span class="p">:</span> <span class="mi">405</span> <span class="n">Method</span> <span class="n">Not</span> <span class="n">Allowed</span>
+</pre></div>
+</div>
+<p>The possible reason is that the incorrect request URL is handled by the default
+Jetty handler, by which the POST method is not allowed by the server.</p>
+<p>References:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">Jetty test: CrossOriginHandlerTest</a>
+(Jan 1, 2025)</p></li>
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty">Cross Origin Filter with embedded Jetty</a></p></li>
+</ol>
+</section>
 <section id="closed-to-be-verified-different-configurations-of-ext-filev2">
-<h2><span class="section-number">2.1. </span>[closed] To be verified: Different configurations of Ext-filev2<a class="headerlink" href="#closed-to-be-verified-different-configurations-of-ext-filev2" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.2. </span>[closed] To be verified: Different configurations of Ext-filev2<a class="headerlink" href="#closed-to-be-verified-different-configurations-of-ext-filev2" title="Link to this heading"></a></h2>
 <p>VERIFIED: 2024-12-31</p>
 <p>$VOLUME_HUB</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;s&gt;</span>
@@ -104,7 +202,7 @@
 <p>Different saving paths should still working.</p>
 </section>
 <section id="closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">
-<h2><span class="section-number">2.2. </span>[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease<a class="headerlink" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.3. </span>[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease<a class="headerlink" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">NoSuchMethodError</span><span class="p">:</span> <span class="s1">&#39;boolean org.eclipse.jetty.io.ByteBufferPool.removeAndRelease(org.eclipse.jetty.io.RetainableByteBuffer)&#39;</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">lockedReleaseBuffer</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">593</span><span class="p">)</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">onWriteComplete</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">302</span><span class="p">)</span>
@@ -141,7 +239,7 @@ ArrayByteBufferPool comes with the method removeAndRelease(…).</p>
 </div>
 </section>
 <section id="closed-album-jserv-denpendencies">
-<h2><span class="section-number">2.3. </span>[closed] Album.jserv Denpendencies<a class="headerlink" href="#closed-album-jserv-denpendencies" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.4. </span>[closed] Album.jserv Denpendencies<a class="headerlink" href="#closed-album-jserv-denpendencies" title="Link to this heading"></a></h2>
 <p>Thu Dec 12 12:41:54 2024 +0800</p>
 <p>Refactor: move DocsException to semantic.jserv, in the package io…tier.docs, shared by anclient and docsync.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="o">--&gt;</span> <span class="n">albumtier</span>
@@ -162,7 +260,7 @@ ArrayByteBufferPool comes with the method removeAndRelease(…).</p>
 </div>
 </section>
 <section id="closed-design-synssion-and-syncuser">
-<h2><span class="section-number">2.4. </span>[closed] Design Synssion and SyncUser:<a class="headerlink" href="#closed-design-synssion-and-syncuser" title="Link to this heading"></a></h2>
+<h2><span class="section-number">2.5. </span>[closed] Design Synssion and SyncUser:<a class="headerlink" href="#closed-design-synssion-and-syncuser" title="Link to this heading"></a></h2>
 <p>commit f7c7c8d6bbd3f383d5d4d295059dfabeeb9f861e</p>
 <p>Date:   Tue Oct 29 19:41:16 2024 -0400</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>√ 0. Docsync 0.2.0: config.xml/class-IUser for IUser object used at serverside,

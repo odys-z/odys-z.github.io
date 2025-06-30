@@ -16,48 +16,34 @@ solution if stop trying again anymore?
 
     If a max trying limit is used, when to reset the tried times counter?
 
-Injecting *jservs* at runtime
------------------------------
+Setup *jservs* at installation
+------------------------------
 
-When the application server is installed, it should know peer jservs
-through dictionary.json, wich is version controlled in source.
+When the application server is installed, it should know peer jservs, otherwise
+the nyq vector matrix won't work.
 
-The test uses a simple cheap way to setup this.
+If a synode is passive (hub-node, e.g. X29), it still need all nodes' ID in settings.jservs,
+except the syn_nodes.jserv is never used. 
 
-.. code-block:: java
+**Update 2025-06-30**
 
-    public static SynotierJettyApp main_(String vol_home,
-        String[] args, PrintstreamProvider ... oe) {
+The concept of passive mode is introduced, and the schema for resolving pushed doc-ref
+at passive nodes, e.g. X29, must be resolved by the pushing clients, e.g. Y20, since a
+passive node dees not necessarily know the actual jserv of the pushing clients.
 
-        // @Option(name="-peer-jservs",
-        // usage=only for test, e. g.
-        // "X:http://127.0.0.1:8964/album-jserv Y:http://127.0.0.1/album-jserv")
-        // public String CliArgs.jservs;
-        CliArgs cli = new CliArgs();
+Currently there are 2 strategies for these passive doc-ref's resolving:
 
-        CmdLineParser parser = new CmdLineParser(cli);
-        parser.parseArgument(args);
+i. the client remember its tasks while select *refile* when pushing; (can be duplicate)
 
-        if (!isblank(cli.installkey)) {
-            YellowPages.load(FilenameUtils.concat(
-                new File(".").getAbsolutePath(),
-                webinf,
-                EnvPath.replaceEnv(vol_home)));
-            AppSettings.setupdb(cfg, webinf, vol_home, "config.xml", cli.installkey,
-                    // inject jservs args to the peers' configuration
-                    cli.jservs);
-        }
-    }
-..
+ii. the client query saved doc-refs at a server to finish its tasks. (already persisted)  
 
-Where the *jservs* for peers are injected into SynodeConfig, and then updated into
-table *syn_nodes*, planning future extension for providing *jservs* in a separate json. 
+Decision 2025-06-30: the second one looks like more error tolerating and simpler.
 
 **Update 2025-06-27**
 
 comments on da2330dae3e085860d637b0e6c077e3cf6992667::
 
-    2. Winsrv cannot update local Ip if changed Wifi settings
+    1. Winsrv cannot update local Ip if changed Wifi settings
     (reboot works, but won't work if booting while wifi is disabled) 
 
 This issue should be considered as a requirements to registration infrastructure.

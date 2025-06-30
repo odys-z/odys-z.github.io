@@ -45,14 +45,14 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Issues</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#injecting-jservs-at-runtime">1.1. Injecting <em>jservs</em> at runtime</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#only-one-syn-worker-thread">1.2. Only one syn-worker thread</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#overhaul-sending-exception-to-client">1.3. Overhaul: sending exception to client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data">1.4. How long will the syn-worker can work without clean buffered data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#enable-cors-for-jetty-12">1.5. Enable CORS for Jetty 12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tireless-doc-ref-resolving">1.1. Tireless Doc-ref Resolving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-jservs-at-installation">1.2. Setup <em>jservs</em> at installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#only-one-syn-worker-thread">1.3. Only one syn-worker thread</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overhaul-sending-exception-to-client">1.4. Overhaul: sending exception to client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data">1.5. How long will the syn-worker can work without clean buffered data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#android-preferenceedit-saves-violate-oop-encapsulation-principle">1.6. Android PreferenceEdit Saves Violate OOP Encapsulation Principle</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#different-filesystem-providers-of-jdk-1-8-windows-android">1.7. Different FileSystem Providers of JDK 1.8, Windows &amp; Android</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#shoud-forcing-radix-32-for-syn-uids">1.8. Shoud forcing Radix-32 for syn-uids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#should-forcing-radix-32-for-syn-uids">1.8. Should forcing Radix-32 for syn-uids?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#file-block-chain-vs-docref-stream">1.9. File Block Chain vs. DocRef Stream</a></li>
 </ul>
 </li>
@@ -84,153 +84,60 @@
              
   <section id="issues">
 <h1><span class="section-number">1. </span>Issues<a class="headerlink" href="#issues" title="Link to this heading"></a></h1>
-<section id="injecting-jservs-at-runtime">
-<h2><span class="section-number">1.1. </span>Injecting <em>jservs</em> at runtime<a class="headerlink" href="#injecting-jservs-at-runtime" title="Link to this heading"></a></h2>
-<p>When the application server is installed, it should know peer jservs
-through dictionary.json, wich is version controlled in source.</p>
-<p>The test uses a simple cheap way to setup this.</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">SynotierJettyApp</span><span class="w"> </span><span class="nf">main_</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">vol_home</span><span class="p">,</span>
-<span class="w">    </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">PrintstreamProvider</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="n">oe</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="c1">// @Option(name=&quot;-peer-jservs&quot;,</span>
-<span class="w">    </span><span class="c1">// usage=only for test, e. g.</span>
-<span class="w">    </span><span class="c1">// &quot;X:http://127.0.0.1:8964/album-jserv Y:http://127.0.0.1/album-jserv&quot;)</span>
-<span class="w">    </span><span class="c1">// public String CliArgs.jservs;</span>
-<span class="w">    </span><span class="n">CliArgs</span><span class="w"> </span><span class="n">cli</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CliArgs</span><span class="p">();</span>
-
-<span class="w">    </span><span class="n">CmdLineParser</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CmdLineParser</span><span class="p">(</span><span class="n">cli</span><span class="p">);</span>
-<span class="w">    </span><span class="n">parser</span><span class="p">.</span><span class="na">parseArgument</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isblank</span><span class="p">(</span><span class="n">cli</span><span class="p">.</span><span class="na">installkey</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">YellowPages</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="n">FilenameUtils</span><span class="p">.</span><span class="na">concat</span><span class="p">(</span>
-<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">).</span><span class="na">getAbsolutePath</span><span class="p">(),</span>
-<span class="w">            </span><span class="n">webinf</span><span class="p">,</span>
-<span class="w">            </span><span class="n">EnvPath</span><span class="p">.</span><span class="na">replaceEnv</span><span class="p">(</span><span class="n">vol_home</span><span class="p">)));</span>
-<span class="w">        </span><span class="n">AppSettings</span><span class="p">.</span><span class="na">setupdb</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span><span class="w"> </span><span class="n">webinf</span><span class="p">,</span><span class="w"> </span><span class="n">vol_home</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;config.xml&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cli</span><span class="p">.</span><span class="na">installkey</span><span class="p">,</span>
-<span class="w">                </span><span class="c1">// inject jservs args to the peers&#39; configuration</span>
-<span class="w">                </span><span class="n">cli</span><span class="p">.</span><span class="na">jservs</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
+<section id="tireless-doc-ref-resolving">
+<h2><span class="section-number">1.1. </span>Tireless Doc-ref Resolving<a class="headerlink" href="#tireless-doc-ref-resolving" title="Link to this heading"></a></h2>
+<p>There are reasons, reasonable reasons, that docs be referenced at target synodes
+are not reachable, resulting SessionPeer.update2peer() -&gt; resolveRef206Stream()
+keeps failing, which will start again and again as long as the syn_docref is not
+empty.</p>
+<p>What’s the reasonable policy to avoid keep printing errors while it’s not a
+solution if stop trying again anymore?</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>If a max trying limit is used, when to reset the tried times counter?
 </pre></div>
 </div>
-<p>Where the <em>jservs</em> for peers are injected into SynodeConfig, and then updated into
-table <em>syn_nodes</em>, planning future extension for providing <em>jservs</em> in a separate json.</p>
+</section>
+<section id="setup-jservs-at-installation">
+<h2><span class="section-number">1.2. </span>Setup <em>jservs</em> at installation<a class="headerlink" href="#setup-jservs-at-installation" title="Link to this heading"></a></h2>
+<p>When the application server is installed, it should know peer jservs, otherwise
+the nyq vector matrix won’t work.</p>
+<p>If a synode is passive (hub-node, e.g. X29), it still need all nodes’ ID in settings.jservs,
+except the syn_nodes.jserv is never used.</p>
+<p><strong>Update 2025-06-30</strong></p>
+<p>The concept of passive mode is introduced, and the schema for resolving pushed doc-ref
+at passive nodes, e.g. X29, must be resolved by the pushing clients, e.g. Y20, since a
+passive node dees not necessarily know the actual jserv of the pushing clients.</p>
+<p>Currently there are 2 strategies for these passive doc-ref’s resolving:</p>
+<ol class="lowerroman simple">
+<li><p>the client remember its tasks while select <em>refile</em> when pushing;</p></li>
+<li><p>the client query saved doc-refs at a server to finish its tasks.</p></li>
+</ol>
+<p>Decision 2025-06-30: the second one looks like more error tolerating and simpler.</p>
+<p><strong>Update 2025-06-27</strong></p>
+<p>comments on da2330dae3e085860d637b0e6c077e3cf6992667:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.</span> <span class="n">Winsrv</span> <span class="n">cannot</span> <span class="n">update</span> <span class="n">local</span> <span class="n">Ip</span> <span class="k">if</span> <span class="n">changed</span> <span class="n">Wifi</span> <span class="n">settings</span>
+<span class="p">(</span><span class="n">reboot</span> <span class="n">works</span><span class="p">,</span> <span class="n">but</span> <span class="n">won</span><span class="s1">&#39;t work if booting while wifi is disabled)</span>
+</pre></div>
+</div>
+<p>This issue should be considered as a requirements to registration infrastructure.</p>
 </section>
 <section id="only-one-syn-worker-thread">
-<h2><span class="section-number">1.2. </span>Only one syn-worker thread<a class="headerlink" href="#only-one-syn-worker-thread" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.3. </span>Only one syn-worker thread<a class="headerlink" href="#only-one-syn-worker-thread" title="Link to this heading"></a></h2>
 <p>Multiple synodes cannot work in one (test) running.</p>
 <p>commit: 2079991c2cfda1a46ac532b94ebb836e41590377</p>
 <p>See ExpSynodetier.syncIns().</p>
 </section>
 <section id="overhaul-sending-exception-to-client">
-<h2><span class="section-number">1.3. </span>Overhaul: sending exception to client<a class="headerlink" href="#overhaul-sending-exception-to-client" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.4. </span>Overhaul: sending exception to client<a class="headerlink" href="#overhaul-sending-exception-to-client" title="Link to this heading"></a></h2>
 <p>Re-design ServPort.err(MsgCode code, Exceptiion e);</p>
 </section>
 <section id="how-long-will-the-syn-worker-can-work-without-clean-buffered-data">
-<h2><span class="section-number">1.4. </span>How long will the syn-worker can work without clean buffered data<a class="headerlink" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data" title="Link to this heading"></a></h2>
+<h2><span class="section-number">1.5. </span>How long will the syn-worker can work without clean buffered data<a class="headerlink" href="#how-long-will-the-syn-worker-can-work-without-clean-buffered-data" title="Link to this heading"></a></h2>
 <p>The maximum distance between stamps in syn-change and synode’s stamp is half of
 Nyquence range, Long.MAX_VALUE, 2 ^ 63 -1 in Java. Each time the stamp will be
 increased by 1 for a syn-workers looping. The longest buffering is the difference
 of the earliest buffered change logs and the latest stamp.</p>
 <p>If each interval is one second, a year has 3.15 * 10 ^ 7 seconds, the longest time
 can be correctly buffered is approx. 300 billion years.</p>
-</section>
-<section id="enable-cors-for-jetty-12">
-<h2><span class="section-number">1.5. </span>Enable CORS for Jetty 12<a class="headerlink" href="#enable-cors-for-jetty-12" title="Link to this heading"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Dec</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">2024</span>
-</pre></div>
-</div>
-<p><a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">Jetty EE10 deprecated CrossOriginFilter</a>,
-but Jetty 12 together with EE8 is not likely will be supported in the near future:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">It</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">possible</span> <span class="n">to</span> <span class="n">add</span> <span class="n">handles</span> <span class="n">after</span> <span class="n">ee10</span> <span class="n">ServletContextHandler</span><span class="o">.</span>
-
-<span class="n">However</span> <span class="k">for</span> <span class="n">ee8</span><span class="o">/</span><span class="mi">9</span> <span class="n">it</span> <span class="n">might</span> <span class="n">be</span> <span class="n">a</span> <span class="n">bit</span> <span class="n">more</span> <span class="n">fiddly</span> <span class="n">to</span> <span class="n">insert</span> <span class="n">a</span> <span class="n">core</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">right</span> <span class="n">location</span>
-</pre></div>
-</div>
-<p>See <a class="reference external" href="https://github.com/jetty/jetty.project/issues/10220">Jetty.project #10220</a>.</p>
-<p>And Semantic.jserv is built upon Servlet 3.1, and
-<a class="reference external" href="https://stackoverflow.com/a/66368511/7362888">can only depends on EE8</a>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mvn</span> <span class="n">dependency</span><span class="p">:</span><span class="n">tree</span>
-
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">---</span> <span class="n">dependency</span><span class="p">:</span><span class="mf">3.6.0</span><span class="p">:</span><span class="n">tree</span> <span class="p">(</span><span class="n">default</span><span class="o">-</span><span class="n">cli</span><span class="p">)</span> <span class="o">@</span> <span class="n">docsync</span><span class="o">.</span><span class="n">jserv</span> <span class="o">---</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">docsync</span><span class="o">.</span><span class="n">jserv</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.2.0</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">javax</span><span class="o">.</span><span class="n">servlet</span><span class="p">:</span><span class="n">javax</span><span class="o">.</span><span class="n">servlet</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">3.1.0</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantic</span><span class="o">.</span><span class="n">DA</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.8</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantics</span><span class="o">.</span><span class="n">transact</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.53</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">|</span>  \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">antson</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.9.104</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">anclient</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.6</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">semantic</span><span class="o">.</span><span class="n">jserv</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">1.5.6</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">synodict</span><span class="o">-</span><span class="n">jclient</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.0.9</span><span class="p">:</span><span class="nb">compile</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">server</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">http</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">util</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">io</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.10</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">webapp</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">xml</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">servlet</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">nested</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">security</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  <span class="o">+-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">session</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     <span class="o">|</span>  \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">toolchain</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">servlet</span><span class="o">-</span><span class="n">api</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">4.0.6</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="o">|</span>     \<span class="o">-</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="p">:</span><span class="n">jetty</span><span class="o">-</span><span class="n">ee8</span><span class="o">-</span><span class="n">security</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">12.0.11</span><span class="p">:</span><span class="n">test</span>
-<span class="p">[</span><span class="n">INFO</span><span class="p">]</span> \<span class="o">-</span> <span class="n">io</span><span class="o">.</span><span class="n">github</span><span class="o">.</span><span class="n">odys</span><span class="o">-</span><span class="n">z</span><span class="p">:</span><span class="n">syndoc</span><span class="o">-</span><span class="n">lib</span><span class="p">:</span><span class="n">jar</span><span class="p">:</span><span class="mf">0.5.7</span><span class="p">:</span><span class="n">test</span>
-</pre></div>
-</div>
-<p>FIY</p>
-<blockquote>
-<div><p>The jetty source project has tests of <a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">CrosOriginHandler</a>
-which can be the example. The start() method explains details.</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="n">CrossOriginHandler</span><span class="w"> </span><span class="n">crossOriginHandler</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Server</span><span class="p">();</span>
-<span class="w">    </span><span class="n">connector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LocalConnector</span><span class="p">(</span><span class="n">server</span><span class="p">);</span>
-<span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">addConnector</span><span class="p">(</span><span class="n">connector</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ContextHandler</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ContextHandler</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
-<span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">crossOriginHandler</span><span class="p">);</span>
-<span class="w">    </span><span class="n">crossOriginHandler</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ApplicationHandler</span><span class="p">());</span>
-<span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>See <a class="reference external" href="https://javadoc.jetty.org/jetty-12/org/eclipse/jetty/ee10/servlets/CrossOriginFilter.html">CrossOriginFilter</a>.
-document.</p>
-<p>Using CrossOriginFilter, with
-<a class="reference external" href="https://github.com/odys-z/semantic-jserv/blob/one-step/jserv-album/src/main/java/io/oz/syntier/serv/CrossOriginFilter.java">source</a>:</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">private</span><span class="w"> </span><span class="n">SynotierJettyApp</span><span class="w"> </span><span class="nf">allowCors</span><span class="p">(</span><span class="n">ServletContextHandler</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">synode</span><span class="p">(</span><span class="n">syngleton</span><span class="p">().</span><span class="na">synode</span><span class="p">());</span>
-
-<span class="w">  </span><span class="n">FilterHolder</span><span class="w"> </span><span class="n">holder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FilterHolder</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_ORIGINS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_METHODS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;GET,POST,HEAD&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_HEADERS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;X-Requested-With,Content-Type,Accept,Origin&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">FilterMapping</span><span class="w"> </span><span class="n">fm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FilterMapping</span><span class="p">();</span>
-<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setFilterName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setPathSpec</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
-
-<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="na">addFilter</span><span class="p">(</span><span class="n">holder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/*&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">EnumSet</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">DispatcherType</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">));</span>
-
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>TIP</p>
-<p>For error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Status</span> <span class="n">Code</span><span class="p">:</span> <span class="mi">405</span> <span class="n">Method</span> <span class="n">Not</span> <span class="n">Allowed</span>
-</pre></div>
-</div>
-<p>The possible reason is that the incorrect request URL is handled by the default
-Jetty handler, by which the POST method is not allowed by the server.</p>
-<p>References:</p>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://github.com/jetty/jetty.project/blob/jetty-12.0.11/jetty-core/jetty-server/src/test/java/org/eclipse/jetty/server/handler/CrossOriginHandlerTest.java#L101">Jetty test: CrossOriginHandlerTest</a>
-(Jan 1, 2025)</p></li>
-<li><p><a class="reference external" href="https://stackoverflow.com/questions/28190198/cross-origin-filter-with-embedded-jetty">Cross Origin Filter with embedded Jetty</a></p></li>
-</ol>
 </section>
 <section id="android-preferenceedit-saves-violate-oop-encapsulation-principle">
 <h2><span class="section-number">1.6. </span>Android PreferenceEdit Saves Violate OOP Encapsulation Principle<a class="headerlink" href="#android-preferenceedit-saves-violate-oop-encapsulation-principle" title="Link to this heading"></a></h2>
@@ -348,8 +255,8 @@ retrieved on 2025-01-25.</p>
 </pre></div>
 </div>
 </section>
-<section id="shoud-forcing-radix-32-for-syn-uids">
-<h2><span class="section-number">1.8. </span>Shoud forcing Radix-32 for syn-uids<a class="headerlink" href="#shoud-forcing-radix-32-for-syn-uids" title="Link to this heading"></a></h2>
+<section id="should-forcing-radix-32-for-syn-uids">
+<h2><span class="section-number">1.8. </span>Should forcing Radix-32 for syn-uids?<a class="headerlink" href="#should-forcing-radix-32-for-syn-uids" title="Link to this heading"></a></h2>
 <p>To be verified:</p>
 <p>Auto-key will generate Radix 64 number in Linux automatically for syn-uids,
 which is used as file name prefix and shouldn’t be confused across different
