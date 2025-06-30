@@ -16,16 +16,12 @@ solution if stop trying again anymore?
 
     If a max trying limit is used, when to reset the tried times counter?
 
-Setup *jservs* at installation
-------------------------------
+To be refined: resolving Doc-ref
+--------------------------------
 
-When the application server is installed, it should know peer jservs, otherwise
-the nyq vector matrix won't work.
+::
 
-If a synode is passive (hub-node, e.g. X29), it still need all nodes' ID in settings.jservs,
-except the syn_nodes.jserv is never used. 
-
-**Update 2025-06-30**
+    Jun 30, 2025
 
 The concept of passive mode is introduced, and the schema for resolving pushed doc-ref
 at passive nodes, e.g. X29, must be resolved by the pushing clients, e.g. Y20, since a
@@ -38,6 +34,23 @@ i. the client remember its tasks while select *refile* when pushing; (can be dup
 ii. the client query saved doc-refs at a server to finish its tasks. (already persisted)  
 
 Decision 2025-06-30: the second one looks like more error tolerating and simpler.
+
+FIXEM TODO!!!
+_____________
+
+The resolving process, block by block, must check something to make sure the ext-file
+is not modified. Somethin like a timestamp is enought. Once it is changed, reset the 
+doc-ref's breakpoint to 0. Any ext-file entity updating will clear the corresponding
+doc-ref records. 
+
+Setup *jservs* at installation
+------------------------------
+
+When the application server is installed, it should know peer jservs, otherwise
+the nyq vector matrix won't work.
+
+If a synode is passive (hub-node, e.g. X29), it still need all nodes' ID in settings.jservs,
+except the syn_nodes.jserv is never used. 
 
 **Update 2025-06-27**
 
