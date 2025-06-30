@@ -38,6 +38,15 @@ The test uses a simple cheap way to setup this.
 Where the *jservs* for peers are injected into SynodeConfig, and then updated into
 table *syn_nodes*, planning future extension for providing *jservs* in a separate json. 
 
+**Update 2025-06-27**
+
+comments on da2330dae3e085860d637b0e6c077e3cf6992667::
+
+    2. Winsrv cannot update local Ip if changed Wifi settings
+    (reboot works, but won't work if booting while wifi is disabled) 
+
+This issue should be considered as a requirements to registration infrastructure.
+
 Only one syn-worker thread
 --------------------------
 
