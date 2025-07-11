@@ -192,13 +192,15 @@ If you have to uninstall the Windows service manually, please follow the steps b
 
 #. Refresh the Windows Service Control Panel if needed.
 
-**tip** If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode
-  and change winsrv.synode and winsrv.web accordingly.
+**tip**
 
-  Sample::
+If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode
+and change winsrv.synode and winsrv.web accordingly.
 
-      "envars": {
-          "WEBROOT_201": "Y201",
-          "winsrv.synode": "Synode-0.7.5-Y201",
-          "winsrv.web": "Synode.web-0.4.1-Y201"
-      },
+Sample::
+
+    "envars": {
+        "WEBROOT_201": "Y201",
+        "winsrv.synode": "Synode-0.7.5-Y201",
+        "winsrv.web": "Synode.web-0.4.1-Y201"
+    },
