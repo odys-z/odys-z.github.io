@@ -45,6 +45,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-topology">The Topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#about-volume">About Volume</a></li>
 </ul>
 </li>
@@ -81,9 +82,23 @@
   <section id="about">
 <h1>About<a class="headerlink" href="#about" title="Link to this heading"></a></h1>
 <p>Portfolio is a system for manage, synchronizing personal documents, including an
-Android client App and a server node.</p>
+Android client App and multiple deployed server nodes.</p>
 <p>Protfolio is currently a demo version. Users must take care of their files
 uploaded to the server, usually a personal computer.</p>
+<section id="the-topology">
+<h2>The Topology<a class="headerlink" href="#the-topology" title="Link to this heading"></a></h2>
+<p>Typically, there should be a central hub node, which is a public server
+accessible from the Internet, and multiple service nodes, which are private servers
+running in local networks. The hub node is used for synchronizing data between service nodes,
+and the service nodes are used for storing data uploaded by clients. The hub node
+is usually available with ristricated storage space.</p>
+<p>There are also mobile clients, such as the Portfolio Android App, which can
+connect to any service nodes and upload files. Files is autmatically synchronized in background.</p>
+<p>With a backbone of relational database synchronization mechanism, Portfolio
+can running in an unrealiable network environment.</p>
+<p>In 0.7.#, the demo version, there is only one synchronization domain, ‘zsu’, available,
+and only 2 Synodes, X29 as the hub node and Y201 as the local node can be setup.</p>
+</section>
 <section id="about-volume">
 <h2>About Volume<a class="headerlink" href="#about-volume" title="Link to this heading"></a></h2>
 <p>A volume is a folder within the server’s file system, which is specified by the user

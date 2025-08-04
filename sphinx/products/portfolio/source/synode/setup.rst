@@ -26,8 +26,8 @@ The services are acturally started by command::
 Please make sure your JDK is running, and make sure it's not auto-updated by Linux, 
 see also :ref: `trouble by auto-update on Ubuntu <trouble-exiftool-by-auto-update>`
 
-Install Steps
--------------
+Setting up Synodes
+------------------
 
 #. Download `synode registry, registry.zip <https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/registry.zip>`_
    from `the project's releas page <https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0>`_.
@@ -70,10 +70,29 @@ Install Steps
     - Click the top button for opening registry dir.
 
       *User Id, password and Login function are not available in demo version. Leave the fields untouched.*
+    
+    - Set local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.
 
-    - Click *Setup* if everything is OK.
+      Check reverse proxy only if the host is mapped from a public Internet address. 
+    
+    - Modify Jservs' URL
+
+      If is setting a public address, say central hub node, leave *Sync-in* as 0 seconds.
+      No need to care about jservs, but make soure the reverse proxy is set correctly, e.g. ::
+
+        10.0.0.1   8900 / 8964
+
+      If is setting a local service node, say your private storage device,
+      set *Sync-in* to typically 20 seconds, and setting the hub nodes IP to it's public address,
+      using the data service port, e.g. ::
+
+        X29: <tab>  http://10.0.0.1:8964/jserv-album
+
+      **Don not change the line format**
+
+    - Click *Save* if everything is OK.
  
-    - Click *Start*. The data service should be running now.
+    - Click *Test Run*. The data service (Synode) should be running now.
 
       Or run "java -jar bin/jserv-album-#.#.#.jar" in the folder.
      
@@ -81,7 +100,7 @@ Install Steps
     client, e.g. the Portfolio Android, to connect to this service node.
 
     .. image:: ../imgs/00-portfolio-synode.png
-        :width: 300px
+        :width: 24em
 
 #. Test Run
 
@@ -99,7 +118,7 @@ Install Steps
         There should be the files once are uploaded with Portfolio Android.
 
     .. image:: ../../../album/source/imgs/07-portfolio-web.png
-        :width: 300px
+        :width: 24em
 
 #. Install Windows Services
 
@@ -173,3 +192,16 @@ If you have to uninstall the Windows service manually, please follow the steps b
       py -m src.synodepy3.cli uninstall-srvname Synode-#.#.#-ID 
 
 #. Refresh the Windows Service Control Panel if needed.
+
+**tip**
+
+If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode
+and change winsrv.synode and winsrv.web accordingly.
+
+Sample::
+
+    "envars": {
+        "WEBROOT_201": "Y201",
+        "winsrv.synode": "Synode-0.7.5-Y201",
+        "winsrv.web": "Synode.web-0.4.1-Y201"
+    },
