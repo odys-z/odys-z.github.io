@@ -85,7 +85,8 @@ Here is an example::
     ... 8 more
 
 The running JDK is an old version, 20.0.7_6, that will spawn a process using
-a newer version, 21.0.8+9.
+a newer version, 21.0.8+9. When jspawnhelper enhanced the version check [1], the
+*exiftool* process will fail.
 
 The Apt changelog::
 
@@ -114,3 +115,6 @@ The Apt changelog::
       Grohne). Addresses: #1095920.
 
   -- Matthias Klose <doko@ubuntu.com>  Thu, 24 Apr 2025 01:57:46 +0200
+
+[1] *Improve jspawnhelper version checks*, JDK-8325621, Affects Version/s: 11, 17, 21, 22, 23,
+    https://bugs.openjdk.org/browse/JDK-8325621
