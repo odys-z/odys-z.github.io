@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Troubleshootings &mdash; Portfolio Home Page 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -51,7 +51,10 @@
 <li class="toctree-l2"><a class="reference internal" href="setup.html">Install Portfolio-synode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setup.html#test-in-browser">Test in Browser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="setup.html#uninstall-portfolio-synode">Uninstall Portfolio-synode</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Troubleshootings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Troubleshootings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#trouble-by-ubuntu-auto-update">Trouble by Ubuntu auto update</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
@@ -87,7 +90,7 @@
 <ul id="install-anson-py3">
 <li><p>Failed to install portfolio-synode</p>
 <p>Error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">a</span> <span class="n">version</span> <span class="n">that</span> <span class="n">satisfies</span> <span class="n">the</span> <span class="n">requirement</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio</span><span class="o">-</span><span class="n">synode</span><span class="p">)</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">versions</span><span class="p">:</span> <span class="n">none</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">a</span> <span class="n">version</span> <span class="n">that</span> <span class="n">satisfies</span> <span class="n">the</span> <span class="n">requirement</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span> <span class="p">(</span><span class="kn">from</span> <span class="nn">portfolio</span><span class="o">-</span><span class="n">synode</span><span class="p">)</span> <span class="p">(</span><span class="kn">from</span> <span class="nn">versions</span><span class="p">:</span> <span class="n">none</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Portfolio-synode requires a module which is still not published in PyPI. Install with this command:</p>
@@ -122,6 +125,66 @@ in errors like <a class="reference external" href="https://github.com/microsoft/
 </pre></div>
 </div>
 <p>which is strongly discuraged as this is not fully tested.</p>
+<section id="trouble-by-ubuntu-auto-update">
+<span id="trouble-exiftool-by-auto-update"></span><h2>Trouble by Ubuntu auto update<a class="headerlink" href="#trouble-by-ubuntu-auto-update" title="Link to this heading"></a></h2>
+<p><strong>Only happens on Linux with auto-update enabled</strong></p>
+<p>If the system service configured on Linux (tested on Ubuntu 24.0.4) is using
+the JDK managed by system auto-updating, there will be error if the running
+service’s JDK version is different from the latest version.</p>
+<p>Here is an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Incorrect Java version: 21.0.7+6-Ubuntu-0ubuntu124.04
+jspawnhelper version 21.0.8+9-Ubuntu-0ubuntu124.04.1
+This command is not for general use and should only be run as the result of a call to
+ProcessBuilder.start() or Runtime.exec() in a java application
+java.io.IOException: Cannot run program &quot;exiftool&quot;: error=0, Failed to exec spawn helper: pid: &gt;
+  at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1170)
+  at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1089)
+  at java.base/java.lang.Runtime.exec(Runtime.java:681)
+  at java.base/java.lang.Runtime.exec(Runtime.java:530)
+  at io.oz.album.helpers.Exiftool.parse(Exiftool.java:117)
+  at io.oz.album.helpers.Exiftool.parseExif(Exiftool.java:62)
+  at io.oz.syntier.serv.DocreateHandler.onCreate(DocreateHandler.java:57)
+  at io.oz.jserv.docs.syn.ExpDoctier.lambda$endBlock$1(ExpDoctier.java:417)
+  at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.io.IOException: error=0, Failed to exec spawn helper: pid: 546376, exit value: 1
+  at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+  at java.base/java.lang.ProcessImpl.&lt;init&gt;(ProcessImpl.java:295)
+  at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:225)
+  at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1126)
+  ... 8 more
+</pre></div>
+</div>
+<p>The running JDK is an old version, 20.0.7_6, that will spawn a process using
+a newer version, 21.0.8+9.</p>
+<p>The Apt changelog:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">openjdk</span><span class="o">-</span><span class="mi">21</span> <span class="p">(</span><span class="mf">21.0.8</span><span class="o">+</span><span class="mi">9</span><span class="o">~</span><span class="n">us1</span><span class="o">-</span><span class="mi">0</span><span class="n">ubuntu1</span><span class="o">~</span><span class="mf">24.04.1</span><span class="p">)</span> <span class="n">noble</span><span class="o">-</span><span class="n">security</span><span class="p">;</span> <span class="n">urgency</span><span class="o">=</span><span class="n">medium</span>
+
+  <span class="o">*</span> <span class="n">Upload</span> <span class="n">to</span> <span class="n">Ubuntu</span> <span class="mf">24.04</span><span class="o">.</span>
+  <span class="o">*</span> <span class="n">CVEs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">50059</span><span class="p">,</span> <span class="mi">8350991</span><span class="p">:</span> <span class="n">Improve</span> <span class="n">HTTP</span> <span class="n">client</span> <span class="n">header</span> <span class="n">handling</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30749</span><span class="p">,</span> <span class="mi">8348989</span><span class="p">:</span> <span class="n">Better</span> <span class="n">Glyph</span> <span class="n">drawing</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">50106</span><span class="p">,</span> <span class="mi">8360147</span><span class="p">:</span> <span class="n">Better</span> <span class="n">Glyph</span> <span class="n">drawing</span> <span class="n">redux</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30754</span><span class="p">,</span> <span class="mi">8349594</span><span class="p">:</span> <span class="n">Enhance</span> <span class="n">TLS</span> <span class="n">protocol</span> <span class="n">support</span>
+  <span class="o">*</span> <span class="n">Security</span> <span class="n">fixes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="mi">8349111</span><span class="p">:</span> <span class="n">Enhance</span> <span class="n">Swing</span> <span class="n">supports</span>
+    <span class="o">-</span> <span class="mi">8345625</span><span class="p">:</span> <span class="n">Better</span> <span class="n">HTTP</span> <span class="n">connections</span>
+
+<span class="o">--</span> <span class="n">Vladimir</span> <span class="n">Petko</span> <span class="o">&lt;</span><span class="n">vladimir</span><span class="o">.</span><span class="n">petko</span><span class="nd">@canonical</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span>  <span class="n">Thu</span><span class="p">,</span> <span class="mi">17</span> <span class="n">Jul</span> <span class="mi">2025</span> <span class="mi">09</span><span class="p">:</span><span class="mi">55</span><span class="p">:</span><span class="mi">59</span> <span class="o">+</span><span class="mi">1200</span>
+
+<span class="o">...</span>
+
+<span class="n">openjdk</span><span class="o">-</span><span class="mi">21</span> <span class="p">(</span><span class="mf">21.0.7</span><span class="o">+</span><span class="mi">6</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">unstable</span><span class="p">;</span> <span class="n">urgency</span><span class="o">=</span><span class="n">high</span>
+
+  <span class="o">*</span> <span class="n">OpenJDK</span> <span class="mf">21.0.7</span> <span class="n">release</span><span class="p">,</span> <span class="n">build</span> <span class="mf">6.</span>
+    <span class="o">-</span> <span class="n">Addresses</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30698</span><span class="p">,</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30691</span><span class="p">,</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mf">21587.</span>
+
+  <span class="o">*</span> <span class="n">Honour</span> <span class="n">DEB_BUILD_OPTIONS</span><span class="o">=</span><span class="n">parallel</span><span class="o">=</span><span class="n">N</span> <span class="k">while</span> <span class="n">running</span> <span class="n">jtreg</span> <span class="n">tests</span> <span class="p">(</span><span class="n">Helmut</span>
+    <span class="n">Grohne</span><span class="p">)</span><span class="o">.</span> <span class="n">Addresses</span><span class="p">:</span> <span class="c1">#1095920.</span>
+
+<span class="o">--</span> <span class="n">Matthias</span> <span class="n">Klose</span> <span class="o">&lt;</span><span class="n">doko</span><span class="nd">@ubuntu</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span>  <span class="n">Thu</span><span class="p">,</span> <span class="mi">24</span> <span class="n">Apr</span> <span class="mi">2025</span> <span class="mi">01</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">46</span> <span class="o">+</span><span class="mi">0200</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 

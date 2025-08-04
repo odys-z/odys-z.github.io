@@ -23,7 +23,8 @@ The services are acturally started by command::
     java -jar bin/jserv-album-0.7.0.jar
     java -jar bin/html-service-0.1.1.jar
 
-Please make sure your JDK is running.
+Please make sure your JDK is running, and make sure it's not auto-updated by Linux, 
+see also :ref: `trouble by auto-update on Ubuntu <trouble-exiftool-by-auto-update>`
 
 Install Steps
 -------------
