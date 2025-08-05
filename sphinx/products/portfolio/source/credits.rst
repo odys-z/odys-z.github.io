@@ -7,6 +7,8 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 
 - Tomcat & Docker
 
+- `Antlr 4 <https://github.com/antlr/antlr4>`_ with BSD-3-Clause license
+
 - Jetty Server 12 & Jetty EE8 12
 
 - Apache Daemon

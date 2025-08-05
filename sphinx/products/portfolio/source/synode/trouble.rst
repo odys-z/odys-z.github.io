@@ -61,7 +61,7 @@ If the system service configured on Linux (tested on Ubuntu 24.0.4) is using
 the JDK managed by system auto-updating, there will be error if the running
 service's JDK version is different from the latest version. 
 
-Here is an example::
+Here is the service log::
 
   Incorrect Java version: 21.0.7+6-Ubuntu-0ubuntu124.04
   jspawnhelper version 21.0.8+9-Ubuntu-0ubuntu124.04.1

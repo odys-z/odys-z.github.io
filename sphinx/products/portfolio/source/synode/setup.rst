@@ -23,8 +23,8 @@ The services are acturally started by command::
     java -jar bin/jserv-album-0.7.0.jar
     java -jar bin/html-service-0.1.1.jar
 
-Please make sure your JDK is running, and make sure it's not auto-updated by Linux, 
-see also :ref: `trouble by auto-update on Ubuntu <trouble-exiftool-by-auto-update>`
+Please make sure your JDK will not be auto-updated by Linux, 
+see also :ref:`trouble by auto-update on Ubuntu <trouble-exiftool-by-auto-update>`
 
 Setting up Synodes
 ------------------
@@ -57,38 +57,46 @@ Setting up Synodes
 
         pip show synode.py3
     
-#. Start Portfolio-synode
+#. Start Portfolio Data Service Nodes
 
     **Don't run this in VS Code Termnial in Linux. See**
     :ref:`the issue<trouble-vscode-linux>` & :ref:`troubleshootings<trouble-vscode-linux>`
     **if you have to, while it's recommended to run this in VS Code Bash terminal in Windows.**
 
+    Portfolio runs on a network of Synode, the Data Synchronzation Service Nodes.
+
+    A synchronization domain includes a hub synode, with a static IP visible to other synodes,
+    and multiple synodes working in their private network. The hub synode is only necessary
+    when setuping the network, while the others are (designed) to be able to share data between
+    each others. 
+
     Run ::
 
         python3 -m src.synodepy3
-
-    - Click the top button for opening registry dir.
+    
+    - Click the *...* folder button for opening registry dir.
 
       *User Id, password and Login function are not available in demo version. Leave the fields untouched.*
     
-    - Set local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.
+    - Setup local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.
 
       Check reverse proxy only if the host is mapped from a public Internet address. 
     
     - Modify Jservs' URL
 
       If is setting a public address, say central hub node, leave *Sync-in* as 0 seconds.
-      No need to care about jservs, but make soure the reverse proxy is set correctly, e.g. ::
+      No need to care about jservs, but make sure the reverse proxy is set correctly, e.g. ::
 
         10.0.0.1   8900 / 8964
 
       If is setting a local service node, say your private storage device,
-      set *Sync-in* to typically 20 seconds, and setting the hub nodes IP to it's public address,
-      using the data service port, e.g. ::
+      set *Sync-in* to typically 30 seconds, while 0 will make the machine too busy.
+      And setup the hub nodes IP to it's public address, using the data service
+      port, e.g. ::
 
         X29: <tab>  http://10.0.0.1:8964/jserv-album
 
-      **Don not change the line format**
+      **Do not change the line format**
 
     - Click *Save* if everything is OK.
  
