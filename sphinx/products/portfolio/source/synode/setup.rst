@@ -23,7 +23,7 @@ The services are acturally started by command::
     java -jar bin/jserv-album-0.7.0.jar
     java -jar bin/html-service-0.1.1.jar
 
-Please make sure your JDK is running.
+Please make sure your JDK is running. Before install new version, uninstall previous versions if any.
 
 Setting up Synodes
 ------------------
@@ -162,8 +162,7 @@ Then uninstall python packages:
 
 ::
 
-    pip uninstall synode.py3
-    pip uninstall anson.py3
+    pip uninstall synode.py3  anclient.py3  anson.py3  semantics.py3
 
 Now it's safe to delete the *portfolio-synode* folder, where the zip file is unzipped.
 The files saving location is specified by the *volume* path. You can delete the
