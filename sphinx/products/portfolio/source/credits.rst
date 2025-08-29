@@ -11,6 +11,8 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 
 - Apache Daemon
 
+- Apache Common Libs, Common IO, `Common Validators <https://github.com/apache/commons-validator>`_.
+
 - `Exiftool <https://exiftool.org/index.html#license>`_,
   by `Phil Harvey <https://exiftool.org/index.html#license>`_,
   with `a free license <https://exiftool.org/index.html#license>`_.
