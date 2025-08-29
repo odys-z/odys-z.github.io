@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Install Portfolio-synode &mdash; Portfolio Home Page 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,7 +106,8 @@
 <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="nb">bin</span><span class="o">/</span><span class="n">html</span><span class="o">-</span><span class="n">service</span><span class="o">-</span><span class="mf">0.1.1</span><span class="o">.</span><span class="n">jar</span>
 </pre></div>
 </div>
-<p>Please make sure your JDK is running.</p>
+<p>Please make sure your JDK will not be auto-updated by Linux,
+see also <a class="reference internal" href="trouble.html#trouble-exiftool-by-auto-update"><span class="std std-ref">trouble by auto-update on Ubuntu</span></a></p>
 </section>
 <section id="setting-up-synodes">
 <h2>Setting up Synodes<a class="headerlink" href="#setting-up-synodes" title="Link to this heading"></a></h2>
@@ -133,35 +134,41 @@ or check lastest version at
 </div>
 </div></blockquote>
 </li>
-<li><p>Start Portfolio-synode</p>
+<li><p>Start Portfolio Data Service Nodes</p>
 <blockquote>
 <div><p><strong>Don’t run this in VS Code Termnial in Linux. See</strong>
 <a class="reference internal" href="trouble.html#trouble-vscode-linux"><span class="std std-ref">the issue</span></a> &amp; <a class="reference internal" href="trouble.html#trouble-vscode-linux"><span class="std std-ref">troubleshootings</span></a>
 <strong>if you have to, while it’s recommended to run this in VS Code Bash terminal in Windows.</strong></p>
+<p>Portfolio runs on a network of Synode, the Data Synchronzation Service Nodes.</p>
+<p>A synchronization domain includes a hub synode, with a static IP visible to other synodes,
+and multiple synodes working in their private network. The hub synode is only necessary
+when setuping the network, while the others are (designed) to be able to share data between
+each others.</p>
 <p>Run</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">synodepy3</span>
 </pre></div>
 </div>
 <ul>
-<li><p>Click the top button for opening registry dir.</p>
+<li><p>Click the <em>…</em> folder button for opening registry dir.</p>
 <p><em>User Id, password and Login function are not available in demo version. Leave the fields untouched.</em></p>
 </li>
-<li><p>Set local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.</p>
+<li><p>Setup local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.</p>
 <p>Check reverse proxy only if the host is mapped from a public Internet address.</p>
 </li>
 <li><p>Modify Jservs’ URL</p>
 <p>If is setting a public address, say central hub node, leave <em>Sync-in</em> as 0 seconds.
-No need to care about jservs, but make soure the reverse proxy is set correctly, e.g.</p>
+No need to care about jservs, but make sure the reverse proxy is set correctly, e.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">10.0.0.1</span>   <span class="mi">8900</span> <span class="o">/</span> <span class="mi">8964</span>
 </pre></div>
 </div>
 <p>If is setting a local service node, say your private storage device,
-set <em>Sync-in</em> to typically 20 seconds, and setting the hub nodes IP to it’s public address,
-using the data service port, e.g.</p>
+set <em>Sync-in</em> to typically 30 seconds, while 0 will make the machine too busy.
+And setup the hub nodes IP to it’s public address, using the data service
+port, e.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X29</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">tab</span><span class="o">&gt;</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">10.0.0.1</span><span class="p">:</span><span class="mi">8964</span><span class="o">/</span><span class="n">jserv</span><span class="o">-</span><span class="n">album</span>
 </pre></div>
 </div>
-<p><strong>Don not change the line format</strong></p>
+<p><strong>Do not change the line format</strong></p>
 </li>
 <li><p>Click <em>Save</em> if everything is OK.</p></li>
 <li><p>Click <em>Test Run</em>. The data service (Synode) should be running now.</p>
@@ -263,8 +270,9 @@ py<span class="w"> </span>-m<span class="w"> </span>src.synodepy3.cli<span class
 </li>
 <li><p>Refresh the Windows Service Control Panel if needed.</p></li>
 </ol>
-<dl>
-<dt><strong>tip</strong> If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode</dt><dd><p>and change winsrv.synode and winsrv.web accordingly.</p>
+<p><strong>tip</strong></p>
+<p>If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode
+and change winsrv.synode and winsrv.web accordingly.</p>
 <p>Sample:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;envars&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;WEBROOT_201&quot;</span><span class="p">:</span> <span class="s2">&quot;Y201&quot;</span><span class="p">,</span>
@@ -273,8 +281,6 @@ py<span class="w"> </span>-m<span class="w"> </span>src.synodepy3.cli<span class
 <span class="p">},</span>
 </pre></div>
 </div>
-</dd>
-</dl>
 </section>
 </section>
 
