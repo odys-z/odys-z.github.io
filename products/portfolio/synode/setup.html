@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Install Portfolio-synode &mdash; Portfolio Home Page 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -106,6 +106,8 @@
 <span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="nb">bin</span><span class="o">/</span><span class="n">html</span><span class="o">-</span><span class="n">service</span><span class="o">-</span><span class="mf">0.1.1</span><span class="o">.</span><span class="n">jar</span>
 </pre></div>
 </div>
+<p>Please make sure your JDK is running. Before install new version of Portfolio Synode,
+uninstall previous versions if any.</p>
 <p>Please make sure your JDK will not be auto-updated by Linux,
 see also <a class="reference internal" href="trouble.html#trouble-exiftool-by-auto-update"><span class="std std-ref">trouble by auto-update on Ubuntu</span></a></p>
 </section>
@@ -242,8 +244,7 @@ permissions.</p>
 </div>
 <p>This will uninstall the Windows services.</p>
 <p>Then uninstall python packages:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">synode</span><span class="o">.</span><span class="n">py3</span>
-<span class="n">pip</span> <span class="n">uninstall</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">synode</span><span class="o">.</span><span class="n">py3</span>  <span class="n">anclient</span><span class="o">.</span><span class="n">py3</span>  <span class="n">anson</span><span class="o">.</span><span class="n">py3</span>  <span class="n">semantics</span><span class="o">.</span><span class="n">py3</span>
 </pre></div>
 </div>
 <p>Now it’s safe to delete the <em>portfolio-synode</em> folder, where the zip file is unzipped.
@@ -252,8 +253,11 @@ folder if you don’t need the uploaded files anymore.</p>
 <section id="uninstall-windows-service-manually">
 <h2>Uninstall Windows Service Manually<a class="headerlink" href="#uninstall-windows-service-manually" title="Link to this heading"></a></h2>
 <p><strong>This is not recommended</strong></p>
-<p>If you have to uninstall the Windows service manually, please follow the steps below:</p>
+<p>The services should be uninstalled by the command above. If you have to uninstall the Windows
+service manually, please follow the steps below:</p>
 <ol class="arabic">
+<li><p>Reinstall Portfolio-synode to the same folder, and make sure the
+version number is the same as the previous installation.</p></li>
 <li><p>From the Startup Menu, open the Windows Service Control Panel to check the two service name,
 which should like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Synode</span><span class="o">.</span><span class="n">web</span><span class="o">-</span><span class="mf">0.7.2</span><span class="o">-</span><span class="n">X29</span>

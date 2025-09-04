@@ -185,7 +185,11 @@ Uninstall Windows Service Manually
 
 **This is not recommended**
 
-If you have to uninstall the Windows service manually, please follow the steps below:
+The services should be uninstalled by the command above. If you have to uninstall the Windows
+service manually, please follow the steps below:
+
+#. Reinstall Portfolio-synode to the same folder, and make sure the
+   version number is the same as the previous installation.
 
 #. From the Startup Menu, open the Windows Service Control Panel to check the two service name,
    which should like::
