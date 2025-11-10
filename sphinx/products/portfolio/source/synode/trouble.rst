@@ -1,21 +1,97 @@
 Troubleshootings
 ================
 
-.. _install-anson-py3:
+- Externally Managed Environment Error (PEP 668) 
 
-- Failed to install portfolio-synode
-  
-  Error::
+When installing Portfolio by::
 
-    ERROR: Could not find a version that satisfies the requirement anson.py3 (from portfolio-synode) (from versions: none)
+  pip install bin/synode_py3-0.7-py3-none-any.whl 
 
-  Portfolio-synode requires a module which is still not published in PyPI. Install with this command:
+ther may be error of externally-managed-environment. Here is an example in
+Ubuntu 24.04 and Python 3.12 (Pip 24):
 
-    pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
+::
 
-  If have to remove a package installed by a previous python version, e.g. installed by python 3.9, uninstall it with::
+  error: externally-managed-environment
 
-    pip3.9 uninstall portfolio-synode 
+  × This environment is externally managed
+  ╰─> To install Python packages system-wide, try apt install
+      python3-xyz, where xyz is the package you are trying to
+      install.
+      
+      If you wish to install a non-Debian-packaged Python package,
+      create a virtual environment using python3 -m venv path/to/venv.
+      Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+      sure you have python3-full installed.
+      
+      If you wish to install a non-Debian packaged Python application,
+      it may be easiest to use pipx install xyz, which will manage a
+      virtual environment for you. Make sure you have pipx installed.
+      
+      See /usr/share/doc/python3.12/README.venv for more information.
+
+  note: If you believe this is a mistake, please contact your Python
+  installation or OS distribution provider. You can override this, at
+  the risk of breaking your Python installation or OS, by passing
+  --break-system-packages.
+
+  hint: See PEP 668 for the detailed specification.
+
+This is Pip telling users don't install Portfolio into system's python3 paths.
+Install a virtual environment to install::
+
+   sudo apt install python3.12-venv # replace the version number
+   python3 -m venv .env
+   source .env/bin/activate
+
+Portfolio 0.7.6 only requires Python3 at the installation. Once it's installed,
+the Python environment is no longer needed.
+
+- PIP Cannot resolve Pillow version for Python 3.12 or higer.
+
+The error like this::
+
+  $ pip install bin/synode_py3-0.7-py3-none-any.whl 
+  Processing ./bin/synode_py3-0.7-py3-none-any.whl
+  ...
+  INFO: pip is looking at multiple versions of synode-py3 to determine which
+  version is compatible with other requirements. This could take a while.
+  ERROR: Ignored the following versions that require a different python version: 6.0.0
+  Requires-Python >=3.6, <3.10; 6.0.0a1.dev1606911628 Requires-Python >=3.6, <3.10;
+  6.0.1 Requires-Python >=3.6, <3.10; 6.0.2 Requires-Python >=3.6, <3.10;
+  6.0.3 Requires-Python >=3.6, <3.10; 6.0.4 Requires-Python >=3.6, <3.10;
+  ...
+  6.5.2 Requires-Python <3.12,>=3.7; 6.5.3 Requires-Python <3.12,>=3.7
+  ERROR: Could not find a version that satisfies the requirement psutil
+  (from synode-py3) (from versions: none)
+  ERROR: No matching distribution found for psutil 
+
+This is possiblly that pip is out of date.
+
+The resolve this problem, we encountered another network problem::
+
+  ERROR: Exception:
+  Traceback (most recent call last):
+  File "...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py", line 438, in _error_catcher
+    yield
+  File "...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py", line 561, in read
+    data = self._fp_read(amt) if not fp_closed else b""
+           ^^^^^^^^^^^^^^^^^^
+  ...
+  File "...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py", line 443, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.")
+  pip._vendor.urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='files.pythonhosted.org', port=443): Read timed out.
+
+And Grok is pretty sure that this is a GFW problem. User a mirror to install.
+
+::
+
+    pip install bin/synode_py3-0.7-py3-none-any.whl -i https://pypi.tuna.tsinghua.edu.cn/simple
+    
+FIY. You have more than one options, like filing a complaint to the ISP.
+And, BTW, arm yourself first. It's said some African brothers have very
+successfully argued on their salaries, with Kalashnikovs and with their
+Chinese employers.
 
 - Windows Network Firewall / Defender
 
@@ -118,3 +194,21 @@ The Apt changelog::
 
 [1] *Improve jspawnhelper version checks*, JDK-8325621, Affects Version/s: 11, 17, 21, 22, 23,
     https://bugs.openjdk.org/browse/JDK-8325621
+
+.. _install-anson-py3:
+
+- Failed to install portfolio-synode
+  
+  [closed by Portfolio 0.7.6]
+
+  Error::
+
+    ERROR: Could not find a version that satisfies the requirement anson.py3 (from portfolio-synode) (from versions: none)
+
+  Portfolio-synode requires a module which is still not published in PyPI. Install with this command:
+
+    pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple anson.py3
+
+  If have to remove a package installed by a previous python version, e.g. installed by python 3.9, uninstall it with::
+
+    pip3.9 uninstall portfolio-synode 
