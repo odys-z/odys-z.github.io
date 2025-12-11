@@ -1,3 +1,5 @@
 .vscode
 **/build
 **/_build
+**/css/links*.json
+!**/css/links-github.json

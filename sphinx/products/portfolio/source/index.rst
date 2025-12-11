@@ -8,6 +8,7 @@ Welcome to Portfolio documentation!
    about-download
    android/index
    synode/index
+   central/index
    credits
    privacy-policy
 ..
