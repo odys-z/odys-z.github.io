@@ -88,10 +88,12 @@
       <!--
       <p><i class="fa fa-download w3-padding-64 w3-text-indigo">
           <a id='download-synode' download >
-              Portfolio 0.7 Synode</a> &amp;
-          <a id='download-registry' download>Registry Demo</a>
+              Portfolio 0.7 Synode</a>
       </i></p>
       -->
+      <p id='download-synodes' class="fa w3-padding-top-64 w3-text-indigo">Download Synodes</p>
+      <p id="synode-zips"/>
+
       <p class="fa w3-text-indigo">
           <a id='doc-install' href="../../products/portfolio/android/quick-start.html">
               Document: Install Portfolio</a>
@@ -158,8 +160,12 @@ function setHeader() {
 // setHref('download-registry', 'registry-central');
 loadLinks(jsn => {
   setHref('download-apk', jsn.apk);
-  setHref('download-synode', jsn.images['synode-0.7']);
-  setHref('download-registry', jsn.images['plan-central']);
+
+  addZipImages('synode-zips', jsn.images,
+      jsn.org && jsn.market
+          ? { id: 'download-synodes',
+              text: `Download Synode [${jsn.org} @ ${jsn.market}]`}
+          : undefined);
 })
 </script>
 

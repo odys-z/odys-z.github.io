@@ -1,5 +1,7 @@
 .vscode
 **/build
 **/_build
-**/css/links*.json
-!**/css/links-github.json
+**/res/links*.json
+**/res/redirection.json
+!**/res/links-github.json
+**/res/dist

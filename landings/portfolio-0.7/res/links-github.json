@@ -1,6 +1,8 @@
 { "type"  : "unknown",
+  "market": "alpha",
+  "org"   : "github",
   "apk"   : "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/portfolio-0.7.4.apk",
   "exe"   : "return 'TODO';",
-  "images": {"synode-0.7": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/portfolio-synode-0.7.7-x64_windows-alpha.zip"},
+  "images": {"windows-x64": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/portfolio-synode-0.7.7-x64_windows-alpha.zip"},
   "plan-central": "https://odys-z.github.io/products/portfolio/central/index.html"
 }
