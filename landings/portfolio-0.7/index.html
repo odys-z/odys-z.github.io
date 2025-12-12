@@ -69,9 +69,13 @@
       <h5 class="w3-padding-32">Share your experience and knowledge.</h5>
 
       <div class="w3-twothird">
-        <h4>End User Agreements</h4>
+        <h5>Licence <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a></h5>
+        <h4>Data Safty Declaration</h4>
         <h5 class="w3-padding-32">Portfolio is used for personal private document synchronization.
-          Portfolio 0.7 is pubulished AS IS. The current version is for Demo only. Users must take care of their documents' safty.</h5>
+          Portfolio 0.7 is pubulished AS IS. Users' documents are saved in the folder of volume
+          where the location is specified by users while installation. The current version is for
+          demo only, which is not fully tested for documents' safty. Users must be aware of their
+          documents' status.</h5>
         <h6 class="w3-padding-32">By installing this software, users agree with this condition.</h6>
       </div>
     </div>
@@ -113,7 +117,7 @@
 -->
 
 <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-    <h1 class="w3-margin w3-xlarge">Alpha Version 2025</h1>
+    <h1 class="w3-margin w3-xlarge">Alpha Version 2026</h1>
 </div>
 
 <!-- Footer
@@ -148,10 +152,15 @@ function setHeader() {
   //   y.className += " qr";
 }
 
-setHref('download-apk', 'apk');
-setHref('download-synode', 'synode-portfolio');
-// setHref('download-registry', 'registry-demo');
-setHref('download-registry', 'registry-central');
+// setHref('download-apk', 'apk');
+// setHref('download-synode', 'synode-portfolio');
+// // setHref('download-registry', 'registry-demo');
+// setHref('download-registry', 'registry-central');
+loadLinks(jsn => {
+  setHref('download-apk', jsn.apk);
+  setHref('download-synode', jsn.images['synode-0.7']);
+  setHref('download-registry', jsn.images['plan-central']);
+})
 </script>
 
 </body>
