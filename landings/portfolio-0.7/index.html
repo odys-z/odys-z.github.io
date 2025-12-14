@@ -156,12 +156,12 @@ function setHeader() {
   //   y.className += " qr";
 }
 
-// setHref('download-apk', 'apk');
+setHref('download-apk', 'apk');
 // setHref('download-synode', 'synode-portfolio');
 // // setHref('download-registry', 'registry-demo');
 // setHref('download-registry', 'registry-central');
 loadLinks(jsn => {
-  setHref('download-apk', jsn.apk);
+  // setHref('download-apk', jsn.apk);
 
   addZipImages('synode-zips', jsn.images,
       jsn.org && jsn.market
