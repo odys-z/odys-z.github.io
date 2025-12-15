@@ -44,7 +44,7 @@ function addZipImages(pid, images, title) {
         i.textContent = '';
 
         let a = document.createElement('a');
-        a.href = images[imgk];
+        a.href = `res/${images[imgk]}`;
         a.setAttribute('download', '');
         a.textContent = `💾 ${imgk}`;
 
