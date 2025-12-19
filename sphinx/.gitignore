@@ -1,3 +1,5 @@
 build
 _build
 _sources
+source/static/assets
+assets
