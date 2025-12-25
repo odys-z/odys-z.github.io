@@ -1,5 +1,8 @@
+Photogrametry
+=============
+
 Projects
-========
+--------
 
 Google AI
 
@@ -15,7 +18,7 @@ Google AI
     to modify the internal matching algorithms for a custom project.
 
 References
-==========
+----------
 
 #. `awesome-photogrammetry <https://github.com/awesome-photogrammetry/awesome-photogrammetry?tab=readme-ov-file>`_, github
   

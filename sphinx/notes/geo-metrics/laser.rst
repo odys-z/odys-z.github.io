@@ -1,5 +1,8 @@
+Laser
+=====
+
 ToF/LiDAR Device Samples
-========================
+------------------------
 
 ::
 
@@ -10,7 +13,7 @@ ToF/LiDAR Device Samples
     IR LED + 38kHz Receiver	Fully (User-defined)	DIY data links or custom remotes
 
 References
-==========
+----------
 
 .. https://www.brightlaser.com.hk/
 

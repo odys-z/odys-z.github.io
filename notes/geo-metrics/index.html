@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Photogrametry &mdash; Study Notes 1.0 documentation</title>
+  <title>Visual Measurement &mdash; Study Notes 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -19,8 +19,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Laser" href="laser.html" />
-    <link rel="prev" title="Visual Measurement" href="index.html" /> 
+    <link rel="next" title="Photogrametry" href="3d-reconstruct.html" />
+    <link rel="prev" title="Compatibility Issues" href="../topics/compatibility.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,12 +47,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../cav/survey.html">CAV SDK Resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev-op/survey.html">Semantic Dev-op White Paper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topics/index.html">Topics</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Visual Measurement</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Photogrametry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#projects">Projects</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Visual Measurement</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3d-reconstruct.html">Photogrametry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="laser.html">Laser</a></li>
 </ul>
 </li>
@@ -72,8 +68,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Visual Measurement</a></li>
-      <li class="breadcrumb-item active">Photogrametry</li>
+      <li class="breadcrumb-item active">Visual Measurement</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -82,46 +77,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="photogrametry">
-<h1>Photogrametry<a class="headerlink" href="#photogrametry" title="Link to this heading"></a></h1>
-<section id="projects">
-<h2>Projects<a class="headerlink" href="#projects" title="Link to this heading"></a></h2>
-<p>Google AI</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Which one should you use?
-
-Use COLMAP if you want the most &quot;realistic&quot; and accurate 3D model of
-a scene for mapping, autonomous driving, or visualization.
-
-Use OpenMVG if you are an engineer or researcher who needs to extract
-the specific mathematical relationship between cameras or if you want
-to modify the internal matching algorithms for a custom project.
-</pre></div>
+  <section id="visual-measurement">
+<h1>Visual Measurement<a class="headerlink" href="#visual-measurement" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="3d-reconstruct.html">Photogrametry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3d-reconstruct.html#projects">Projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3d-reconstruct.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="laser.html">Laser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="laser.html#tof-lidar-device-samples">ToF/LiDAR Device Samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="laser.html#references">References</a></li>
+</ul>
+</li>
+</ul>
 </div>
-</section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://github.com/awesome-photogrammetry/awesome-photogrammetry?tab=readme-ov-file">awesome-photogrammetry</a>, github</p></li>
-</ol>
-<blockquote>
-<div><p>A survey on photogrametry projects.</p>
-</div></blockquote>
-<ol class="arabic simple">
-<li><p><a class="reference external" href="https://github.com/openMVG/openMVG/wiki">opemMVG</a> github</p></li>
-<li><p><a class="reference external" href="https://docs.google.com/presentation/d/1eEd12oUeKRckuymHHfauclpc62QGpGRI67B02wcKA0I">Get to know: Multiple View Geometry &amp; OpenMVG</a>, OpenMVG</p></li>
-</ol>
-<blockquote>
-<div><p>Explain basic ideas of photogrametry, and the OpenMVG’s pipeline.</p>
-</div></blockquote>
-</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Visual Measurement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="laser.html" class="btn btn-neutral float-right" title="Laser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../topics/compatibility.html" class="btn btn-neutral float-left" title="Compatibility Issues" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="3d-reconstruct.html" class="btn btn-neutral float-right" title="Photogrametry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
