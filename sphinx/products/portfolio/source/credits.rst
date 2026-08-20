@@ -34,3 +34,5 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 - `Image Viewer, PhotoView <https://github.com/bm-x/PhotoView>`_
 
 - `Image Loader, Glide <https://github.com/bumptech/glide>`_
+
+- `Slint <https://github.com/slint-ui/slint>`_ & `SurrealismUI <https://github.com/Surrealism-All/SurrealismUI>`_
