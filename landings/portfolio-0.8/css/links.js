@@ -1,8 +1,8 @@
 links = { "type": "@deprecated",
     // "apk": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/portfolio-0.7.4.apk",
-    "apk": "res/dist/portfolio-0.7.4.apk",
-    "synode-gui": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/portfolio-synode-0.7.7.zip",
-    "registry-central": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/registry.zip"
+    "apk": "res/dist/portfolio-0.7.5.apk",
+    "synode-gui": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/portfolio-synode-0.8.0.zip",
+    "registry-central": "https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.8.0/registry.zip"
 }
 
 function loadLinks(onRedirect) {

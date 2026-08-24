@@ -8,6 +8,7 @@ Tech Notes
    cav/survey
    dev-op/survey
    topics/index
+   geo-metrics/index
 
 
 Indices and tables
