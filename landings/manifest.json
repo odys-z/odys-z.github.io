@@ -1,0 +1,14 @@
+{
+  "version": "0.8",
+  "generated_at": "2026-08-25T12:06:54+00:00",
+  "apk": {
+    "file": "portfolio-0.7.5.apk",
+    "size_bytes": 8107302,
+    "modified_at": "2026-08-25T12:06:50+00:00"
+  },
+  "synode": {
+    "file": "synode-0.8.0-x64_windows-alpha-pmking.zip",
+    "size_bytes": 406800432,
+    "modified_at": "2026-08-25T12:06:51+00:00"
+  }
+}

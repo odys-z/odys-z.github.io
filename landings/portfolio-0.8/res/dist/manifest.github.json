@@ -1,0 +1,5 @@
+{ "comments": "run gen-manifest.py for this file", 
+  "version": "0.8",
+  "apk":    { "file": "portfolio-0.8-android.apk" },
+  "synode": { "file": "portfolio-0.8-synode.zip" }
+}
