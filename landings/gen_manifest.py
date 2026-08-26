@@ -2,26 +2,38 @@
 """
 gen_manifest.py
 
-Scans a "res/dist" folder for published Portfolio build artifacts (APK,
-Synode zip) and writes a manifest.json that index.html's JS
-(renderDownloadLinks) reads to build the download links dynamically.
+Scans a "res/dist" folder for published Portfolio build artifacts and
+writes a manifest.json describing three resource types:
 
-Intended to live OUTSIDE the web root, e.g.:
+  1. apk      - portfolio-<version>-android.apk
+                (no market/org — flat "Android" section)
+  2. desktop  - desktop-<version>-<market>-<org>.zip
+  3. synode   - synode-<version>-<jre>-<market>-<org>.zip
+                (has an extra "jre" segment between version and market)
 
-    project/
-      scripts/gen_manifest.py   <- this file
-      web/index.html
-      web/res/dist/             <- scanned folder
-          portfolio-0.8-android.apk
-          portfolio-0.8-synode.zip
-          portfolio-0.7-android.apk   (older builds ignored if versioned)
+Output shape:
+
+{
+  "generated_at": "...",
+  "android": [
+    {"file": "portfolio-0.8.0-android.apk", "version": "0.8.0"}
+  ],
+  "tree": {
+    "<market>": {
+      "<org>": {
+        "desktop": {"file": "...", "version": "..."},
+        "synode":  {"file": "...", "version": "...", "jre": "..."}
+      }
+    }
+  }
+}
+
+If both a desktop and synode zip exist for the same market/org but at
+different versions, both are kept as-is (per-artifact version, not a
+single global version) since builds may ship on independent cadences.
 
 Usage:
     python gen_manifest.py --dist ../web/res/dist --out ../web/res/dist/manifest.json
-    python gen_manifest.py --dist ../web/res/dist --out ../web/res/dist/manifest.json --version 0.8
-
-Can also be run on a schedule (cron / CI) to keep manifest.json in sync
-whenever new artifacts are dropped into res/dist.
 """
 
 import argparse
@@ -31,79 +43,109 @@ import sys
 from pathlib import Path
 from datetime import datetime, timezone
 
-# Filename patterns to recognize each artifact type.
-# Adjust these if your build/CI naming convention differs.
-APK_PATTERN = re.compile(r'.*\.apk$', re.IGNORECASE)
-SYNODE_PATTERN = re.compile(r'.*synode.*\.(zip|tar\.gz|tgz)$', re.IGNORECASE)
+APK_RE = re.compile(
+    r'^portfolio-(?P<version>[\d.]+)-android\.apk$', re.IGNORECASE)
 
-# Optional: pull a version number like "0.8" or "1.2.3" out of a filename.
-VERSION_PATTERN = re.compile(r'(\d+(?:\.\d+){1,2})')
-
-
-def find_latest(dist_dir: Path, pattern: re.Pattern):
-    """Return the most recently modified file matching pattern, or None."""
-    candidates = [f for f in dist_dir.iterdir() if f.is_file() and pattern.match(f.name)]
-    if not candidates:
-        return None
-    return max(candidates, key=lambda f: f.stat().st_mtime)
+# desktop/synode filenames use '-' both as the field separator AND inside
+# org ids (e.g. "pm-4"), so a plain regex can't tell them apart. We
+# instead split on '-' positionally: market is always a single token right
+# after version (no hyphens in market names), and org is "everything
+# remaining before the extension", rejoined with '-'.
+DESKTOP_PREFIX_RE = re.compile(r'^desktop-(?P<version>[\d.]+)-', re.IGNORECASE)
+SYNODE_PREFIX_RE = re.compile(r'^synode-(?P<version>[\d.]+)-', re.IGNORECASE)
 
 
-def guess_version(filename: str, fallback: str) -> str:
-    m = VERSION_PATTERN.search(filename)
-    return m.group(1) if m else fallback
-
-
-def build_manifest(dist_dir: Path, version_override: str | None) -> dict:
-    apk_file = find_latest(dist_dir, APK_PATTERN)
-    synode_file = find_latest(dist_dir, SYNODE_PATTERN)
-
-    if not apk_file and not synode_file:
-        print(f"warning: no apk or synode files found in {dist_dir}", file=sys.stderr)
-
-    # Prefer an explicit --version, else derive from whichever file we found.
-    default_version = version_override
-    if not default_version:
-        for f in (apk_file, synode_file):
-            if f:
-                default_version = guess_version(f.name, "0.0")
-                break
-        else:
-            default_version = "0.0"
-
-    manifest = {
-        "version": default_version,
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+def file_meta(f: Path) -> dict:
+    return {
+        "size_bytes": f.stat().st_size,
+        "modified_at": datetime.fromtimestamp(
+            f.stat().st_mtime, tz=timezone.utc
+        ).isoformat(timespec="seconds"),
     }
 
-    if apk_file:
-        manifest["apk"] = {
-            "file": apk_file.name,
-            "size_bytes": apk_file.stat().st_size,
-            "modified_at": datetime.fromtimestamp(
-                apk_file.stat().st_mtime, tz=timezone.utc
-            ).isoformat(timespec="seconds"),
-        }
 
-    if synode_file:
-        manifest["synode"] = {
-            "file": synode_file.name,
-            "size_bytes": synode_file.stat().st_size,
-            "modified_at": datetime.fromtimestamp(
-                synode_file.stat().st_mtime, tz=timezone.utc
-            ).isoformat(timespec="seconds"),
-        }
+def parse_desktop(stem: str):
+    """desktop-<version>-<market>-<org...>  (org may contain '-')"""
+    m = DESKTOP_PREFIX_RE.match(stem + '-')
+    if not m:
+        return None
+    rest = stem[m.end() - 1:].lstrip('-')  # tokens after version-
+    parts = rest.split('-')
+    if len(parts) < 2:
+        return None
+    market, org = parts[0], '-'.join(parts[1:])
+    return {"version": m["version"], "market": market, "org": org}
 
-    return manifest
+
+def parse_synode(stem: str):
+    """synode-<version>-<jre>-<market>-<org...>  (org may contain '-')"""
+    m = SYNODE_PREFIX_RE.match(stem + '-')
+    if not m:
+        return None
+    rest = stem[m.end() - 1:].lstrip('-')
+    parts = rest.split('-')
+    if len(parts) < 3:
+        return None
+    jre, market, org = parts[0], parts[1], '-'.join(parts[2:])
+    return {"version": m["version"], "jre": jre, "market": market, "org": org}
+
+
+def build_manifest(dist_dir: Path) -> dict:
+    android = []
+    tree: dict[str, dict[str, dict]] = {}
+    unmatched = []
+
+    for f in sorted(dist_dir.iterdir()):
+        if not f.is_file():
+            continue
+
+        apk_m = APK_RE.match(f.name)
+        if apk_m:
+            android.append({"file": f.name, "version": apk_m["version"], **file_meta(f)})
+            continue
+
+        stem = f.name[:-len(f.suffix)] if f.suffix else f.name  # strip .zip
+
+        if f.name.lower().startswith('desktop-'):
+            info = parse_desktop(stem)
+            if info:
+                node = tree.setdefault(info["market"], {}).setdefault(info["org"], {})
+                node["desktop"] = {"file": f.name, "version": info["version"], **file_meta(f)}
+                continue
+
+        if f.name.lower().startswith('synode-'):
+            info = parse_synode(stem)
+            if info:
+                node = tree.setdefault(info["market"], {}).setdefault(info["org"], {})
+                node["synode"] = {
+                    "file": f.name, "version": info["version"], "jre": info["jre"],
+                    **file_meta(f)
+                }
+                continue
+
+        unmatched.append(f.name)
+
+    if not android and not tree:
+        print(f"warning: no recognized artifacts found in {dist_dir}", file=sys.stderr)
+    for name in unmatched:
+        print(f"note: skipped unrecognized file: {name}", file=sys.stderr)
+
+    # Keep android's newest build first (helps the JS pick a "latest" link
+    # trivially if you only ever want to show one).
+    android.sort(key=lambda a: a["modified_at"], reverse=True)
+
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "android": android,
+        "tree": tree,
+    }
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate manifest.json for Portfolio downloads.")
-    parser.add_argument("--dist", required=True, type=Path,
-                         help="Path to the res/dist folder to scan.")
-    parser.add_argument("--out", required=True, type=Path,
-                         help="Path to write manifest.json to.")
-    parser.add_argument("--version", default=None,
-                         help="Override the version string instead of guessing from filenames.")
+    parser = argparse.ArgumentParser(description="Generate resource-tree manifest.json.")
+    parser.add_argument("--dist", required=True, type=Path)
+    parser.add_argument("--out", type=Path, default=None,
+                         help="Defaults to <dist>/manifest.json if omitted.")
     args = parser.parse_args()
 
     dist_dir = args.dist.resolve()
@@ -111,13 +153,10 @@ def main():
         print(f"error: dist folder not found: {dist_dir}", file=sys.stderr)
         sys.exit(1)
 
-    manifest = build_manifest(dist_dir, args.version)
+    manifest = build_manifest(dist_dir)
 
-    out_path = args.out.resolve()
+    out_path = (args.out if args.out is not None else args.dist / "manifest.json").resolve()
     out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Write atomically-ish: write to temp then replace, so JS never sees a
-    # half-written file if this runs while the site is being served.
     tmp_path = out_path.with_suffix(out_path.suffix + ".tmp")
     with open(tmp_path, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
