@@ -5,7 +5,7 @@ gen_manifest.py
 Scans a "res/dist" folder for published Portfolio build artifacts and
 writes a manifest.json describing three resource types:
 
-  1. apk      - portfolio-<version>-android.apk
+  1. apk      - portfolio-<version>[-<anything>].apk or .aab
                 (no market/org — flat "Android" section)
   2. desktop  - desktop-<version>-<market>-<org>.zip
   3. synode   - synode-<version>-<jre>-<market>-<org>.zip
@@ -44,7 +44,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 APK_RE = re.compile(
-    r'^portfolio-(?P<version>[\d.]+)-android\.apk$', re.IGNORECASE)
+    r'^portfolio-(?P<version>[\d.]+)(?:-[^.]+)?\.(?P<ext>apk|aab)$', re.IGNORECASE)
 
 # desktop/synode filenames use '-' both as the field separator AND inside
 # org ids (e.g. "pm-4"), so a plain regex can't tell them apart. We
@@ -101,7 +101,10 @@ def build_manifest(dist_dir: Path) -> dict:
 
         apk_m = APK_RE.match(f.name)
         if apk_m:
-            android.append({"file": f.name, "version": apk_m["version"], **file_meta(f)})
+            android.append({
+                "file": f.name, "version": apk_m["version"],
+                "ext": apk_m["ext"].lower(), **file_meta(f)
+            })
             continue
 
         stem = f.name[:-len(f.suffix)] if f.suffix else f.name  # strip .zip
