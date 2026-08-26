@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 """
+Credits
+=======
+
+Entierly generted by Claude.ai.
+
+About
+=====
 gen_manifest.py
 
 Scans a "res/dist" folder for published Portfolio build artifacts and
