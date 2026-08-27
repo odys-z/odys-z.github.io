@@ -32,6 +32,7 @@
  * everything stays flush to the container's left edge regardless of depth.
  */
 function renderResourceTree(containerId, manifestUrl, distBaseUrl) {
+  distBaseUrl |= '';
   const container = document.getElementById(containerId);
   if (!container) return;
 
