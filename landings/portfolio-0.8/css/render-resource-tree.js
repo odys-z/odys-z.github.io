@@ -79,10 +79,13 @@ function buildTree(container, mf, distBaseUrl) {
         );
       }
       if (node.synode) {
-        const label = node.synode.jre
-          ? `Synode ${node.synode.version} (${node.synode.jre})`
-          : `Synode ${node.synode.version}`;
-        root.appendChild(resourceRow(label, distBaseUrl + node.synode.file, 2));
+        const synodes = Array.isArray(node.synode) ? node.synode : [node.synode];
+        for (const item of synodes) {
+          const label = item.jre
+            ? `Synode ${item.version} (${item.jre})`
+            : `Synode ${item.version}`;
+          root.appendChild(resourceRow(label, distBaseUrl + item.file, 2));
+        }
       }
     });
   });
