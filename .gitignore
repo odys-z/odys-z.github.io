@@ -6,3 +6,4 @@
 !**/res/links-github.json
 **/res/dist/*
 !**/res/dist/manifest.github.json
+build-*

@@ -31,8 +31,9 @@
  * set explicitly per level, rather than relying on list-nesting indent, so
  * everything stays flush to the container's left edge regardless of depth.
  */
-function renderResourceTree(containerId, manifestUrl, distBaseUrl) {
-  distBaseUrl |= '';
+function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
+  distBaseUrl = (distBaseUrl || '') + '/';
+  manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json'); 
   const container = document.getElementById(containerId);
   if (!container) return;
 

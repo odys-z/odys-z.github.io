@@ -92,15 +92,29 @@ def parse_synode(stem: str):
     rest = stem[m.end() - 1:].lstrip('-')
     parts = rest.split('-')
 
-    print(parts)
-    while parts[-1] in ['.tar', '.tar.gz', '.gz', '.zip', '.7z']:
-        parts = parts[:-1]
+    # while parts[-1] in ['.tar', '.tar.gz', '.gz', '.zip', '.7z']:
+    # #     parts = parts[:-1]
+    # 
+    # print(parts, '-'.join(parts[2:]))
 
     if len(parts) < 3:
         return None
     jre, market, org = parts[0], parts[1], '-'.join(parts[2:])
     return {"version": m["version"], "jre": jre, "market": market, "org": org}
 
+def remove_suffixes(filepath: str) -> str:
+    path = Path(filepath)
+    filename = path.name
+
+    # Collect all suffixes (e.g. ['.tar', '.gz'])
+    suffixes = ['.tar', '.tar.gz', '.gz', '.zip', '.7z']
+
+    # Strip suffixes from the end of the filename string
+    for suffix in reversed(suffixes):
+        if filename.endswith(suffix):
+            filename = filename[: -len(suffix)]
+
+    return str(path.parent / filename) if path.parent != Path(".") else filename
 
 def build_manifest(dist_dir: Path) -> dict:
     android = []
@@ -119,7 +133,7 @@ def build_manifest(dist_dir: Path) -> dict:
             })
             continue
 
-        stem = f.name[:-len(f.suffix)] if f.suffix else f.name  # strip .zip
+        stem = remove_suffixes(f.name)
 
         if f.name.lower().startswith('desktop-'):
             info = parse_desktop(stem)
@@ -132,10 +146,12 @@ def build_manifest(dist_dir: Path) -> dict:
             info = parse_synode(stem)
             if info:
                 node = tree.setdefault(info["market"], {}).setdefault(info["org"], {})
-                node["synode"] = {
+                if not hasattr(node, "synode") and not "synode" in node:
+                    node["synode"] = []
+                node["synode"].append({
                     "file": f.name, "version": info["version"], "jre": info["jre"],
                     **file_meta(f)
-                }
+                })
                 continue
 
         unmatched.append(f.name)
