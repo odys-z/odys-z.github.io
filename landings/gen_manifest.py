@@ -91,6 +91,12 @@ def parse_synode(stem: str):
         return None
     rest = stem[m.end() - 1:].lstrip('-')
     parts = rest.split('-')
+
+    while parts[-1] in ['.tar', '.tar.gz', '.gz', '.zip', '.7z']:
+        parts = parts[:-1]
+
+    print(parts, '-'.join(parts[2:]))
+
     if len(parts) < 3:
         return None
     jre, market, org = parts[0], parts[1], '-'.join(parts[2:])
