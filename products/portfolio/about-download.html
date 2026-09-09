@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About &mdash; Portfolio Home Page 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=2882ecd3"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -49,9 +49,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#about-volume">About Volume</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#call-for-testers">Call for Testers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="android/index.html">Portfolio Android Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="synode/index.html">Portfolio Synode (Demo)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="central/index.html">About Central Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="privacy-policy.html">Portfolio Privacy Policy</a></li>
 </ul>
@@ -81,26 +82,37 @@
              
   <section id="about">
 <h1>About<a class="headerlink" href="#about" title="Link to this heading"></a></h1>
-<p>Portfolio is a system for manage, synchronizing personal documents, including an
-Android client App and multiple deployed server nodes.</p>
-<p>Protfolio is currently a demo version. Users must take care of their files
+<p>Portfolio is a system for managing, synchronizing personal documents, including
+multiple deployed storage nodes and clients.</p>
+<p>If you think keeping, saving and managing and sorting your documents on your own
+computer is essential, then Portfolio is the solution for you!</p>
+<p>Portfolio is currently a demo version. Users must take care of their files
 uploaded to the server, usually a personal computer.</p>
 <section id="the-topology">
 <h2>The Topology<a class="headerlink" href="#the-topology" title="Link to this heading"></a></h2>
-<p>Typically, there should be a central hub node, which is a public server
-accessible from the Internet, and multiple service nodes, which are private servers
-running in local networks. The hub node is used for synchronizing data between service nodes,
-and the service nodes are used for storing data uploaded by clients. The hub node
-is usually available with ristricated storage space.</p>
-<p>There are also mobile clients, such as the Portfolio Android App, which can
-connect to any service nodes and upload files. Files is autmatically synchronized in background.</p>
-<p>With a backbone of relational database synchronization mechanism, Portfolio
-can running in an unrealiable network environment.</p>
-<p>In 0.7.#, the demo version, there is only one synchronization domain, ‘zsu’, available,
-and only 2 Synodes, X29 as the hub node and Y201 as the local node can be setup.</p>
+<p>The v 0.8.# Demo version can only support a fixed structure, to synchronize files in the user’s domain.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-------------------</span>
+<span class="o">|</span>    <span class="n">domain</span><span class="o">-</span><span class="n">hub</span>    <span class="o">|</span>
+<span class="o">|</span>    <span class="o">^</span>       <span class="o">^</span>     <span class="o">|</span>
+<span class="o">|</span>    <span class="o">|</span>       <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span> <span class="n">node</span><span class="o">-</span><span class="mi">1</span>    <span class="n">node</span><span class="o">-</span><span class="mi">1</span> <span class="o">|</span>
+<span class="o">-------------------</span>
+    <span class="o">^</span>         <span class="o">^</span>
+    <span class="o">|</span>         <span class="o">|</span>
+<span class="n">mobile</span><span class="o">-</span><span class="mi">1</span>   <span class="n">device</span><span class="o">-</span><span class="mi">2</span> <span class="o">...</span>
+</pre></div>
+</div>
+<blockquote>
+<div><ul class="simple">
+<li><p>domain-hub: The server can be accessed via public IP</p></li>
+<li><p>node 1 &amp; 2: The private file storage, typically a personal computer.</p></li>
+</ul>
+</div></blockquote>
+<p>This structure is based on an Edge Computing backbone, and the developer(s) is planning to
+extend this to peer-peer nodes without any network topology restriction.</p>
 </section>
 <section id="about-volume">
-<h2>About Volume<a class="headerlink" href="#about-volume" title="Link to this heading"></a></h2>
+<span id="id1"></span><h2>About Volume<a class="headerlink" href="#about-volume" title="Link to this heading"></a></h2>
 <p>A volume is a folder within the server’s file system, which is specified by the user
 while setting up the service node. uploaded files and data are saved here.</p>
 <div class="admonition warning">
@@ -112,11 +124,15 @@ will cause unspecified results.</p>
 still run.</p>
 </section>
 </section>
-<section id="download">
-<h1>Download<a class="headerlink" href="#download" title="Link to this heading"></a></h1>
-<p>You can agree license and download the software at
-<a class="reference external" href="https://odys-z.github.io/landings/portfolio-0.7/">here</a>.</p>
-<span class="target" id="id1"></span></section>
+<section id="call-for-testers">
+<h1>Call for Testers<a class="headerlink" href="#call-for-testers" title="Link to this heading"></a></h1>
+<p>The Portfolio 0.8 Demo’s Android client is under Google Play’s <em>Closed Testing</em> phase.
+Had you would like to vote Portolio 0.8 pass the tester’s verification, please mail to the
+author at <a class="reference external" href="mailto:odys&#46;zhou&#37;&#52;&#48;gmail&#46;com">odys<span>&#46;</span>zhou<span>&#64;</span>gmail<span>&#46;</span>com</a>, and an opt-in link will
+follow up. Thank you for your thumb up!</p>
+<p>All the latest resources can be download at Semantic-jserv, the Edge Computing backbone’s
+<a class="reference external" href="https://github.com/odys-z/semantic-jserv/releases/tag/portfolip-0.8/">release selection</a>.</p>
+</section>
 
 
            </div>

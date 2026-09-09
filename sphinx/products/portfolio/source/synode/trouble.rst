@@ -47,6 +47,41 @@ Install a virtual environment to install::
 Portfolio 0.7.6 only requires Python3 at the installation. Once it's installed,
 the Python environment is no longer needed.
 
+.. _uninstall_winsrv_manually:
+
+- Uninstall Windows Service Manually
+
+**This is not recommended**
+
+The services should be uninstalled by the command above. If you have to uninstall the Windows
+service manually, please follow the steps below:
+
+#. Copy and backup *WEB-INF/settings.json*
+
+#. If any files are damanged, reinstall Portfolio-synode to the same folder, and make sure the
+   version number is the same as the previous installation.
+
+#. From the Startup Menu, open the Windows Service Control Panel to check the two service name,
+   which should like::
+
+    Synode.web-0.8.0-X29
+    Synode-0.8.0-X29
+
+  Open the *WEB-INF/settings.json* file, replace the synode id into the *"envars"* section, like::
+
+    "envars": {
+        "winsrv.web": "Synode.web-0.8.0-X29",
+        "winsrv.synode": "Synode-0.8.0-X29"
+        ...
+    }
+
+#. Open CMD terminal as administrator, go to the install folder.
+
+#. Run synode-uninstall.exe
+
+#. Refresh the Windows Service Control Panel if needed.
+
+
 - PIP Cannot resolve Pillow version for Python 3.12 or higer.
 
 The error like this::

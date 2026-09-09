@@ -1,29 +1,42 @@
 About
 =====
 
-Portfolio is a system for manage, synchronizing personal documents, including an
-Android client App and multiple deployed server nodes.
+Portfolio is a system for managing, synchronizing personal documents, including
+multiple deployed storage nodes and clients.
 
-Protfolio is currently a demo version. Users must take care of their files
+If you think keeping, saving and managing and sorting your documents on your own
+computer is essential, then Portfolio is the solution for you!
+
+Portfolio is currently a demo version. Users must take care of their files
 uploaded to the server, usually a personal computer.
 
 The Topology
 ------------
 
-Typically, there should be a central hub node, which is a public server
-accessible from the Internet, and multiple service nodes, which are private servers
-running in local networks. The hub node is used for synchronizing data between service nodes,
-and the service nodes are used for storing data uploaded by clients. The hub node
-is usually available with ristricated storage space. 
+The v 0.8.# Demo version can only support a fixed structure, to synchronize files in the user's domain.
 
-There are also mobile clients, such as the Portfolio Android App, which can
-connect to any service nodes and upload files. Files is autmatically synchronized in background.
+::
 
-With a backbone of relational database synchronization mechanism, Portfolio
-can running in an unrealiable network environment. 
+        -------------------
+        |    domain-hub    |
+        |    ^       ^     |
+        |    |       |     |
+        | node-1    node-1 |
+        -------------------
+            ^         ^
+            |         |
+        mobile-1   device-2 ...
 
-In 0.7.#, the demo version, there is only one synchronization domain, 'zsu', available,
-and only 2 Synodes, X29 as the hub node and Y201 as the local node can be setup.
+..
+
+ - domain-hub: The server can be accessed via public IP
+
+ - node 1 & 2: The private file storage, typically a personal computer. 
+
+This structure is based on an Edge Computing backbone, and the developer(s) is planning to
+extend this to peer-peer nodes without any network topology restriction.  
+
+.. _about-volume:
 
 About Volume
 ------------
@@ -39,11 +52,13 @@ while setting up the service node. uploaded files and data are saved here.
 Also, do not switch volume to another location although in v 0.7.0 the service can
 still run. 
 
-Download
-========
+Call for Testers
+================
 
-You can agree license and download the software at
-`here <https://odys-z.github.io/landings/portfolio-0.7/>`_.
+The Portfolio 0.8 Demo's Android client is under Google Play's *Closed Testing* phase.
+Had you would like to vote Portolio 0.8 pass the tester's verification, please mail to the
+author at `odys.zhou@gmail.com <mailto:odys.zhou@gmail.com>`_, and an opt-in link will
+follow up. Thank you for your thumb up! 
 
-.. _about-volume:
-
+All the latest resources can be download at Semantic-jserv, the Edge Computing backbone's
+`release selection <https://github.com/odys-z/semantic-jserv/releases/tag/portfolip-0.8/>`_.

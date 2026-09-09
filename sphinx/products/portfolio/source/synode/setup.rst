@@ -3,12 +3,15 @@
 Install Portfolio-synode
 ========================
 
-**This document is the 0.7.0 demo version. Some function in the UI is still in developing.**
-
 Prerequisit
 -----------
 
-Portfolio-synode requires Python 3.9 and JDK 17.
+- Python 3.12
+
+Portfolio-synode requires Python 3.12. This means you need a Windows 10 if you decide 
+to deploy the a synode on Windows.
+
+- Exiftool
 
 For Linux, please also install *Exiftool*.
 
@@ -18,146 +21,97 @@ Follow the `document <https://exiftool.org/install.html#Unix>`_ or use *apt* to 
 
 And make sure "exiftool -ver" is running.
 
-The services are acturally started by command::
+- About JDK 17
 
-    java -jar bin/jserv-album-0.7.0.jar
-    java -jar bin/html-service-0.1.1.jar
-
-Please make sure your JDK is running. Before install new version of Portfolio Synode,
-uninstall previous versions if any.
-
-Please make sure your JDK will not be auto-updated by Linux, 
-see also :ref:`trouble by auto-update on Ubuntu <trouble-exiftool-by-auto-update>`
+Portfolio 0.8 will download and install it's own JDK 17. Please be aware of this if you
+have other JDKs installed.
 
 Setting up Synodes
 ------------------
 
-#. Download `synode registry, registry.zip <https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/registry.zip>`_
-   from `the project's releas page <https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0>`_.
+#. Download synode package according the target OS type at the
+   `product page <https://odys-z.github.io/landings/products/portfolio-0.8>`_.
 
-   Unzip the Synode registry.
+*To be verified:* Name like x64 is the JRE name. If the installer find that your system 
+  need another JRE, it will automatically download the correct distribution.  
 
-   *Portfolio Synode 0.7.0 can only work as a stand alone service node. Registry is
-   used in the future for synchronizing register.*
 
-#. Download `jserv-album-0.7.1.zip <https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/jserv-album-0.7.0.zip>`_
-   or check lastest version at
-   `the project's releas page <https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0>`_.
+Setup on Windows
+________________
 
-#. Unzip into a floder, say, *protfolio-synode*
+#. Unzip into a floder.
+
+  FYI, cli commands can be::
+
+    mkdir portfolio-synode
+    cd portfolio-synode
+    unzip ../synode-x64_windows-alpha-sampledom.zip
 
 #. Setup Portfolio-synode's Python module
 
-    in *portfolio-synode*, run:
+   Run *setup-gui.exe*, here is what expected:
 
-    ::
+   .. image:: ../imgs/00-synode-x64_windows-0.8.0.png
+       :width: 24em
 
-        pip install bin/synode_py3-0.7-py3-non-any.whl
+   - Setup local web page service port and data service port, e.g. 8964/8965.
 
-    To check if it's installed successfully, run:
+    Check reverse proxy only if the host is mapped from a public Internet address. 
 
-    ::
-
-        pip show synode.py3
+    The local Ip is detected autmatically.
     
-#. Start Portfolio Data Service Nodes
+   - Modify Jservs' URL
 
-    **Don't run this in VS Code Termnial in Linux. See**
-    :ref:`the issue<trouble-vscode-linux>` & :ref:`troubleshootings<trouble-vscode-linux>`
-    **if you have to, while it's recommended to run this in VS Code Bash terminal in Windows.**
+    If is setting a public address, say central hub node, leave *Sync-in* as 0 seconds.
+    No need to care about jservs, but make sure the reverse proxy is set correctly, e.g. ::
 
-    Portfolio runs on a network of Synode, the Data Synchronzation Service Nodes.
+        10.0.0.1   8964 / 8965
 
-    A synchronization domain includes a hub synode, with a static IP visible to other synodes,
-    and multiple synodes working in their private network. The hub synode is only necessary
-    when setuping the network, while the others are (designed) to be able to share data between
-    each others. 
+    If is setting a local service node, say your private storage device, or a computer,
+    set *Sync-in* to typically 60 seconds, while 0 will make the machine stop visiting the hub. 
 
-    Run ::
+    If you change the hub's url manually, follow exactly the forma::
 
-        python3 -m src.synodepy3
-    
-    - Click the *...* folder button for opening registry dir.
-
-      *User Id, password and Login function are not available in demo version. Leave the fields untouched.*
-    
-    - Setup local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.
-
-      Check reverse proxy only if the host is mapped from a public Internet address. 
-    
-    - Modify Jservs' URL
-
-      If is setting a public address, say central hub node, leave *Sync-in* as 0 seconds.
-      No need to care about jservs, but make sure the reverse proxy is set correctly, e.g. ::
-
-        10.0.0.1   8900 / 8964
-
-      If is setting a local service node, say your private storage device,
-      set *Sync-in* to typically 30 seconds, while 0 will make the machine too busy.
-      And setup the hub nodes IP to it's public address, using the data service
-      port, e.g. ::
-
-        X29: <tab>  http://10.0.0.1:8964/jserv-album
-
-      **Do not change the line format**
+        http://10.0.0.1:8964/jserv-album
 
     - Click *Save* if everything is OK.
  
-    - Click *Test Run*. The data service (Synode) should be running now.
+    There should be a QR Code showing now. You can scan with a Portfolio
+    client later, e.g. the Portfolio Android, to connect to this service node.
 
-      Or run "java -jar bin/jserv-album-#.#.#.jar" in the folder.
-     
-    There should be a QR Code showing in the GUI. You can scan with a Portfolio
-    client, e.g. the Portfolio Android, to connect to this service node.
+    - Click *Install Windows Serivce* to start 2 windows services.
 
-    .. image:: ../imgs/00-portfolio-synode.png
-        :width: 24em
+    **Note: To install and start 2 Services, you need confirm with Administrator's permission, 4 times**
+    
+    Please note the permission dialogs can be hidden behind the current window.
 
-#. Test Run
+#. Test in Browser
 
     * Check firewall configurations
 
-        Protfolio-synode by default will listening on TCP port 8964, the data service,
-        and port 8900, the web page server.
+        Protfolio-synode by default will listening on TCP port 8965, like above example,
+        the data service, and port 8964, is the web page server.
 
     * Open the webpage in a browser
 
         Open the home page for listing uploaded files, e.g.::
 
-            url: http://127.0.0.1:8900
+            url: http://127.0.0.1:8964/login.html
 
         There should be the files once are uploaded with Portfolio Android.
 
     .. image:: ../../../album/source/imgs/07-portfolio-web.png
         :width: 24em
 
-#. Install Windows Services
 
-    *Portfolio-Synode* must be installed as Windows serices if is running in Windows. Click the *install
-    Windows Service* button to install. This process requires administrator permission, which will asks for
-    4 times, 2 separate service for Web pages and data service, each requires a *install* and a *start*
-    permissions.
-
-    Please also be aware of the permission confirmation's dialogs can be hidden behind current Window.
-
-Test in Browser
-===============
-
-Visit 
-
-    http://127.0.0.1:8900/login.html
-
-It will access a json data service at
-
-    http://127.0.0.1:8964/jserv-album
-
-if no default arguments were changed during installation.
-
-**And this is the time to download and scan with the Android client for login**.
+**And this is the right time to download and scan with the Android client for login**.
 :ref:`It also needs some setup <setup_android>`.
 
-Uninstall Portfolio-synode
-==========================
+Uninstall Synodes
+-----------------
+
+Uninstall Portfolio-synode on Windows
+_____________________________________
 
 * Uninstall Services for Windows:
 
@@ -170,52 +124,8 @@ In CMD Termnial, or VS Code Bash Termnial,
 
 This will uninstall the Windows services.
 
-Then uninstall python packages:
-
-::
-
-    pip uninstall synode.py3  anclient.py3  anson.py3  semantics.py3
-
 Now it's safe to delete the *portfolio-synode* folder, where the zip file is unzipped.
 The files saving location is specified by the *volume* path. You can delete the
 folder if you don't need the uploaded files anymore.
 
-Uninstall Windows Service Manually
-----------------------------------
-
-**This is not recommended**
-
-The services should be uninstalled by the command above. If you have to uninstall the Windows
-service manually, please follow the steps below:
-
-#. Reinstall Portfolio-synode to the same folder, and make sure the
-   version number is the same as the previous installation.
-
-#. From the Startup Menu, open the Windows Service Control Panel to check the two service name,
-   which should like::
-
-    Synode.web-0.7.2-X29
-    Synode-0.7.2-X29
-
-#. Open CMD terminal as administrator, go to the install folder.
-#. Run the command below to uninstall the service (replace version numbers and synode ID):
-
-   .. code-block:: shell
-
-      py -m src.synodepy3.cli uninstall-srvname Synode.web-#.#.#-ID 
-      py -m src.synodepy3.cli uninstall-srvname Synode-#.#.#-ID 
-
-#. Refresh the Windows Service Control Panel if needed.
-
-**tip**
-
-If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode
-and change winsrv.synode and winsrv.web accordingly.
-
-Sample::
-
-    "envars": {
-        "WEBROOT_201": "Y201",
-        "winsrv.synode": "Synode-0.7.5-Y201",
-        "winsrv.web": "Synode.web-0.4.1-Y201"
-    },
+* If files damaged and the services cannot uninstalled, you can :ref:`uninstall Windows Service manually <uninstall_winsrv_manually>`.
