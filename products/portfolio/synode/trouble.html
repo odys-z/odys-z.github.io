@@ -8,18 +8,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Troubleshootings &mdash; Portfolio Home Page 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=2882ecd3"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Credits" href="../credits.html" />
+    <link rel="next" title="About Central Service" href="../central/index.html" />
     <link rel="prev" title="Install Portfolio-synode" href="setup.html" /> 
 </head>
 
@@ -45,18 +45,17 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about-download.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about-download.html#download">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-download.html#call-for-testers">Call for Testers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../android/index.html">Portfolio Android Demo</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Portfolio Synode (Demo)</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="setup.html">Install Portfolio-synode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#test-in-browser">Test in Browser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#uninstall-portfolio-synode">Uninstall Portfolio-synode</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Troubleshootings</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#trouble-by-ubuntu-auto-update">Trouble by Ubuntu auto update</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../central/index.html">About Central Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../privacy-policy.html">Portfolio Privacy Policy</a></li>
 </ul>
@@ -87,21 +86,127 @@
              
   <section id="troubleshootings">
 <h1>Troubleshootings<a class="headerlink" href="#troubleshootings" title="Link to this heading"></a></h1>
-<ul id="install-anson-py3">
-<li><p>Failed to install portfolio-synode</p>
-<p>Error:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">a</span> <span class="n">version</span> <span class="n">that</span> <span class="n">satisfies</span> <span class="n">the</span> <span class="n">requirement</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio</span><span class="o">-</span><span class="n">synode</span><span class="p">)</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">versions</span><span class="p">:</span> <span class="n">none</span><span class="p">)</span>
+<ul class="simple">
+<li><p>Externally Managed Environment Error (PEP 668)</p></li>
+</ul>
+<p>When installing Portfolio by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="nb">bin</span><span class="o">/</span><span class="n">synode_py3</span><span class="o">-</span><span class="mf">0.7</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="o">.</span><span class="n">whl</span>
 </pre></div>
 </div>
-<p>Portfolio-synode requires a module which is still not published in PyPI. Install with this command:</p>
-<blockquote>
-<div><p>pip install –index-url <a class="reference external" href="https://test.pypi.org/simple">https://test.pypi.org/simple</a> –extra-index-url <a class="reference external" href="https://pypi.org/simple">https://pypi.org/simple</a> anson.py3</p>
-</div></blockquote>
-<p>If have to remove a package installed by a previous python version, e.g. installed by python 3.9, uninstall it with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span><span class="mf">.9</span> <span class="n">uninstall</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+<p>ther may be error of externally-managed-environment. Here is an example in
+Ubuntu 24.04 and Python 3.12 (Pip 24):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>error: externally-managed-environment
+
+× This environment is externally managed
+╰─&gt; To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+
+    If you wish to install a non-Debian-packaged Python package,
+    create a virtual environment using python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+
+    If you wish to install a non-Debian packaged Python application,
+    it may be easiest to use pipx install xyz, which will manage a
+    virtual environment for you. Make sure you have pipx installed.
+
+    See /usr/share/doc/python3.12/README.venv for more information.
+
+note: If you believe this is a mistake, please contact your Python
+installation or OS distribution provider. You can override this, at
+the risk of breaking your Python installation or OS, by passing
+--break-system-packages.
+
+hint: See PEP 668 for the detailed specification.
+</pre></div>
+</div>
+<p>This is Pip telling users don’t install Portfolio into system’s python3 paths.
+Install a virtual environment to install:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="mf">.12</span><span class="o">-</span><span class="n">venv</span> <span class="c1"># replace the version number</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">.</span><span class="n">env</span>
+<span class="n">source</span> <span class="o">.</span><span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<p>Portfolio 0.7.6 only requires Python3 at the installation. Once it’s installed,
+the Python environment is no longer needed.</p>
+<ul class="simple" id="uninstall-winsrv-manually">
+<li><p>Uninstall Windows Service Manually</p></li>
+</ul>
+<p><strong>This is not recommended</strong></p>
+<p>The services should be uninstalled by the command above. If you have to uninstall the Windows
+service manually, please follow the steps below:</p>
+<ol class="arabic">
+<li><p>Copy and backup <em>WEB-INF/settings.json</em></p></li>
+<li><p>If any files are damanged, reinstall Portfolio-synode to the same folder, and make sure the
+version number is the same as the previous installation.</p></li>
+<li><p>From the Startup Menu, open the Windows Service Control Panel to check the two service name,
+which should like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Synode</span><span class="o">.</span><span class="n">web</span><span class="o">-</span><span class="mf">0.8.0</span><span class="o">-</span><span class="n">X29</span>
+<span class="n">Synode</span><span class="o">-</span><span class="mf">0.8.0</span><span class="o">-</span><span class="n">X29</span>
 </pre></div>
 </div>
 </li>
+</ol>
+<blockquote>
+<div><p>Open the <em>WEB-INF/settings.json</em> file, replace the synode id into the <em>“envars”</em> section, like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">"envars"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"winsrv.web"</span><span class="p">:</span> <span class="s2">"Synode.web-0.8.0-X29"</span><span class="p">,</span>
+    <span class="s2">"winsrv.synode"</span><span class="p">:</span> <span class="s2">"Synode-0.8.0-X29"</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>Open CMD terminal as administrator, go to the install folder.</p></li>
+<li><p>Run synode-uninstall.exe</p></li>
+<li><p>Refresh the Windows Service Control Panel if needed.</p></li>
+</ol>
+<ul class="simple">
+<li><p>PIP Cannot resolve Pillow version for Python 3.12 or higer.</p></li>
+</ul>
+<p>The error like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install bin/synode_py3-0.7-py3-none-any.whl
+Processing ./bin/synode_py3-0.7-py3-none-any.whl
+...
+INFO: pip is looking at multiple versions of synode-py3 to determine which
+version is compatible with other requirements. This could take a while.
+ERROR: Ignored the following versions that require a different python version: 6.0.0
+Requires-Python &gt;=3.6, &lt;3.10; 6.0.0a1.dev1606911628 Requires-Python &gt;=3.6, &lt;3.10;
+6.0.1 Requires-Python &gt;=3.6, &lt;3.10; 6.0.2 Requires-Python &gt;=3.6, &lt;3.10;
+6.0.3 Requires-Python &gt;=3.6, &lt;3.10; 6.0.4 Requires-Python &gt;=3.6, &lt;3.10;
+...
+6.5.2 Requires-Python &lt;3.12,&gt;=3.7; 6.5.3 Requires-Python &lt;3.12,&gt;=3.7
+ERROR: Could not find a version that satisfies the requirement psutil
+(from synode-py3) (from versions: none)
+ERROR: No matching distribution found for psutil
+</pre></div>
+</div>
+<p>This is possiblly that pip is out of date.</p>
+<p>The resolve this problem, we encountered another network problem:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="n">File</span> <span class="s2">"...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">438</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_error_catcher</span>
+  <span class="k">yield</span>
+<span class="n">File</span> <span class="s2">"...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">561</span><span class="p">,</span> <span class="ow">in</span> <span class="n">read</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp_read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">fp_closed</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">""</span>
+         <span class="o">^^^^^^^^^^^^^^^^^^</span>
+<span class="o">...</span>
+<span class="n">File</span> <span class="s2">"...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">443</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_error_catcher</span>
+  <span class="k">raise</span> <span class="n">ReadTimeoutError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Read timed out."</span><span class="p">)</span>
+<span class="n">pip</span><span class="o">.</span><span class="n">_vendor</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ReadTimeoutError</span><span class="p">:</span> <span class="n">HTTPSConnectionPool</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">'files.pythonhosted.org'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">443</span><span class="p">):</span> <span class="n">Read</span> <span class="n">timed</span> <span class="n">out</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>And Grok is pretty sure that this is a GFW problem. User a mirror to install.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="nb">bin</span><span class="o">/</span><span class="n">synode_py3</span><span class="o">-</span><span class="mf">0.7</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="o">.</span><span class="n">whl</span> <span class="o">-</span><span class="n">i</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">tuna</span><span class="o">.</span><span class="n">tsinghua</span><span class="o">.</span><span class="n">edu</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">simple</span>
+</pre></div>
+</div>
+<p>FIY. You have more than one options, like filing a complaint to the ISP.
+And, BTW, arm yourself first. It’s said some African brothers have very
+successfully argued on their salaries, with Kalashnikovs and with their
+Chinese employers.</p>
+<ul class="simple">
 <li><p>Windows Network Firewall / Defender</p></li>
 </ul>
 <p>For Windows with Firewall enabled, please make sure your filewall settings allow the port you configured.</p>
@@ -136,7 +241,7 @@ service’s JDK version is different from the latest version.</p>
 jspawnhelper version 21.0.8+9-Ubuntu-0ubuntu124.04.1
 This command is not for general use and should only be run as the result of a call to
 ProcessBuilder.start() or Runtime.exec() in a java application
-java.io.IOException: Cannot run program &quot;exiftool&quot;: error=0, Failed to exec spawn helper: pid: &gt;
+java.io.IOException: Cannot run program "exiftool": error=0, Failed to exec spawn helper: pid: &gt;
   at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1170)
   at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1089)
   at java.base/java.lang.Runtime.exec(Runtime.java:681)
@@ -189,6 +294,23 @@ a newer version, 21.0.8+9. When jspawnhelper enhanced the version check [1], the
 <dt>[1] <em>Improve jspawnhelper version checks</em>, JDK-8325621, Affects Version/s: 11, 17, 21, 22, 23,</dt><dd><p><a class="reference external" href="https://bugs.openjdk.org/browse/JDK-8325621">https://bugs.openjdk.org/browse/JDK-8325621</a></p>
 </dd>
 </dl>
+<ul id="install-anson-py3">
+<li><p>Failed to install portfolio-synode</p>
+<p>[closed by Portfolio 0.7.6]</p>
+<p>Error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">a</span> <span class="n">version</span> <span class="n">that</span> <span class="n">satisfies</span> <span class="n">the</span> <span class="n">requirement</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio</span><span class="o">-</span><span class="n">synode</span><span class="p">)</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">versions</span><span class="p">:</span> <span class="n">none</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Portfolio-synode requires a module which is still not published in PyPI. Install with this command:</p>
+<blockquote>
+<div><p>pip install –index-url <a class="reference external" href="https://test.pypi.org/simple">https://test.pypi.org/simple</a> –extra-index-url <a class="reference external" href="https://pypi.org/simple">https://pypi.org/simple</a> anson.py3</p>
+</div></blockquote>
+<p>If have to remove a package installed by a previous python version, e.g. installed by python 3.9, uninstall it with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span><span class="mf">.9</span> <span class="n">uninstall</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+</pre></div>
+</div>
+</li>
+</ul>
 </section>
 </section>
 
@@ -197,7 +319,7 @@ a newer version, 21.0.8+9. When jspawnhelper enhanced the version check [1], the
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="setup.html" class="btn btn-neutral float-left" title="Install Portfolio-synode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../credits.html" class="btn btn-neutral float-right" title="Credits" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../central/index.html" class="btn btn-neutral float-right" title="About Central Service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

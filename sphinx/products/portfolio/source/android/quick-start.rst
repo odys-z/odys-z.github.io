@@ -4,13 +4,8 @@ Quick Start
 Prerequisit
 -----------
 
-The Portfolio Android client must run with a server which is usually deployed as
-a family file server. This server must be installed on a personal computer
-(requires Python 3.9 and JDK 17).
-
-The server program, Portfolio Synode,
-`jserv-album-0.7.#.zip <https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0>`_
-is released as an excutable on Python 3 and JDK 17.
+The Portfolio Android client uploads files to any domain server which is usually
+deployed as the community's file server. The service nodes must be already setup.
 
 See :ref:`How to setup Portfolio Synode <setup-synode>`, the private file server.
 
@@ -23,7 +18,7 @@ Once the server installed and the service is started up, open Portfolio for Andr
 and in the Settings page, setup device Id and user Id.
 
 .. image:: ../imgs/01-android-prefs.png
-    :height: 320
+    :height: 36em
 ..
 
 - Set Device Name

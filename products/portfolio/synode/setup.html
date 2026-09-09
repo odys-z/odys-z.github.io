@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Install Portfolio-synode &mdash; Portfolio Home Page 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=2882ecd3"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -45,22 +45,25 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about-download.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../about-download.html#download">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about-download.html#call-for-testers">Call for Testers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../android/index.html">Portfolio Android Demo</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Portfolio Synode (Demo)</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Install Portfolio-synode</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#prerequisit">Prerequisit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#setting-up-synodes">Setting up Synodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-synodes">Setting up Synodes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup-on-windows">Setup on Windows</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#test-in-browser">Test in Browser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#uninstall-portfolio-synode">Uninstall Portfolio-synode</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#uninstall-windows-service-manually">Uninstall Windows Service Manually</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uninstall-synodes">Uninstall Synodes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#uninstall-portfolio-synode-on-windows">Uninstall Portfolio-synode on Windows</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="trouble.html">Troubleshootings</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../central/index.html">About Central Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../privacy-policy.html">Portfolio Privacy Policy</a></li>
 </ul>
@@ -91,111 +94,103 @@
              
   <section id="install-portfolio-synode">
 <span id="setup-synode"></span><h1>Install Portfolio-synode<a class="headerlink" href="#install-portfolio-synode" title="Link to this heading"></a></h1>
-<p><strong>This document is the 0.7.0 demo version. Some function in the UI is still in developing.</strong></p>
 <section id="prerequisit">
 <h2>Prerequisit<a class="headerlink" href="#prerequisit" title="Link to this heading"></a></h2>
-<p>Portfolio-synode requires Python 3.9 and JDK 17.</p>
+<ul class="simple">
+<li><p>Python 3.12</p></li>
+</ul>
+<p>Portfolio-synode requires Python 3.12. This means you need a Windows 10 if you decide
+to deploy the a synode on Windows.</p>
+<ul class="simple">
+<li><p>Exiftool</p></li>
+</ul>
 <p>For Linux, please also install <em>Exiftool</em>.</p>
 <p>Follow the <a class="reference external" href="https://exiftool.org/install.html#Unix">document</a> or use <em>apt</em> to install:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">exiftool</span>
 </pre></div>
 </div>
 <p>And make sure “exiftool -ver” is running.</p>
-<p>The services are acturally started by command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="nb">bin</span><span class="o">/</span><span class="n">jserv</span><span class="o">-</span><span class="n">album</span><span class="o">-</span><span class="mf">0.7.0</span><span class="o">.</span><span class="n">jar</span>
-<span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="nb">bin</span><span class="o">/</span><span class="n">html</span><span class="o">-</span><span class="n">service</span><span class="o">-</span><span class="mf">0.1.1</span><span class="o">.</span><span class="n">jar</span>
-</pre></div>
-</div>
-<p>Please make sure your JDK is running. Before install new version of Portfolio Synode,
-uninstall previous versions if any.</p>
-<p>Please make sure your JDK will not be auto-updated by Linux,
-see also <a class="reference internal" href="trouble.html#trouble-exiftool-by-auto-update"><span class="std std-ref">trouble by auto-update on Ubuntu</span></a></p>
+<ul class="simple">
+<li><p>About JDK 17</p></li>
+</ul>
+<p>Portfolio 0.8 will download and install it’s own JDK 17. Please be aware of this if you
+have other JDKs installed.</p>
 </section>
 <section id="setting-up-synodes">
 <h2>Setting up Synodes<a class="headerlink" href="#setting-up-synodes" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Download synode package according the target OS type at the
+<a class="reference external" href="https://odys-z.github.io/landings/products/portfolio-0.8">product page</a>.</p></li>
+</ol>
+<dl class="simple">
+<dt><em>To be verified:</em> Name like x64 is the JRE name. If the installer find that your system</dt><dd><p>need another JRE, it will automatically download the correct distribution.</p>
+</dd>
+</dl>
+<section id="setup-on-windows">
+<h3>Setup on Windows<a class="headerlink" href="#setup-on-windows" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Unzip into a floder.</p></li>
+</ol>
+<blockquote>
+<div><p>FYI, cli commands can be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+<span class="n">cd</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+<span class="n">unzip</span> <span class="o">../</span><span class="n">synode</span><span class="o">-</span><span class="n">x64_windows</span><span class="o">-</span><span class="n">alpha</span><span class="o">-</span><span class="n">sampledom</span><span class="o">.</span><span class="n">zip</span>
+</pre></div>
+</div>
+</div></blockquote>
 <ol class="arabic">
-<li><p>Download <a class="reference external" href="https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/registry.zip">synode registry, registry.zip</a>
-from <a class="reference external" href="https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0">the project’s releas page</a>.</p>
-<p>Unzip the Synode registry.</p>
-<p><em>Portfolio Synode 0.7.0 can only work as a stand alone service node. Registry is
-used in the future for synchronizing register.</em></p>
-</li>
-<li><p>Download <a class="reference external" href="https://github.com/odys-z/semantic-jserv/releases/download/portfolio-synode-0.7.0/jserv-album-0.7.0.zip">jserv-album-0.7.1.zip</a>
-or check lastest version at
-<a class="reference external" href="https://github.com/odys-z/semantic-jserv/releases/tag/portfolio-synode-0.7.0">the project’s releas page</a>.</p></li>
-<li><p>Unzip into a floder, say, <em>protfolio-synode</em></p></li>
 <li><p>Setup Portfolio-synode’s Python module</p>
-<blockquote>
-<div><p>in <em>portfolio-synode</em>, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="nb">bin</span><span class="o">/</span><span class="n">synode_py3</span><span class="o">-</span><span class="mf">0.7</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">non</span><span class="o">-</span><span class="nb">any</span><span class="o">.</span><span class="n">whl</span>
-</pre></div>
-</div>
-<p>To check if it’s installed successfully, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">show</span> <span class="n">synode</span><span class="o">.</span><span class="n">py3</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p>Start Portfolio Data Service Nodes</p>
-<blockquote>
-<div><p><strong>Don’t run this in VS Code Termnial in Linux. See</strong>
-<a class="reference internal" href="trouble.html#trouble-vscode-linux"><span class="std std-ref">the issue</span></a> &amp; <a class="reference internal" href="trouble.html#trouble-vscode-linux"><span class="std std-ref">troubleshootings</span></a>
-<strong>if you have to, while it’s recommended to run this in VS Code Bash terminal in Windows.</strong></p>
-<p>Portfolio runs on a network of Synode, the Data Synchronzation Service Nodes.</p>
-<p>A synchronization domain includes a hub synode, with a static IP visible to other synodes,
-and multiple synodes working in their private network. The hub synode is only necessary
-when setuping the network, while the others are (designed) to be able to share data between
-each others.</p>
-<p>Run</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">src</span><span class="o">.</span><span class="n">synodepy3</span>
-</pre></div>
-</div>
-<ul>
-<li><p>Click the <em>…</em> folder button for opening registry dir.</p>
-<p><em>User Id, password and Login function are not available in demo version. Leave the fields untouched.</em></p>
-</li>
-<li><p>Setup local web page service port and data service port, e.g. 8900/8964. The local Ip is detected autmatically.</p>
-<p>Check reverse proxy only if the host is mapped from a public Internet address.</p>
-</li>
-<li><p>Modify Jservs’ URL</p>
-<p>If is setting a public address, say central hub node, leave <em>Sync-in</em> as 0 seconds.
-No need to care about jservs, but make sure the reverse proxy is set correctly, e.g.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">10.0.0.1</span>   <span class="mi">8900</span> <span class="o">/</span> <span class="mi">8964</span>
-</pre></div>
-</div>
-<p>If is setting a local service node, say your private storage device,
-set <em>Sync-in</em> to typically 30 seconds, while 0 will make the machine too busy.
-And setup the hub nodes IP to it’s public address, using the data service
-port, e.g.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X29</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">tab</span><span class="o">&gt;</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">10.0.0.1</span><span class="p">:</span><span class="mi">8964</span><span class="o">/</span><span class="n">jserv</span><span class="o">-</span><span class="n">album</span>
-</pre></div>
-</div>
-<p><strong>Do not change the line format</strong></p>
-</li>
-<li><p>Click <em>Save</em> if everything is OK.</p></li>
-<li><p>Click <em>Test Run</em>. The data service (Synode) should be running now.</p>
-<p>Or run “java -jar bin/jserv-album-#.#.#.jar” in the folder.</p>
-</li>
-</ul>
-<p>There should be a QR Code showing in the GUI. You can scan with a Portfolio
-client, e.g. the Portfolio Android, to connect to this service node.</p>
-<a class="reference internal image-reference" href="../_images/00-portfolio-synode.png"><img alt="../_images/00-portfolio-synode.png" src="../_images/00-portfolio-synode.png" style="width: 24em;" />
+<p>Run <em>setup-gui.exe</em>, here is what expected:</p>
+<a class="reference internal image-reference" href="imgs/00-synode-x64_windows-0.8.0.png"><img alt="imgs/00-synode-x64_windows-0.8.0.png" src="imgs/00-synode-x64_windows-0.8.0.png" style="width: 24em;" />
 </a>
+<ul class="simple">
+<li><p>Setup local web page service port and data service port, e.g. 8964/8965.</p></li>
+</ul>
+<blockquote>
+<div><p>Check reverse proxy only if the host is mapped from a public Internet address.</p>
+<p>The local Ip is detected autmatically.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Modify Jservs’ URL</p></li>
+</ul>
+<blockquote>
+<div><p>If is setting a public address, say central hub node, leave <em>Sync-in</em> as 0 seconds.
+No need to care about jservs, but make sure the reverse proxy is set correctly, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">10.0.0.1</span>   <span class="mi">8964</span> <span class="o">/</span> <span class="mi">8965</span>
+</pre></div>
+</div>
+<p>If is setting a local service node, say your private storage device, or a computer,
+set <em>Sync-in</em> to typically 60 seconds, while 0 will make the machine stop visiting the hub.</p>
+<p>If you change the hub’s url manually, follow exactly the forma:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">10.0.0.1</span><span class="p">:</span><span class="mi">8964</span><span class="o">/</span><span class="n">jserv</span><span class="o">-</span><span class="n">album</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Click <em>Save</em> if everything is OK.</p></li>
+</ul>
+<p>There should be a QR Code showing now. You can scan with a Portfolio
+client later, e.g. the Portfolio Android, to connect to this service node.</p>
+<ul class="simple">
+<li><p>Click <em>Install Windows Serivce</em> to start 2 windows services.</p></li>
+</ul>
+<p><strong>Note: To install and start 2 Services, you need confirm with Administrator’s permission, 4 times</strong></p>
+<p>Please note the permission dialogs can be hidden behind the current window.</p>
 </div></blockquote>
 </li>
-<li><p>Test Run</p>
+<li><p>Test in Browser</p>
 <blockquote>
 <div><ul>
 <li><p>Check firewall configurations</p>
 <blockquote>
-<div><p>Protfolio-synode by default will listening on TCP port 8964, the data service,
-and port 8900, the web page server.</p>
+<div><p>Protfolio-synode by default will listening on TCP port 8965, like above example,
+the data service, and port 8964, is the web page server.</p>
 </div></blockquote>
 </li>
 <li><p>Open the webpage in a browser</p>
 <blockquote>
 <div><p>Open the home page for listing uploaded files, e.g.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">url</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">8900</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">url</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">8964</span><span class="o">/</span><span class="n">login</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 <p>There should be the files once are uploaded with Portfolio Android.</p>
@@ -206,34 +201,15 @@ and port 8900, the web page server.</p>
 </a>
 </div></blockquote>
 </li>
-<li><p>Install Windows Services</p>
-<blockquote>
-<div><p><em>Portfolio-Synode</em> must be installed as Windows serices if is running in Windows. Click the <em>install
-Windows Service</em> button to install. This process requires administrator permission, which will asks for
-4 times, 2 separate service for Web pages and data service, each requires a <em>install</em> and a <em>start</em>
-permissions.</p>
-<p>Please also be aware of the permission confirmation’s dialogs can be hidden behind current Window.</p>
-</div></blockquote>
-</li>
 </ol>
-</section>
-</section>
-<section id="test-in-browser">
-<h1>Test in Browser<a class="headerlink" href="#test-in-browser" title="Link to this heading"></a></h1>
-<p>Visit</p>
-<blockquote>
-<div><p><a class="reference external" href="http://127.0.0.1:8900/login.html">http://127.0.0.1:8900/login.html</a></p>
-</div></blockquote>
-<p>It will access a json data service at</p>
-<blockquote>
-<div><p><a class="reference external" href="http://127.0.0.1:8964/jserv-album">http://127.0.0.1:8964/jserv-album</a></p>
-</div></blockquote>
-<p>if no default arguments were changed during installation.</p>
-<p><strong>And this is the time to download and scan with the Android client for login</strong>.
+<p><strong>And this is the right time to download and scan with the Android client for login</strong>.
 <a class="reference internal" href="../android/quick-start.html#setup-android"><span class="std std-ref">It also needs some setup</span></a>.</p>
 </section>
-<section id="uninstall-portfolio-synode">
-<h1>Uninstall Portfolio-synode<a class="headerlink" href="#uninstall-portfolio-synode" title="Link to this heading"></a></h1>
+</section>
+<section id="uninstall-synodes">
+<h2>Uninstall Synodes<a class="headerlink" href="#uninstall-synodes" title="Link to this heading"></a></h2>
+<section id="uninstall-portfolio-synode-on-windows">
+<h3>Uninstall Portfolio-synode on Windows<a class="headerlink" href="#uninstall-portfolio-synode-on-windows" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Uninstall Services for Windows:</p></li>
 </ul>
@@ -243,48 +219,13 @@ permissions.</p>
 </pre></div>
 </div>
 <p>This will uninstall the Windows services.</p>
-<p>Then uninstall python packages:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">synode</span><span class="o">.</span><span class="n">py3</span>  <span class="n">anclient</span><span class="o">.</span><span class="n">py3</span>  <span class="n">anson</span><span class="o">.</span><span class="n">py3</span>  <span class="n">semantics</span><span class="o">.</span><span class="n">py3</span>
-</pre></div>
-</div>
 <p>Now it’s safe to delete the <em>portfolio-synode</em> folder, where the zip file is unzipped.
 The files saving location is specified by the <em>volume</em> path. You can delete the
 folder if you don’t need the uploaded files anymore.</p>
-<section id="uninstall-windows-service-manually">
-<h2>Uninstall Windows Service Manually<a class="headerlink" href="#uninstall-windows-service-manually" title="Link to this heading"></a></h2>
-<p><strong>This is not recommended</strong></p>
-<p>The services should be uninstalled by the command above. If you have to uninstall the Windows
-service manually, please follow the steps below:</p>
-<ol class="arabic">
-<li><p>Reinstall Portfolio-synode to the same folder, and make sure the
-version number is the same as the previous installation.</p></li>
-<li><p>From the Startup Menu, open the Windows Service Control Panel to check the two service name,
-which should like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Synode</span><span class="o">.</span><span class="n">web</span><span class="o">-</span><span class="mf">0.7.2</span><span class="o">-</span><span class="n">X29</span>
-<span class="n">Synode</span><span class="o">-</span><span class="mf">0.7.2</span><span class="o">-</span><span class="n">X29</span>
-</pre></div>
-</div>
-</li>
-<li><p>Open CMD terminal as administrator, go to the install folder.</p></li>
-<li><p>Run the command below to uninstall the service (replace version numbers and synode ID):</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>py<span class="w"> </span>-m<span class="w"> </span>src.synodepy3.cli<span class="w"> </span>uninstall-srvname<span class="w"> </span>Synode.web-#.#.#-ID
-py<span class="w"> </span>-m<span class="w"> </span>src.synodepy3.cli<span class="w"> </span>uninstall-srvname<span class="w"> </span>Synode-#.#.#-ID
-</pre></div>
-</div>
-</li>
-<li><p>Refresh the Windows Service Control Panel if needed.</p></li>
-</ol>
-<p><strong>tip</strong></p>
-<p>If the WEB-INF/settings.json file is not found, reinstall the Portfolio-synode
-and change winsrv.synode and winsrv.web accordingly.</p>
-<p>Sample:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;envars&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;WEBROOT_201&quot;</span><span class="p">:</span> <span class="s2">&quot;Y201&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;winsrv.synode&quot;</span><span class="p">:</span> <span class="s2">&quot;Synode-0.7.5-Y201&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;winsrv.web&quot;</span><span class="p">:</span> <span class="s2">&quot;Synode.web-0.4.1-Y201&quot;</span>
-<span class="p">},</span>
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>If files damaged and the services cannot uninstalled, you can <a class="reference internal" href="trouble.html#uninstall-winsrv-manually"><span class="std std-ref">uninstall Windows Service manually</span></a>.</p></li>
+</ul>
+</section>
 </section>
 </section>
 
