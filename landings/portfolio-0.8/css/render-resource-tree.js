@@ -64,6 +64,11 @@ function buildTree(container, mf, distBaseUrl) {
   }
 
   // --- market -> community -> desktop/synode ---
+  const resolveUrl = (filePath) => 
+    /^(?:https?|wss?|ftps?|file|content):\/\//i.test(filePath)
+      ? filePath
+      : distBaseUrl + filePath;
+
   const markets = Object.keys(mf.tree || {}).sort();
   markets.forEach(market => {
     root.appendChild(sectionHeading(`MARKET: ${market}`));
@@ -73,23 +78,25 @@ function buildTree(container, mf, distBaseUrl) {
       root.appendChild(subHeading(`COMMUNITY: ${org}`, 1));
 
       const node = mf.tree[market][org];
+      
       if (node.desktop) {
         root.appendChild(
-          resourceRow(`Desktop ${node.desktop.version}`, distBaseUrl + node.desktop.file, 2)
+          resourceRow(`Desktop ${node.desktop.version}`, resolveUrl(node.desktop.file), 2)
         );
       }
+      
       if (node.synode) {
         const synodes = Array.isArray(node.synode) ? node.synode : [node.synode];
         for (const item of synodes) {
           const label = item.jre
             ? `Synode ${item.version} (${item.jre})`
             : `Synode ${item.version}`;
-          root.appendChild(resourceRow(label, distBaseUrl + item.file, 2));
+
+          root.appendChild(resourceRow(label, resolveUrl(item.file), 2));
         }
       }
     });
   });
-
   container.appendChild(root);
 }
 
