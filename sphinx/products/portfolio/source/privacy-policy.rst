@@ -3,9 +3,8 @@ Portfolio Privacy Policy
 
 **Last Updated: Sep 09, 2026**
 
-::
 
-    Product: Portfolio 0.8, Demo Version, together with Anroid and Windows Clients (Ads Supported)
+  *Product: Portfolio 0.8, Demo Version, Synode, Anroid and Windows Clients (Ads Supported)*
 
 This privacy policy has been compiled to better serve those who are concerned with
 how their 'Personally Identifiable Information' (PII) is being used online. PII,
