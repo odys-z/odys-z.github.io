@@ -44,7 +44,7 @@ About Volume
 ------------
 
 A volume is a folder within the server's file system, which is specified by the user
-while setting up the service node. uploaded files and data are saved here.
+while setting up the service node. uploaded files and data are saved there.
 
 .. warning::
 
@@ -72,5 +72,5 @@ ______________________________________
 
 - Synodes can join and leave the domain.
 
-FYI, the backbone of Edge Computing can do a lot more. Here is the
+FYI, the Edge Computing backbone of Portfolio can do a lot more. Here is the
 `the detailed techquenical discussion <https://github.com/odys-z/semantic-jserv/blob/master/docsync.jserv/README.md>`_.
