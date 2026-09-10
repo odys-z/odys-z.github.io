@@ -1,3 +1,22 @@
+Call for Play Testers |play-icon|
+=================================
+
+.. |play-icon| raw:: html
+
+   <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" 
+        style="height: 0.9em !important; width: auto !important; vertical-align: middle;" 
+        alt="▶" 
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+   <span style="display:none;">▶</span>
+
+The Portfolio 0.8 Demo's Android client is under Google Play's *Closed Testing* phase.
+Had you would like to vote Portolio 0.8 pass the tester's verification, please mail to the
+author at `odys.zhou@gmail.com <mailto:odys.zhou@gmail.com>`_, and an opt-in link will
+follow up. Thank you for your thumb up! 
+
+All the latest resources can be download at Semantic-jserv, the Edge Computing backbone's
+`release selection <https://github.com/odys-z/semantic-jserv/releases/tag/portfolip-0.8/>`_.
+
 Download Portfolio
 ==================
 
@@ -18,7 +37,9 @@ uploaded to the server, usually a personal computer.
 The Topology
 ------------
 
-The v 0.8.# Demo version can only support a fixed structure, to synchronize files in the user's domain.
+The v0.8.# Demo version automatically sychronize files that users uploaded to any
+of the server, in the user's synchronization domain. Here after the file strage node
+is named as a *Synode*.
 
 ::
 
@@ -57,13 +78,23 @@ while setting up the service node. uploaded files and data are saved here.
 Also, do not switch volume to another location although in v 0.7.0 the service can
 still run. 
 
-Call for Testers
-================
+Limitation of Portfolio 0.8
+---------------------------
 
-The Portfolio 0.8 Demo's Android client is under Google Play's *Closed Testing* phase.
-Had you would like to vote Portolio 0.8 pass the tester's verification, please mail to the
-author at `odys.zhou@gmail.com <mailto:odys.zhou@gmail.com>`_, and an opt-in link will
-follow up. Thank you for your thumb up! 
+- Needing a hub syndoe deployed on a public IP host, which can be accessed by other synnodes.
 
-All the latest resources can be download at Semantic-jserv, the Edge Computing backbone's
-`release selection <https://github.com/odys-z/semantic-jserv/releases/tag/portfolip-0.8/>`_.
+- Only fixed number of Synodes and cannot be changed.
+
+- File storage limitation is low - price for hub storage can be high.
+
+What you can expect in the near future
+______________________________________
+
+- A cloud service that users can plan their domains.
+
+- The hub node can schedule storage, by keeping only public accessable files.
+
+- Synodes can join and leave the domain.
+
+FYI, the backbone of Edge Computing can do a lot more. Here is the
+`the detailed techquenical discussion <https://github.com/odys-z/semantic-jserv/blob/master/docsync.jserv/README.md>`_.
