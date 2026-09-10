@@ -37,4 +37,3 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 
 - `Slint <https://github.com/slint-ui/slint>`_ & `SurrealismUI <https://github.com/Surrealism-All/SurrealismUI>`_
 
-with the help of `Claude.ai <https://claude.ai>`_ and `Gemini <https://gemini.google.com>`_.
