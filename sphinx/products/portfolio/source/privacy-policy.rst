@@ -1,7 +1,7 @@
 Portfolio Privacy Policy
 ========================
 
-**Last Updated: March 05, 2025**
+**Last Updated: Sep 09, 2026**
 
 ::
 
