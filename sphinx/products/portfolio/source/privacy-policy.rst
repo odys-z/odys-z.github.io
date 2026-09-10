@@ -19,16 +19,16 @@ in accordance with our apps.
 
 What personal information do we collect from the people using Portfolio?
 
-When installing Family Album Synchronizer, as appropriate, you may be asked to
-allow Portfolio to have the permissions to access user's audio record, external
-storage or other details to help you synchronize (upload) user's files to the
-file server.
+On Android device, when installing Portfolio for file synchronization, as appropriate,
+you may be asked to allow Portfolio to have the permissions to access user's audio
+record, external storage or other details to help you synchronize (upload) user's
+files to the file server.
 
-Portfolio has no plan to use third party services, e.g. Google's Advertising
-and Google Analytics.
+Portfolio is planned to use third party advertisement services, e.g. Google's Advertising,
+but not planning to analysis user's data with third part services, e.g. Google Analytics.
 
-We want to inform users of this application that user's Personal Information will
-not be used anywhere except for managing files at server.
+We want to inform users of Portfolio v0.8 that user's Personal Information will
+not be used anywhere else except for managing files at server.
 
 AdMob & AdSense advertising requirements can be summed up by AdMob & AdSense
 advertising principles. They are put in place to provide a positive experience
