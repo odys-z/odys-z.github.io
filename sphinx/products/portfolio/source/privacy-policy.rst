@@ -1,8 +1,7 @@
 Portfolio Privacy Policy
 ========================
 
-**Last Updated: Sep 09, 2026**
-
+  *Last Updated: Sep 09, 2026*
 
   *Product: Portfolio 0.8, Demo Version, Synode, Anroid and Windows Clients (Ads Supported)*
 
