@@ -1,0 +1,13 @@
+/* Fix inline icon heights, not used */
+.rst-content img.inline-icon {
+    height: 1.2em !important;
+    width: auto !important;
+    vertical-align: middle;
+}
+
+/* Smaller font for FYI / Note text */
+.rst-content .fyi-text,
+.rst-content p.fyi-text {
+    font-size: 0.80em !important;
+    color: #555555;
+}

@@ -5,7 +5,8 @@ Welcome to Portfolio documentation!
    :maxdepth: 1
    :caption: Contents:
 
-   about-download
+   download
+   about
    android/index
    synode/index
    desktop
