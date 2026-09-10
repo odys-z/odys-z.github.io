@@ -5,7 +5,7 @@ Portfolio Privacy Policy
 
 ::
 
-    Product: Portfolio 0.7, Demo Version (Ads Supported)
+    Product: Portfolio 0.8, Demo Version, together with Anroid and Windows Clients (Ads Supported)
 
 This privacy policy has been compiled to better serve those who are concerned with
 how their 'Personally Identifiable Information' (PII) is being used online. PII,
@@ -85,6 +85,14 @@ safety.
 
 However, non-personally identifiable user information may be provided to other
 parties for marketing, advertising, or other uses.
+
+Documents Sharing Policies
+--------------------------
+
+In Portfolio 0.8, all files uploaded to a synode will evatually copied to any device
+setup as a sychronization storage node in your synchornization domain. Such devices
+can be owned by other users, and have fully access to the domain's storages. It's the
+user's responsibility to not to share their sensitive documents (files) a specific domain. 
 
 - **Important**:
   
