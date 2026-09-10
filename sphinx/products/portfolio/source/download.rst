@@ -18,6 +18,8 @@ All the latest resources can be download at Semantic-jserv, the Edge Computing b
    <span style="display:none;">▶</span>
 
 The Portfolio 0.8 Demo's Android client is under Google Play's *Closed Testing* phase.
-Had you would like to vote Portolio 0.8 pass the tester's verification, please mail to the
-author at `odys.zhou@gmail.com <mailto:odys.zhou@gmail.com>`_, and an opt-in link will
-follow up. Thank you for your thumb up! 
+Had you would like to vote for Portolio 0.8 to pass the tester's verification, please
+mail to the author at `odys.zhou@gmail.com <mailto:odys.zhou@gmail.com>`_, and an opt-in
+link will follow up.
+
+Thank you for your thumb up! 
