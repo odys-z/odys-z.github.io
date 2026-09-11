@@ -13,21 +13,21 @@
     "alpha": {
       "github": {
         "desktop": {
-          "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/portfolio-0.7.5.apk",
+          "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/desktop-0.8.0-alpha-closed-test.zip",
           "version": "0.8.0",
           "size_bytes": 0,
           "modified_at": "2026-09-08T12:10:59+00:00"
         },
         "synode": [
           {
-            "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.0-x64_linux-alpha-pmking.tar.gz",
+            "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.0-x64_linux-alpha-closed-test.tar.gz",
             "version": "0.8.0",
             "jre": "x64_linux",
             "size_bytes": 0,
             "modified_at": "2026-09-08T12:10:18+00:00"
           },
           {
-            "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.0-x64_windows-alpha-pmking.zip",
+            "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.0-x64_windows-alpha-closed-test.zip",
             "version": "0.8.0",
             "jre": "x64_windows",
             "size_bytes": 0,
