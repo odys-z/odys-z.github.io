@@ -34,7 +34,7 @@ Verified & Recommended Install Steps
     Portfolio 0.8 will download and install it's own JDK 17. Please be aware of this if you
     have other JDKs installed.
 
-    Install the hub node follow this video.
+    Install the hub node following this video.
 
         .. video:: ../imgs/00-synode-x64_linux-0.8.0-pic-motion.mp4
             :width: 600
