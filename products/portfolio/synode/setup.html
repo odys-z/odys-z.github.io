@@ -56,11 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../android/index.html">Portfolio Android Demo</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Portfolio Synode (Demo)</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Install Portfolio-synode</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#prerequisit">Prerequisit</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#setting-up-synodes">Setting up Synodes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#setup-on-windows">Setup on Windows</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#verified-recommended-install-steps">Verified &amp; Recommended Install Steps</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uninstall-synodes">Uninstall Synodes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#uninstall-portfolio-synode-on-windows">Uninstall Portfolio-synode on Windows</a></li>
 </ul>
@@ -102,8 +98,16 @@
              
   <section id="install-portfolio-synode">
 <span id="setup-synode"></span><h1>Install Portfolio-synode<a class="headerlink" href="#install-portfolio-synode" title="Link to this heading"></a></h1>
-<section id="prerequisit">
-<h2>Prerequisit<a class="headerlink" href="#prerequisit" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>Download synode package according the target OS type at the
+<a class="reference external" href="https://odys-z.github.io/landings/products/portfolio-0.8">product page</a>.</p>
+</div></blockquote>
+<section id="verified-recommended-install-steps">
+<h2>Verified &amp; Recommended Install Steps<a class="headerlink" href="#verified-recommended-install-steps" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Install the Hub Node</p>
+<blockquote>
+<div><p>Prerequisit</p>
 <ul class="simple">
 <li><p>Python 3.12</p></li>
 </ul>
@@ -123,36 +127,21 @@ to deploy the a synode on Windows.</p>
 </ul>
 <p>Portfolio 0.8 will download and install it’s own JDK 17. Please be aware of this if you
 have other JDKs installed.</p>
-</section>
-<section id="setting-up-synodes">
-<h2>Setting up Synodes<a class="headerlink" href="#setting-up-synodes" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p>Download synode package according the target OS type at the
-<a class="reference external" href="https://odys-z.github.io/landings/products/portfolio-0.8">product page</a>.</p></li>
-</ol>
-<dl class="simple">
-<dt><em>To be verified:</em> Name like x64 is the JRE name. If the installer find that your system</dt><dd><p>need another JRE, it will automatically download the correct distribution.</p>
-</dd>
-</dl>
-<section id="setup-on-windows">
-<h3>Setup on Windows<a class="headerlink" href="#setup-on-windows" title="Link to this heading"></a></h3>
-<ol class="arabic simple">
-<li><p>Unzip into a floder.</p></li>
-</ol>
+<p>Install the hub node follow this video.</p>
 <blockquote>
-<div><p>FYI, cli commands can be:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
-<span class="n">cd</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
-<span class="n">unzip</span> <span class="o">../</span><span class="n">synode</span><span class="o">-</span><span class="n">x64_windows</span><span class="o">-</span><span class="n">alpha</span><span class="o">-</span><span class="n">sampledom</span><span class="o">.</span><span class="n">zip</span>
-</pre></div>
-</div>
+<div><div  class="sphinx-contrib-video-container align-left"><video controls="True" preload="auto" width="600"><source src="../_images/00-synode-x64_linux-0.8.0-pic-motion.mp4" type="video/mp4"></video></div></div></blockquote>
 </div></blockquote>
-<ol class="arabic">
-<li><p>Setup Portfolio-synode’s Python module</p>
+</li>
+<li><p>Setup the Peer Nodes</p>
+<p>Steps on Windows</p>
+<ul class="simple">
+<li><p>Download and Unzip into a floder.</p></li>
+</ul>
 <p>Run <em>setup-gui.exe</em>, here is what expected:</p>
 <a class="reference internal image-reference" href="../_images/00-synode-x64_windows-0.8.0.png"><img alt="../_images/00-synode-x64_windows-0.8.0.png" src="../_images/00-synode-x64_windows-0.8.0.png" style="width: 24em;" />
 </a>
 <ul class="simple">
+<li><p>Select the domain created in the <em>hub node</em> step.</p></li>
 <li><p>Setup local web page service port and data service port, e.g. 8964/8965.</p></li>
 </ul>
 <blockquote>
@@ -170,7 +159,7 @@ No need to care about jservs, but make sure the reverse proxy is set correctly, 
 </div>
 <p>If is setting a local service node, say your private storage device, or a computer,
 set <em>Sync-in</em> to typically 60 seconds, while 0 will make the machine stop visiting the hub.</p>
-<p>If you change the hub’s url manually, follow exactly the forma:</p>
+<p>If you change the hub’s url manually, follow exactly the format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">10.0.0.1</span><span class="p">:</span><span class="mi">8964</span><span class="o">/</span><span class="n">jserv</span><span class="o">-</span><span class="n">album</span>
 </pre></div>
 </div>
@@ -212,7 +201,6 @@ the data service, and port 8964, is the web page server.</p>
 </ol>
 <p><strong>And this is the right time to download and scan with the Android client for login</strong>.
 <a class="reference internal" href="../android/quick-start.html#setup-android"><span class="std std-ref">It also needs some setup</span></a>.</p>
-</section>
 </section>
 <section id="uninstall-synodes">
 <h2>Uninstall Synodes<a class="headerlink" href="#uninstall-synodes" title="Link to this heading"></a></h2>

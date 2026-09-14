@@ -4,7 +4,7 @@ Install Portfolio-synode
 ========================
 
     Download synode package according the target OS type at the
-   `product page <https://odys-z.github.io/landings/products/portfolio-0.8>`_.
+    `product page <https://odys-z.github.io/landings/products/portfolio-0.8>`_.
 
 Verified & Recommended Install Steps
 ------------------------------------
@@ -36,10 +36,8 @@ Verified & Recommended Install Steps
 
     Install the hub node follow this video.
 
-    .. video:: imgs/00-synode-x64_linux-0.8.0-pic-motion.mp4
-        :width: 600
-        :controls:
-
+        .. video:: ../imgs/00-synode-x64_linux-0.8.0-pic-motion.mp4
+            :width: 600
 
 #. Setup the Peer Nodes
    
