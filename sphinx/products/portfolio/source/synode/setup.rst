@@ -3,56 +3,56 @@
 Install Portfolio-synode
 ========================
 
-Prerequisit
------------
-
-- Python 3.12
-
-Portfolio-synode requires Python 3.12. This means you need a Windows 10 if you decide 
-to deploy the a synode on Windows.
-
-- Exiftool
-
-For Linux, please also install *Exiftool*.
-
-Follow the `document <https://exiftool.org/install.html#Unix>`_ or use *apt* to install::
-
-    sudo apt install exiftool
-
-And make sure "exiftool -ver" is running.
-
-- About JDK 17
-
-Portfolio 0.8 will download and install it's own JDK 17. Please be aware of this if you
-have other JDKs installed.
-
-Setting up Synodes
-------------------
-
-#. Download synode package according the target OS type at the
+    Download synode package according the target OS type at the
    `product page <https://odys-z.github.io/landings/products/portfolio-0.8>`_.
 
-*To be verified:* Name like x64 is the JRE name. If the installer find that your system 
-  need another JRE, it will automatically download the correct distribution.  
+Verified & Recommended Install Steps
+------------------------------------
+
+#. Install the Hub Node
+
+    Prerequisit
 
 
-Setup on Windows
-________________
+    - Python 3.12
 
-#. Unzip into a floder.
+    Portfolio-synode requires Python 3.12. This means you need a Windows 10 if you decide 
+    to deploy the a synode on Windows.
 
-  FYI, cli commands can be::
+    - Exiftool
 
-    mkdir portfolio-synode
-    cd portfolio-synode
-    unzip ../synode-x64_windows-alpha-sampledom.zip
+    For Linux, please also install *Exiftool*.
 
-#. Setup Portfolio-synode's Python module
+    Follow the `document <https://exiftool.org/install.html#Unix>`_ or use *apt* to install::
+
+        sudo apt install exiftool
+
+    And make sure "exiftool -ver" is running.
+
+    - About JDK 17
+
+    Portfolio 0.8 will download and install it's own JDK 17. Please be aware of this if you
+    have other JDKs installed.
+
+    Install the hub node follow this video.
+
+    .. video:: imgs/00-synode-x64_linux-0.8.0-pic-motion.mp4
+        :width: 600
+        :controls:
+
+
+#. Setup the Peer Nodes
+   
+   Steps on Windows
+
+   - Download and Unzip into a floder.
 
    Run *setup-gui.exe*, here is what expected:
 
    .. image:: ../imgs/00-synode-x64_windows-0.8.0.png
        :width: 24em
+
+   - Select the domain created in the *hub node* step.
 
    - Setup local web page service port and data service port, e.g. 8964/8965.
 
@@ -70,7 +70,7 @@ ________________
     If is setting a local service node, say your private storage device, or a computer,
     set *Sync-in* to typically 60 seconds, while 0 will make the machine stop visiting the hub. 
 
-    If you change the hub's url manually, follow exactly the forma::
+    If you change the hub's url manually, follow exactly the format::
 
         http://10.0.0.1:8964/jserv-album
 
