@@ -6,20 +6,22 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About &mdash; Portfolio Home Page 1.0 documentation</title>
+  <title>Download Portfolio &mdash; Portfolio 0.8 Documents 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=27a464d5" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=2882ecd3"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Portfolio Android Demo" href="android/index.html" />
+    <link rel="next" title="About" href="about.html" />
     <link rel="prev" title="Welcome to Portfolio documentation!" href="index.html" /> 
 </head>
 
@@ -32,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Portfolio Home Page
+            Portfolio 0.8 Documents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -44,14 +46,17 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">About</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-topology">The Topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#about-volume">About Volume</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Download Portfolio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#play-icon-call-for-play-testers"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+     style="height: 0.9em !important; width: auto !important; vertical-align: middle;"
+     alt="▶"
+     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+<span style="display:none;">▶</span> Call for Play Testers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="android/index.html">Portfolio Android Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="synode/index.html">Portfolio Synode (Demo)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="desktop.html">Windows Desktop Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="central/index.html">About Central Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference internal" href="privacy-policy.html">Portfolio Privacy Policy</a></li>
 </ul>
@@ -62,7 +67,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Portfolio Home Page</a>
+          <a href="index.html">Portfolio 0.8 Documents</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +75,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">About</li>
+      <li class="breadcrumb-item active">Download Portfolio</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -79,57 +84,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="about">
-<h1>About<a class="headerlink" href="#about" title="Link to this heading"></a></h1>
-<p>Portfolio is a system for manage, synchronizing personal documents, including an
-Android client App and multiple deployed server nodes.</p>
-<p>Protfolio is currently a demo version. Users must take care of their files
-uploaded to the server, usually a personal computer.</p>
-<section id="the-topology">
-<h2>The Topology<a class="headerlink" href="#the-topology" title="Link to this heading"></a></h2>
-<p>Typically, there should be a central hub node, which is a public server
-accessible from the Internet, and multiple service nodes, which are private servers
-running in local networks. The hub node is used for synchronizing data between service nodes,
-and the service nodes are used for storing data uploaded by clients. The hub node
-is usually available with ristricated storage space.</p>
-<p>There are also mobile clients, such as the Portfolio Android App, which can
-connect to any service nodes and upload files. Files is autmatically synchronized in background.</p>
-<p>With a backbone of relational database synchronization mechanism, Portfolio
-can running in an unrealiable network environment.</p>
-<p>In 0.7.#, the demo version, there is only one synchronization domain, ‘zsu’, available,
-and only 2 Synodes, X29 as the hub node and Y201 as the local node can be setup.</p>
+  <section id="download-portfolio">
+<h1>Download Portfolio<a class="headerlink" href="#download-portfolio" title="Link to this heading"></a></h1>
+<p>Check <a class="reference external" href="https://odys-z.github.io/landings/portfolio-0.8/">Portfolio 0.8 downlaod page</a>.</p>
+<p>All the latest resources can be download at Semantic-jserv, the Edge Computing backbone’s
+<a class="reference external" href="https://github.com/odys-z/semantic-jserv/releases/tag/portfolip-0.8/">release selection</a>.</p>
 </section>
-<section id="about-volume">
-<h2>About Volume<a class="headerlink" href="#about-volume" title="Link to this heading"></a></h2>
-<p>A volume is a folder within the server’s file system, which is specified by the user
-while setting up the service node. uploaded files and data are saved here.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Don’t change data in the volume folder. Moving, modification of files
-will cause unspecified results.</p>
-</div>
-<p>Also, do not switch volume to another location although in v 0.7.0 the service can
-still run.</p>
+<section id="play-icon-call-for-play-testers">
+<h1><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+     style="height: 0.9em !important; width: auto !important; vertical-align: middle;"
+     alt="▶"
+     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+<span style="display:none;">▶</span> Call for Play Testers<a class="headerlink" href="#play-icon-call-for-play-testers" title="Link to this heading"></a></h1>
+<p>The Portfolio 0.8 Demo’s Android client is under Google Play’s <em>Closed Testing</em> phase.
+Had you would like to vote for Portolio 0.8 to pass the tester’s verification, please
+mail to the author at <a class="reference external" href="mailto:odys&#46;zhou&#37;&#52;&#48;gmail&#46;com">odys<span>&#46;</span>zhou<span>&#64;</span>gmail<span>&#46;</span>com</a>, and an opt-in
+link will follow up.</p>
+<p>Thank you for your thumb up!</p>
 </section>
-</section>
-<section id="download">
-<h1>Download<a class="headerlink" href="#download" title="Link to this heading"></a></h1>
-<p>You can agree license and download the software at
-<a class="reference external" href="https://odys-z.github.io/landings/portfolio-0.7/">here</a>.</p>
-<span class="target" id="id1"></span></section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Portfolio documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="android/index.html" class="btn btn-neutral float-right" title="Portfolio Android Demo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="about.html" class="btn btn-neutral float-right" title="About" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, Ody Zhou.</p>
+    <p>&#169; Copyright 2027, Odys Zhou.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

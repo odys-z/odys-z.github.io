@@ -1,11 +1,9 @@
 Portfolio Privacy Policy
 ========================
 
-**Last Updated: March 05, 2025**
+  *Last Updated: Sep 09, 2026*
 
-::
-
-    Product: Portfolio 0.7, Demo Version (Ads Supported)
+  *Product: Portfolio 0.8, Demo Version, Synode, Anroid and Windows Clients (Ads Supported)*
 
 This privacy policy has been compiled to better serve those who are concerned with
 how their 'Personally Identifiable Information' (PII) is being used online. PII,
@@ -19,16 +17,16 @@ in accordance with our apps.
 
 What personal information do we collect from the people using Portfolio?
 
-When installing Family Album Synchronizer, as appropriate, you may be asked to
-allow Portfolio to have the permissions to access user's audio record, external
-storage or other details to help you synchronize (upload) user's files to the
-file server.
+On Android device, when installing Portfolio for file synchronization, as appropriate,
+you may be asked to allow Portfolio to have the permissions to access user's audio
+record, external storage or other details to help you synchronize (upload) user's
+files to the file server.
 
-Portfolio has no plan to use third party services, e.g. Google's Advertising
-and Google Analytics.
+Portfolio is planned to use third party advertisement services, e.g. Google's Advertising,
+but not planning to analysis user's data with third part services, e.g. Google Analytics.
 
-We want to inform users of this application that user's Personal Information will
-not be used anywhere except for managing files at server.
+We want to inform users of Portfolio v0.8 that user's Personal Information will
+not be used anywhere else except for managing files at server.
 
 AdMob & AdSense advertising requirements can be summed up by AdMob & AdSense
 advertising principles. They are put in place to provide a positive experience
@@ -85,6 +83,14 @@ safety.
 
 However, non-personally identifiable user information may be provided to other
 parties for marketing, advertising, or other uses.
+
+Documents Sharing Policies
+--------------------------
+
+In Portfolio 0.8, all files uploaded to a synode will evatually copied to any device
+setup as a sychronization storage node in your synchornization domain. Such devices
+can be owned by other users, and have fully access to the domain's storages. It's the
+user's responsibility to not to share their sensitive documents (files) a specific domain. 
 
 - **Important**:
   

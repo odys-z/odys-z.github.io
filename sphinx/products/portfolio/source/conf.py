@@ -16,9 +16,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Portfolio Home Page'
-copyright = '2025, Ody Zhou'
-author = 'Ody Zhou'
+project = 'Portfolio 0.8 Documents'
+copyright = '2027, Odys Zhou'
+author = 'Odys Zhou'
 
 # The full version, including alpha/beta/rc tags
 release = '1.0'
@@ -31,6 +31,7 @@ release = '1.0'
 # ones.
 extensions = [
     'sphinx_rtd_theme',
+    'sphinxcontrib.video'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -57,3 +58,6 @@ html_static_path = ['static']
 # https://stackoverflow.com/a/62061439
 html_show_sourcelink = False
 html_copy_source = False
+
+def setup(app):
+    app.add_css_file('custom.css')

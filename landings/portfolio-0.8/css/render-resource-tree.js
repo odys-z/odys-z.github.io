@@ -31,8 +31,9 @@
  * set explicitly per level, rather than relying on list-nesting indent, so
  * everything stays flush to the container's left edge regardless of depth.
  */
-function renderResourceTree(containerId, manifestUrl, distBaseUrl) {
-  distBaseUrl |= '';
+function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
+  distBaseUrl = (distBaseUrl || '') + '/';
+  manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json'); 
   const container = document.getElementById(containerId);
   if (!container) return;
 
@@ -48,6 +49,13 @@ function renderResourceTree(containerId, manifestUrl, distBaseUrl) {
 }
 
 function buildTree(container, mf, distBaseUrl) {
+  // --- market -> community -> desktop/synode ---
+  const resolveUrl = (filePath) => 
+    /^(?:https?|wss?|ftps?|file|content):\/\//i.test(filePath)
+      ? filePath
+      : distBaseUrl + filePath;
+
+
   container.innerHTML = '';
   const root = document.createElement('div');
   root.className = 'resource-tree';
@@ -57,12 +65,11 @@ function buildTree(container, mf, distBaseUrl) {
     root.appendChild(sectionHeading('Android'));
     mf.android.forEach(a => {
       root.appendChild(
-        resourceRow(`Portfolio ${a.version} for Android`, distBaseUrl + a.file, 1)
+        resourceRow(`Portfolio ${a.version} for Android`, resolveUrl(a.file), 1)
       );
     });
   }
 
-  // --- market -> community -> desktop/synode ---
   const markets = Object.keys(mf.tree || {}).sort();
   markets.forEach(market => {
     root.appendChild(sectionHeading(`MARKET: ${market}`));
@@ -72,20 +79,25 @@ function buildTree(container, mf, distBaseUrl) {
       root.appendChild(subHeading(`COMMUNITY: ${org}`, 1));
 
       const node = mf.tree[market][org];
+      
       if (node.desktop) {
         root.appendChild(
-          resourceRow(`Desktop ${node.desktop.version}`, distBaseUrl + node.desktop.file, 2)
+          resourceRow(`Desktop ${node.desktop.version}`, resolveUrl(node.desktop.file), 2)
         );
       }
+      
       if (node.synode) {
-        const label = node.synode.jre
-          ? `Synode ${node.synode.version} (${node.synode.jre})`
-          : `Synode ${node.synode.version}`;
-        root.appendChild(resourceRow(label, distBaseUrl + node.synode.file, 2));
+        const synodes = Array.isArray(node.synode) ? node.synode : [node.synode];
+        for (const item of synodes) {
+          const label = item.jre
+            ? `Synode ${item.version} (${item.jre})`
+            : `Synode ${item.version}`;
+
+          root.appendChild(resourceRow(label, resolveUrl(item.file), 2));
+        }
       }
     });
   });
-
   container.appendChild(root);
 }
 

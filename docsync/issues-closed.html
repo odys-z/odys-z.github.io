@@ -7,15 +7,15 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2. Closed Issues &mdash; Docsync.jserv 1.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=2882ecd3"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -130,7 +130,7 @@ which can be the example. The start() method explains details.</p>
 <span class="w">    </span><span class="n">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Server</span><span class="p">();</span>
 <span class="w">    </span><span class="n">connector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LocalConnector</span><span class="p">(</span><span class="n">server</span><span class="p">);</span>
 <span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">addConnector</span><span class="p">(</span><span class="n">connector</span><span class="p">);</span>
-<span class="w">    </span><span class="n">ContextHandler</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ContextHandler</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ContextHandler</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ContextHandler</span><span class="p">(</span><span class="s">"/"</span><span class="p">);</span>
 <span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
 <span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="n">crossOriginHandler</span><span class="p">);</span>
 <span class="w">    </span><span class="n">crossOriginHandler</span><span class="p">.</span><span class="na">setHandler</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ApplicationHandler</span><span class="p">());</span>
@@ -147,16 +147,16 @@ document.</p>
 <span class="w">  </span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">synode</span><span class="p">(</span><span class="n">syngleton</span><span class="p">().</span><span class="na">synode</span><span class="p">());</span>
 
 <span class="w">  </span><span class="n">FilterHolder</span><span class="w"> </span><span class="n">holder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FilterHolder</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_ORIGINS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;*&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_METHODS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;GET,POST,HEAD&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_HEADERS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;X-Requested-With,Content-Type,Accept,Origin&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_ORIGINS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">"*"</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span><span class="p">,</span><span class="w"> </span><span class="s">"*"</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_METHODS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">"GET,POST,HEAD"</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setInitParameter</span><span class="p">(</span><span class="n">CrossOriginFilter</span><span class="p">.</span><span class="na">ALLOWED_HEADERS_PARAM</span><span class="p">,</span><span class="w"> </span><span class="s">"X-Requested-With,Content-Type,Accept,Origin"</span><span class="p">);</span>
+<span class="w">  </span><span class="n">holder</span><span class="p">.</span><span class="na">setName</span><span class="p">(</span><span class="s">"cross-origin"</span><span class="p">);</span>
 <span class="w">  </span><span class="n">FilterMapping</span><span class="w"> </span><span class="n">fm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FilterMapping</span><span class="p">();</span>
-<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setFilterName</span><span class="p">(</span><span class="s">&quot;cross-origin&quot;</span><span class="p">);</span>
-<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setPathSpec</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setFilterName</span><span class="p">(</span><span class="s">"cross-origin"</span><span class="p">);</span>
+<span class="w">  </span><span class="n">fm</span><span class="p">.</span><span class="na">setPathSpec</span><span class="p">(</span><span class="s">"*"</span><span class="p">);</span>
 
-<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="na">addFilter</span><span class="p">(</span><span class="n">holder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/*&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">EnumSet</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">DispatcherType</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">));</span>
+<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="na">addFilter</span><span class="p">(</span><span class="n">holder</span><span class="p">,</span><span class="w"> </span><span class="s">"/*"</span><span class="p">,</span><span class="w"> </span><span class="n">EnumSet</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">DispatcherType</span><span class="p">.</span><span class="na">REQUEST</span><span class="p">));</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
 <span class="p">}</span>
@@ -203,7 +203,7 @@ Jetty handler, by which the POST method is not allowed by the server.</p>
 </section>
 <section id="closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease">
 <h2><span class="section-number">2.3. </span>[closed] Jetty NoSuchMethodError: ByteBufferPool.removeAndRelease<a class="headerlink" href="#closed-jetty-nosuchmethoderror-bytebufferpool-removeandrelease" title="Link to this heading"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">NoSuchMethodError</span><span class="p">:</span> <span class="s1">&#39;boolean org.eclipse.jetty.io.ByteBufferPool.removeAndRelease(org.eclipse.jetty.io.RetainableByteBuffer)&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">NoSuchMethodError</span><span class="p">:</span> <span class="s1">'boolean org.eclipse.jetty.io.ByteBufferPool.removeAndRelease(org.eclipse.jetty.io.RetainableByteBuffer)'</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">lockedReleaseBuffer</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">593</span><span class="p">)</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">onWriteComplete</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">302</span><span class="p">)</span>
     <span class="n">at</span> <span class="n">org</span><span class="o">.</span><span class="n">eclipse</span><span class="o">.</span><span class="n">jetty</span><span class="o">.</span><span class="n">ee8</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">flush</span><span class="p">(</span><span class="n">HttpOutput</span><span class="o">.</span><span class="n">java</span><span class="p">:</span><span class="mi">657</span><span class="p">)</span>
@@ -264,14 +264,14 @@ ArrayByteBufferPool comes with the method removeAndRelease(…).</p>
 <p>commit f7c7c8d6bbd3f383d5d4d295059dfabeeb9f861e</p>
 <p>Date:   Tue Oct 29 19:41:16 2024 -0400</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>√ 0. Docsync 0.2.0: config.xml/class-IUser for IUser object used at serverside,
-    SynodeConfig by syntity.json&#39;s user id is used for Synssion client side, which
+    SynodeConfig by syntity.json's user id is used for Synssion client side, which
     is injected into sysconn while install;
     A SyncUser, admin, is used for domain wide in 0.2.0.
 √ 1. SynDomanager extends SyndomContext, and SyndomContext.load() is called by Syngleton
 √ 2. SynDomanager.loadomx() -&gt; call SyndomContext.loadStampNv(), from which also initializing local robot.
-√ 3. ExpDoctier uses DocUser to represent session&#39;s IUser object
+√ 3. ExpDoctier uses DocUser to represent session's IUser object
 √ 4. SynodeTier also uses a DocUser for initiate a synssion, which is not the same to the
-    syn-context&#39;s local user, and will trigger unlockx() when logging out.
+    syn-context's local user, and will trigger unlockx() when logging out.
 √ 5. SyndomContext is responsible for synlock managing.
 √ 6. Simplify Syngleton.syndomanagers
 </pre></div>
