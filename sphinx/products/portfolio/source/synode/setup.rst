@@ -4,15 +4,14 @@ Install Portfolio-synode
 ========================
 
     Download synode package according the target OS type at the
-    `product page <https://odys-z.github.io/landings/products/portfolio-0.8>`_.
+    `Portfolio Homepage <https://odys-z.github.io/landings/portfolio-0.8/>`_.
 
 Verified & Recommended Install Steps
 ------------------------------------
 
 #. Install the Hub Node
 
-    Prerequisit
-
+    Prerequisites:
 
     - Python 3.12
 
@@ -41,11 +40,13 @@ Verified & Recommended Install Steps
 
 #. Setup the Peer Nodes
    
-   Steps on Windows
-
    - Download and Unzip into a floder.
 
-   Run *setup-gui.exe*, here is what expected:
+   For Windows, download the zip file, unzip and run *setup-gui.exe*.
+   
+   For Linux, download the tar ball, extract and run *synode-gui*.
+
+   Here is what expected:
 
    .. image:: ../imgs/00-synode-x64_windows-0.8.0.png
        :width: 24em
@@ -77,11 +78,24 @@ Verified & Recommended Install Steps
     There should be a QR Code showing now. You can scan with a Portfolio
     client later, e.g. the Portfolio Android, to connect to this service node.
 
-    - Click *Install Windows Serivce* to start 2 windows services.
-
-    **Note: To install and start 2 Services, you need confirm with Administrator's permission, 4 times**
+    - Install the service
     
-    Please note the permission dialogs can be hidden behind the current window.
+    For Windows
+    
+        Click *Install Windows Serivce* to start 2 windows services.
+
+        Users need confirm with Administrator's permission, 4 times, for setup & start service for each service.
+
+        **Note: Please note the permission dialogs can be hidden behind the current window.**
+
+    For Linux
+    
+    Copy the generated serivce templates to setup system services.
+
+    The service configuration files are named if format of [synode-id][.service] and [synode-id][.web-service]. E.g.::
+
+        closed-test-1-hub.service
+        closed-test-1-hub.web.service
 
 #. Test in Browser
 
@@ -127,3 +141,17 @@ The files saving location is specified by the *volume* path. You can delete the
 folder if you don't need the uploaded files anymore.
 
 * If files damaged and the services cannot uninstalled, you can :ref:`uninstall Windows Service manually <uninstall_winsrv_manually>`.
+
+Uninstall Portfolio-synode on Windows
+_____________________________________
+
+Here is the command templates, for uninstall services of synode Id *closed-test-1-hub*:
+
+.. code-block:: bash
+
+   sudo systemctl stop closed-test-1-hub.service closed-test-1-hub.web.service
+   sudo systemctl disable closed-test-1-hub.service closed-test-1-hub.web.service
+   sudo rm /etc/systemd/system/closed-test-1-hub.service
+   sudo rm /etc/systemd/system/closed-test-1-hub.web.service
+   sudo systemctl daemon-reload
+   sudo systemctl reset-failed
