@@ -49,6 +49,13 @@ function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
 }
 
 function buildTree(container, mf, distBaseUrl) {
+  // --- market -> community -> desktop/synode ---
+  const resolveUrl = (filePath) => 
+    /^(?:https?|wss?|ftps?|file|content):\/\//i.test(filePath)
+      ? filePath
+      : distBaseUrl + filePath;
+
+
   container.innerHTML = '';
   const root = document.createElement('div');
   root.className = 'resource-tree';
@@ -62,12 +69,6 @@ function buildTree(container, mf, distBaseUrl) {
       );
     });
   }
-
-  // --- market -> community -> desktop/synode ---
-  const resolveUrl = (filePath) => 
-    /^(?:https?|wss?|ftps?|file|content):\/\//i.test(filePath)
-      ? filePath
-      : distBaseUrl + filePath;
 
   const markets = Object.keys(mf.tree || {}).sort();
   markets.forEach(market => {
