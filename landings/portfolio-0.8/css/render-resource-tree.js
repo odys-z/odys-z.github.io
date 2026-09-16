@@ -58,7 +58,7 @@ function buildTree(container, mf, distBaseUrl) {
     root.appendChild(sectionHeading('Android'));
     mf.android.forEach(a => {
       root.appendChild(
-        resourceRow(`Portfolio ${a.version} for Android`, distBaseUrl + a.file, 1)
+        resourceRow(`Portfolio ${a.version} for Android`, resolveUrl(a.file), 1)
       );
     });
   }
