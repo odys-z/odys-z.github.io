@@ -6,6 +6,7 @@ Portfolio Synode (Demo)
    :caption: Android Client:
 
    setup
+   tips
    trouble
 ..
 
