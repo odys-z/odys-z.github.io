@@ -7,9 +7,6 @@
  *   Android
  *     [download] Portfolio 0.8.0 for Android
  *
- *   Documents
- *     [download] Portfolio 0.8 Manual (PDF, en)
- *
  *   MARKET: alpha
  *     COMMUNITY: pmking
  *       [download] Desktop 0.8.0
@@ -34,31 +31,104 @@
  * All rows are plain <div>s (not nested <ul>/<li>) with left/right padding
  * set explicitly per level, rather than relying on list-nesting indent, so
  * everything stays flush to the container's left edge regardless of depth.
+ *
+ * Documents (mf.docs) are NOT part of the resource tree. They are rendered
+ * into a separate container (docsContainerId), one link per language found
+ * in the manifest, labelled with the names in DOC_LANGS below.
  */
-function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
+
+// ---------------------------------------------------------------------------
+// Data: display names for document language codes (manifest "lang" field,
+// taken from file names like portfolio-0.8-zh-CN.pdf). Codes not listed here
+// are shown as the raw code.
+// ---------------------------------------------------------------------------
+const DOC_LANGS = {
+  "en": "English",
+  "zh-CN": "Chinese (simplified)"
+};
+
+/**
+ * @param containerId     element for the resource tree (Android + markets)
+ * @param distBaseUrl     folder holding the manifest and the artifacts
+ * @param manifestUrl     manifest file name, relative to distBaseUrl
+ * @param docsContainerId optional element for the document downloads; its
+ *                        existing content (e.g. a static link) is kept
+ */
+function renderResourceTree(containerId, distBaseUrl, manifestUrl, docsContainerId) {
   distBaseUrl = (distBaseUrl || '') + '/';
-  manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json'); 
+  manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json');
   const container = document.getElementById(containerId);
   if (!container) return;
+  const docsContainer = docsContainerId ? document.getElementById(docsContainerId) : null;
 
   fetch(manifestUrl, { cache: 'no-store' })
     .then(resp => {
       if (!resp.ok) throw new Error(`manifest fetch failed: ${resp.status}`);
       return resp.json();
     })
-    .then(mf => buildTree(container, mf, distBaseUrl))
+    .then(mf => {
+      buildTree(container, mf, distBaseUrl);
+      if (docsContainer) buildDocs(docsContainer, mf, distBaseUrl);
+    })
     .catch(err => {
       console.error('renderResourceTree:', err);
     });
 }
 
-function buildTree(container, mf, distBaseUrl) {
-  // --- market -> community -> desktop/synode ---
-  const resolveUrl = (filePath) => 
+function urlResolver(distBaseUrl) {
+  return (filePath) =>
     /^(?:https?|wss?|ftps?|file|content):\/\//i.test(filePath)
       ? filePath
       : distBaseUrl + filePath;
+}
 
+/** "zh_cn" / "ZH-CN" -> "zh-CN"; "EN" -> "en" */
+function normalizeLang(code) {
+  const [lang, region] = String(code || '').split(/[-_]/);
+  return region ? `${lang.toLowerCase()}-${region.toUpperCase()}` : lang.toLowerCase();
+}
+
+function langName(code) {
+  const norm = normalizeLang(code);
+  return DOC_LANGS[norm] || norm;
+}
+
+/**
+ * Appends the document downloads (one row per language) to docsContainer,
+ * keeping whatever the page already put there. The language matching the
+ * page's <html lang> comes first; the rest follow in DOC_LANGS order, then
+ * any language not in DOC_LANGS.
+ */
+function buildDocs(docsContainer, mf, distBaseUrl) {
+  const docs = (mf.docs || []).slice();
+  if (!docs.length) return;
+
+  const resolveUrl = urlResolver(distBaseUrl);
+  const pageLang = normalizeLang(document.documentElement.lang || 'en');
+  const known = Object.keys(DOC_LANGS);
+  const rank = (d) => {
+    const l = normalizeLang(d.lang);
+    if (l === pageLang) return -1;
+    const i = known.indexOf(l);
+    return i < 0 ? known.length : i;
+  };
+  docs.sort((a, b) => rank(a) - rank(b));
+
+  const box = document.createElement('div');
+  box.className = 'doc-downloads';
+  box.appendChild(sectionHeading('Documents'));
+  docs.forEach(d => {
+    const label = d.lang
+      ? `Portfolio ${d.version} Manual (PDF, ${langName(d.lang)})`
+      : `Portfolio ${d.version} Manual (PDF)`;
+    box.appendChild(resourceRow(label, resolveUrl(d.file), 1));
+  });
+  docsContainer.appendChild(box);
+}
+
+function buildTree(container, mf, distBaseUrl) {
+  // --- market -> community -> desktop/synode ---
+  const resolveUrl = urlResolver(distBaseUrl);
 
   container.innerHTML = '';
   const root = document.createElement('div');
@@ -71,17 +141,6 @@ function buildTree(container, mf, distBaseUrl) {
       root.appendChild(
         resourceRow(`Portfolio ${a.version} for Android`, resolveUrl(a.file), 1)
       );
-    });
-  }
-
-  // --- Documents section (flat, one PDF per language) ---
-  if (mf.docs && mf.docs.length) {
-    root.appendChild(sectionHeading('Documents'));
-    mf.docs.forEach(d => {
-      const label = d.lang
-        ? `Portfolio ${d.version} Manual (PDF, ${d.lang})`
-        : `Portfolio ${d.version} Manual (PDF)`;
-      root.appendChild(resourceRow(label, resolveUrl(d.file), 1));
     });
   }
 

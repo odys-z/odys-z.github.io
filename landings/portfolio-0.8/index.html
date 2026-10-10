@@ -16,12 +16,15 @@
 .w3-bar,.fa-anchor,.fa-coffee {font-size:200px}
 
 #download-links .resource-tree,
-#download-links .resource-tree * {
+#download-links .resource-tree *,
+#doc-links .doc-downloads,
+#doc-links .doc-downloads * {
    text-align: left;
   }
 
 #download-links .resource-tree .resource-section,
-#download-links .resource-tree .resource-subsection {
+#download-links .resource-tree .resource-subsection,
+#doc-links .doc-downloads .resource-section {
   text-align: center;
 }
 
@@ -81,11 +84,16 @@
       </div>
     </div>
 
-    <div class="w3-third w3-center", id="download-links">
-      <p class="fa w3-text-indigo">
-          <a id='doc-install' href="../../products/portfolio/android/quick-start.html">
-              Document: Install Portfolio</a>
-      </p>
+    <div class="w3-third w3-center">
+      <!-- Documents: kept outside the resource tree, which clears its own container -->
+      <div id="doc-links">
+        <p class="fa w3-text-indigo">
+            <a id='doc-install' href="../../products/portfolio/android/quick-start.html">
+                Document: Install Portfolio</a>
+        </p>
+      </div>
+      <!-- Resource tree: Android + market/community downloads -->
+      <div id="download-links"></div>
     </div>
   </div>
 </div>
@@ -108,7 +116,7 @@ function setHeader() {
   }
 }
 
-renderResourceTree('download-links', './res/dist');
+renderResourceTree('download-links', './res/dist', 'manifest.json', 'doc-links');
 </script>
 
 </body>
