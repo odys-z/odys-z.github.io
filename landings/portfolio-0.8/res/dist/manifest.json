@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-09T09:54:32+00:00",
+  "generated_at": "2026-10-10T12:14:38+00:00",
   "android": [
     {
-      "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/portfolio-0.7.5.apk",
+      "file": "portfolio-0.7.5.apk",
       "version": "0.7.5",
       "ext": "apk",
       "size_bytes": 0,
@@ -14,29 +14,29 @@
       "file": "portfolio-0.8-en.pdf",
       "version": "0.8",
       "lang": "en",
-      "size_bytes": 0,
-      "modified_at": "2026-10-10T12:00:00+00:00"
+      "size_bytes": 2281907,
+      "modified_at": "2026-10-10T12:12:37+00:00"
     }
   ],
   "tree": {
     "alpha": {
-      "Closed Test": {
+      "github": {
         "desktop": {
-          "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/desktop-0.8.0-alpha-closed-test.zip",
+          "file": "desktop-0.8.0-alpha-github.zip",
           "version": "0.8.0",
           "size_bytes": 0,
           "modified_at": "2026-09-08T12:10:59+00:00"
         },
         "synode": [
           {
-            "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.0-x64_linux-alpha-closed-test.tar.gz",
+            "file": "synode-0.8.0-x64_linux-alpha-github.tar.gz",
             "version": "0.8.0",
             "jre": "x64_linux",
             "size_bytes": 0,
             "modified_at": "2026-09-08T12:10:18+00:00"
           },
           {
-            "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.0-x64_windows-alpha-closed-test.zip",
+            "file": "synode-0.8.0-x64_windows-alpha-github.zip",
             "version": "0.8.0",
             "jre": "x64_windows",
             "size_bytes": 0,
