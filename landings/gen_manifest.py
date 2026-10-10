@@ -10,13 +10,15 @@ About
 gen_manifest.py
 
 Scans a "res/dist" folder for published Portfolio build artifacts and
-writes a manifest.json describing three resource types:
+writes a manifest.json describing four resource types:
 
   1. apk      - portfolio-<version>[-<anything>].apk or .aab
                 (no market/org — flat "Android" section)
   2. desktop  - desktop-<version>-<market>-<org>.zip
   3. synode   - synode-<version>-<jre>-<market>-<org>.zip
                 (has an extra "jre" segment between version and market)
+  4. docs     - portfolio-<version>-<lang>.pdf  (e.g. portfolio-0.8-en.pdf)
+                (flat "Documents" section, one entry per language)
 
 Output shape:
 
@@ -24,6 +26,9 @@ Output shape:
   "generated_at": "...",
   "android": [
     {"file": "portfolio-0.8.0-android.apk", "version": "0.8.0"}
+  ],
+  "docs": [
+    {"file": "portfolio-0.8-en.pdf", "version": "0.8", "lang": "en"}
   ],
   "tree": {
     "<market>": {
@@ -52,6 +57,9 @@ from datetime import datetime, timezone
 
 APK_RE = re.compile(
     r'^portfolio-(?P<version>[\d.]+)(?:-[^.]+)?\.(?P<ext>apk|aab)$', re.IGNORECASE)
+
+DOC_RE = re.compile(
+    r'^portfolio-(?P<version>[\d.]+)-(?P<lang>[a-z]{2}(?:[-_][a-z]{2})?)\.pdf$', re.IGNORECASE)
 
 # desktop/synode filenames use '-' both as the field separator AND inside
 # org ids (e.g. "pm-4"), so a plain regex can't tell them apart. We
@@ -118,6 +126,7 @@ def remove_suffixes(filepath: str) -> str:
 
 def build_manifest(dist_dir: Path) -> dict:
     android = []
+    docs = []
     tree: dict[str, dict[str, dict]] = {}
     unmatched = []
 
@@ -130,6 +139,14 @@ def build_manifest(dist_dir: Path) -> dict:
             android.append({
                 "file": f.name, "version": apk_m["version"],
                 "ext": apk_m["ext"].lower(), **file_meta(f)
+            })
+            continue
+
+        doc_m = DOC_RE.match(f.name)
+        if doc_m:
+            docs.append({
+                "file": f.name, "version": doc_m["version"],
+                "lang": doc_m["lang"], **file_meta(f)
             })
             continue
 
@@ -156,7 +173,7 @@ def build_manifest(dist_dir: Path) -> dict:
 
         unmatched.append(f.name)
 
-    if not android and not tree:
+    if not android and not docs and not tree:
         print(f"warning: no recognized artifacts found in {dist_dir}", file=sys.stderr)
     for name in unmatched:
         print(f"note: skipped unrecognized file: {name}", file=sys.stderr)
@@ -168,6 +185,7 @@ def build_manifest(dist_dir: Path) -> dict:
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "android": android,
+        "docs": docs,
         "tree": tree,
     }
 

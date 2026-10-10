@@ -9,6 +9,15 @@
       "modified_at": "2026-09-08T12:10:43+00:00"
     }
   ],
+  "docs": [
+    {
+      "file": "portfolio-0.8-en.pdf",
+      "version": "0.8",
+      "lang": "en",
+      "size_bytes": 0,
+      "modified_at": "2026-10-10T12:00:00+00:00"
+    }
+  ],
   "tree": {
     "alpha": {
       "Closed Test": {

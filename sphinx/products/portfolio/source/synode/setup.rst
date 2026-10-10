@@ -35,8 +35,19 @@ Verified & Recommended Install Steps
 
     Install the hub node following this video.
 
-        .. video:: ../imgs/00-synode-x64_linux-0.8.0-pic-motion.mp4
-            :width: 600
+        .. only:: html
+
+            .. video:: ../imgs/00-synode-x64_linux-0.8.0-pic-motion.mp4
+                :width: 600
+
+        .. only:: latex
+
+            .. image:: ../imgs/00-synode-x64_linux-0.8.0-poster.png
+                :width: 80%
+                :target: https://odys-z.github.io/products/portfolio/synode/setup.html
+
+            Watch the video online:
+            https://odys-z.github.io/products/portfolio/synode/setup.html
 
 #. Setup the Peer Nodes
    

@@ -6,4 +6,5 @@
 !**/res/links-github.json
 **/res/dist/*
 !**/res/dist/manifest.github.json
+!**/res/dist/portfolio-*.pdf
 build-*

@@ -59,5 +59,15 @@ html_static_path = ['static']
 html_show_sourcelink = False
 html_copy_source = False
 
+# -- Options for LaTeX/PDF output -------------------------------------------
+# pdflatex can't print these characters, used in code blocks, by default.
+latex_elements = {
+    'preamble': r'''
+\DeclareUnicodeCharacter{2500}{-}
+\DeclareUnicodeCharacter{2570}{\ensuremath{\llcorner}}
+\DeclareUnicodeCharacter{25B6}{\ensuremath{\blacktriangleright}}
+''',
+}
+
 def setup(app):
     app.add_css_file('custom.css')

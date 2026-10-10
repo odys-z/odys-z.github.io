@@ -7,6 +7,9 @@
  *   Android
  *     [download] Portfolio 0.8.0 for Android
  *
+ *   Documents
+ *     [download] Portfolio 0.8 Manual (PDF, en)
+ *
  *   MARKET: alpha
  *     COMMUNITY: pmking
  *       [download] Desktop 0.8.0
@@ -17,6 +20,7 @@
  * Expects a manifest shaped like:
  * {
  *   "android": [{ "file": "...", "version": "..." }],
+ *   "docs":    [{ "file": "...", "version": "...", "lang": "en" }],
  *   "tree": {
  *     "<market>": {
  *       "<org>": {
@@ -67,6 +71,17 @@ function buildTree(container, mf, distBaseUrl) {
       root.appendChild(
         resourceRow(`Portfolio ${a.version} for Android`, resolveUrl(a.file), 1)
       );
+    });
+  }
+
+  // --- Documents section (flat, one PDF per language) ---
+  if (mf.docs && mf.docs.length) {
+    root.appendChild(sectionHeading('Documents'));
+    mf.docs.forEach(d => {
+      const label = d.lang
+        ? `Portfolio ${d.version} Manual (PDF, ${d.lang})`
+        : `Portfolio ${d.version} Manual (PDF)`;
+      root.appendChild(resourceRow(label, resolveUrl(d.file), 1));
     });
   }
 
