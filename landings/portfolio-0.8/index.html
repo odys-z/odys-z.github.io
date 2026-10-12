@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Welcome to Album</title>
+<title>Portfolio 0.8</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="alternate" hreflang="en" href="https://odys-z.github.io/landings/portfolio-0.8/">
+<link rel="alternate" hreflang="zh-CN" href="https://odys-z.github.io/landings/portfolio-0.8/zh-CN/">
+<link rel="alternate" hreflang="zh-TW" href="https://odys-z.github.io/landings/portfolio-0.8/zh-TW/">
+<link rel="alternate" hreflang="x-default" href="https://odys-z.github.io/landings/portfolio-0.8/">
 <script rel="text/script" src="./css/render-resource-tree.js"></script>
+<script rel="text/script" src="./css/lang-switcher.js"></script>
 <link rel="stylesheet" href="./css/w3.css">
 <!--
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -28,6 +33,9 @@
   text-align: center;
 }
 
+#what-to-download td, #what-to-download th { vertical-align: top; }
+#what-to-download code { font-size: 90%; }
+
 .qr { background: url('css/qr-inforise.com.cn.svg');
       background-position: right;
       background-size: contain;
@@ -39,7 +47,7 @@
 
 <!-- Navbar -->
 <div class="w3-top">
-  <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
+  <div id="top-bar" class="w3-bar w3-blue w3-card w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue"
        href="javascript:void(0);" onclick="setHeader()" title="Toggle Navigation Menu">
        <i class="fa fa-bars"></i></a>
@@ -98,6 +106,77 @@
   </div>
 </div>
 
+<!-- What to download -->
+<div id="what-to-download" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content">
+    <h2>What to download</h2>
+    <p>A Portfolio <em>domain</em> is a group of storage nodes (<b>Synodes</b>) that keep
+      copies of each other's files. Clients (Android, Windows Desktop) upload files to a
+      Synode of the domain. Pick the packages for the role of each machine:</p>
+
+    <div class="w3-responsive">
+    <table class="w3-table w3-bordered w3-white">
+      <tr class="w3-blue">
+        <th>Package</th><th>What it is</th><th>Who needs it</th><th>Requirements</th>
+      </tr>
+      <tr>
+        <td><b>Synode</b><br><code>synode-&lt;version&gt;-x64_windows-&lt;market&gt;-&lt;community&gt;.zip</code><br>
+            <code>synode-&lt;version&gt;-x64_linux-&lt;market&gt;-&lt;community&gt;.tar.gz</code></td>
+        <td>The file storage node (server). Saves uploaded files in its <em>volume</em> folder and
+            synchronizes them with the other Synodes of the domain. Includes a setup GUI and
+            installs itself as system services.</td>
+        <td>Every domain needs one <b>hub</b> Synode on a host reachable by public IP, plus
+            one Synode on each private computer that should keep a copy of the files.
+            Choose the zip for Windows, the tar ball for Linux.</td>
+        <td>Python 3.12 for setup; Windows 10+ or 64-bit Linux; Linux also needs
+            <code>exiftool</code>. A JRE 17 is downloaded during setup.</td>
+      </tr>
+      <tr>
+        <td><b>Desktop</b><br><code>desktop-&lt;version&gt;-&lt;market&gt;-&lt;community&gt;.zip</code></td>
+        <td>The Windows client for browsing, uploading and managing files on a PC.</td>
+        <td><b>Not needed</b> on a Windows computer that runs a Synode, since the Synode package
+            already installs it. Download it only for a Windows PC that uses a domain
+            without hosting a Synode.</td>
+        <td>Windows 10+</td>
+      </tr>
+      <tr>
+        <td><b>Android</b><br><code>portfolio-&lt;version&gt;.apk</code></td>
+        <td>The mobile client. Uploads photos, videos, audio and other files from the phone.</td>
+        <td>Anyone uploading from an Android phone. It connects to a Synode that is already
+            set up, by scanning the QR code shown in the Synode's setup.</td>
+        <td>Android 8.0+</td>
+      </tr>
+      <tr>
+        <td><b>Manual</b><br><code>portfolio-&lt;version&gt;-&lt;lang&gt;.pdf</code></td>
+        <td>The offline PDF of the <a href="https://odys-z.github.io/products/portfolio/">online documents</a>.</td>
+        <td>Optional, for reading offline.</td>
+        <td>A PDF reader</td>
+      </tr>
+    </table>
+    </div>
+
+    <h4>Market and community</h4>
+    <p>Synode and Desktop packages are listed under a <b>MARKET</b> (the release channel,
+      e.g. <code>alpha</code>) and a <b>COMMUNITY</b> (the organization whose registry the
+      package is preconfigured for). Download the packages of the community you are
+      joining, and use the same community for every Synode and Desktop in a domain.</p>
+
+    <h4>Typical setups</h4>
+    <ul>
+      <li><b>Starting a new domain:</b> a Synode on a public-IP host as the hub, then a Synode
+        on each home or office computer, then the Android app on phones.</li>
+      <li><b>Joining an existing domain:</b> a Synode on your computer (Windows users get the
+        Desktop client with it), and/or the Android app.</li>
+      <li><b>Phone only:</b> just the Android app, connected to a Synode someone in the domain
+        has already set up.</li>
+    </ul>
+    <p>Step-by-step instructions:
+      <a href="../../products/portfolio/synode/setup.html">Install Portfolio-synode</a> &middot;
+      <a href="../../products/portfolio/android/quick-start.html">Android quick start</a> &middot;
+      <a href="../../products/portfolio/desktop.html">Windows Desktop</a></p>
+  </div>
+</div>
+
 <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
     <h1 class="w3-margin w3-xlarge">Alpha Version 2026</h1>
 </div>
@@ -116,6 +195,7 @@ function setHeader() {
   }
 }
 
+renderLangSwitcher('top-bar', './');
 renderResourceTree('download-links', './res/dist', 'manifest.json', 'doc-links');
 </script>
 

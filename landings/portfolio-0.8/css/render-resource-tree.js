@@ -34,18 +34,60 @@
  *
  * Documents (mf.docs) are NOT part of the resource tree. They are rendered
  * into a separate container (docsContainerId), one link per language found
- * in the manifest, labelled with the names in DOC_LANGS below.
+ * in the manifest, labelled with LANG_NAMES from lang-switcher.js.
+ *
+ * Requires: lang-switcher.js loaded on the same page (for LANG_NAMES). Without
+ * it the manuals are still listed, labelled with the raw language code.
  */
 
+// Language names (manifest "lang" field, from file names like
+// portfolio-0.8-zh-CN.pdf) come from LANG_NAMES in lang-switcher.js, the one
+// list of languages for the landing pages. Read at call time, so script order
+// does not matter.
+function langNames() {
+  return (typeof LANG_NAMES !== 'undefined') ? LANG_NAMES : {};
+}
+
 // ---------------------------------------------------------------------------
-// Data: display names for document language codes (manifest "lang" field,
-// taken from file names like portfolio-0.8-zh-CN.pdf). Codes not listed here
-// are shown as the raw code.
+// Data: UI labels per page language (<html lang>). Languages not listed fall
+// back to "en". Add an entry here when adding a landing page language.
 // ---------------------------------------------------------------------------
-const DOC_LANGS = {
-  "en": "English",
-  "zh-CN": "Chinese (simplified)"
+const TREE_TEXT = {
+  "en": {
+    android:   "Android",
+    apk:       (v) => `Portfolio ${v} for Android`,
+    market:    (m) => `MARKET: ${m}`,
+    community: (o) => `COMMUNITY: ${o}`,
+    desktop:   (v) => `Desktop ${v}`,
+    synode:    (v) => `Synode ${v}`,
+    documents: "Documents",
+    manual:    (v, lang) => lang ? `Portfolio ${v} Manual (PDF, ${lang})` : `Portfolio ${v} Manual (PDF)`
+  },
+  "zh-CN": {
+    android:   "Android",
+    apk:       (v) => `Portfolio ${v}（Android 版）`,
+    market:    (m) => `发布渠道：${m}`,
+    community: (o) => `社区：${o}`,
+    desktop:   (v) => `桌面端 ${v}`,
+    synode:    (v) => `Synode ${v}`,
+    documents: "文档",
+    manual:    (v, lang) => lang ? `Portfolio ${v} 用户手册（PDF，${lang}）` : `Portfolio ${v} 用户手册（PDF）`
+  },
+  "zh-TW": {
+    android:   "Android",
+    apk:       (v) => `Portfolio ${v}（Android 版）`,
+    market:    (m) => `發佈渠道：${m}`,
+    community: (o) => `社群：${o}`,
+    desktop:   (v) => `桌面端 ${v}`,
+    synode:    (v) => `Synode ${v}`,
+    documents: "文件",
+    manual:    (v, lang) => lang ? `Portfolio ${v} 使用手冊（PDF，${lang}）` : `Portfolio ${v} 使用手冊（PDF）`
+  }
 };
+
+function treeText() {
+  return TREE_TEXT[normalizeLang(document.documentElement.lang || 'en')] || TREE_TEXT.en;
+}
 
 /**
  * @param containerId     element for the resource tree (Android + markets)
@@ -90,14 +132,14 @@ function normalizeLang(code) {
 
 function langName(code) {
   const norm = normalizeLang(code);
-  return DOC_LANGS[norm] || norm;
+  return langNames()[norm] || norm;
 }
 
 /**
  * Appends the document downloads (one row per language) to docsContainer,
  * keeping whatever the page already put there. The language matching the
- * page's <html lang> comes first; the rest follow in DOC_LANGS order, then
- * any language not in DOC_LANGS.
+ * page's <html lang> comes first; the rest follow in LANG_NAMES order, then
+ * any language not in LANG_NAMES.
  */
 function buildDocs(docsContainer, mf, distBaseUrl) {
   const docs = (mf.docs || []).slice();
@@ -105,7 +147,7 @@ function buildDocs(docsContainer, mf, distBaseUrl) {
 
   const resolveUrl = urlResolver(distBaseUrl);
   const pageLang = normalizeLang(document.documentElement.lang || 'en');
-  const known = Object.keys(DOC_LANGS);
+  const known = Object.keys(langNames());
   const rank = (d) => {
     const l = normalizeLang(d.lang);
     if (l === pageLang) return -1;
@@ -114,13 +156,12 @@ function buildDocs(docsContainer, mf, distBaseUrl) {
   };
   docs.sort((a, b) => rank(a) - rank(b));
 
+  const T = treeText();
   const box = document.createElement('div');
   box.className = 'doc-downloads';
-  box.appendChild(sectionHeading('Documents'));
+  box.appendChild(sectionHeading(T.documents));
   docs.forEach(d => {
-    const label = d.lang
-      ? `Portfolio ${d.version} Manual (PDF, ${langName(d.lang)})`
-      : `Portfolio ${d.version} Manual (PDF)`;
+    const label = T.manual(d.version, d.lang ? langName(d.lang) : '');
     box.appendChild(resourceRow(label, resolveUrl(d.file), 1));
   });
   docsContainer.appendChild(box);
@@ -129,6 +170,7 @@ function buildDocs(docsContainer, mf, distBaseUrl) {
 function buildTree(container, mf, distBaseUrl) {
   // --- market -> community -> desktop/synode ---
   const resolveUrl = urlResolver(distBaseUrl);
+  const T = treeText();
 
   container.innerHTML = '';
   const root = document.createElement('div');
@@ -136,27 +178,27 @@ function buildTree(container, mf, distBaseUrl) {
 
   // --- Android section (flat, no market/community) ---
   if (mf.android && mf.android.length) {
-    root.appendChild(sectionHeading('Android'));
+    root.appendChild(sectionHeading(T.android));
     mf.android.forEach(a => {
       root.appendChild(
-        resourceRow(`Portfolio ${a.version} for Android`, resolveUrl(a.file), 1)
+        resourceRow(T.apk(a.version), resolveUrl(a.file), 1)
       );
     });
   }
 
   const markets = Object.keys(mf.tree || {}).sort();
   markets.forEach(market => {
-    root.appendChild(sectionHeading(`MARKET: ${market}`));
+    root.appendChild(sectionHeading(T.market(market)));
 
     const orgs = Object.keys(mf.tree[market]).sort();
     orgs.forEach(org => {
-      root.appendChild(subHeading(`COMMUNITY: ${org}`, 1));
+      root.appendChild(subHeading(T.community(org), 1));
 
       const node = mf.tree[market][org];
       
       if (node.desktop) {
         root.appendChild(
-          resourceRow(`Desktop ${node.desktop.version}`, resolveUrl(node.desktop.file), 2)
+          resourceRow(T.desktop(node.desktop.version), resolveUrl(node.desktop.file), 2)
         );
       }
       
@@ -164,8 +206,8 @@ function buildTree(container, mf, distBaseUrl) {
         const synodes = Array.isArray(node.synode) ? node.synode : [node.synode];
         for (const item of synodes) {
           const label = item.jre
-            ? `Synode ${item.version} (${item.jre})`
-            : `Synode ${item.version}`;
+            ? `${T.synode(item.version)} (${item.jre})`
+            : T.synode(item.version);
 
           root.appendChild(resourceRow(label, resolveUrl(item.file), 2));
         }
