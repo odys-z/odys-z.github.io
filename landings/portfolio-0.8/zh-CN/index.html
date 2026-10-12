@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>Portfolio 0.8</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="alternate" hreflang="en" href="https://odys-z.github.io/landings/portfolio-0.8/">
+<link rel="alternate" hreflang="zh-CN" href="https://odys-z.github.io/landings/portfolio-0.8/zh-CN/">
+<link rel="alternate" hreflang="zh-TW" href="https://odys-z.github.io/landings/portfolio-0.8/zh-TW/">
+<link rel="alternate" hreflang="x-default" href="https://odys-z.github.io/landings/portfolio-0.8/">
+<script rel="text/script" src="../css/render-resource-tree.js"></script>
+<script rel="text/script" src="../css/lang-switcher.js"></script>
+<link rel="stylesheet" href="../css/w3.css">
+<!--
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+.w3-bar,.fa-anchor,.fa-coffee {font-size:200px}
+
+#download-links .resource-tree,
+#download-links .resource-tree *,
+#doc-links .doc-downloads,
+#doc-links .doc-downloads * {
+   text-align: left;
+  }
+
+#download-links .resource-tree .resource-section,
+#download-links .resource-tree .resource-subsection,
+#doc-links .doc-downloads .resource-section {
+  text-align: center;
+}
+
+#what-to-download td, #what-to-download th { vertical-align: top; }
+#what-to-download code { font-size: 90%; }
+
+.qr { background: url('../css/qr-inforise.com.cn.svg');
+      background-position: right;
+      background-size: contain;
+      background-repeat: no-repeat;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div id="top-bar" class="w3-bar w3-blue w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue"
+       href="javascript:void(0);" onclick="setHeader()" title="展开导航菜单">
+       <i class="fa fa-bars"></i></a>
+    <a href="http://github.com/odys-z" class="w3-bar-item w3-button w3-padding-large w3-white">
+      源代码</a>
+    <a href="https://odys-z.github.io/products/portfolio/" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">
+      文档</a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="https://odys-z.github.io/products/portfolio" class="w3-bar-item w3-button w3-padding-large">文档</a>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-container w3-blue w3-center" style="padding:128px 16px">
+  <h1 id="qrh1" class="w3-margin w3-jumbo">Portfolio 0.8</h1>
+  <h4 class="w3-xlarge">支持 Android 8.0+ 与 Windows 10+</h4>
+  <p class="w3-xlarge">基于 <a href='https://odys-z.github.io'>Semantic-*</a></p>
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
+      onclick="return false;">
+      规划域服务（即将推出）</button>
+</header>
+
+<!-- First Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h2>Portfolio 0.8 个人文档同步平台</h2>
+      <h5 class="w3-padding-32">分享你的经历与知识。</h5>
+
+      <div class="w3-twothird">
+        <h5>许可证 <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a></h5>
+        <h4>数据安全声明</h4>
+        <h5 class="w3-padding-32">Portfolio 用于个人私有文档的同步。
+          Portfolio 0.8 按“现状”（AS IS）发布。用户文档保存在安装时由用户指定的卷（volume）文件夹中。
+          当前版本仅供演示，尚未针对文档安全进行完整测试，用户须自行留意并负责其文档的状态。</h5>
+        <h6 class="w3-padding-32">安装本软件即表示用户同意上述条款。</h6>
+      </div>
+    </div>
+
+    <div class="w3-third w3-center">
+      <!-- Documents: kept outside the resource tree, which clears its own container -->
+      <div id="doc-links">
+        <p class="fa w3-text-indigo">
+            <a id='doc-install' href="../../../products/portfolio/android/quick-start.html">
+                文档：如何安装 Portfolio</a>
+        </p>
+      </div>
+      <!-- Resource tree: Android + market/community downloads -->
+      <div id="download-links"></div>
+    </div>
+  </div>
+</div>
+
+<!-- What to download -->
+<div id="what-to-download" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content">
+    <h2>下载哪些资源</h2>
+    <p>Portfolio 的一个<em>域</em>（domain）由若干存储节点（<b>Synode</b>）组成，各节点互相保存文件副本。客户端（Android、Windows 桌面端）把文件上传到域中的某个 Synode。请按每台设备的用途选择下载包：</p>
+
+    <div class="w3-responsive">
+    <table class="w3-table w3-bordered w3-white">
+      <tr class="w3-blue">
+        <th>下载包</th><th>用途</th><th>谁需要</th><th>运行要求</th>
+      </tr>
+      <tr>
+        <td><b>Synode</b><br><code>synode-&lt;version&gt;-x64_windows-&lt;market&gt;-&lt;community&gt;.zip</code><br>
+            <code>synode-&lt;version&gt;-x64_linux-&lt;market&gt;-&lt;community&gt;.tar.gz</code></td>
+        <td>文件存储节点（服务器）。上传的文件保存在其<em>卷</em>（volume）文件夹中，并与域中其他 Synode 同步。附带安装界面，并会安装为系统服务。</td>
+        <td>每个域需要一个部署在公网 IP 主机上的<b>中心（hub）</b>Synode，另外每台需要保存文件副本的私人电脑各装一个 Synode。Windows 选 zip 包，Linux 选 tar 包。</td>
+        <td>安装时需要 Python 3.12；Windows 10+ 或 64 位 Linux；Linux 还需安装 <code>exiftool</code>。安装过程会自动下载 JRE 17。</td>
+      </tr>
+      <tr>
+        <td><b>桌面端</b><br><code>desktop-&lt;version&gt;-&lt;market&gt;-&lt;community&gt;.zip</code></td>
+        <td>Windows 客户端，用于在电脑上浏览、上传和管理文件。</td>
+        <td>运行 Synode 的 Windows 电脑<b>无需</b>单独下载，Synode 包已自带。仅当某台 Windows 电脑只使用域、不部署 Synode 时才需要下载。</td>
+        <td>Windows 10+</td>
+      </tr>
+      <tr>
+        <td><b>Android</b><br><code>portfolio-&lt;version&gt;.apk</code></td>
+        <td>手机客户端，用于上传手机中的照片、视频、音频及其他文件。</td>
+        <td>需要从 Android 手机上传文件的用户。通过扫描 Synode 安装界面中显示的二维码，连接到已部署好的 Synode。</td>
+        <td>Android 8.0+</td>
+      </tr>
+      <tr>
+        <td><b>用户手册</b><br><code>portfolio-&lt;version&gt;-&lt;lang&gt;.pdf</code></td>
+        <td><a href="https://odys-z.github.io/products/portfolio/">在线文档</a>的离线 PDF 版本。</td>
+        <td>可选，供离线阅读。</td>
+        <td>PDF 阅读器</td>
+      </tr>
+    </table>
+    </div>
+
+    <h4>发布渠道与社区</h4>
+    <p>Synode 与桌面端下载包按<b>发布渠道</b>（MARKET，如 <code>alpha</code>）和<b>社区</b>（COMMUNITY，即下载包预先配置的注册中心所属组织）分组列出。请下载你要加入的社区的下载包，同一个域中所有的 Synode 和桌面端应使用同一社区。</p>
+
+    <h4>常见部署方式</h4>
+    <ul>
+      <li><b>新建一个域：</b>先在公网 IP 主机上部署 Synode 作为中心节点，再在家中或办公室的电脑上各部署一个 Synode，最后在手机上安装 Android 应用。</li>
+      <li><b>加入已有的域：</b>在自己的电脑上部署 Synode（Windows 用户会同时获得桌面端），和/或安装 Android 应用。</li>
+      <li><b>只用手机：</b>只需安装 Android 应用，并连接到域中他人已部署好的 Synode。</li>
+    </ul>
+    <p>详细步骤（英文）：
+      <a href="../../../products/portfolio/synode/setup.html">安装 Portfolio-synode</a> &middot;
+      <a href="../../../products/portfolio/android/quick-start.html">Android 快速入门</a> &middot;
+      <a href="../../../products/portfolio/desktop.html">Windows 桌面端</a></p>
+  </div>
+</div>
+
+<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+    <h1 class="w3-margin w3-xlarge">Alpha 版 2026</h1>
+</div>
+
+ <p>2026 年 9 月 8 日 - 本软件基于
+  <a href="https://odys-z.github.io/products/portfolio/credits.html" target="_blank">开源与自由软件</a>构建。</p>
+</footer>
+
+<script>
+function setHeader() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else {
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+
+renderLangSwitcher('top-bar', '../');
+renderResourceTree('download-links', '../res/dist', 'manifest.json', 'doc-links');
+</script>
+
+</body>
+</html>
