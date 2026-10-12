@@ -88,31 +88,27 @@
       <div class="w3-responsive">
       <table class="w3-table w3-bordered w3-white">
         <tr class="w3-blue">
-          <th>下載套件</th><th>用途</th><th>誰需要</th><th>執行需求</th>
+          <th>下載套件</th><th>用途</th><th>執行需求</th>
         </tr>
         <tr>
           <td><b>Synode</b><br><code>synode-&lt;version&gt;-x64_windows-&lt;market&gt;-&lt;community&gt;.zip</code><br>
               <code>synode-&lt;version&gt;-x64_linux-&lt;market&gt;-&lt;community&gt;.tar.gz</code></td>
           <td>檔案儲存節點（伺服器）。上傳的檔案儲存在其<em>磁碟區</em>（volume）資料夾中，並與網域中其他 Synode 同步。附帶安裝介面，並會安裝為系統服務。</td>
-          <td>每個網域需要一個部署在公網 IP 主機上的<b>中樞（hub）</b>Synode，另外每台需要保存檔案副本的私人電腦各裝一個 Synode。Windows 選 zip 檔，Linux 選 tar 檔。</td>
           <td>安裝時需要 Python 3.12；Windows 10+ 或 64 位元 Linux；Linux 另需安裝 <code>exiftool</code>。安裝過程會自動下載 JRE 17。</td>
         </tr>
         <tr>
           <td><b>桌面版</b><br><code>desktop-&lt;version&gt;-&lt;market&gt;-&lt;community&gt;.zip</code></td>
           <td>Windows 用戶端，用於在電腦上瀏覽、上傳和管理檔案。</td>
-          <td>執行 Synode 的 Windows 電腦<b>無需</b>另外下載，Synode 套件已內含。僅當某台 Windows 電腦只使用網域、不部署 Synode 時才需要下載。</td>
           <td>Windows 10+</td>
         </tr>
         <tr>
           <td><b>Android</b><br><code>portfolio-&lt;version&gt;.apk</code></td>
           <td>手機用戶端，用於上傳手機中的照片、影片、音訊及其他檔案。</td>
-          <td>需要從 Android 手機上傳檔案的使用者。透過掃描 Synode 安裝介面中顯示的 QR 碼，連線到已部署好的 Synode。</td>
           <td>Android 8.0+</td>
         </tr>
         <tr>
           <td><b>使用手冊</b><br><code>portfolio-&lt;version&gt;-&lt;lang&gt;.pdf</code></td>
           <td><a href="https://odys-z.github.io/products/portfolio/">線上文件</a>的離線 PDF 版本。</td>
-          <td>選用，供離線閱讀。</td>
           <td>PDF 閱讀器</td>
         </tr>
       </table>

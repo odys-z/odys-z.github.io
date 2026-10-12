@@ -90,7 +90,7 @@
       <div class="w3-responsive">
       <table class="w3-table w3-bordered w3-white">
         <tr class="w3-blue">
-          <th>Package</th><th>What it is</th><th>Who needs it</th><th>Requirements</th>
+          <th>Package</th><th>What it is</th><th>Requirements</th>
         </tr>
         <tr>
           <td><b>Synode</b><br><code>synode-&lt;version&gt;-x64_windows-&lt;market&gt;-&lt;community&gt;.zip</code><br>
@@ -98,31 +98,22 @@
           <td>The file storage node (server). Saves uploaded files in its <em>volume</em> folder and
               synchronizes them with the other Synodes of the domain. Includes a setup GUI and
               installs itself as system services.</td>
-          <td>Every domain needs one <b>hub</b> Synode on a host reachable by public IP, plus
-              one Synode on each private computer that should keep a copy of the files.
-              Choose the zip for Windows, the tar ball for Linux.</td>
           <td>Python 3.12 for setup; Windows 10+ or 64-bit Linux; Linux also needs
               <code>exiftool</code>. A JRE 17 is downloaded during setup.</td>
         </tr>
         <tr>
           <td><b>Desktop</b><br><code>desktop-&lt;version&gt;-&lt;market&gt;-&lt;community&gt;.zip</code></td>
           <td>The Windows client for browsing, uploading and managing files on a PC.</td>
-          <td><b>Not needed</b> on a Windows computer that runs a Synode, since the Synode package
-              already installs it. Download it only for a Windows PC that uses a domain
-              without hosting a Synode.</td>
           <td>Windows 10+</td>
         </tr>
         <tr>
           <td><b>Android</b><br><code>portfolio-&lt;version&gt;.apk</code></td>
           <td>The mobile client. Uploads photos, videos, audio and other files from the phone.</td>
-          <td>Anyone uploading from an Android phone. It connects to a Synode that is already
-              set up, by scanning the QR code shown in the Synode's setup.</td>
           <td>Android 8.0+</td>
         </tr>
         <tr>
           <td><b>Manual</b><br><code>portfolio-&lt;version&gt;-&lt;lang&gt;.pdf</code></td>
           <td>The offline PDF of the <a href="https://odys-z.github.io/products/portfolio/">online documents</a>.</td>
-          <td>Optional, for reading offline.</td>
           <td>A PDF reader</td>
         </tr>
       </table>
