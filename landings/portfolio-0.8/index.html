@@ -80,15 +80,73 @@
       <h2>Portfolio 0.8, the documents synchronizer!</h2>
       <h5 class="w3-padding-32">Share your experience and knowledge.</h5>
 
-      <div class="w3-twothird">
-        <h5>Licence <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a></h5>
-        <h4>Data Safty Declaration</h4>
-        <h5 class="w3-padding-32">Portfolio is used for personal private document synchronization.
-          Portfolio 0.8 is pubulished AS IS. Users' documents are saved in the folder of volume
-          where the location is specified by users while installation. The current version is for
-          demo only, which is not fully tested for documents' safty. Users must be aware of their
-          documents' status.</h5>
-        <h6 class="w3-padding-32">By installing this software, users agree with this condition.</h6>
+      <!-- What to download -->
+      <div id="what-to-download">
+      <h3>What to download</h3>
+      <p>A Portfolio <em>domain</em> is a group of storage nodes (<b>Synodes</b>) that keep
+        copies of each other's files. Clients (Android, Windows Desktop) upload files to a
+        Synode of the domain. Pick the packages for the role of each machine:</p>
+
+      <div class="w3-responsive">
+      <table class="w3-table w3-bordered w3-white">
+        <tr class="w3-blue">
+          <th>Package</th><th>What it is</th><th>Who needs it</th><th>Requirements</th>
+        </tr>
+        <tr>
+          <td><b>Synode</b><br><code>synode-&lt;version&gt;-x64_windows-&lt;market&gt;-&lt;community&gt;.zip</code><br>
+              <code>synode-&lt;version&gt;-x64_linux-&lt;market&gt;-&lt;community&gt;.tar.gz</code></td>
+          <td>The file storage node (server). Saves uploaded files in its <em>volume</em> folder and
+              synchronizes them with the other Synodes of the domain. Includes a setup GUI and
+              installs itself as system services.</td>
+          <td>Every domain needs one <b>hub</b> Synode on a host reachable by public IP, plus
+              one Synode on each private computer that should keep a copy of the files.
+              Choose the zip for Windows, the tar ball for Linux.</td>
+          <td>Python 3.12 for setup; Windows 10+ or 64-bit Linux; Linux also needs
+              <code>exiftool</code>. A JRE 17 is downloaded during setup.</td>
+        </tr>
+        <tr>
+          <td><b>Desktop</b><br><code>desktop-&lt;version&gt;-&lt;market&gt;-&lt;community&gt;.zip</code></td>
+          <td>The Windows client for browsing, uploading and managing files on a PC.</td>
+          <td><b>Not needed</b> on a Windows computer that runs a Synode, since the Synode package
+              already installs it. Download it only for a Windows PC that uses a domain
+              without hosting a Synode.</td>
+          <td>Windows 10+</td>
+        </tr>
+        <tr>
+          <td><b>Android</b><br><code>portfolio-&lt;version&gt;.apk</code></td>
+          <td>The mobile client. Uploads photos, videos, audio and other files from the phone.</td>
+          <td>Anyone uploading from an Android phone. It connects to a Synode that is already
+              set up, by scanning the QR code shown in the Synode's setup.</td>
+          <td>Android 8.0+</td>
+        </tr>
+        <tr>
+          <td><b>Manual</b><br><code>portfolio-&lt;version&gt;-&lt;lang&gt;.pdf</code></td>
+          <td>The offline PDF of the <a href="https://odys-z.github.io/products/portfolio/">online documents</a>.</td>
+          <td>Optional, for reading offline.</td>
+          <td>A PDF reader</td>
+        </tr>
+      </table>
+      </div>
+
+      <h4>Market and community</h4>
+      <p>Synode and Desktop packages are listed under a <b>MARKET</b> (the release channel,
+        e.g. <code>alpha</code>) and a <b>COMMUNITY</b> (the organization whose registry the
+        package is preconfigured for). Download the packages of the community you are
+        joining, and use the same community for every Synode and Desktop in a domain.</p>
+
+      <h4>Typical setups</h4>
+      <ul>
+        <li><b>Starting a new domain:</b> a Synode on a public-IP host as the hub, then a Synode
+          on each home or office computer, then the Android app on phones.</li>
+        <li><b>Joining an existing domain:</b> a Synode on your computer (Windows users get the
+          Desktop client with it), and/or the Android app.</li>
+        <li><b>Phone only:</b> just the Android app, connected to a Synode someone in the domain
+          has already set up.</li>
+      </ul>
+      <p>Step-by-step instructions:
+        <a href="../../products/portfolio/synode/setup.html">Install Portfolio-synode</a> &middot;
+        <a href="../../products/portfolio/android/quick-start.html">Android quick start</a> &middot;
+        <a href="../../products/portfolio/desktop.html">Windows Desktop</a></p>
       </div>
     </div>
 
@@ -106,74 +164,17 @@
   </div>
 </div>
 
-<!-- What to download -->
-<div id="what-to-download" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+<!-- Data safety -->
+<div id="data-safety" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
   <div class="w3-content">
-    <h2>What to download</h2>
-    <p>A Portfolio <em>domain</em> is a group of storage nodes (<b>Synodes</b>) that keep
-      copies of each other's files. Clients (Android, Windows Desktop) upload files to a
-      Synode of the domain. Pick the packages for the role of each machine:</p>
-
-    <div class="w3-responsive">
-    <table class="w3-table w3-bordered w3-white">
-      <tr class="w3-blue">
-        <th>Package</th><th>What it is</th><th>Who needs it</th><th>Requirements</th>
-      </tr>
-      <tr>
-        <td><b>Synode</b><br><code>synode-&lt;version&gt;-x64_windows-&lt;market&gt;-&lt;community&gt;.zip</code><br>
-            <code>synode-&lt;version&gt;-x64_linux-&lt;market&gt;-&lt;community&gt;.tar.gz</code></td>
-        <td>The file storage node (server). Saves uploaded files in its <em>volume</em> folder and
-            synchronizes them with the other Synodes of the domain. Includes a setup GUI and
-            installs itself as system services.</td>
-        <td>Every domain needs one <b>hub</b> Synode on a host reachable by public IP, plus
-            one Synode on each private computer that should keep a copy of the files.
-            Choose the zip for Windows, the tar ball for Linux.</td>
-        <td>Python 3.12 for setup; Windows 10+ or 64-bit Linux; Linux also needs
-            <code>exiftool</code>. A JRE 17 is downloaded during setup.</td>
-      </tr>
-      <tr>
-        <td><b>Desktop</b><br><code>desktop-&lt;version&gt;-&lt;market&gt;-&lt;community&gt;.zip</code></td>
-        <td>The Windows client for browsing, uploading and managing files on a PC.</td>
-        <td><b>Not needed</b> on a Windows computer that runs a Synode, since the Synode package
-            already installs it. Download it only for a Windows PC that uses a domain
-            without hosting a Synode.</td>
-        <td>Windows 10+</td>
-      </tr>
-      <tr>
-        <td><b>Android</b><br><code>portfolio-&lt;version&gt;.apk</code></td>
-        <td>The mobile client. Uploads photos, videos, audio and other files from the phone.</td>
-        <td>Anyone uploading from an Android phone. It connects to a Synode that is already
-            set up, by scanning the QR code shown in the Synode's setup.</td>
-        <td>Android 8.0+</td>
-      </tr>
-      <tr>
-        <td><b>Manual</b><br><code>portfolio-&lt;version&gt;-&lt;lang&gt;.pdf</code></td>
-        <td>The offline PDF of the <a href="https://odys-z.github.io/products/portfolio/">online documents</a>.</td>
-        <td>Optional, for reading offline.</td>
-        <td>A PDF reader</td>
-      </tr>
-    </table>
-    </div>
-
-    <h4>Market and community</h4>
-    <p>Synode and Desktop packages are listed under a <b>MARKET</b> (the release channel,
-      e.g. <code>alpha</code>) and a <b>COMMUNITY</b> (the organization whose registry the
-      package is preconfigured for). Download the packages of the community you are
-      joining, and use the same community for every Synode and Desktop in a domain.</p>
-
-    <h4>Typical setups</h4>
-    <ul>
-      <li><b>Starting a new domain:</b> a Synode on a public-IP host as the hub, then a Synode
-        on each home or office computer, then the Android app on phones.</li>
-      <li><b>Joining an existing domain:</b> a Synode on your computer (Windows users get the
-        Desktop client with it), and/or the Android app.</li>
-      <li><b>Phone only:</b> just the Android app, connected to a Synode someone in the domain
-        has already set up.</li>
-    </ul>
-    <p>Step-by-step instructions:
-      <a href="../../products/portfolio/synode/setup.html">Install Portfolio-synode</a> &middot;
-      <a href="../../products/portfolio/android/quick-start.html">Android quick start</a> &middot;
-      <a href="../../products/portfolio/desktop.html">Windows Desktop</a></p>
+    <h5>Licence <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a></h5>
+    <h4>Data Safty Declaration</h4>
+    <h5 class="w3-padding-32">Portfolio is used for personal private document synchronization.
+      Portfolio 0.8 is pubulished AS IS. Users' documents are saved in the folder of volume
+      where the location is specified by users while installation. The current version is for
+      demo only, which is not fully tested for documents' safty. Users must be aware of their
+      documents' status.</h5>
+    <h6 class="w3-padding-32">By installing this software, users agree with this condition.</h6>
   </div>
 </div>
 
