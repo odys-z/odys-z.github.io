@@ -1,0 +1,9 @@
+# Python packages for building the Portfolio docs (HTML + PDF, en / zh_CN / zh_TW)
+#   pip install -r requirements.txt
+sphinx>=7
+sphinx_rtd_theme
+sphinxcontrib-video
+jieba           # Chinese word segmentation for the zh search index
+# PDF also needs TeX (not pip), e.g. on Ubuntu:
+#   sudo apt install latexmk texlive-latex-extra texlive-xetex tex-gyre \
+#                    texlive-lang-chinese fonts-noto-cjk
