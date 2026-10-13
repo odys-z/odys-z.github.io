@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-TW" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>故障排除 &mdash; Portfolio 0.8 文件</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=437f3cdd" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=844dbbd0"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=cbf116e0"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="關於這些文件" href="../about.html" />
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜尋" href="../search.html" />
+    <link rel="next" title="Windows 桌面版示範版" href="../desktop.html" />
+    <link rel="prev" title="提示" href="tips.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Portfolio 0.8 文件
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目錄：</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">下載 Portfolio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html#play-icon-google-play"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+     style="height: 0.9em !important; width: auto !important; vertical-align: middle;"
+     alt="▶"
+     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+<span style="display:none;">▶</span> 招募 Google Play 測試者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">關於</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../android/index.html">Portfolio Android 示範版</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Portfolio Synode（示範版）</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="setup.html">安裝 Portfolio-synode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">提示</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">故障排除</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ubuntu">Ubuntu 自動更新導致的問題</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../desktop.html">Windows 桌面版示範版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../central/index.html">關於中央服務</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">致謝</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../privacy-policy.html">Portfolio 隱私政策</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Portfolio 0.8 文件</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Portfolio Synode（示範版）</a></li>
+      <li class="breadcrumb-item active">故障排除</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>故障排除<a class="headerlink" href="#id1" title="連結到這個標頭"></a></h1>
+<ul class="simple">
+<li><p>外部管理環境錯誤（PEP 668）</p></li>
+</ul>
+<p>使用以下命令安裝 Portfolio 時:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="nb">bin</span><span class="o">/</span><span class="n">synode_py3</span><span class="o">-</span><span class="mf">0.7</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="o">.</span><span class="n">whl</span>
+</pre></div>
+</div>
+<p>可能會出現 externally-managed-environment 錯誤。以下是 Ubuntu 24.04、Python 3.12（Pip 24）下的示例：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>error: externally-managed-environment
+
+× This environment is externally managed
+╰─&gt; To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+
+    If you wish to install a non-Debian-packaged Python package,
+    create a virtual environment using python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+
+    If you wish to install a non-Debian packaged Python application,
+    it may be easiest to use pipx install xyz, which will manage a
+    virtual environment for you. Make sure you have pipx installed.
+
+    See /usr/share/doc/python3.12/README.venv for more information.
+
+note: If you believe this is a mistake, please contact your Python
+installation or OS distribution provider. You can override this, at
+the risk of breaking your Python installation or OS, by passing
+--break-system-packages.
+
+hint: See PEP 668 for the detailed specification.
+</pre></div>
+</div>
+<p>這是 Pip 在提示不要把 Portfolio 安裝到系統的 python3 路徑中。請建立虛擬環境後再安裝:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="mf">.12</span><span class="o">-</span><span class="n">venv</span> <span class="c1"># replace the version number</span>
+<span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">.</span><span class="n">env</span>
+<span class="n">source</span> <span class="o">.</span><span class="n">env</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<p>Portfolio 0.7.6 只在安裝時需要 Python3；安裝完成後就不再需要 Python 環境。</p>
+<ul class="simple" id="uninstall-winsrv-manually">
+<li><p>手動解除安裝 Windows 服務</p></li>
+</ul>
+<p><strong>不推薦這樣做</strong></p>
+<p>服務應當使用上文的命令解除安裝。如果必須手動解除安裝 Windows 服務，請按以下步驟操作：</p>
+<ol class="arabic">
+<li><p>複製並備份 <em>WEB-INF/settings.json</em></p></li>
+<li><p>如果有檔案損壞，請把 Portfolio-synode 重新安裝到同一資料夾，並確保版本號與之前安裝的相同。</p></li>
+<li><p>從開始選單開啟 Windows 服務控制面板，檢視兩個服務的名稱，應類似於:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Synode</span><span class="o">.</span><span class="n">web</span><span class="o">-</span><span class="mf">0.8.0</span><span class="o">-</span><span class="n">X29</span>
+<span class="n">Synode</span><span class="o">-</span><span class="mf">0.8.0</span><span class="o">-</span><span class="n">X29</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<blockquote>
+<div><p>開啟 <em>WEB-INF/settings.json</em> 檔案，把 Synode ID 填入 <em>&quot;envars&quot;</em> 部分，例如:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">"envars"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">"winsrv.web"</span><span class="p">:</span> <span class="s2">"Synode.web-0.8.0-X29"</span><span class="p">,</span>
+    <span class="s2">"winsrv.synode"</span><span class="p">:</span> <span class="s2">"Synode-0.8.0-X29"</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>以管理員身份開啟 CMD 終端，進入安裝資料夾。</p></li>
+<li><p>執行 synode-uninstall.exe</p></li>
+<li><p>如有需要，重新整理 Windows 服務控制面板。</p></li>
+</ol>
+<ul class="simple">
+<li><p>PIP 無法為 Python 3.12 或更高版本解析 Pillow 版本</p></li>
+</ul>
+<p>錯誤資訊類似:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install bin/synode_py3-0.7-py3-none-any.whl
+Processing ./bin/synode_py3-0.7-py3-none-any.whl
+...
+INFO: pip is looking at multiple versions of synode-py3 to determine which
+version is compatible with other requirements. This could take a while.
+ERROR: Ignored the following versions that require a different python version: 6.0.0
+Requires-Python &gt;=3.6, &lt;3.10; 6.0.0a1.dev1606911628 Requires-Python &gt;=3.6, &lt;3.10;
+6.0.1 Requires-Python &gt;=3.6, &lt;3.10; 6.0.2 Requires-Python &gt;=3.6, &lt;3.10;
+6.0.3 Requires-Python &gt;=3.6, &lt;3.10; 6.0.4 Requires-Python &gt;=3.6, &lt;3.10;
+...
+6.5.2 Requires-Python &lt;3.12,&gt;=3.7; 6.5.3 Requires-Python &lt;3.12,&gt;=3.7
+ERROR: Could not find a version that satisfies the requirement psutil
+(from synode-py3) (from versions: none)
+ERROR: No matching distribution found for psutil
+</pre></div>
+</div>
+<p>這可能是因為 pip 版本過舊。</p>
+<p>在解決這個問題時，我們又遇到了另一個網路問題:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+<span class="n">File</span> <span class="s2">"...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">438</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_error_catcher</span>
+  <span class="k">yield</span>
+<span class="n">File</span> <span class="s2">"...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">561</span><span class="p">,</span> <span class="ow">in</span> <span class="n">read</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fp_read</span><span class="p">(</span><span class="n">amt</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">fp_closed</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">""</span>
+         <span class="o">^^^^^^^^^^^^^^^^^^</span>
+<span class="o">...</span>
+<span class="n">File</span> <span class="s2">"...env-m7/lib/python3.12/site-packages/pip/_vendor/urllib3/response.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">443</span><span class="p">,</span> <span class="ow">in</span> <span class="n">_error_catcher</span>
+  <span class="k">raise</span> <span class="n">ReadTimeoutError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Read timed out."</span><span class="p">)</span>
+<span class="n">pip</span><span class="o">.</span><span class="n">_vendor</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ReadTimeoutError</span><span class="p">:</span> <span class="n">HTTPSConnectionPool</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">'files.pythonhosted.org'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">443</span><span class="p">):</span> <span class="n">Read</span> <span class="n">timed</span> <span class="n">out</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Grok 很肯定這是防火長城（GFW）導致的問題。請使用映象源安裝。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="nb">bin</span><span class="o">/</span><span class="n">synode_py3</span><span class="o">-</span><span class="mf">0.7</span><span class="o">-</span><span class="n">py3</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="o">.</span><span class="n">whl</span> <span class="o">-</span><span class="n">i</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">tuna</span><span class="o">.</span><span class="n">tsinghua</span><span class="o">.</span><span class="n">edu</span><span class="o">.</span><span class="n">cn</span><span class="o">/</span><span class="n">simple</span>
+</pre></div>
+</div>
+<p>另外，你還有其他選擇，例如向網路服務提供商投訴。</p>
+<ul class="simple">
+<li><p>Windows 網路防火牆 / Defender</p></li>
+</ul>
+<p>在啟用了防火牆的 Windows 上，請確保防火牆設定允許你所設定的連接埠。</p>
+<p><a class="reference external" href="https://learn.microsoft.com/zh-tw/sql/reporting-services/report-server/configure-a-firewall-for-report-server-access?view=sql-server-ver15#opening-ports-in-windows-firewall">Microsoft 文件</a></p>
+<a class="reference internal image-reference" href="../../_images/windows-firewall-0.png"><img alt="../../_images/windows-firewall-0.png" src="../../_images/windows-firewall-0.png" style="width: 200px;" />
+</a>
+<a class="reference internal image-reference" href="../../_images/windows-firewall-1.png"><img alt="../../_images/windows-firewall-1.png" src="../../_images/windows-firewall-1.png" style="width: 200px;" />
+</a>
+<a class="reference internal image-reference" href="../../_images/windows-firewall-2.png"><img alt="../../_images/windows-firewall-2.png" src="../../_images/windows-firewall-2.png" style="width: 200px;" />
+</a>
+<ul class="simple" id="trouble-vscode-linux">
+<li><p>在 Linux 的 VS Code 中執行</p></li>
+</ul>
+<p><strong>僅在 Ubuntu 24.04 上測試過</strong></p>
+<p>在 Ubuntu / Linux 的 VS Code 終端中執行 Portfolio-synode，會出現類似 <a class="reference external" href="https://github.com/microsoft/vscode/issues/179274">問題報告 #179274</a> 的錯誤。</p>
+<a class="reference internal image-reference" href="../../_images/04-portfolio-vscode-issue.png"><img alt="../../_images/04-portfolio-vscode-issue.png" src="../../_images/04-portfolio-vscode-issue.png" style="width: 36em;" />
+</a>
+<p>可以這樣執行來避免該錯誤:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">GTK_PATH</span><span class="o">=</span> <span class="o">&amp;&amp;</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+</pre></div>
+</div>
+<p>但由於未經充分測試，強烈不建議這樣做。</p>
+<section id="ubuntu">
+<span id="trouble-exiftool-by-auto-update"></span><h2>Ubuntu 自動更新導致的問題<a class="headerlink" href="#ubuntu" title="連結到這個標頭"></a></h2>
+<p><strong>僅發生在啟用了自動更新的 Linux 上</strong></p>
+<p>如果在 Linux（在 Ubuntu 24.04 上測試）上設定的系統服務使用的是由系統自動更新管理的 JDK，那麼當正在執行的服務的 JDK 版本與最新版本不同時，就會出錯。</p>
+<p>服務日誌如下:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Incorrect Java version: 21.0.7+6-Ubuntu-0ubuntu124.04
+jspawnhelper version 21.0.8+9-Ubuntu-0ubuntu124.04.1
+This command is not for general use and should only be run as the result of a call to
+ProcessBuilder.start() or Runtime.exec() in a java application
+java.io.IOException: Cannot run program "exiftool": error=0, Failed to exec spawn helper: pid: &gt;
+  at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1170)
+  at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1089)
+  at java.base/java.lang.Runtime.exec(Runtime.java:681)
+  at java.base/java.lang.Runtime.exec(Runtime.java:530)
+  at io.oz.album.helpers.Exiftool.parse(Exiftool.java:117)
+  at io.oz.album.helpers.Exiftool.parseExif(Exiftool.java:62)
+  at io.oz.syntier.serv.DocreateHandler.onCreate(DocreateHandler.java:57)
+  at io.oz.jserv.docs.syn.ExpDoctier.lambda$endBlock$1(ExpDoctier.java:417)
+  at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.io.IOException: error=0, Failed to exec spawn helper: pid: 546376, exit value: 1
+  at java.base/java.lang.ProcessImpl.forkAndExec(Native Method)
+  at java.base/java.lang.ProcessImpl.&lt;init&gt;(ProcessImpl.java:295)
+  at java.base/java.lang.ProcessImpl.start(ProcessImpl.java:225)
+  at java.base/java.lang.ProcessBuilder.start(ProcessBuilder.java:1126)
+  ... 8 more
+</pre></div>
+</div>
+<p>正在執行的 JDK 是舊版本 20.0.7_6，它會用較新的 21.0.8+9 版本來派生程序。由於 jspawnhelper 加強了版本檢查 [1]，啟動 <em>exiftool</em> 程序會失敗。</p>
+<p>Apt 更新日誌:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">openjdk</span><span class="o">-</span><span class="mi">21</span> <span class="p">(</span><span class="mf">21.0.8</span><span class="o">+</span><span class="mi">9</span><span class="o">~</span><span class="n">us1</span><span class="o">-</span><span class="mi">0</span><span class="n">ubuntu1</span><span class="o">~</span><span class="mf">24.04.1</span><span class="p">)</span> <span class="n">noble</span><span class="o">-</span><span class="n">security</span><span class="p">;</span> <span class="n">urgency</span><span class="o">=</span><span class="n">medium</span>
+
+  <span class="o">*</span> <span class="n">Upload</span> <span class="n">to</span> <span class="n">Ubuntu</span> <span class="mf">24.04</span><span class="o">.</span>
+  <span class="o">*</span> <span class="n">CVEs</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">50059</span><span class="p">,</span> <span class="mi">8350991</span><span class="p">:</span> <span class="n">Improve</span> <span class="n">HTTP</span> <span class="n">client</span> <span class="n">header</span> <span class="n">handling</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30749</span><span class="p">,</span> <span class="mi">8348989</span><span class="p">:</span> <span class="n">Better</span> <span class="n">Glyph</span> <span class="n">drawing</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">50106</span><span class="p">,</span> <span class="mi">8360147</span><span class="p">:</span> <span class="n">Better</span> <span class="n">Glyph</span> <span class="n">drawing</span> <span class="n">redux</span>
+    <span class="o">-</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30754</span><span class="p">,</span> <span class="mi">8349594</span><span class="p">:</span> <span class="n">Enhance</span> <span class="n">TLS</span> <span class="n">protocol</span> <span class="n">support</span>
+  <span class="o">*</span> <span class="n">Security</span> <span class="n">fixes</span><span class="p">:</span>
+    <span class="o">-</span> <span class="mi">8349111</span><span class="p">:</span> <span class="n">Enhance</span> <span class="n">Swing</span> <span class="n">supports</span>
+    <span class="o">-</span> <span class="mi">8345625</span><span class="p">:</span> <span class="n">Better</span> <span class="n">HTTP</span> <span class="n">connections</span>
+
+<span class="o">--</span> <span class="n">Vladimir</span> <span class="n">Petko</span> <span class="o">&lt;</span><span class="n">vladimir</span><span class="o">.</span><span class="n">petko</span><span class="nd">@canonical</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span>  <span class="n">Thu</span><span class="p">,</span> <span class="mi">17</span> <span class="n">Jul</span> <span class="mi">2025</span> <span class="mi">09</span><span class="p">:</span><span class="mi">55</span><span class="p">:</span><span class="mi">59</span> <span class="o">+</span><span class="mi">1200</span>
+
+<span class="o">...</span>
+
+<span class="n">openjdk</span><span class="o">-</span><span class="mi">21</span> <span class="p">(</span><span class="mf">21.0.7</span><span class="o">+</span><span class="mi">6</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">unstable</span><span class="p">;</span> <span class="n">urgency</span><span class="o">=</span><span class="n">high</span>
+
+  <span class="o">*</span> <span class="n">OpenJDK</span> <span class="mf">21.0.7</span> <span class="n">release</span><span class="p">,</span> <span class="n">build</span> <span class="mf">6.</span>
+    <span class="o">-</span> <span class="n">Addresses</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30698</span><span class="p">,</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mi">30691</span><span class="p">,</span> <span class="n">CVE</span><span class="o">-</span><span class="mi">2025</span><span class="o">-</span><span class="mf">21587.</span>
+
+  <span class="o">*</span> <span class="n">Honour</span> <span class="n">DEB_BUILD_OPTIONS</span><span class="o">=</span><span class="n">parallel</span><span class="o">=</span><span class="n">N</span> <span class="k">while</span> <span class="n">running</span> <span class="n">jtreg</span> <span class="n">tests</span> <span class="p">(</span><span class="n">Helmut</span>
+    <span class="n">Grohne</span><span class="p">)</span><span class="o">.</span> <span class="n">Addresses</span><span class="p">:</span> <span class="c1">#1095920.</span>
+
+<span class="o">--</span> <span class="n">Matthias</span> <span class="n">Klose</span> <span class="o">&lt;</span><span class="n">doko</span><span class="nd">@ubuntu</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span>  <span class="n">Thu</span><span class="p">,</span> <span class="mi">24</span> <span class="n">Apr</span> <span class="mi">2025</span> <span class="mi">01</span><span class="p">:</span><span class="mi">57</span><span class="p">:</span><span class="mi">46</span> <span class="o">+</span><span class="mi">0200</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>[1] <em>Improve jspawnhelper version checks</em>，JDK-8325621，影響版本：11、17、21、22、23，</dt><dd><p><a class="reference external" href="https://bugs.openjdk.org/browse/JDK-8325621">https://bugs.openjdk.org/browse/JDK-8325621</a></p>
+</dd>
+</dl>
+<ul id="install-anson-py3">
+<li><p>安裝 portfolio-synode 失敗</p>
+<p>[已在 Portfolio 0.7.6 中解決]</p>
+<p>錯誤:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ERROR</span><span class="p">:</span> <span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">a</span> <span class="n">version</span> <span class="n">that</span> <span class="n">satisfies</span> <span class="n">the</span> <span class="n">requirement</span> <span class="n">anson</span><span class="o">.</span><span class="n">py3</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">portfolio</span><span class="o">-</span><span class="n">synode</span><span class="p">)</span> <span class="p">(</span><span class="kn">from</span><span class="w"> </span><span class="nn">versions</span><span class="p">:</span> <span class="n">none</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Portfolio-synode 依賴一個尚未釋出到 PyPI 的模組。請使用以下命令安裝：</p>
+<blockquote>
+<div><p>pip install --index-url <a class="reference external" href="https://test.pypi.org/simple">https://test.pypi.org/simple</a> --extra-index-url <a class="reference external" href="https://pypi.org/simple">https://pypi.org/simple</a> anson.py3</p>
+</div></blockquote>
+<p>如果需要移除由舊版 Python（例如 python 3.9）安裝的包，請用以下命令解除安裝:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span><span class="mf">.9</span> <span class="n">uninstall</span> <span class="n">portfolio</span><span class="o">-</span><span class="n">synode</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tips.html" class="btn btn-neutral float-left" title="提示" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../desktop.html" class="btn btn-neutral float-right" title="Windows 桌面版示範版" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2027, Odys Zhou.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
