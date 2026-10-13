@@ -13,12 +13,7 @@
  *   <script>renderLangSwitcher('top-bar', '../');</script>
  * where the second argument is the path from the page to the landing root.
  */
-/**
- * Display names of language codes, each written in its own language.
- * Shared: render-resource-tree.js also uses it to label the PDF manuals
- * (portfolio-<version>-<lang>.pdf). A code may be listed here without a
- * landing page, e.g. a manual that is translated before the page is.
- */
+/** Display names of language codes, each written in its own language. */
 const LANG_NAMES = {
   'en':    'English',
   'zh-CN': '简体中文',

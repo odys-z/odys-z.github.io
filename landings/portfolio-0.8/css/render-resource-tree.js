@@ -17,7 +17,6 @@
  * Expects a manifest shaped like:
  * {
  *   "android": [{ "file": "...", "version": "..." }],
- *   "docs":    [{ "file": "...", "version": "...", "lang": "en" }],
  *   "tree": {
  *     "<market>": {
  *       "<org>": {
@@ -32,21 +31,9 @@
  * set explicitly per level, rather than relying on list-nesting indent, so
  * everything stays flush to the container's left edge regardless of depth.
  *
- * Documents (mf.docs) are NOT part of the resource tree. They are rendered
- * into a separate container (docsContainerId), one link per language found
- * in the manifest, labelled with LANG_NAMES from lang-switcher.js.
- *
- * Requires: lang-switcher.js loaded on the same page (for LANG_NAMES). Without
- * it the manuals are still listed, labelled with the raw language code.
+ * The PDF manuals are not listed here: each landing page links its own
+ * language's manual directly (res/dist/portfolio-<version>-<lang>.pdf).
  */
-
-// Language names (manifest "lang" field, from file names like
-// portfolio-0.8-zh-CN.pdf) come from LANG_NAMES in lang-switcher.js, the one
-// list of languages for the landing pages. Read at call time, so script order
-// does not matter.
-function langNames() {
-  return (typeof LANG_NAMES !== 'undefined') ? LANG_NAMES : {};
-}
 
 // ---------------------------------------------------------------------------
 // Data: UI labels per page language (<html lang>). Languages not listed fall
@@ -59,9 +46,7 @@ const TREE_TEXT = {
     market:    (m) => `MARKET: ${m}`,
     community: (o) => `COMMUNITY: ${o}`,
     desktop:   (v) => `Desktop ${v}`,
-    synode:    (v) => `Synode ${v}`,
-    documents: "Documents",
-    manual:    (v, lang) => lang ? `Portfolio ${v} Manual (PDF, ${lang})` : `Portfolio ${v} Manual (PDF)`
+    synode:    (v) => `Synode ${v}`
   },
   "zh-CN": {
     android:   "Android",
@@ -69,9 +54,7 @@ const TREE_TEXT = {
     market:    (m) => `发布渠道：${m}`,
     community: (o) => `社区：${o}`,
     desktop:   (v) => `桌面端 ${v}`,
-    synode:    (v) => `Synode ${v}`,
-    documents: "文档",
-    manual:    (v, lang) => lang ? `Portfolio ${v} 用户手册（PDF，${lang}）` : `Portfolio ${v} 用户手册（PDF）`
+    synode:    (v) => `Synode ${v}`
   },
   "zh-TW": {
     android:   "Android",
@@ -79,9 +62,7 @@ const TREE_TEXT = {
     market:    (m) => `發佈渠道：${m}`,
     community: (o) => `社群：${o}`,
     desktop:   (v) => `桌面端 ${v}`,
-    synode:    (v) => `Synode ${v}`,
-    documents: "文件",
-    manual:    (v, lang) => lang ? `Portfolio ${v} 使用手冊（PDF，${lang}）` : `Portfolio ${v} 使用手冊（PDF）`
+    synode:    (v) => `Synode ${v}`
   }
 };
 
@@ -93,15 +74,12 @@ function treeText() {
  * @param containerId     element for the resource tree (Android + markets)
  * @param distBaseUrl     folder holding the manifest and the artifacts
  * @param manifestUrl     manifest file name, relative to distBaseUrl
- * @param docsContainerId optional element for the document downloads; its
- *                        existing content (e.g. a static link) is kept
  */
-function renderResourceTree(containerId, distBaseUrl, manifestUrl, docsContainerId) {
+function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
   distBaseUrl = (distBaseUrl || '') + '/';
   manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json');
   const container = document.getElementById(containerId);
   if (!container) return;
-  const docsContainer = docsContainerId ? document.getElementById(docsContainerId) : null;
 
   fetch(manifestUrl, { cache: 'no-store' })
     .then(resp => {
@@ -110,7 +88,6 @@ function renderResourceTree(containerId, distBaseUrl, manifestUrl, docsContainer
     })
     .then(mf => {
       buildTree(container, mf, distBaseUrl);
-      if (docsContainer) buildDocs(docsContainer, mf, distBaseUrl);
     })
     .catch(err => {
       console.error('renderResourceTree:', err);
@@ -128,43 +105,6 @@ function urlResolver(distBaseUrl) {
 function normalizeLang(code) {
   const [lang, region] = String(code || '').split(/[-_]/);
   return region ? `${lang.toLowerCase()}-${region.toUpperCase()}` : lang.toLowerCase();
-}
-
-function langName(code) {
-  const norm = normalizeLang(code);
-  return langNames()[norm] || norm;
-}
-
-/**
- * Appends the document downloads (one row per language) to docsContainer,
- * keeping whatever the page already put there. The language matching the
- * page's <html lang> comes first; the rest follow in LANG_NAMES order, then
- * any language not in LANG_NAMES.
- */
-function buildDocs(docsContainer, mf, distBaseUrl) {
-  const docs = (mf.docs || []).slice();
-  if (!docs.length) return;
-
-  const resolveUrl = urlResolver(distBaseUrl);
-  const pageLang = normalizeLang(document.documentElement.lang || 'en');
-  const known = Object.keys(langNames());
-  const rank = (d) => {
-    const l = normalizeLang(d.lang);
-    if (l === pageLang) return -1;
-    const i = known.indexOf(l);
-    return i < 0 ? known.length : i;
-  };
-  docs.sort((a, b) => rank(a) - rank(b));
-
-  const T = treeText();
-  const box = document.createElement('div');
-  box.className = 'doc-downloads';
-  box.appendChild(sectionHeading(T.documents));
-  docs.forEach(d => {
-    const label = T.manual(d.version, d.lang ? langName(d.lang) : '');
-    box.appendChild(resourceRow(label, resolveUrl(d.file), 1));
-  });
-  docsContainer.appendChild(box);
 }
 
 function buildTree(container, mf, distBaseUrl) {

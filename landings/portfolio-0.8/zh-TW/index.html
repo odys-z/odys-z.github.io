@@ -136,12 +136,17 @@
     </div>
 
     <div class="w3-third w3-center">
-      <!-- Documents: kept outside the resource tree, which clears its own container -->
+      <!-- Documents: static links, kept outside the resource tree, which clears its own container -->
       <div id="doc-links">
         <p class="fa w3-text-indigo">
             <a id='doc-install' href="../../../products/portfolio/zh-TW/android/quick-start.html">
                 文件：如何安裝 Portfolio</a>
         </p>
+        <!-- This language's PDF manual, built by `make pdf` in sphinx/products/portfolio -->
+        <div class="doc-downloads">
+          <div class="w3-blue w3-padding-small resource-section" style="margin-top:12px"><strong>文件</strong></div>
+          <div class="resource-row" style="padding-left:16px"><i class="fa fa-download w3-text-indigo"><a download href="../res/dist/portfolio-0.8-zh-TW.pdf"> Portfolio 0.8 使用手冊（PDF）</a></i></div>
+        </div>
       </div>
       <!-- Resource tree: Android + market/community downloads -->
       <div id="download-links"></div>
@@ -180,7 +185,7 @@ function setHeader() {
 }
 
 renderLangSwitcher('top-bar', '../');
-renderResourceTree('download-links', '../res/dist', 'manifest.json', 'doc-links');
+renderResourceTree('download-links', '../res/dist', 'manifest.json');
 </script>
 
 </body>
