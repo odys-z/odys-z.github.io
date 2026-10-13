@@ -153,8 +153,8 @@ folder if you don't need the uploaded files anymore.
 
 * If files damaged and the services cannot uninstalled, you can :ref:`uninstall Windows Service manually <uninstall_winsrv_manually>`.
 
-Uninstall Portfolio-synode on Windows
-_____________________________________
+Uninstall Portfolio-synode on Linux
+___________________________________
 
 Here is the command templates, for uninstall services of synode Id *closed-test-1-hub*:
 

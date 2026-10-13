@@ -2,6 +2,7 @@ Windows Desktop Demo
 ====================
 
 Portfolio Windows Desktop App is the client for managing & synchronzing files on a Personal Computer.
+
 .. a screenshot is needed
 
 Install Desktop

@@ -11,3 +11,12 @@
     font-size: 0.80em !important;
     color: #555555;
 }
+/* Language dropdown at the top of index.rst (|lang-select|, see conf.py) */
+.rst-content select.lang-select {
+    font-size: 0.95em;
+    padding: 0.2em 0.4em;
+    margin-left: 0.3em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #fff;
+}

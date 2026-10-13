@@ -1,6 +1,10 @@
 Welcome to Portfolio documentation!
 ===================================
 
+.. only:: html
+
+   🌐 |lang-select|
+
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
