@@ -50,6 +50,12 @@ ghpage:
 
 # Build the PDF manuals (English + every language folder) and publish them
 # to the landing page's dist folder.
+#
+# Requires LaTeX. English uses pdflatex; Chinese (and Japanese / Korean) use
+# xelatex + xeCJK with the Noto CJK fonts. On Ubuntu / Debian:
+#   sudo apt install latexmk texlive-latex-extra tex-gyre \
+#                    texlive-xetex texlive-lang-chinese fonts-noto-cjk
+# "xelatex: not found" or "xeCJK.sty not found" means the last line is missing.
 pdf: pdf-en $(addprefix pdf-,$(LANGS))
 
 langs:
