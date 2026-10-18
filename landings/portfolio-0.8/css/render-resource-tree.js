@@ -9,8 +9,8 @@
  *
  *   MARKET: alpha
  *     COMMUNITY: pmking
- *       [download] Desktop 0.8.0
- *       [download] Synode 0.8.0 (jre17)
+ *       [download] Desktop 0.8.0 (stand alone)
+ *       [download] Synode 0.8.0 (x64_linux) - with desktop
  *     COMMUNITY: some-other-org
  *       [download] Desktop 0.8.0
  *
@@ -46,7 +46,10 @@ const TREE_TEXT = {
     market:    (m) => `MARKET: ${m}`,
     community: (o) => `COMMUNITY: ${o}`,
     desktop:   (v) => `Desktop ${v}`,
-    synode:    (v) => `Synode ${v}`
+    synode:    (v) => `Synode ${v}`,
+    // Desktop is only needed where no Synode is installed (a Synode includes it)
+    desktopNote: "(stand alone)",
+    synodeNote:  "- with desktop"
   },
   "zh-CN": {
     android:   "Android",
@@ -54,7 +57,9 @@ const TREE_TEXT = {
     market:    (m) => `发布渠道：${m}`,
     community: (o) => `社区：${o}`,
     desktop:   (v) => `桌面端 ${v}`,
-    synode:    (v) => `Synode ${v}`
+    synode:    (v) => `Synode ${v}`,
+    desktopNote: "（单独安装）",
+    synodeNote:  "- 含桌面端"
   },
   "zh-TW": {
     android:   "Android",
@@ -62,7 +67,9 @@ const TREE_TEXT = {
     market:    (m) => `發佈渠道：${m}`,
     community: (o) => `社群：${o}`,
     desktop:   (v) => `桌面端 ${v}`,
-    synode:    (v) => `Synode ${v}`
+    synode:    (v) => `Synode ${v}`,
+    desktopNote: "（單獨安裝）",
+    synodeNote:  "- 含桌面端"
   }
 };
 
@@ -138,7 +145,7 @@ function buildTree(container, mf, distBaseUrl) {
       
       if (node.desktop) {
         root.appendChild(
-          resourceRow(T.desktop(node.desktop.version), resolveUrl(node.desktop.file), 2)
+          resourceRow(T.desktop(node.desktop.version), resolveUrl(node.desktop.file), 2, T.desktopNote)
         );
       }
       
@@ -149,7 +156,7 @@ function buildTree(container, mf, distBaseUrl) {
             ? `${T.synode(item.version)} (${item.jre})`
             : T.synode(item.version);
 
-          root.appendChild(resourceRow(label, resolveUrl(item.file), 2));
+          root.appendChild(resourceRow(label, resolveUrl(item.file), 2, T.synodeNote));
         }
       }
     });
@@ -180,8 +187,9 @@ function subHeading(text, level) {
   return div;
 }
 
-// A single downloadable resource row.
-function resourceRow(label, href, level) {
+// A single downloadable resource row, with an optional plain-text note
+// after the link, e.g. "(stand alone)".
+function resourceRow(label, href, level, note) {
   const div = document.createElement('div');
   div.className = 'resource-row';
   div.style.paddingLeft = (level * 16) + 'px';
@@ -195,6 +203,7 @@ function resourceRow(label, href, level) {
   a.textContent = ' ' + label;
 
   i.appendChild(a);
+  if (note) i.appendChild(document.createTextNode(' ' + note));
   div.appendChild(i);
   return div;
 }
