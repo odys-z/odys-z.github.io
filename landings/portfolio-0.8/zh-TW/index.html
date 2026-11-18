@@ -37,6 +37,13 @@
 #what-to-download td, #what-to-download th { vertical-align: top; }
 #what-to-download code { font-size: 90%; }
 
+/* gutter between the two columns of the first grid on wide screens (they
+   sit inside .w3-content, so .w3-row-padding doesn't pad them) */
+@media (min-width:601px) {
+  .w3-row-padding > .w3-content > .w3-twothird { padding-right: 24px; }
+  .w3-row-padding > .w3-content > .w3-third    { padding-left: 24px; }
+}
+
 /* this page's QR code, an <img> added after h1#qrh1 by render-resource-tree.js */
 header { position: relative; }
 .page-qr { position: absolute; top: 144px; right: 32px; width: 96px; height: 96px; }
