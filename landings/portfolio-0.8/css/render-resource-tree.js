@@ -6,6 +6,7 @@
  *
  *   Android
  *     [download] Portfolio 0.8.0 for Android
+ *     [QR code]  (download QR, drawn here)
  *
  *   MARKET: alpha
  *     COMMUNITY: pmking
@@ -16,6 +17,7 @@
  *
  * Expects a manifest shaped like:
  * {
+ *   "page_url": "https://.../portfolio-0.8/",   (optional, the landing root)
  *   "android": [{ "file": "...", "version": "..." }],
  *   "tree": {
  *     "<market>": {
@@ -31,6 +33,15 @@
  * set explicitly per level, rather than relying on list-nesting indent, so
  * everything stays flush to the container's left edge regardless of depth.
  *
+ * QR codes are drawn in the browser with qrcode.js (Kazuhiko Arase, MIT),
+ * which the page must load before this script:
+ *   - the header shows the QR of this page: "page_url" + this language's
+ *     folder (SITE_LANGS in lang-switcher.js), e.g. ".../portfolio-0.8/zh-CN/";
+ *   - each Android package gets a download QR with a download sign in the
+ *     middle, encoding the package's URL resolved against that page URL.
+ * Without "page_url" the page's own address is used (fine when deployed,
+ * but a local test server's address won't open on a phone).
+ *
  * The PDF manuals are not listed here: each landing page links its own
  * language's manual directly (res/dist/portfolio-<version>-<lang>.pdf).
  */
@@ -43,6 +54,7 @@ const TREE_TEXT = {
   "en": {
     android:   "Android",
     apk:       (v) => `Portfolio ${v} for Android`,
+    scanApk:   "Scan to download",
     market:    (m) => `MARKET: ${m}`,
     community: (o) => `COMMUNITY: ${o}`,
     desktop:   (v) => `Desktop ${v}`,
@@ -54,6 +66,7 @@ const TREE_TEXT = {
   "zh-CN": {
     android:   "Android",
     apk:       (v) => `Portfolio ${v}（Android 版）`,
+    scanApk:   "扫码下载",
     market:    (m) => `发布渠道：${m}`,
     community: (o) => `社区：${o}`,
     desktop:   (v) => `桌面端 ${v}`,
@@ -64,6 +77,7 @@ const TREE_TEXT = {
   "zh-TW": {
     android:   "Android",
     apk:       (v) => `Portfolio ${v}（Android 版）`,
+    scanApk:   "掃碼下載",
     market:    (m) => `發佈渠道：${m}`,
     community: (o) => `社群：${o}`,
     desktop:   (v) => `桌面端 ${v}`,
@@ -81,8 +95,11 @@ function treeText() {
  * @param containerId     element for the resource tree (Android + markets)
  * @param distBaseUrl     folder holding the manifest and the artifacts
  * @param manifestUrl     manifest file name, relative to distBaseUrl
+ * @param qrElemId        element to show the page's QR code on (as a
+ *                        right-aligned background, see css class .qr),
+ *                        default "qrh1"
  */
-function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
+function renderResourceTree(containerId, distBaseUrl, manifestUrl, qrElemId) {
   distBaseUrl = (distBaseUrl || '') + '/';
   manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json');
   const container = document.getElementById(containerId);
@@ -95,6 +112,7 @@ function renderResourceTree(containerId, distBaseUrl, manifestUrl) {
     })
     .then(mf => {
       buildTree(container, mf, distBaseUrl);
+      renderPageQr(qrElemId || 'qrh1', mf);
     })
     .catch(err => {
       console.error('renderResourceTree:', err);
@@ -130,6 +148,11 @@ function buildTree(container, mf, distBaseUrl) {
       root.appendChild(
         resourceRow(T.apk(a.version), resolveUrl(a.file), 1)
       );
+      // download QR, below the link text
+      const qrImg = qrDataUrl(absoluteUrl(resolveUrl(a.file), mf), true);
+      if (qrImg) {
+        root.appendChild(qrRow(qrImg, resolveUrl(a.file), 1, T.scanApk));
+      }
     });
   }
 
@@ -162,6 +185,119 @@ function buildTree(container, mf, distBaseUrl) {
     });
   });
   container.appendChild(root);
+}
+
+// ---------------------------------------------------------------------------
+// QR codes
+// ---------------------------------------------------------------------------
+
+/**
+ * This page's public URL: mf.page_url (the landing root) + this language's
+ * folder from SITE_LANGS; without page_url, the page's own address.
+ */
+function pageUrl(mf) {
+  if (!mf.page_url) return location.href.split('#')[0];
+
+  const root = mf.page_url.replace(/\/*$/, '/');
+  const lang = normalizeLang(document.documentElement.lang || 'en');
+  const site = (typeof SITE_LANGS !== 'undefined')
+    ? SITE_LANGS.find(l => normalizeLang(l.code) === lang) : null;
+  return new URL(site ? site.dir : '', root).href;
+}
+
+/** A link of this page (e.g. "../res/dist/x.apk") as a full public URL. */
+function absoluteUrl(href, mf) {
+  return new URL(href, pageUrl(mf)).href;
+}
+
+/** Shows this page's QR code as the element's right-aligned background. */
+function renderPageQr(elemId, mf) {
+  const el = document.getElementById(elemId);
+  if (!el) return;
+  const url = pageUrl(mf);
+  const img = qrDataUrl(url, false);
+  if (!img) return;
+
+  el.classList.add('qr');
+  el.style.backgroundImage = `url("${img}")`;
+  el.title = url;
+}
+
+// Download arrow over a tray, in a 24x24 box.
+const QR_DOWNLOAD_ICON =
+  '<g fill="none" stroke="#3f51b5" stroke-width="2.6" ' +
+  'stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M12 3v11"/><path d="M7 10l5 5 5-5"/><path d="M4 16v4h16v-4"/></g>';
+
+/**
+ * QR code of text as an SVG data URL, black on white, or null if qrcode.js
+ * isn't loaded. With downloadIcon, a download sign covers the centre; the
+ * code then uses error correction level H (30%) so it still scans.
+ */
+function qrDataUrl(text, downloadIcon) {
+  if (typeof qrcode === 'undefined') {
+    console.warn('QR codes need css/qrcode.js loaded before render-resource-tree.js');
+    return null;
+  }
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+  const qr = qrcode(0, downloadIcon ? 'H' : 'M');   // 0: smallest version that fits
+  qr.addData(text, 'Byte');
+  qr.make();
+
+  const n = qr.getModuleCount(), border = 2, size = n + 2 * border;
+  let d = '';
+  for (let r = 0; r < n; r++)
+    for (let c = 0; c < n; c++)
+      if (qr.isDark(r, c)) d += `M${c + border} ${r + border}h1v1h-1z`;
+
+  let icon = '';
+  if (downloadIcon) {
+    const box = size * 0.24, x0 = (size - box) / 2;
+    icon = `<rect x="${x0}" y="${x0}" width="${box}" height="${box}" ` +
+           `rx="${box * 0.18}" fill="#fff"/>` +
+           `<g transform="translate(${x0 + box * 0.1},${x0 + box * 0.1}) ` +
+           `scale(${box * 0.8 / 24})">${QR_DOWNLOAD_ICON}</g>`;
+  }
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" ` +
+    `shape-rendering="crispEdges"><rect width="${size}" height="${size}" fill="#fff"/>` +
+    `<path d="${d}" fill="#000"/><g shape-rendering="auto">${icon}</g></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+/**
+ * A download QR code under a resource row; clicking it downloads too.
+ *   [QR image]
+ *   Scan to download
+ */
+function qrRow(qrSrc, href, level, caption) {
+  const div = document.createElement('div');
+  div.className = 'resource-qr';
+  div.style.paddingLeft = (level * 16) + 'px';
+  div.style.margin = '6px 0 10px 0';
+
+  const a = document.createElement('a');
+  a.setAttribute('download', '');
+  a.href = href;
+  a.title = caption || '';
+
+  const img = document.createElement('img');
+  img.src = qrSrc;
+  img.alt = caption || 'QR';
+  img.width = 128;
+  img.height = 128;
+  img.style.display = 'block';
+  a.appendChild(img);
+  div.appendChild(a);
+
+  if (caption) {
+    const small = document.createElement('small');
+    small.className = 'w3-text-grey';
+    small.textContent = caption;
+    div.appendChild(small);
+  }
+  return div;
 }
 
 // Top-level section label: "Android" / "MARKET: alpha"

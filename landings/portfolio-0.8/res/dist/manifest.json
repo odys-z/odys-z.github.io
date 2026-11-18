@@ -1,5 +1,6 @@
 {
-  "generated_at": "2026-10-10T12:14:38+00:00",
+  "generated_at": "2026-11-18T07:50:04+00:00",
+  "page_url": "http://192.168.2.59:8888/",
   "android": [
     {
       "file": "portfolio-0.7.5.apk",
@@ -14,8 +15,22 @@
       "file": "portfolio-0.8-en.pdf",
       "version": "0.8",
       "lang": "en",
-      "size_bytes": 2281907,
-      "modified_at": "2026-10-10T12:12:37+00:00"
+      "size_bytes": 2281855,
+      "modified_at": "2026-10-13T07:43:53+00:00"
+    },
+    {
+      "file": "portfolio-0.8-zh-CN.pdf",
+      "version": "0.8",
+      "lang": "zh-CN",
+      "size_bytes": 2263570,
+      "modified_at": "2026-11-18T07:27:11+00:00"
+    },
+    {
+      "file": "portfolio-0.8-zh-TW.pdf",
+      "version": "0.8",
+      "lang": "zh-TW",
+      "size_bytes": 2305192,
+      "modified_at": "2026-10-13T07:44:03+00:00"
     }
   ],
   "tree": {
@@ -41,6 +56,25 @@
             "jre": "x64_windows",
             "size_bytes": 0,
             "modified_at": "2026-09-08T12:10:08+00:00"
+          }
+        ]
+      },
+      "closed-test": {
+        "desktop": {
+          "file": "desktop-0.8.1-alpha-closed-test.zip",
+          "version": "0.8.1",
+          "size_bytes": 0,
+          "modified_at": "2026-11-18T07:27:11+00:00"
+        }
+      },
+      "pmking": {
+        "synode": [
+          {
+            "file": "synode-0.8.2-x64_linux-alpha-pmking.tar.gz",
+            "version": "0.8.2",
+            "jre": "x64_linux",
+            "size_bytes": 0,
+            "modified_at": "2026-11-18T07:27:11+00:00"
           }
         ]
       }

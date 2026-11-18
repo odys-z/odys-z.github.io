@@ -7,6 +7,9 @@
  *   1. add its name to LANG_NAMES and its folder to SITE_LANGS below,
  *   2. copy a translated index.html into <dir>,
  *   3. add its <link rel="alternate" hreflang=...> to every page's <head>.
+ *   4. add its download-list labels to TREE_TEXT in render-resource-tree.js,
+ *   5. load css/qrcode.js before render-resource-tree.js in the new page;
+ *      its QR code is drawn from manifest "page_url" + <dir>.
  *
  * Usage, in a page whose <html lang> is one of the codes below:
  *   <script src="../css/lang-switcher.js"></script>

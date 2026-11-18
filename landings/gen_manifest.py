@@ -44,13 +44,30 @@ If both a desktop and synode zip exist for the same market/org but at
 different versions, both are kept as-is (per-artifact version, not a
 single global version) since builds may ship on independent cadences.
 
+Page URL (for the QR codes)
+---------------------------
+  "page_url": "https://odys-z.github.io/landings/portfolio-0.8/"
+
+is the public URL of the landing root (the "en" page). The landing pages
+use it to draw, in the browser (render-resource-tree.js), the QR code of
+each language page and the download QR codes of the Android packages.
+Set it with --page-url. Without it, the page is assumed served locally
+for testing (e.g. python -m http.server 8888 in the landing folder), and
+page_url is http://<IPv4 of --iface, default eth0>:<--port, default 8888>/,
+so a phone on the same network can open the QR codes.
+
 Usage:
     python gen_manifest.py --dist ../web/res/dist --out ../web/res/dist/manifest.json
+    python gen_manifest.py --dist portfolio-0.8/res/dist \
+        --page-url https://odys-z.github.io/landings/portfolio-0.8/
+    python gen_manifest.py --dist portfolio-0.8/res/dist --iface eth0 --port 8888
 """
 
 import argparse
 import json
 import re
+import socket
+import struct
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
@@ -134,6 +151,10 @@ def build_manifest(dist_dir: Path) -> dict:
         if not f.is_file():
             continue
 
+        # our own output, not an artifact
+        if f.suffix.lower() in ('.json', '.tmp'):
+            continue
+
         apk_m = APK_RE.match(f.name)
         if apk_m:
             android.append({
@@ -190,11 +211,50 @@ def build_manifest(dist_dir: Path) -> dict:
     }
 
 
+def iface_ipv4(iface: str):
+    """IPv4 address of a network interface (Linux), or None."""
+    try:
+        import fcntl
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            packed = fcntl.ioctl(s.fileno(), 0x8915,  # SIOCGIFADDR
+                                 struct.pack('256s', iface[:15].encode()))
+        return socket.inet_ntoa(packed[20:24])
+    except (ImportError, OSError):
+        return None
+
+
+def outbound_ipv4():
+    """IPv4 address of the default route's interface (no packet is sent)."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("10.255.255.255", 1))
+            return s.getsockname()[0]
+    except OSError:
+        return None
+
+
+def local_page_url(iface: str, port: int) -> str:
+    ip = iface_ipv4(iface)
+    if not ip:
+        ip = outbound_ipv4()
+        print(f"note: no IPv4 address on {iface}, using {ip or '127.0.0.1'} "
+              "(see --iface)", file=sys.stderr)
+    return f"http://{ip or '127.0.0.1'}:{port}/"
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate resource-tree manifest.json.")
     parser.add_argument("--dist", required=True, type=Path)
     parser.add_argument("--out", type=Path, default=None,
                          help="Defaults to <dist>/manifest.json if omitted.")
+    parser.add_argument("--page-url", default=None,
+                         help="Public URL of the landing root page, written as "
+                              "\"page_url\" for the pages' QR codes; default: "
+                              "http://<--iface address>:<--port>/")
+    parser.add_argument("--iface", default="eth0",
+                         help="Network interface for the default page_url (default: eth0).")
+    parser.add_argument("--port", type=int, default=8888,
+                         help="Local web server port for the default page_url (default: 8888).")
     args = parser.parse_args()
 
     dist_dir = args.dist.resolve()
@@ -205,6 +265,13 @@ def main():
     manifest = build_manifest(dist_dir)
 
     out_path = (args.out if args.out is not None else args.dist / "manifest.json").resolve()
+
+    page_url = args.page_url or local_page_url(args.iface, args.port)
+    # first key after "generated_at", easy to find
+    manifest = {"generated_at": manifest["generated_at"], "page_url": page_url,
+                **{k: v for k, v in manifest.items() if k != "generated_at"}}
+    print(f"page_url: {page_url}")
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = out_path.with_suffix(out_path.suffix + ".tmp")
     with open(tmp_path, "w", encoding="utf-8") as f:
