@@ -37,11 +37,17 @@
 #what-to-download td, #what-to-download th { vertical-align: top; }
 #what-to-download code { font-size: 90%; }
 
-.qr { /* QR image drawn by render-resource-tree.js */
-      background-position: right;
-      background-size: contain;
-      background-repeat: no-repeat;
-  }
+/* this page's QR code, an <img> added after h1#qrh1 by render-resource-tree.js */
+header { position: relative; }
+.page-qr { position: absolute; top: 144px; right: 32px; width: 96px; height: 96px; }
+@media (max-width:700px) {
+  /* phones, narrow tablets: under the title, which may wrap to 2 lines */
+  .page-qr { position: static; display: block; margin: 0 auto 8px auto;
+             width: 112px; height: 112px; }
+}
+
+/* let long header button labels wrap on narrow screens */
+header .w3-button { white-space: normal; max-width: 100%; }
 </style>
 </head>
 <body>

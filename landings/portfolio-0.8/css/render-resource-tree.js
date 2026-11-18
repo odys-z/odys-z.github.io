@@ -95,9 +95,8 @@ function treeText() {
  * @param containerId     element for the resource tree (Android + markets)
  * @param distBaseUrl     folder holding the manifest and the artifacts
  * @param manifestUrl     manifest file name, relative to distBaseUrl
- * @param qrElemId        element to show the page's QR code on (as a
- *                        right-aligned background, see css class .qr),
- *                        default "qrh1"
+ * @param qrElemId        element to show the page's QR code after (see css
+ *                        class .page-qr), default "qrh1"
  */
 function renderResourceTree(containerId, distBaseUrl, manifestUrl, qrElemId) {
   distBaseUrl = (distBaseUrl || '') + '/';
@@ -210,17 +209,26 @@ function absoluteUrl(href, mf) {
   return new URL(href, pageUrl(mf)).href;
 }
 
-/** Shows this page's QR code as the element's right-aligned background. */
+/**
+ * Shows this page's QR code as <img class="page-qr"> right after the element
+ * (h1#qrh1); the page's CSS places it (top-right, or under the title on
+ * phones).
+ */
 function renderPageQr(elemId, mf) {
   const el = document.getElementById(elemId);
   if (!el) return;
   const url = pageUrl(mf);
-  const img = qrDataUrl(url, false);
-  if (!img) return;
+  const src = qrDataUrl(url, false);
+  if (!src) return;
 
-  el.classList.add('qr');
-  el.style.backgroundImage = `url("${img}")`;
-  el.title = url;
+  let img = document.querySelector('img.page-qr');
+  if (!img) {
+    img = document.createElement('img');
+    img.className = 'page-qr';
+    el.insertAdjacentElement('afterend', img);
+  }
+  img.src = src;
+  img.alt = img.title = url;
 }
 
 // Download arrow over a tray, in a 24x24 box.
