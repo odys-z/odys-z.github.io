@@ -14,8 +14,22 @@
       "file": "portfolio-0.8-en.pdf",
       "version": "0.8",
       "lang": "en",
-      "size_bytes": 0,
-      "modified_at": "2026-10-10T12:00:00+00:00"
+      "size_bytes": 2281855,
+      "modified_at": "2026-10-13T07:43:53+00:00"
+    },
+    {
+      "file": "portfolio-0.8-zh-CN.pdf",
+      "version": "0.8",
+      "lang": "zh-CN",
+      "size_bytes": 2263570,
+      "modified_at": "2026-11-18T07:27:11+00:00"
+    },
+    {
+      "file": "portfolio-0.8-zh-TW.pdf",
+      "version": "0.8",
+      "lang": "zh-TW",
+      "size_bytes": 2305192,
+      "modified_at": "2026-11-18T07:27:11+00:00"
     }
   ],
   "tree": {
@@ -23,21 +37,21 @@
       "Closed Test": {
         "desktop": {
           "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/desktop-0.8.2-alpha-closed-test.zip",
-          "version": "0.8.0",
+          "version": "0.8.2",
           "size_bytes": 0,
           "modified_at": "2026-09-08T12:10:59+00:00"
         },
         "synode": [
           {
             "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.2-x64_linux-alpha-closed-test.tar.gz",
-            "version": "0.8.0",
+            "version": "0.8.2",
             "jre": "x64_linux",
             "size_bytes": 0,
             "modified_at": "2026-09-08T12:10:18+00:00"
           },
           {
             "file": "https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/synode-0.8.2-x64_windows-alpha-closed-test.zip",
-            "version": "0.8.0",
+            "version": "0.8.2",
             "jre": "x64_windows",
             "size_bytes": 0,
             "modified_at": "2026-09-08T12:10:08+00:00"
