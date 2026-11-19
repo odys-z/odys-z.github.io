@@ -98,9 +98,20 @@ function treeText() {
  * @param qrElemId        element to show the page's QR code after (see css
  *                        class .page-qr), default "qrh1"
  */
+// ---------------------------------------------------------------------------
+// Data: the manifest each host loads instead of the one the page names. The
+// GitHub site links the packages to a GitHub release (manifest.github.json,
+// written by gen_manifest.py --base-url); the private servers serve them from
+// res/dist (manifest.json, bare file names).
+// ---------------------------------------------------------------------------
+const MANIFEST_BY_HOST = {
+  "odys-z.github.io": "manifest.github.json"
+};
+
 function renderResourceTree(containerId, distBaseUrl, manifestUrl, qrElemId) {
   distBaseUrl = (distBaseUrl || '') + '/';
-  manifestUrl = distBaseUrl + (manifestUrl || 'manifest.json');
+  manifestUrl = distBaseUrl
+      + (MANIFEST_BY_HOST[location.hostname] || manifestUrl || 'manifest.json');
   const container = document.getElementById(containerId);
   if (!container) return;
 

@@ -56,6 +56,24 @@ for testing (e.g. python -m http.server 8888 in the landing folder), and
 page_url is http://<IPv4 of --iface, default eth0>:<--port, default 8888>/,
 so a phone on the same network can open the QR codes.
 
+Download links (--base-url)
+---------------------------
+By default each artifact's "file" is its bare file name, so the page
+downloads it from the res/dist folder next to the manifest (the private
+servers). The GitHub site does not hold the packages: they are assets of
+a GitHub release. For it, give --base-url, the release's download folder,
+and write manifest.github.json, which the pages load on odys-z.github.io
+(see MANIFEST_BY_HOST in render-resource-tree.js):
+
+    python gen_manifest.py --dist <folder holding the packages> \
+        --out portfolio-0.8/res/dist/manifest.github.json \
+        --base-url https://github.com/odys-z/semantic-jserv/releases/download/portfolip-0.8/ \
+        --page-url https://odys-z.github.io/landings/portfolio-0.8/
+
+The packages' file names must be the release's asset names. The PDF
+manuals ("docs") are kept as bare names: they are in res/dist on every
+site, GitHub's included.
+
 Usage:
     python gen_manifest.py --dist ../web/res/dist --out ../web/res/dist/manifest.json
     python gen_manifest.py --dist portfolio-0.8/res/dist \
@@ -141,7 +159,11 @@ def remove_suffixes(filepath: str) -> str:
 
     return str(path.parent / filename) if path.parent != Path(".") else filename
 
-def build_manifest(dist_dir: Path) -> dict:
+def build_manifest(dist_dir: Path, base_url: str = "") -> dict:
+    """base_url, if given, prefixes the packages' "file" (not the docs')."""
+    def link(name: str) -> str:
+        return base_url + name if base_url else name
+
     android = []
     docs = []
     tree: dict[str, dict[str, dict]] = {}
@@ -158,7 +180,7 @@ def build_manifest(dist_dir: Path) -> dict:
         apk_m = APK_RE.match(f.name)
         if apk_m:
             android.append({
-                "file": f.name, "version": apk_m["version"],
+                "file": link(f.name), "version": apk_m["version"],
                 "ext": apk_m["ext"].lower(), **file_meta(f)
             })
             continue
@@ -177,7 +199,7 @@ def build_manifest(dist_dir: Path) -> dict:
             info = parse_desktop(stem)
             if info:
                 node = tree.setdefault(info["market"], {}).setdefault(info["org"], {})
-                node["desktop"] = {"file": f.name, "version": info["version"], **file_meta(f)}
+                node["desktop"] = {"file": link(f.name), "version": info["version"], **file_meta(f)}
                 continue
 
         if f.name.lower().startswith('synode-'):
@@ -187,7 +209,7 @@ def build_manifest(dist_dir: Path) -> dict:
                 if not hasattr(node, "synode") and not "synode" in node:
                     node["synode"] = []
                 node["synode"].append({
-                    "file": f.name, "version": info["version"], "jre": info["jre"],
+                    "file": link(f.name), "version": info["version"], "jre": info["jre"],
                     **file_meta(f)
                 })
                 continue
@@ -251,6 +273,10 @@ def main():
                          help="Public URL of the landing root page, written as "
                               "\"page_url\" for the pages' QR codes; default: "
                               "http://<--iface address>:<--port>/")
+    parser.add_argument("--base-url", default=None,
+                         help="URL prefixed to the packages' file names, e.g. a GitHub "
+                              "release's download folder; default: bare file names, "
+                              "served from the manifest's own folder.")
     parser.add_argument("--iface", default="eth0",
                          help="Network interface for the default page_url (default: eth0).")
     parser.add_argument("--port", type=int, default=8888,
@@ -262,7 +288,10 @@ def main():
         print(f"error: dist folder not found: {dist_dir}", file=sys.stderr)
         sys.exit(1)
 
-    manifest = build_manifest(dist_dir)
+    base_url = args.base_url
+    if base_url and not base_url.endswith('/'):
+        base_url += '/'
+    manifest = build_manifest(dist_dir, base_url or "")
 
     out_path = (args.out if args.out is not None else args.dist / "manifest.json").resolve()
 
