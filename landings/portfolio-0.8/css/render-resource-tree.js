@@ -17,7 +17,7 @@
  *
  * Expects a manifest shaped like:
  * {
- *   "page_url": "https://.../portfolio-0.8/",   (optional, the landing root)
+ *   "page_url": "http://182.150.29.34:2000/",   (optional root path)
  *   "android": [{ "file": "...", "version": "..." }],
  *   "tree": {
  *     "<market>": {
@@ -35,12 +35,10 @@
  *
  * QR codes are drawn in the browser with qrcode.js (Kazuhiko Arase, MIT),
  * which the page must load before this script:
- *   - the header shows the QR of this page: "page_url" + this language's
- *     folder (SITE_LANGS in lang-switcher.js), e.g. ".../portfolio-0.8/zh-CN/";
+ *   - the header shows the QR of the current page (location.href without hash);
  *   - each Android package gets a download QR with a download sign in the
- *     middle, encoding the package's URL resolved against that page URL.
- * Without "page_url" the page's own address is used (fine when deployed,
- * but a local test server's address won't open on a phone).
+ *     middle, built from the package's <a href> resolved against the current
+ *     page address.
  *
  * The PDF manuals are not listed here: each landing page links its own
  * language's manual directly (res/dist/portfolio-<version>-<lang>.pdf).
@@ -122,7 +120,7 @@ function renderResourceTree(containerId, distBaseUrl, manifestUrl, qrElemId) {
     })
     .then(mf => {
       buildTree(container, mf, distBaseUrl);
-      renderPageQr(qrElemId || 'qrh1', mf);
+      renderPageQr(qrElemId || 'qrh1');
     })
     .catch(err => {
       console.error('renderResourceTree:', err);
@@ -155,13 +153,14 @@ function buildTree(container, mf, distBaseUrl) {
   if (mf.android && mf.android.length) {
     root.appendChild(sectionHeading(T.android));
     mf.android.forEach(a => {
-      root.appendChild(
-        resourceRow(T.apk(a.version), resolveUrl(a.file), 1)
-      );
-      // download QR, below the link text
-      const qrImg = qrDataUrl(absoluteUrl(resolveUrl(a.file), mf), true);
+      const row = resourceRow(T.apk(a.version), resolveUrl(a.file), 1);
+      root.appendChild(row);
+      const anchor = row.querySelector('a');
+      // Compose APK QR URL from <a href> and the current page address
+      const apkUrl = new URL(anchor ? anchor.getAttribute('href') : resolveUrl(a.file), location.href).href;
+      const qrImg = qrDataUrl(apkUrl, true);
       if (qrImg) {
-        root.appendChild(qrRow(qrImg, resolveUrl(a.file), 1, T.scanApk));
+        root.appendChild(qrRow(qrImg, anchor ? anchor.getAttribute('href') : resolveUrl(a.file), 1, T.scanApk));
       }
     });
   }
@@ -202,33 +201,14 @@ function buildTree(container, mf, distBaseUrl) {
 // ---------------------------------------------------------------------------
 
 /**
- * This page's public URL: mf.page_url (the landing root) + this language's
- * folder from SITE_LANGS; without page_url, the page's own address.
- */
-function pageUrl(mf) {
-  if (!mf.page_url) return location.href.split('#')[0];
-
-  const root = mf.page_url.replace(/\/*$/, '/');
-  const lang = normalizeLang(document.documentElement.lang || 'en');
-  const site = (typeof SITE_LANGS !== 'undefined')
-    ? SITE_LANGS.find(l => normalizeLang(l.code) === lang) : null;
-  return new URL(site ? site.dir : '', root).href;
-}
-
-/** A link of this page (e.g. "../res/dist/x.apk") as a full public URL. */
-function absoluteUrl(href, mf) {
-  return new URL(href, pageUrl(mf)).href;
-}
-
-/**
  * Shows this page's QR code as <img class="page-qr"> right after the element
  * (h1#qrh1); the page's CSS places it (top-right, or under the title on
  * phones).
  */
-function renderPageQr(elemId, mf) {
+function renderPageQr(elemId) {
   const el = document.getElementById(elemId);
   if (!el) return;
-  const url = pageUrl(mf);
+  const url = location.href.split('#')[0];
   const src = qrDataUrl(url, false);
   if (!src) return;
 
