@@ -51,10 +51,9 @@ Page URL (for the QR codes)
 is the public URL of the landing root (the "en" page). The landing pages
 use it to draw, in the browser (render-resource-tree.js), the QR code of
 each language page and the download QR codes of the Android packages.
-Set it with --page-url. Without it, the page is assumed served locally
-for testing (e.g. python -m http.server 8888 in the landing folder), and
-page_url is http://<IPv4 of --iface, default eth0>:<--port, default 8888>/,
-so a phone on the same network can open the QR codes.
+Set it with --page-url. Without it, the script queries ipify for the
+public IPv4 (falling back to --iface, default eth0) and prompts for the
+port before writing manifest.json.
 
 Download links (--base-url)
 ---------------------------
@@ -82,11 +81,14 @@ Usage:
 """
 
 import argparse
+import ipaddress
 import json
 import re
 import socket
 import struct
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -145,6 +147,7 @@ def parse_synode(stem: str):
     jre, market, org = parts[0], parts[1], '-'.join(parts[2:])
     return {"version": m["version"], "jre": jre, "market": market, "org": org}
 
+
 def remove_suffixes(filepath: str) -> str:
     path = Path(filepath)
     filename = path.name
@@ -158,6 +161,7 @@ def remove_suffixes(filepath: str) -> str:
             filename = filename[: -len(suffix)]
 
     return str(path.parent / filename) if path.parent != Path(".") else filename
+
 
 def build_manifest(dist_dir: Path, base_url: str = "") -> dict:
     """base_url, if given, prefixes the packages' "file" (not the docs')."""
@@ -255,13 +259,46 @@ def outbound_ipv4():
         return None
 
 
-def local_page_url(iface: str, port: int) -> str:
-    ip = iface_ipv4(iface)
+def ipify_ipv4(timeout: float = 3.0):
+    """Public IPv4 from api.ipify.org, or None."""
+    try:
+        req = urllib.request.Request(
+            "https://api.ipify.org",
+            headers={"User-Agent": "gen_manifest/1.0"}
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            candidate = resp.read().decode("utf-8").strip()
+            return str(ipaddress.IPv4Address(candidate))
+    except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+        return None
+
+
+def prompt_port(default_port: int) -> int:
+    """Pause and require a port (Enter accepts default_port)."""
+    while True:
+        raw = input(f"Enter port [{default_port}]: ").strip()
+        if not raw:
+            return default_port
+        try:
+            port = int(raw)
+            if 1 <= port <= 65535:
+                return port
+        except ValueError:
+            pass
+        print("Invalid port. Enter a number between 1 and 65535.", file=sys.stderr)
+
+
+def auto_page_url(iface: str, port: int) -> str:
+    ip = ipify_ipv4()
     if not ip:
-        ip = outbound_ipv4()
-        print(f"note: no IPv4 address on {iface}, using {ip or '127.0.0.1'} "
+        ip = iface_ipv4(iface) or outbound_ipv4()
+        print(f"note: ipify lookup failed, using local IP {ip or '127.0.0.1'} "
               "(see --iface)", file=sys.stderr)
-    return f"http://{ip or '127.0.0.1'}:{port}/"
+    else:
+        print(f"detected public IP via ipify: {ip}")
+
+    chosen_port = prompt_port(port)
+    return f"http://{ip or '127.0.0.1'}:{chosen_port}/"
 
 
 def main():
@@ -295,7 +332,7 @@ def main():
 
     out_path = (args.out if args.out is not None else args.dist / "manifest.json").resolve()
 
-    page_url = args.page_url or local_page_url(args.iface, args.port)
+    page_url = args.page_url or auto_page_url(args.iface, args.port)
     # first key after "generated_at", easy to find
     manifest = {"generated_at": manifest["generated_at"], "page_url": page_url,
                 **{k: v for k, v in manifest.items() if k != "generated_at"}}

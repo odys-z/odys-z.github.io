@@ -7,21 +7,17 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 
 - Tomcat & Docker
 
+- Jetty Server 12 & Jetty EE8/10
+
 - `Antlr 4 <https://github.com/antlr/antlr4>`_ with BSD-3-Clause license
 
-- Jetty Server 12 & Jetty EE8 12
-
-- Apache Daemon
+- `Apache Commons Daemon <https://commons.apache.org/proper/commons-daemon/>`_
 
 - Apache Common Libs, Common IO, `Common Validators <https://github.com/apache/commons-validator>`_.
 
-- `Exiftool <https://exiftool.org/index.html#license>`_,
-  by `Phil Harvey <https://exiftool.org/index.html#license>`_,
-  with `a free license <https://exiftool.org/index.html#license>`_.
+- `React.js <https://github.com/nodejs/node>`_
 
-- React.js
-
-- Node.js
+- `Node.js <https://github.com/react/react>`_
 
 - `Material-UI (React) 4 <https://v4.mui.com/>`_
 
@@ -37,3 +33,10 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 
 - `Slint <https://github.com/slint-ui/slint>`_ & `SurrealismUI <https://github.com/Surrealism-All/SurrealismUI>`_
 
+- `Tiptap <https://github.com/ueberdosis/tiptap>`_
+
+- `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ & `RTD Theme <https://sphinx-rtd-theme.readthedocs.io/en/stable/#/>`_
+
+- `Exiftool <https://exiftool.org/index.html#license>`_,
+  by `Phil Harvey <https://exiftool.org/index.html#license>`_,
+  with `a free license <https://exiftool.org/index.html#license>`_.
