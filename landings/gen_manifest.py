@@ -52,8 +52,9 @@ is the public URL of the landing root (the "en" page). The landing pages
 use it to draw, in the browser (render-resource-tree.js), the QR code of
 each language page and the download QR codes of the Android packages.
 Set it with --page-url. Without it, the script queries public IP echo
-services (falling back to --iface, default eth0) and prompts for the
-port before writing manifest.json.
+services (falling back to --iface, default eth0), prompts for the port,
+and guesses the full example artifact URL down to the APK file so you can
+edit/confirm the full URL before saving manifest.json.
 
 Download links (--base-url)
 ---------------------------
@@ -91,6 +92,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 from datetime import datetime, timezone
+from urllib.parse import urlsplit, urlunsplit
 
 APK_RE = re.compile(
     r'^portfolio-(?P<version>[\d.]+)(?:-[^.]+)?\.(?P<ext>apk|aab)$', re.IGNORECASE)
@@ -289,6 +291,67 @@ def public_ipv4(timeout: float = 3.0):
     return None, None
 
 
+def guess_landing_dir_path(dist_dir: Path, out_path: Path) -> str:
+    """Guess landing directory path (where index.html sits) from dist/manifest path."""
+    # Prefer the directory above .../res/dist when present, or the parent of the manifest directory.
+    target_dir = out_path.parent
+    if target_dir.name == "dist" and target_dir.parent.name == "res":
+        landing_dir = target_dir.parent.parent
+    elif dist_dir.name == "dist" and dist_dir.parent.name == "res":
+        landing_dir = dist_dir.parent.parent
+    else:
+        landing_dir = target_dir.parent
+
+    parts = landing_dir.parts
+    for marker in ("products", "product", "landings"):
+        if marker in parts:
+            idx = parts.index(marker)
+            return "/" + "/".join(parts[idx:]) + "/"
+
+    folder_name = landing_dir.name.strip("/")
+    return f"/{folder_name}/" if folder_name else "/"
+
+
+def sample_apk_name(manifest: dict, dist_dir: Path) -> str:
+    """Pick an APK filename from the built manifest or dist_dir for display/editing."""
+    if manifest.get("android"):
+        first_file = manifest["android"][0]["file"]
+        return Path(urlsplit(first_file).path).name
+    for f in sorted(dist_dir.iterdir()):
+        if f.is_file() and APK_RE.match(f.name):
+            return f.name
+    return "portfolio-0.8.apk"
+
+
+def derive_page_url_from_full_url(full_url: str, apk_name: str, dist_dir: Path, out_path: Path) -> str:
+    """Extract the landing page_url (containing index.html) from the full artifact URL."""
+    parts = urlsplit(full_url)
+    scheme = parts.scheme or "https"
+    netloc = parts.netloc
+    path = parts.path or "/"
+
+    # Strip trailing APK filename if present
+    if apk_name and path.endswith("/" + apk_name):
+        path = path[: -len(apk_name)]
+    elif path.lower().endswith(".apk") or path.lower().endswith(".aab"):
+        path = path.rsplit("/", 1)[0] + "/"
+
+    # Strip manifest directory tail (e.g. res/dist/ or <out_dir_name>/) if the user left it in
+    dist_tail = "res/dist/"
+    out_tail = out_path.parent.name.strip("/") + "/" if out_path.parent.name.strip("/") else ""
+    if path.endswith("/" + dist_tail):
+        path = path[: -len(dist_tail)]
+    elif out_tail and path.endswith("/" + out_tail):
+        path = path[: -len(out_tail)]
+
+    if not path.startswith("/"):
+        path = "/" + path
+    if not path.endswith("/"):
+        path = path + "/"
+
+    return urlunsplit((scheme, netloc, path, "", ""))
+
+
 def prompt_port(default_port: int) -> int:
     """Pause and require a port (Enter accepts default_port)."""
     while True:
@@ -304,7 +367,18 @@ def prompt_port(default_port: int) -> int:
         print("Invalid port. Enter a number between 1 and 65535.", file=sys.stderr)
 
 
-def auto_page_url(iface: str, port: int) -> str:
+def prompt_full_apk_url(ip: str, port: int, dist_dir: Path, out_path: Path, manifest: dict) -> str:
+    """Show full URL down to the APK and let the user edit/confirm before saving."""
+    landing_path = guess_landing_dir_path(dist_dir, out_path)
+    apk_name = sample_apk_name(manifest, dist_dir)
+    default_full_url = f"https://{ip}:{port}{landing_path}res/dist/{apk_name}"
+
+    raw = input(f"Full APK URL [{default_full_url}]: ").strip()
+    chosen_full_url = raw or default_full_url
+    return derive_page_url_from_full_url(chosen_full_url, apk_name, dist_dir, out_path)
+
+
+def auto_page_url(iface: str, port: int, dist_dir: Path, out_path: Path, manifest: dict) -> str:
     ip, source = public_ipv4()
     if not ip:
         ip = iface_ipv4(iface) or outbound_ipv4()
@@ -314,7 +388,7 @@ def auto_page_url(iface: str, port: int) -> str:
         print(f"detected public IP {ip} via {source}")
 
     chosen_port = prompt_port(port)
-    return f"http://{ip or '127.0.0.1'}:{chosen_port}/"
+    return prompt_full_apk_url(ip or "127.0.0.1", chosen_port, dist_dir, out_path, manifest)
 
 
 def main():
@@ -325,7 +399,7 @@ def main():
     parser.add_argument("--page-url", default=None,
                          help="Public URL of the landing root page, written as "
                               "\"page_url\" for the pages' QR codes; default: "
-                              "http://<public or --iface address>:<--port>/")
+                              "derived from the full APK URL prompt.")
     parser.add_argument("--base-url", default=None,
                          help="URL prefixed to the packages' file names, e.g. a GitHub "
                               "release's download folder; default: bare file names, "
@@ -348,7 +422,7 @@ def main():
 
     out_path = (args.out if args.out is not None else args.dist / "manifest.json").resolve()
 
-    page_url = args.page_url or auto_page_url(args.iface, args.port)
+    page_url = args.page_url or auto_page_url(args.iface, args.port, dist_dir, out_path, manifest)
     # first key after "generated_at", easy to find
     manifest = {"generated_at": manifest["generated_at"], "page_url": page_url,
                 **{k: v for k, v in manifest.items() if k != "generated_at"}}
