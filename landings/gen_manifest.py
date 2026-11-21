@@ -51,8 +51,8 @@ Page URL (for the QR codes)
 is the public URL of the landing root (the "en" page). The landing pages
 use it to draw, in the browser (render-resource-tree.js), the QR code of
 each language page and the download QR codes of the Android packages.
-Set it with --page-url. Without it, the script queries ipify for the
-public IPv4 (falling back to --iface, default eth0) and prompts for the
+Set it with --page-url. Without it, the script queries public IP echo
+services (falling back to --iface, default eth0) and prompts for the
 port before writing manifest.json.
 
 Download links (--base-url)
@@ -105,6 +105,15 @@ DOC_RE = re.compile(
 # remaining before the extension", rejoined with '-'.
 DESKTOP_PREFIX_RE = re.compile(r'^desktop-(?P<version>[\d.]+)-', re.IGNORECASE)
 SYNODE_PREFIX_RE = re.compile(r'^synode-(?P<version>[\d.]+)-', re.IGNORECASE)
+
+IPV4_RE = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
+
+# Public IPv4 echo endpoints (AWS checkip services first, then ipify fallback).
+IP_ECHO_URLS = (
+    "https://checkip.amazonaws.com",
+    "https://checkip.global.api.aws",
+    "https://api.ipify.org",
+)
 
 
 def file_meta(f: Path) -> dict:
@@ -259,18 +268,25 @@ def outbound_ipv4():
         return None
 
 
-def ipify_ipv4(timeout: float = 3.0):
-    """Public IPv4 from api.ipify.org, or None."""
-    try:
-        req = urllib.request.Request(
-            "https://api.ipify.org",
-            headers={"User-Agent": "gen_manifest/1.0"}
-        )
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            candidate = resp.read().decode("utf-8").strip()
-            return str(ipaddress.IPv4Address(candidate))
-    except (urllib.error.URLError, TimeoutError, ValueError, OSError):
-        return None
+def public_ipv4(timeout: float = 3.0):
+    """Public IPv4 from AWS/ipify echo services, or (None, None)."""
+    for url in IP_ECHO_URLS:
+        try:
+            req = urllib.request.Request(
+                url,
+                headers={"User-Agent": "curl/8.0"}
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                body = resp.read().decode("utf-8", errors="ignore").strip()
+                m = IPV4_RE.search(body)
+                if not m:
+                    continue
+                ip_obj = ipaddress.IPv4Address(m.group(0))
+                if ip_obj.is_global:
+                    return str(ip_obj), url
+        except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+            continue
+    return None, None
 
 
 def prompt_port(default_port: int) -> int:
@@ -289,13 +305,13 @@ def prompt_port(default_port: int) -> int:
 
 
 def auto_page_url(iface: str, port: int) -> str:
-    ip = ipify_ipv4()
+    ip, source = public_ipv4()
     if not ip:
         ip = iface_ipv4(iface) or outbound_ipv4()
-        print(f"note: ipify lookup failed, using local IP {ip or '127.0.0.1'} "
+        print(f"note: public IP lookup failed, using local IP {ip or '127.0.0.1'} "
               "(see --iface)", file=sys.stderr)
     else:
-        print(f"detected public IP via ipify: {ip}")
+        print(f"detected public IP {ip} via {source}")
 
     chosen_port = prompt_port(port)
     return f"http://{ip or '127.0.0.1'}:{chosen_port}/"
@@ -309,15 +325,15 @@ def main():
     parser.add_argument("--page-url", default=None,
                          help="Public URL of the landing root page, written as "
                               "\"page_url\" for the pages' QR codes; default: "
-                              "http://<--iface address>:<--port>/")
+                              "http://<public or --iface address>:<--port>/")
     parser.add_argument("--base-url", default=None,
                          help="URL prefixed to the packages' file names, e.g. a GitHub "
                               "release's download folder; default: bare file names, "
                               "served from the manifest's own folder.")
     parser.add_argument("--iface", default="eth0",
-                         help="Network interface for the default page_url (default: eth0).")
+                         help="Network interface fallback for page_url (default: eth0).")
     parser.add_argument("--port", type=int, default=8888,
-                         help="Local web server port for the default page_url (default: 8888).")
+                         help="Default port prompt value for page_url (default: 8888).")
     args = parser.parse_args()
 
     dist_dir = args.dist.resolve()
