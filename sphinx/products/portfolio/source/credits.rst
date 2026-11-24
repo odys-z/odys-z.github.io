@@ -33,9 +33,13 @@ Portfolio, the personal documents synchronizer, is built on open source projects
 
 - `Slint <https://github.com/slint-ui/slint>`_ & `SurrealismUI <https://github.com/Surrealism-All/SurrealismUI>`_
 
+- `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ & `RTD Theme <https://sphinx-rtd-theme.readthedocs.io/en/stable/#/>`_
+
 - `Tiptap <https://github.com/ueberdosis/tiptap>`_
 
-- `Sphinx <https://www.sphinx-doc.org/en/master/index.html>`_ & `RTD Theme <https://sphinx-rtd-theme.readthedocs.io/en/stable/#/>`_
+- `Doc4j <https://github.com/plutext/docx4j>`_
+
+- `Puck <https://github.com/puckeditor/puck>`_
 
 - `Exiftool <https://exiftool.org/index.html#license>`_,
   by `Phil Harvey <https://exiftool.org/index.html#license>`_,
