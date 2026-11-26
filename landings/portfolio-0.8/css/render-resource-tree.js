@@ -12,6 +12,7 @@
  *     COMMUNITY: pmking
  *       [download] Desktop 0.8.0 (stand alone)
  *       [download] Synode 0.8.0 (x64_linux) - with desktop
+ *       [download] Synode Upgrade 0.8.3 (Windows) - for an installed Synode
  *     COMMUNITY: some-other-org
  *       [download] Desktop 0.8.0
  *
@@ -23,7 +24,8 @@
  *     "<market>": {
  *       "<org>": {
  *         "desktop": { "file": "...", "version": "..." },
- *         "synode":  { "file": "...", "version": "...", "jre": "..." }
+ *         "synode":  { "file": "...", "version": "...", "jre": "..." },
+ *         "upgrade-windows": { "file": "...", "version": "..." }
  *       }
  *     }
  *   }
@@ -59,7 +61,9 @@ const TREE_TEXT = {
     synode:    (v) => `Synode ${v}`,
     // Desktop is only needed where no Synode is installed (a Synode includes it)
     desktopNote: "(stand alone)",
-    synodeNote:  "- with desktop"
+    synodeNote:  "- with desktop",
+    upgrade:     (v, os) => `Synode Upgrade ${v} (${os})`,
+    upgradeNote: "- for an installed Synode"
   },
   "zh-CN": {
     android:   "Android",
@@ -70,7 +74,9 @@ const TREE_TEXT = {
     desktop:   (v) => `桌面端 ${v}`,
     synode:    (v) => `Synode ${v}`,
     desktopNote: "（单独安装）",
-    synodeNote:  "- 含桌面端"
+    synodeNote:  "- 含桌面端",
+    upgrade:     (v, os) => `Synode 升级程序 ${v}（${os}）`,
+    upgradeNote: "- 升级已安装的 Synode"
   },
   "zh-TW": {
     android:   "Android",
@@ -81,7 +87,9 @@ const TREE_TEXT = {
     desktop:   (v) => `桌面端 ${v}`,
     synode:    (v) => `Synode ${v}`,
     desktopNote: "（單獨安裝）",
-    synodeNote:  "- 含桌面端"
+    synodeNote:  "- 含桌面端",
+    upgrade:     (v, os) => `Synode 升級程式 ${v}（${os}）`,
+    upgradeNote: "- 升級已安裝的 Synode"
   }
 };
 
@@ -191,6 +199,17 @@ function buildTree(container, mf, distBaseUrl) {
           root.appendChild(resourceRow(label, resolveUrl(item.file), 2, T.synodeNote));
         }
       }
+
+      // the Synode upgrade tools, last: manifest keys "upgrade-<os>"
+      const upgradeOs = { "upgrade-windows": "Windows" };
+      Object.keys(upgradeOs).forEach(key => {
+        const upg = node[key];
+        if (upg) {
+          root.appendChild(rowRule(2));
+          root.appendChild(
+            resourceRow(T.upgrade(upg.version, upgradeOs[key]), resolveUrl(upg.file), 2, T.upgradeNote));
+        }
+      });
     });
   });
   container.appendChild(root);
@@ -320,6 +339,14 @@ function subHeading(text, level) {
   strong.textContent = text;
   div.appendChild(strong);
   return div;
+}
+
+// A rule between rows, indented like the rows: <hr> above the upgrade tools.
+function rowRule(level) {
+  const hr = document.createElement('hr');
+  hr.className = 'resource-rule';
+  hr.style.margin = '6px 0 6px ' + (level * 16) + 'px';
+  return hr;
 }
 
 // A single downloadable resource row, with an optional plain-text note

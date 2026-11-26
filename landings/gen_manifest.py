@@ -10,14 +10,17 @@ About
 gen_manifest.py
 
 Scans a "res/dist" folder for published Portfolio build artifacts and
-writes a manifest.json describing four resource types:
+writes a manifest.json describing five resource types:
 
   1. apk      - portfolio-<version>[-<anything>].apk or .aab
                 (no market/org — flat "Android" section)
   2. desktop  - desktop-<version>-<market>-<org>.zip
   3. synode   - synode-<version>-<jre>-<market>-<org>.zip
                 (has an extra "jre" segment between version and market)
-  4. docs     - portfolio-<version>-<lang>.pdf  (e.g. portfolio-0.8-en.pdf)
+  4. upgrade  - synode-upgrade-<version>-<market>-<org>.exe
+                (the Synode upgrade tool, tasks.py SynodeTask.get_upgrader();
+                written as "upgrade-windows", by the extension: .exe -> windows)
+  5. docs     - portfolio-<version>-<lang>.pdf  (e.g. portfolio-0.8-en.pdf)
                 (flat "Documents" section, one entry per language)
 
 Output shape:
@@ -34,7 +37,8 @@ Output shape:
     "<market>": {
       "<org>": {
         "desktop": {"file": "...", "version": "..."},
-        "synode":  {"file": "...", "version": "...", "jre": "..."}
+        "synode":  [{"file": "...", "version": "...", "jre": "..."}],
+        "upgrade-windows": {"file": "...", "version": "..."}
       }
     }
   }
@@ -103,6 +107,10 @@ DOC_RE = re.compile(
 # remaining before the extension", rejoined with '-'.
 DESKTOP_PREFIX_RE = re.compile(r'^desktop-(?P<version>[\d.]+)-', re.IGNORECASE)
 SYNODE_PREFIX_RE = re.compile(r'^synode-(?P<version>[\d.]+)-', re.IGNORECASE)
+UPGRADE_RE = re.compile(
+    r'^synode-upgrade-(?P<version>[\d.]+)-(?P<market>[^-.]+)-(?P<org>.+)\.(?P<ext>exe)$', re.IGNORECASE)
+# upgrade tool's extension -> its platform, the manifest key's suffix: "upgrade-windows"
+UPGRADE_OS = {"exe": "windows"}
 
 IPV4_RE = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
 
@@ -202,6 +210,13 @@ def build_manifest(dist_dir: Path, base_url: str = "") -> dict:
                 "file": f.name, "version": doc_m["version"],
                 "lang": doc_m["lang"], **file_meta(f)
             })
+            continue
+
+        upg_m = UPGRADE_RE.match(f.name)
+        if upg_m:
+            node = tree.setdefault(upg_m["market"], {}).setdefault(upg_m["org"], {})
+            node[f'upgrade-{UPGRADE_OS[upg_m["ext"].lower()]}'] = {
+                "file": link(f.name), "version": upg_m["version"], **file_meta(f)}
             continue
 
         stem = remove_suffixes(f.name)
