@@ -9,3 +9,5 @@
 !**/res/dist/portfolio-*.pdf
 build-*
 landings/**/assests
+res.json
+__pycache__

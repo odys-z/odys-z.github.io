@@ -1,0 +1,36 @@
+{ "type": "HtmlRes",
+  "dist_dir": "portfolio-0.8/res/dist",
+  "index_dir": "portfolio-0.8",
+  "echo_points": [
+    "https://checkip.amazonaws.com",
+    "https://checkip.global.api.aws",
+    "https://api.ipify.org" ],
+  "langs": [
+    { "lang": "en",
+      "market": "alpha",
+      "landing": "",
+      "desktop": "",
+      "android": "",
+      "orgs": [
+        {"org": "closed-test", "posix": "sample", "win32": "sample32"},
+        {"org": "qqhome"}],
+      "hlp_pdf": "res/dist/portfolio-0.8-en.pdf",
+      "upgrade_hlp": ""},
+    { "lang": "zh-CN",
+      "market": "alpha",
+      "landing": "",
+      "orgs": [
+        {"org": "pmking"},
+        {"org": "inforise"},
+        {"org": "qqhome"}],
+      "hlp_pdf": "../res/dist/portfolio-0.8-zh-CN.pdf",
+      "upgrade_hlp": ""},
+    { "lang": "zh-TW", 
+      "market": "alpha",
+      "landing": "",
+      "orgs": [
+        {"org": "closed-test"},
+        {"org": "pmking"}],
+      "hlp_pdf": "../res/dist/portfolio-0.8-zh-TW.pdf",
+      "upgrade_hlp": ""}]
+}

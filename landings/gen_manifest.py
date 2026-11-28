@@ -107,8 +107,17 @@ DOC_RE = re.compile(
 # remaining before the extension", rejoined with '-'.
 DESKTOP_PREFIX_RE = re.compile(r'^desktop-(?P<version>[\d.]+)-', re.IGNORECASE)
 SYNODE_PREFIX_RE = re.compile(r'^synode-(?P<version>[\d.]+)-', re.IGNORECASE)
+
 UPGRADE_RE = re.compile(
-    r'^synode-upgrade-(?P<version>[\d.]+)-(?P<market>[^-.]+)-(?P<org>.+)\.(?P<ext>exe)$', re.IGNORECASE)
+    # r'^synode-upgrade-(?P<version>[\d.]+)-(?P<market>[^-.]+)-(?P<org>.+)\.(?P<ext>exe)$', re.IGNORECASE)
+    r'^synode-upgrade-(?P<version>[\d.]+)-(?P<market>[^-.]+)\.(?P<ext>exe)$', re.IGNORECASE)
+
+UPGRADE_HELP_LINKS = {
+    "en": "upgrade-help-en.html",
+    "zh-CN": "upgrade-help-zh-CN.html",
+    "zh-TW": "upgrade-help-zh-TW.html",
+}
+
 # upgrade tool's extension -> its platform, the manifest key's suffix: "upgrade-windows"
 UPGRADE_OS = {"exe": "windows"}
 
@@ -151,11 +160,6 @@ def parse_synode(stem: str):
         return None
     rest = stem[m.end() - 1:].lstrip('-')
     parts = rest.split('-')
-
-    # while parts[-1] in ['.tar', '.tar.gz', '.gz', '.zip', '.7z']:
-    # #     parts = parts[:-1]
-    # 
-    # print(parts, '-'.join(parts[2:]))
 
     if len(parts) < 3:
         return None

@@ -18,7 +18,7 @@
  *
  * Expects a manifest shaped like:
  * {
- *   "page_url": "http://182.150.29.34:2000/",   (optional root path)
+ *   "page_url": "http://10.10.10.10:8888/",   (optional root path)
  *   "android": [{ "file": "...", "version": "..." }],
  *   "tree": {
  *     "<market>": {
@@ -201,15 +201,15 @@ function buildTree(container, mf, distBaseUrl) {
       }
 
       // the Synode upgrade tools, last: manifest keys "upgrade-<os>"
-      const upgradeOs = { "upgrade-windows": "Windows" };
-      Object.keys(upgradeOs).forEach(key => {
-        const upg = node[key];
-        if (upg) {
-          root.appendChild(rowRule(2));
-          root.appendChild(
-            resourceRow(T.upgrade(upg.version, upgradeOs[key]), resolveUrl(upg.file), 2, T.upgradeNote));
-        }
-      });
+      // const upgradeOs = { "upgrade-windows": "Windows" };
+      // Object.keys(upgradeOs).forEach(key => {
+      //   const upg = node[key];
+      //   if (upg) {
+      //     root.appendChild(rowRule(2));
+      //     root.appendChild(
+      //       resourceRow(T.upgrade(upg.version, upgradeOs[key]), resolveUrl(upg.file), 2, T.upgradeNote));
+      //   }
+      // });
     });
   });
   container.appendChild(root);
